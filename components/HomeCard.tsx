@@ -2,6 +2,9 @@
 import React from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
 import { Icon } from "./Icon";
+import { globalColors } from "../constants/themes";
+
+const { primary, grayscale } = globalColors;
 
 type CardProps = {
   title: string;
@@ -12,29 +15,33 @@ type CardProps = {
 export const Card: React.FC<CardProps> = ({ title, iconName, onPress }) => {
   return (
     <Pressable style={styles.card} onPress={onPress}>
-      <Icon iconName={iconName} color="#fff" />
+      <Icon iconName={iconName} color={grayscale[700]} />
       <Text style={styles.title}>{title}</Text>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  cardContainer: {},
+  cardContainer: {
+    paddingHorizontal: 5,
+  },
   card: {
-    height: 200,
+    paddingHorizontal: 3,
+    height: 150,
     width: 150,
-    paddingVertical: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    borderWidth: 0.9,
+    borderColor: grayscale[200],
     borderRadius: 8,
     margin: 8,
     alignItems: "center",
     justifyContent: "center",
-    //backgroundColor: "#fff",
+    backgroundColor: globalColors.background2,
+    elevation: 2,
   },
   title: {
-    marginTop: 8,
-    fontSize: 16,
-    color: "#fff",
+    marginTop: 10,
+    fontSize: 15,
+    color: globalColors.text,
+    textAlign: "center",
   },
 });

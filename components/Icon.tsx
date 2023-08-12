@@ -14,10 +14,23 @@ export const Icon = (props: IconProps) => {
   const { iconName } = props;
   const defaultSize = 36;
   const defaultColor = "#000";
-  return iconName === "person" || iconName === "document-text" || iconName === "home" ? (
-    <Ionicons name={iconName} size={defaultSize} color={defaultColor} {...props} />
+  return iconName === "person" ||
+    iconName === "document-text" ||
+    iconName === "home" ||
+    iconName === "send" ? (
+    <Ionicons
+      name={iconName}
+      size={defaultSize}
+      color={defaultColor}
+      {...props}
+    />
   ) : iconName === "building" || iconName === "pencil-square-o" ? (
-    <FontAwesome name={iconName} size={defaultSize} color={defaultColor} {...props} />
+    <FontAwesome
+      name={iconName}
+      size={defaultSize}
+      color={defaultColor}
+      {...props}
+    />
   ) : (
     <></>
   );

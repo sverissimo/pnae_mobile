@@ -3,7 +3,7 @@ import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../components/ProdutorSearchBar";
 import { ProdutorInfo } from "../components/ProdutorInfo";
 
-export const ProdutorScreen = () => {
+export const ProdutorSelector = () => {
   const { produtor } = useSelectProdutor();
   return (
     <View style={styles.container}>
@@ -18,7 +18,8 @@ export const ProdutorScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: globalColors.primary[50],
     alignItems: "center",
+    width: "90%",
+    marginTop: "5%",
   },
 });

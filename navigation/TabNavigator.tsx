@@ -1,19 +1,28 @@
 import { HomeScreen } from "../screens/HomeScreen";
-import { LogoutComponent } from "../components/Logout";
-import { useAuth } from "../hooks/useAuth";
 import { RelatorioScreen } from "../screens/RelatorioScreen";
 import { ProdutorScreen } from "../screens/ProdutorScreen";
 import { PerfilScreen } from "../screens/PerfilScreen";
+import { useAuth } from "../hooks/useAuth";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RootStackParamList } from "./types";
+import { LogoutComponent } from "../components/Logout";
 import { Icon } from "../components/Icon";
-import { globalColors } from "../constants/colorsPallete";
+import { globalColors } from "../constants/themes";
+import {
+  HomeWrapped,
+  PerfilWrapped,
+  ProdutorSelectWraper,
+  RelatorioWrapped,
+} from "../components/ProdutorSelectWraper";
 
+const { primary, grayscale } = globalColors;
 const BottomTabs = createBottomTabNavigator<RootStackParamList>();
 
-const itemInactiveColor = globalColors.primary100;
-const itemActiveColor = globalColors.primary500;
+//const itemInactiveColor = grayscale[500];
+const itemInactiveColor = grayscale[900];
+const itemActiveColor = primary[50] || primary[100];
+const backgroundHeaderColor = primary[400];
 
 export function TabNavigator() {
   const { logoutHandler } = useAuth();
@@ -22,83 +31,69 @@ export function TabNavigator() {
   return (
     <BottomTabs.Navigator
       screenOptions={{
-        headerBackgroundContainerStyle: {
-          backgroundColor: "#6a9f6f",
+        headerStyle: {
+          backgroundColor: backgroundHeaderColor,
         },
-
+        headerTintColor: globalColors.text,
         tabBarActiveTintColor: itemActiveColor,
-        tabBarInactiveTintColor: "#333",
+        tabBarInactiveTintColor: itemInactiveColor,
         tabBarStyle: {
-          //  backgroundColor: "#efe" ,
-          backgroundColor: globalColors.primary50,
+          backgroundColor: backgroundHeaderColor,
         },
+        headerRight: () => <LogoutComponent onLogout={resetProdutor} />,
       }}
     >
       <BottomTabs.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={HomeWrapped}
         options={{
           title: "Página Inicial",
-          headerStyle: {
-            //backgroundColor: "#376d5d",
-            backgroundColor: globalColors.primary800,
-          },
-          headerTitleStyle: {
-            color: "#fff",
-          },
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              iconName="home"
-              size={24}
-              color={focused ? itemActiveColor : itemInactiveColor}
-            />
-          ),
-          headerRight: () => <LogoutComponent onLogout={resetProdutor} />,
+          tabBarIcon: ({ focused }) => createIcon(focused, "home"),
         }}
       />
+
       <BottomTabs.Screen
         name="ProdutorScreen"
         component={ProdutorScreen}
         options={{
-          title: "Gerenciar Produtores",
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              iconName="person"
-              size={24}
-              color={focused ? itemActiveColor : itemInactiveColor}
-            />
-          ),
-          headerTitleStyle: {},
+          title: "Produtores",
+          tabBarIcon: ({ focused }) => createIcon(focused, "person"),
         }}
       />
+
+      <BottomTabs.Screen
+        name="PropriedadeScreen"
+        component={ProdutorScreen}
+        options={{
+          title: "Propriedades",
+          tabBarIcon: ({ focused }) => createIcon(focused, "building"),
+        }}
+      />
+
       <BottomTabs.Screen
         name="PerfilScreen"
-        component={PerfilScreen}
+        component={PerfilWrapped}
         options={{
           title: "Perfil",
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              iconName="document-text"
-              size={24}
-              color={focused ? itemActiveColor : itemInactiveColor}
-            />
-          ),
+          tabBarIcon: ({ focused }) => createIcon(focused, "document-text"),
         }}
       />
       <BottomTabs.Screen
         name="RelatorioScreen"
-        component={RelatorioScreen}
+        component={RelatorioWrapped}
         options={{
           title: "Relatório",
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              iconName="pencil-square-o"
-              size={24}
-              color={focused ? itemActiveColor : itemInactiveColor}
-            />
-          ),
+          tabBarIcon: ({ focused }) => createIcon(focused, "pencil-square-o"),
         }}
       />
     </BottomTabs.Navigator>
   );
 }
+
+const createIcon = (focused: boolean, iconName: string) => (
+  <Icon
+    iconName={iconName}
+    size={24}
+    color={focused ? itemActiveColor : itemInactiveColor}
+  />
+);

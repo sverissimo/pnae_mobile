@@ -7,7 +7,7 @@ import { useCustomNavigation } from "../hooks/useCustomNavigation";
 export const PerfilScreen = () => {
   const { produtor } = useContext(ProdutorContext);
   const { navigation } = useCustomNavigation();
-  useLayoutEffect(() => {
+  /* useLayoutEffect(() => {
     if (!produtor) {
       navigation.setOptions({
         headerTitle: "Gerenciar produtores",
@@ -15,7 +15,7 @@ export const PerfilScreen = () => {
       navigation.navigate("ProdutorScreen", { title: "Gerenciar produtores" });
     }
   }, [navigation]);
-
+ */
   return (
     <View>
       <Text>PerfilScreen</Text>

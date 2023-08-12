@@ -1,10 +1,11 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { globalColors } from "../constants/themes";
 
 export function LogoutComponent({ onLogout: logoutHandler }: { onLogout: () => void }) {
   return (
     <Pressable onPress={logoutHandler} style={styles.container}>
-      <Ionicons name="exit-outline" size={24} color="white" />
+      <Ionicons name="exit-outline" size={24} color={globalColors.text} />
     </Pressable>
   );
 }

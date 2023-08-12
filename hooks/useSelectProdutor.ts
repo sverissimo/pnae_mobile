@@ -9,8 +9,11 @@ export const useSelectProdutor = () => {
     setState((state) => ({ ...state, [name]: value }));
   };
 
-  const getProdutor = () => {
-    setProdutor(state);
+  const getProdutor = (cpf: string) => {
+    setProdutor({
+      produtorName: "Evandro de Albuquerque Resende Jr.",
+      cpf,
+    });
   };
 
   const resetProdutor = () => {

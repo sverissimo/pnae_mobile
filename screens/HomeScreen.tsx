@@ -1,44 +1,35 @@
 // src/screens/HomeScreen/HomeScreen.tsx
 import { View, StyleSheet } from "react-native";
 import { Card } from "../components/HomeCard";
-import { useContext } from "react";
-import { ProdutorContext } from "../contexts/ProdutorContext";
 import { useCustomNavigation } from "../hooks/useCustomNavigation";
 import { RootStackParamList } from "../navigation/types";
-import { globalColors } from "../constants/colorsPallete";
 
 export const HomeScreen: React.FC = (props: any) => {
   const { navigation } = useCustomNavigation();
-  const { produtor } = useContext(ProdutorContext);
 
   const pressHandler = (screenName: keyof RootStackParamList) => {
-    if (!produtor) {
-      navigation.navigate("ProdutorSelectScreen");
-    } else {
-      navigation.navigate(screenName);
-    }
+    navigation.navigate(screenName);
   };
-  HomeScreen;
 
   return (
     <View style={styles.container}>
       <Card
-        title="Produtor"
+        title="Gerenciar Produtores"
         iconName="person"
         onPress={() => pressHandler("ProdutorScreen")}
       />
       <Card
-        title="Propriedade"
+        title="Gerenciar Propriedades"
         iconName="building"
-        onPress={() => pressHandler("ProdutorSelectScreen")}
+        onPress={() => pressHandler("ProdutorScreen")}
       />
       <Card
-        title="Perfil"
+        title="Cadastrar Perfil"
         iconName="document-text"
         onPress={() => pressHandler("PerfilScreen")}
       />
       <Card
-        title="Relatório"
+        title="Cadastrar Relatório"
         iconName="pencil-square-o"
         onPress={() => pressHandler("RelatorioScreen")}
       />
@@ -51,11 +42,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    //backgroundColor: "#faffff",
-    //backgroundColor: "#6a7f6f",
-    backgroundColor: globalColors.primary700,
     justifyContent: "center",
-    alignItems: "center",
-    paddingTop: "25%",
+    top: "30%",
+    //backgroundColor: globalColors.background,
   },
 });
