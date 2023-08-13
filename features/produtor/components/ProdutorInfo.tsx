@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable } from "react-native";
 import { Chip } from "react-native-paper";
-import { globalColors } from "../constants/themes";
+import { globalColors } from "../../../constants/themes";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 
 const { grayscale } = globalColors;
@@ -13,6 +13,7 @@ export const ProdutorInfo = () => {
       resetProdutor();
     }
   };
+
   const chipProps = produtor
     ? {
         textStyle: { color: grayscale[700] },
@@ -20,13 +21,13 @@ export const ProdutorInfo = () => {
         onClose: handlePress,
       }
     : { textStyle: { color: grayscale[600] } };
-
+  const a = produtor?.tp_sexo === "F" ? "a" : "";
   return (
     <Pressable style={styles.container}>
       <Chip style={styles.chip} {...chipProps}>
         {!produtor
           ? "Nenhum produtor selecionado"
-          : `Produtor - ${produtor.produtorName}`}
+          : `Produtor${a} - ${produtor.nm_pessoa}`}
       </Chip>
     </Pressable>
   );

@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
-import { ProdutorInfo } from "./ProdutorInfo";
+import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
 import { HomeScreen } from "../screens/HomeScreen";
 import { PerfilScreen } from "../screens/PerfilScreen";
 import { RelatorioScreen } from "../screens/RelatorioScreen";

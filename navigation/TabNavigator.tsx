@@ -1,9 +1,9 @@
 import { HomeScreen } from "../screens/HomeScreen";
 import { RelatorioScreen } from "../screens/RelatorioScreen";
-import { ProdutorScreen } from "../screens/ProdutorScreen";
+import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
 import { PerfilScreen } from "../screens/PerfilScreen";
 import { useAuth } from "../hooks/useAuth";
-import { useSelectProdutor } from "../hooks/useSelectProdutor";
+import { useSelectProdutor } from "../features/produtor/hooks/useSelectProdutor";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RootStackParamList } from "./types";
 import { LogoutComponent } from "../components/Logout";

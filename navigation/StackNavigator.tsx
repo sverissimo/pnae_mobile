@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../hooks/useAuth";
 import { RootStackParamList } from "./types";
 import { TabNavigator } from "./TabNavigator";
-import { ProdutorScreen } from "../screens/ProdutorScreen";
+import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { globalColors } from "../constants/themes";
-import { Icon } from "./Icon";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { grayscale } from "../constants/colorsPallete";
+import { Icon } from "../../../components/Icon";
+import { globalColors } from "../../../constants/themes";
+import { getProdutorData } from "../../../api/produtorAPI";
 
 export function ProdutorSearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { getProdutor } = useSelectProdutor();
+  const { setProdutor } = useSelectProdutor();
 
   const onChangeSearch = (value: string) => {
     setSearchQuery(value);
   };
 
-  const handleSubmit = () => {
-    getProdutor(searchQuery);
+  const handleSubmit = async () => {
+    const data = await getProdutorData(searchQuery);
+    setProdutor(data);
   };
 
   return (
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     marginRight: "2%",
     //backgroundColor: globalColors.primary[50],
-    backgroundColor: grayscale[50],
+    backgroundColor: globalColors.grayscale[50],
   },
   chip: {
     backgroundColor: globalColors.grayscale[200],
