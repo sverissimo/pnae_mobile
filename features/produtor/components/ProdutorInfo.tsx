@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     width: "90%",
-    marginVertical: "6%",
+    marginTop: "6%",
+    marginBottom: "4%",
   },
   chip: {
     backgroundColor: grayscale[100],

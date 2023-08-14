@@ -1,32 +1,24 @@
-import { HomeScreen } from "../screens/HomeScreen";
-import { RelatorioScreen } from "../screens/RelatorioScreen";
-import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
-import { PerfilScreen } from "../screens/PerfilScreen";
-import { useAuth } from "../hooks/useAuth";
-import { useSelectProdutor } from "../features/produtor/hooks/useSelectProdutor";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useAuth } from "../hooks/useAuth";
+import { HomeScreen } from "../screens/HomeScreen";
+import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
+import { PropriedadeScreen } from "../features/propriedade/screens/PropriedadeScreen";
+import { PerfilScreen } from "../features/perfil/screens/PerfilScreen";
+import { RelatorioScreen } from "../features/relatorio/screens/RelatorioScreen";
 import { RootStackParamList } from "./types";
 import { LogoutComponent } from "../components/Logout";
 import { Icon } from "../components/Icon";
 import { globalColors } from "../constants/themes";
-import {
-  HomeWrapped,
-  PerfilWrapped,
-  ProdutorSelectWraper,
-  RelatorioWrapped,
-} from "../components/ProdutorSelectWraper";
 
 const { primary, grayscale } = globalColors;
-const BottomTabs = createBottomTabNavigator<RootStackParamList>();
-
-//const itemInactiveColor = grayscale[500];
 const itemInactiveColor = grayscale[900];
 const itemActiveColor = primary[50] || primary[100];
 const backgroundHeaderColor = primary[400];
 
+const BottomTabs = createBottomTabNavigator<RootStackParamList>();
+
 export function TabNavigator() {
   const { logoutHandler } = useAuth();
-  const { resetProdutor } = useSelectProdutor();
 
   return (
     <BottomTabs.Navigator
@@ -40,12 +32,12 @@ export function TabNavigator() {
         tabBarStyle: {
           backgroundColor: backgroundHeaderColor,
         },
-        headerRight: () => <LogoutComponent onLogout={resetProdutor} />,
+        headerRight: () => <LogoutComponent onLogout={logoutHandler} />,
       }}
     >
       <BottomTabs.Screen
         name="HomeScreen"
-        component={HomeWrapped}
+        component={HomeScreen}
         options={{
           title: "Página Inicial",
           tabBarIcon: ({ focused }) => createIcon(focused, "home"),
@@ -63,7 +55,7 @@ export function TabNavigator() {
 
       <BottomTabs.Screen
         name="PropriedadeScreen"
-        component={ProdutorScreen}
+        component={PropriedadeScreen}
         options={{
           title: "Propriedades",
           tabBarIcon: ({ focused }) => createIcon(focused, "building"),
@@ -72,7 +64,7 @@ export function TabNavigator() {
 
       <BottomTabs.Screen
         name="PerfilScreen"
-        component={PerfilWrapped}
+        component={PerfilScreen}
         options={{
           title: "Perfil",
           tabBarIcon: ({ focused }) => createIcon(focused, "document-text"),
@@ -80,7 +72,7 @@ export function TabNavigator() {
       />
       <BottomTabs.Screen
         name="RelatorioScreen"
-        component={RelatorioWrapped}
+        component={RelatorioScreen}
         options={{
           title: "Relatório",
           tabBarIcon: ({ focused }) => createIcon(focused, "pencil-square-o"),

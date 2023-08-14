@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { globalColors } from "../constants/themes";
 
 type RowProps = {
   data?: any;
@@ -21,7 +22,7 @@ export const ListItem: React.FC<RowProps> = ({ data, isHeader, columns }) => {
     </View>
   );
 };
-
+const bgColor = globalColors.grayscale[200];
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -30,22 +31,30 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomWidth: 1,
     paddingVertical: 5,
+    backgroundColor: bgColor,
   },
   headerText: {
-    fontWeight: "bold",
-    textAlign: "center",
     flex: 1,
+    fontSize: 13,
+    textAlign: "center",
+    fontFamily: "Roboto",
+    //color: "white",
   },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    borderColor: bgColor,
+    borderWidth: 0.3,
   },
   itemText: {
     textAlign: "center",
     flex: 1,
+    fontSize: 12,
+    borderColor: bgColor,
+    borderWidth: 0.3,
+    backgroundColor: "white",
+    paddingVertical: "1%",
   },
 });
 

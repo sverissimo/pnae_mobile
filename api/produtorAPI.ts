@@ -1,8 +1,9 @@
 import { env } from "../config";
 
 export const getProdutorData = async (id: string) => {
-  id = id || "06627559609"; // dev/test purposes only
+  //id = id || "06627559609"; // dev/test purposes only
   //id = id || "15609048605"; // dev/test purposes only
+  id = id || "04548773665"; // dev/test purposes only
   const response = await fetch(`${env.BASE_URL}/produtor/${id}`);
 
   const data = await response.json();

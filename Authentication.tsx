@@ -4,7 +4,7 @@ import { useAuth } from "./hooks/useAuth";
 
 export default function Authentication() {
   const { user } = useAuth();
-  if (false) {
+  if (!user) {
     return <LoginScreen />;
   }
 

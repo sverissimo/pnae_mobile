@@ -8,7 +8,7 @@ const PerfilList = () => {
   if (!produtor?.perfis) return null;
 
   const perfilData = produtor.perfis.map((p: any) => ({
-    id: p.id,
+    //id: p.id,
     tipo_perfil: p.tipo_perfil,
     nome_tecnico: p.usuario.nome_usuario,
     data_preenchimento: formatDate(p.data_preenchimento),
@@ -19,7 +19,7 @@ const PerfilList = () => {
 
   return (
     <List
-      title="Perfis cadastrados:"
+      title="Perfis cadastrados"
       data={perfilData}
       columns={PERFIL_COLUMNS}
     />

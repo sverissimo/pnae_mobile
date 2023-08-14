@@ -4,19 +4,16 @@ import { formatDate } from "../../../utils/formatDate";
 import { List } from "../../../components/List";
 import { Relatorio } from "../types/Relatorio";
 import { RELATORIO_COLUMNS } from "../relatorioColumns";
+import { truncateString } from "../../../utils/truncateString";
 
-export const RelatoriosList = () => {
+export const RelatorioList = () => {
   const { produtor } = useSelectProdutor();
   if (!produtor?.relatorios) return null;
-  console.log(
-    "🚀 ~ file: RelatorioList.tsx:9 ~ RelatoriosList ~ produtor?.relatorios:",
-    produtor?.relatorios
-  );
 
   const relatorioData = produtor.relatorios.map((r: Relatorio) => ({
-    //id: r?.id,
+    id: r?.id,
     numeroRelatorio: r?.numeroRelatorio,
-    assunto: r?.assunto,
+    assunto: truncateString(r?.assunto),
     nome_tecnico: "TBE",
     createdAt: formatDate(r?.createdAt),
   }));
@@ -25,7 +22,7 @@ export const RelatoriosList = () => {
 
   return (
     <List
-      title="Relatorios cadastrados:"
+      title="Relatorios cadastrados"
       data={relatorioData}
       columns={RELATORIO_COLUMNS}
     />

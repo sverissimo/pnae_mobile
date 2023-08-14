@@ -1,24 +1,18 @@
 import { Text, View, StyleSheet } from "react-native";
-import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { ProdutorSearchBar } from "../components/ProdutorSearchBar";
-import { ProdutorInfo } from "../components/ProdutorInfo";
-import PerfilList from "../../perfil/components/PerfilList";
-import { RelatorioList } from "../../relatorio/components/RelatorioList";
 import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
 import { globalColors } from "../../../constants/themes";
-import { formatCPF } from "../../../utils/formatCPF";
+import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
+import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
+import React from "react";
+import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 
-export const ProdutorScreen = () => {
+export const PropriedadeScreen = () => {
   const { produtor } = useSelectProdutor();
-  const cpf = formatCPF(produtor?.nr_cpf_cnpj);
 
   return (
     <View style={styles.container}>
       {produtor ? <ProdutorInfo /> : <ProdutorSearchBar />}
-      {produtor && <Text>{`CPF - ${cpf}`} </Text>}
       <PropriedadesList />
-      <PerfilList />
-      <RelatorioList />
     </View>
   );
 };
