@@ -13,16 +13,6 @@ export const SelectDropdown = ({
   options,
   onSelect,
 }: SelectDropdownProps) => {
-  options = options || [
-    "Egypt",
-    "Canada",
-    "Australia",
-    "Ireland",
-    "Brazil",
-    "England",
-    "Dubai",
-  ];
-
   return (
     <FormFieldContainer label={label}>
       <ScrollView

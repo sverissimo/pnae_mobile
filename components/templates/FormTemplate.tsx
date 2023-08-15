@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { FormElement } from "../../@shared/types/FormElement";
 import { SelectDropdown } from "../organisms/SelectDropdown";
 import { RadioComponent } from "../organisms/RadioComponent";
+import { TextInputComponent } from "../organisms/TextInputComponent";
 
 type FormTemplateProps = {
   form: FormElement[];
@@ -31,6 +32,17 @@ export function FormTemplate({ form, data, onValueChange }: FormTemplateProps) {
                 key={item.field}
                 onValueChange={(value: any) => onValueChange(item.field, value)}
                 label={item.label}
+                value={data[item.field]}
+              />
+            );
+          case "input":
+            return (
+              <TextInputComponent
+                key={item.field}
+                label={item.label}
+                item={item}
+                onChangeText={(value: any) => onValueChange(item.field, value)}
+                //@ts-ignore
                 value={data[item.field]}
               />
             );

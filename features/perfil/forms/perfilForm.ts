@@ -1,12 +1,6 @@
-type PerfilForm = {
-  field: string;
-  label: string;
-  type: "select" | "radio";
-  options?: string[] | number[];
-  value?: string | boolean;
-};
+import { FormElement } from "../../../@shared/types/FormElement";
 
-export const perfilForm: PerfilForm[] = [
+export const perfilForm: FormElement[] = [
   {
     field: "tipo_perfil",
     label: "Tipo de Perfil",
@@ -111,8 +105,7 @@ export const perfilForm: PerfilForm[] = [
     // ## TODO - CREATE input field
     field: "pessoas_processamento_alimentos",
     label: "Pessoas no Processamento de Alimentos",
-    type: "select",
-    options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    type: "input",
   },
   {
     field: "tipo_estabelecimento",
@@ -171,15 +164,13 @@ export const perfilForm: PerfilForm[] = [
   {
     field: "valor_total_obtido_pnae",
     label: "Valor Total Obtido PNAE",
-    type: "select",
-    options: ["OPÇÃO1", "OPÇÃO2"],
+    type: "input",
   },
   // ## TODO - CREATE input field
   {
     field: "valor_total_obtido_outros",
     label: "Valor Total Obtido de Outros",
-    type: "select",
-    options: ["OPÇÃO1", "OPÇÃO2"],
+    type: "input",
   },
   {
     field: "local_comercializacao",
@@ -203,8 +194,7 @@ export const perfilForm: PerfilForm[] = [
   {
     field: "informacoes_adicionais",
     label: "Informações Adicionais",
-    type: "select",
-    options: ["OPÇÃO1", "OPÇÃO2"],
+    type: "input",
   },
 
   {
