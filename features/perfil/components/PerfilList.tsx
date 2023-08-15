@@ -1,14 +1,21 @@
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { formatDate } from "../../../utils/formatDate";
-import { List } from "../../../components/List";
+import { formatDate } from "../../../@shared/utils/formatDate";
+import { List } from "../../../components/organisms/List";
 import { PERFIL_COLUMNS } from "../forms/perfilColumns";
+import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
 
 const PerfilList = () => {
   const { produtor } = useSelectProdutor();
+  const { navigation } = useCustomNavigation();
   if (!produtor?.perfis) return null;
+  const handlePress = (rowData: any) => {
+    const perfil = produtor.perfis!.find((p) => p.id === rowData.id);
+
+    navigation.navigate("EditPerfilScreen", { perfil });
+  };
 
   const perfilData = produtor.perfis.map((p: any) => ({
-    //id: p.id,
+    id: p.id,
     tipo_perfil: p.tipo_perfil,
     nome_tecnico: p.usuario.nome_usuario,
     data_preenchimento: formatDate(p.data_preenchimento),
@@ -18,11 +25,7 @@ const PerfilList = () => {
   if (!produtor?.perfis) return null;
 
   return (
-    <List
-      title="Perfis cadastrados"
-      data={perfilData}
-      columns={PERFIL_COLUMNS}
-    />
+    <List data={perfilData} columns={PERFIL_COLUMNS} onPress={handlePress} />
   );
 };
 

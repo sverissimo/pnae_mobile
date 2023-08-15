@@ -1,10 +1,9 @@
-import { Text, View, StyleSheet } from "react-native";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { formatDate } from "../../../utils/formatDate";
-import { List } from "../../../components/List";
+import { formatDate } from "../../../@shared/utils/formatDate";
+import { List } from "../../../components/organisms/List";
 import { Relatorio } from "../types/Relatorio";
 import { RELATORIO_COLUMNS } from "../relatorioColumns";
-import { truncateString } from "../../../utils/truncateString";
+import { truncateString } from "../../../@shared/utils/truncateString";
 
 export const RelatorioList = () => {
   const { produtor } = useSelectProdutor();
@@ -18,13 +17,9 @@ export const RelatorioList = () => {
     createdAt: formatDate(r?.createdAt),
   }));
 
-  //return <Text>Hi</Text>;
-
   return (
-    <List
-      title="Relatorios cadastrados"
-      data={relatorioData}
-      columns={RELATORIO_COLUMNS}
-    />
+    <>
+      <List data={relatorioData} columns={RELATORIO_COLUMNS} />
+    </>
   );
 };

@@ -4,5 +4,8 @@ export type RootStackParamList = {
   RelatorioScreen: undefined;
   PerfilScreen: undefined;
   PropriedadeScreen: undefined;
+  CreateRelatorioScreen: undefined;
+  CreatePerfilScreen: undefined;
+  EditPerfilScreen: { perfil: any };
   tabs: undefined;
 };

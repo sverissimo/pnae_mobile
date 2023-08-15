@@ -17,7 +17,9 @@ export const Icon = (props: IconProps) => {
   return iconName === "person" ||
     iconName === "document-text" ||
     iconName === "home" ||
-    iconName === "send" ? (
+    iconName === "send" ||
+    iconName === "chevron-up" ||
+    iconName === "chevron-down" ? (
     <Ionicons
       name={iconName}
       size={defaultSize}

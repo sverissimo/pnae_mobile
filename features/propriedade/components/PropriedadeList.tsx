@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { formatDate } from "../../../utils/formatDate";
-import { List } from "../../../components/List";
+import { formatDate } from "../../../@shared/utils/formatDate";
+import { List } from "../../../components/organisms/List";
 import { Propriedade } from "../types/Propriedade";
 import { PROPRIEDADE_COLUMNS } from "../propriedadeColumns";
-import { formatCoordinates } from "../../../utils/formatCoordinates";
+import { formatCoordinates } from "../../../@shared/utils/formatCoordinates";
 
 export const PropriedadesList = () => {
   const { produtor } = useSelectProdutor();

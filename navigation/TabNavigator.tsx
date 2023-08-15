@@ -6,8 +6,8 @@ import { PropriedadeScreen } from "../features/propriedade/screens/PropriedadeSc
 import { PerfilScreen } from "../features/perfil/screens/PerfilScreen";
 import { RelatorioScreen } from "../features/relatorio/screens/RelatorioScreen";
 import { RootStackParamList } from "./types";
-import { LogoutComponent } from "../components/Logout";
-import { Icon } from "../components/Icon";
+import { LogoutComponent } from "../components/molecules/Logout";
+import { Icon } from "../components/atoms/Icon";
 import { globalColors } from "../constants/themes";
 
 const { primary, grayscale } = globalColors;
@@ -74,7 +74,7 @@ export function TabNavigator() {
         name="RelatorioScreen"
         component={RelatorioScreen}
         options={{
-          title: "Relatório",
+          title: "Relatórios",
           tabBarIcon: ({ focused }) => createIcon(focused, "pencil-square-o"),
         }}
       />

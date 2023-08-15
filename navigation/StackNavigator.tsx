@@ -3,6 +3,9 @@ import { useAuth } from "../hooks/useAuth";
 import { RootStackParamList } from "./types";
 import { TabNavigator } from "./TabNavigator";
 import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
+import { CreateRelatorioScreen } from "../features/relatorio/screens/CreateRelatorioScreen";
+import { CreatePerfilScreen } from "../features/perfil/screens/CreatePerfilScreen";
+import { EditPerfilScreen } from "../features/perfil/screens/EditPerfilScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -28,9 +31,27 @@ export function StackNavigator() {
         options={{
           title: "Selecionar Produtor",
         }}
-        /* options={{
-          title: "Selecione um produtor",
-        }} */
+      />
+      <Stack.Screen
+        name="CreateRelatorioScreen"
+        component={CreateRelatorioScreen}
+        options={{
+          title: "Criar Novo Relatório",
+        }}
+      />
+      <Stack.Screen
+        name="CreatePerfilScreen"
+        component={CreatePerfilScreen}
+        options={{
+          title: "Criar Novo Perfil",
+        }}
+      />
+      <Stack.Screen
+        name="EditPerfilScreen"
+        component={EditPerfilScreen}
+        options={{
+          title: "Editar Perfil",
+        }}
       />
     </Stack.Navigator>
   );

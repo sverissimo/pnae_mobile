@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { Icon } from "../../../components/Icon";
+import { Icon } from "../../../components/atoms/Icon";
 import { globalColors } from "../../../constants/themes";
 import { getProdutorData } from "../../../api/produtorAPI";
 
@@ -17,6 +17,10 @@ export function ProdutorSearchBar() {
 
   const handleSubmit = async () => {
     const data = await getProdutorData(searchQuery);
+    console.log(
+      "🚀 ~ file: ProdutorSearchBar.tsx:21 ~ handleSubmit ~ data:",
+      data.perfis
+    );
     setProdutor(data);
   };
 

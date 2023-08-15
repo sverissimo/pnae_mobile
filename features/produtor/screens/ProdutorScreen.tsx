@@ -6,7 +6,7 @@ import PerfilList from "../../perfil/components/PerfilList";
 import { RelatorioList } from "../../relatorio/components/RelatorioList";
 import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
 import { globalColors } from "../../../constants/themes";
-import { formatCPF } from "../../../utils/formatCPF";
+import { formatCPF } from "../../../@shared/utils/formatCPF";
 
 export const ProdutorScreen = () => {
   const { produtor } = useSelectProdutor();

@@ -1,20 +1,27 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { globalColors } from "../constants/themes";
+import { globalColors } from "../../constants/themes";
 
 type RowProps = {
   data?: any;
   isHeader?: boolean;
   columns?: any;
+  onPress?: any;
 };
 
-export const ListItem: React.FC<RowProps> = ({ data, isHeader, columns }) => {
+export const ListItem: React.FC<RowProps> = ({
+  data,
+  isHeader,
+  columns,
+  onPress,
+}) => {
   return (
     <View style={isHeader ? styles.headerContainer : styles.itemContainer}>
       {columns.map((column: any) => (
         <Text
           key={column.key}
           style={isHeader ? styles.headerText : styles.itemText}
+          onPress={column.action ? () => onPress(data) : undefined}
         >
           {isHeader ? column.label : data?.[column.key]}
         </Text>

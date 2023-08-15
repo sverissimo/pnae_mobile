@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { Card } from "../components/HomeCard";
+import { Card } from "../components/organisms/HomeCard";
 import { useCustomNavigation } from "../hooks/useCustomNavigation";
 import { RootStackParamList } from "../navigation/types";
 import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
