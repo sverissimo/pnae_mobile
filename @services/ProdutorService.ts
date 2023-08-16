@@ -1,7 +1,7 @@
 import humps from "humps";
 
 import { RelatorioDB } from "../@infrastructure/database/RelatorioDB";
-import { ProdutorAPI } from "../@infrastructure/api/ProdutorAPI_renamed";
+import { ProdutorAPI } from "../@infrastructure/api/ProdutorAPI";
 
 export const ProdutorService = {
   getProdutor: async (CPFProdutor: string) => {

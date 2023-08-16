@@ -5,15 +5,18 @@ import { Relatorio } from "../../../types/Relatorio";
 import { RELATORIO_COLUMNS } from "../relatorioColumns";
 import { truncateString } from "../../../@shared/utils/truncateString";
 
-export const RelatorioList = () => {
-  const { produtor } = useSelectProdutor();
-  if (!produtor?.relatorios) return null;
+interface RelatoriosListProps {
+  relatorios?: Relatorio[];
+}
 
-  const relatorioData = produtor.relatorios.map((r: Relatorio) => ({
+export const RelatorioList = ({ relatorios }: RelatoriosListProps) => {
+  if (!relatorios) return null;
+
+  const relatorioData = relatorios.map((r: Relatorio) => ({
     id: r?.id,
     numeroRelatorio: r?.numeroRelatorio,
     assunto: truncateString(r?.assunto),
-    nome_tecnico: "TBE",
+    nome_tecnico: r?.nome_tecnico,
     createdAt: formatDate(r?.createdAt),
   }));
 

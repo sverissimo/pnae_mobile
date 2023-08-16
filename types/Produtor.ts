@@ -3,6 +3,8 @@ export type Produtor = {
   nm_pessoa?: string;
   nr_cpf_cnpj?: string;
   tp_sexo?: string;
+  dt_nascimento?: string;
+  sn_ativo?: string;
   dap?: string;
   caf?: string;
   propriedades?: any[];

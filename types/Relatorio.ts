@@ -4,6 +4,7 @@ export type Relatorio = {
   id?: number;
   produtorId?: string;
   tecnicoId?: string;
+  nome_tecnico?: string;
   numeroRelatorio?: number;
   assunto?: string;
   orientacao?: string;

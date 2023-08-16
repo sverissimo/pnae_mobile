@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ProdutorContext } from "../../../contexts/ProdutorContext";
 import { Produtor } from "_types/Produtor";
-import { ProdutorService } from "@services/ProdutorService_rn";
+import { ProdutorService } from "@services/ProdutorService";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =
@@ -23,6 +23,8 @@ export const useSelectProdutor = () => {
       nm_pessoa: produtorDTO.nm_pessoa,
       nr_cpf_cnpj: produtorDTO.nr_cpf_cnpj,
       tp_sexo: produtorDTO.tp_sexo,
+      dt_nascimento: produtorDTO.dt_nascimento,
+      sn_ativo: produtorDTO.sn_ativo ? "Ativo" : "Inativo",
       dap: produtorDTO.dap,
       caf: produtorDTO.caf,
       perfis: produtorDTO.perfis,

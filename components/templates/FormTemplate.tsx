@@ -1,16 +1,23 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { FormElement } from "../../@shared/types/FormElement";
 import { SelectDropdown } from "../organisms/SelectDropdown";
 import { RadioComponent } from "../organisms/RadioComponent";
 import { TextInputComponent } from "../organisms/TextInputComponent";
+import { ButtonInputComponent } from "components/organisms/ButtonInputComponent";
 
 type FormTemplateProps = {
   form: FormElement[];
-  onValueChange: any;
   data: any;
+  onValueChange: any;
+  onPressButton?: any;
 };
-export function FormTemplate({ form, data, onValueChange }: FormTemplateProps) {
+export function FormTemplate({
+  form,
+  data,
+  onValueChange,
+  onPressButton,
+}: FormTemplateProps) {
   return (
     <View>
       {form.map((item) => {
@@ -45,6 +52,16 @@ export function FormTemplate({ form, data, onValueChange }: FormTemplateProps) {
                 //@ts-ignore
                 value={data[item.field]}
                 keyboardType={item.keyboardType}
+              />
+            );
+          case "button":
+            return (
+              <ButtonInputComponent
+                key={item.field}
+                label={item.label}
+                item={item}
+                buttonLabel={item.buttonLabel}
+                onPress={(field: string) => onPressButton(field)}
               />
             );
           default:

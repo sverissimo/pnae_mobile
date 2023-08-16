@@ -4,9 +4,18 @@ import { FormTemplate } from "../../../components/templates/FormTemplate";
 import { Button } from "react-native-paper";
 import { relatorioForm } from "../relatorioForm";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
+import { useCustomNavigation } from "hooks/useCustomNavigation";
 
 export const CreateRelatorioScreen = () => {
   const { relatorio, handleChange, setRelatorio } = useManageRelatorio();
+  const { navigation } = useCustomNavigation();
+  const handlePressButton = (field: string) => {
+    console.log(
+      "🚀 ~ file: CreateRelatorioScreen.tsx:12 ~ onPressButton ~ field:",
+      field
+    );
+    console.log("HI IM ELFO");
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -15,6 +24,7 @@ export const CreateRelatorioScreen = () => {
         form={relatorioForm}
         data={relatorio}
         onValueChange={handleChange}
+        onPressButton={handlePressButton}
       />
       <Button mode="contained" style={styles.button} onPress={setRelatorio}>
         Salvar

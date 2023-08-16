@@ -20,11 +20,16 @@ export const relatorioForm: FormElement[] = [
   {
     field: "pictureURI",
     label: "Foto",
-    type: "input",
+    type: "button",
+    buttonLabel: "Registrar foto",
+    icon: "camera",
   },
   {
     field: "assinaturaURI",
     label: "Assinatura",
-    type: "input",
+    type: "button",
+    buttonLabel: "Adicionar Assinatura",
+    icon: "pen",
+    //icon: "signature",
   },
 ];

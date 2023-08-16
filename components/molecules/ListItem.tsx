@@ -29,7 +29,8 @@ export const ListItem: React.FC<RowProps> = ({
     </View>
   );
 };
-const bgColor = globalColors.grayscale[200];
+// const bgColor = globalColors.grayscale[200];
+const bgColor = globalColors.primary[100];
 const styles = StyleSheet.create({
   container: {
     flex: 1,

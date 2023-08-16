@@ -18,9 +18,9 @@ export const RelatorioService = {
     return result;
   },
 
-  getRelatorios: async (produtorId: any) => {
-    const relatorios = await RelatorioDB.createRelatorio(produtorId);
-    const data = humps.camelizeKeys(relatorios);
+  getRelatorios: async (produtorId: string): Promise<Relatorio[]> => {
+    const relatorios = await RelatorioDB.getRelatorios(produtorId);
+    const data = humps.camelizeKeys(relatorios) as Relatorio[];
     return data;
   },
 
