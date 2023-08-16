@@ -1,6 +1,9 @@
 import { useContext, useState } from "react";
 import { ProdutorContext } from "../../../contexts/ProdutorContext";
-import { Produtor } from "../types/Produtor";
+import { Produtor } from "../../../types/Produtor";
+import { getProdutorData } from "../../../@infrastructure/api/produtorAPI";
+import { getRelatoriosFromDB } from "../../../@infrastructure/database/dao/relatorioDAO";
+import { getProdutor } from "../../../@services/produtorService";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =
@@ -9,6 +12,12 @@ export const useSelectProdutor = () => {
 
   const inputHandler = (name: string, value: string) => {
     setState((state) => ({ ...state, [name]: value }));
+  };
+
+  const fetchProdutor = async (CPFProdutor: string) => {
+    const produtor = await getProdutor(CPFProdutor);
+
+    setProdutor(produtor);
   };
 
   const setProdutor = async (produtorDTO: any) => {
@@ -34,5 +43,6 @@ export const useSelectProdutor = () => {
     inputHandler,
     setProdutor,
     resetProdutor,
+    fetchProdutor,
   };
 };

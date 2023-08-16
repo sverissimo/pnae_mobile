@@ -1,7 +1,7 @@
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { formatDate } from "../../../@shared/utils/formatDate";
 import { List } from "../../../components/organisms/List";
-import { Relatorio } from "../types/Relatorio";
+import { Relatorio } from "../../../types/Relatorio";
 import { RELATORIO_COLUMNS } from "../relatorioColumns";
 import { truncateString } from "../../../@shared/utils/truncateString";
 

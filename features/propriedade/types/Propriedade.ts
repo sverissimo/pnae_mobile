@@ -1,4 +1,4 @@
-import { Produtor } from "../../produtor/types/Produtor";
+import { Produtor } from "../../../types/Produtor";
 
 export type Propriedade = {
   id_pl_propriedade?: number;

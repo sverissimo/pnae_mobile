@@ -11,7 +11,7 @@ export const PropriedadesList = () => {
   if (!produtor?.propriedades) return null;
 
   const propriedadeData = produtor.propriedades.map((p: Propriedade) => ({
-    id_pl_propriedade: p?.id_pl_propriedade,
+    id: p?.id_pl_propriedade,
     nome_propriedade: p?.nome_propriedade,
     area_total: p?.area_total,
     atividade: p?.atividade || p?.atividade_principal,
@@ -21,11 +21,5 @@ export const PropriedadesList = () => {
     //createdAt: formatDate(r?.createdAt),
   }));
 
-  return (
-    <List
-      title="Propriedades cadastradas"
-      data={propriedadeData}
-      columns={PROPRIEDADE_COLUMNS}
-    />
-  );
+  return <List data={propriedadeData} columns={PROPRIEDADE_COLUMNS} />;
 };

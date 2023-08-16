@@ -1,28 +1,64 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import React, { useState } from "react";
+import { createRelatorio } from "../../../@services/relatorioService";
+import { ListTitle } from "../../../components/atoms/ListTitle";
+import { FormTemplate } from "../../../components/templates/FormTemplate";
+import { Button } from "react-native-paper";
+import { relatorioForm } from "../relatorioForm";
+import { useAuth } from "../../../hooks/useAuth";
+import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 
-export const CreateRelatorioScreen = ({ onSubmit }: any) => {
-  const [numeroRelatorio, setNumeroRelatorio] = useState("");
-  const [assunto, setAssunto] = useState("");
-  const [orientacao, setOrientacao] = useState("");
-  const [produtorId, setProdutorId] = useState("");
-  const [tecnicoId, setTecnicoId] = useState("");
+export const CreateRelatorioScreen = () => {
+  const [state, setState] = useState<any>({});
+  const { user } = useAuth();
+  const { produtor } = useSelectProdutor();
+  const handleChange = (name: string, value: any) => {
+    setState((state: any) => ({ ...state, [name]: value }));
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const relatorio = {
-      numeroRelatorio: parseInt(numeroRelatorio),
-      assunto,
-      orientacao,
-      produtorId: parseInt(produtorId),
-      tecnicoId: parseInt(tecnicoId),
+      ...state,
+      tecnicoId: user?.digito_matricula,
+      produtorId: produtor?.id_pessoa_demeter,
     };
-    //onSubmit(relatorio);
-    console.log(relatorio);
+    const result = createRelatorio(relatorio);
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
+    <ScrollView style={styles.container}>
+      <ListTitle title="Preencha as informações abaixo" />
+      <FormTemplate
+        form={relatorioForm}
+        data={state}
+        onValueChange={handleChange}
+      />
+      <Button mode="contained" style={styles.button} onPress={handleSubmit}>
+        Salvar
+      </Button>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+  },
+  button: {
+    marginVertical: "6%",
+  },
+});
+
+/*
+<>
+<TextInput
         placeholder="Número do Relatório"
         value={numeroRelatorio}
         onChangeText={setNumeroRelatorio}
@@ -56,31 +92,7 @@ export const CreateRelatorioScreen = ({ onSubmit }: any) => {
         style={styles.input}
       />
       <Pressable onPress={handleSubmit} style={styles.button}>
+
         <Text style={styles.buttonText}>Submit</Text>
       </Pressable>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});
+</> */

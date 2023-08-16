@@ -4,24 +4,13 @@ import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { Icon } from "../../../components/atoms/Icon";
 import { globalColors } from "../../../constants/themes";
-import { getProdutorData } from "../../../api/produtorAPI";
 
 export function ProdutorSearchBar() {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const { setProdutor } = useSelectProdutor();
+  const { fetchProdutor } = useSelectProdutor();
+  const [CPFProdutor, setCPFProdutor] = useState("");
 
   const onChangeSearch = (value: string) => {
-    setSearchQuery(value);
-  };
-
-  const handleSubmit = async () => {
-    const data = await getProdutorData(searchQuery);
-    console.log(
-      "🚀 ~ file: ProdutorSearchBar.tsx:21 ~ handleSubmit ~ data:",
-      data.perfis
-    );
-    setProdutor(data);
+    setCPFProdutor(value);
   };
 
   return (
@@ -29,10 +18,13 @@ export function ProdutorSearchBar() {
       <Searchbar
         placeholder="Digite o CPF do Produtor"
         onChangeText={onChangeSearch}
-        value={searchQuery}
+        value={CPFProdutor}
         style={styles.input}
       />
-      <Pressable style={styles.button} onPress={handleSubmit}>
+      <Pressable
+        style={styles.button}
+        onPress={() => fetchProdutor(CPFProdutor)}
+      >
         <Icon iconName="send" size={20} color="white" />
       </Pressable>
     </View>

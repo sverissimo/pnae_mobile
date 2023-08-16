@@ -19,11 +19,6 @@ export const CreatePerfilScreen: React.FC = () => {
   console.log("🚀 ~ file: CreatePerfilScreen.tsx:23 ~ state:", state);
 
   const handleChange = (name: string, value: any) => {
-    console.log(
-      "🚀 ~ file: CreatePerfilScreen.tsx:22 ~ handleChange ~ name: string, value: any:",
-      name,
-      value
-    );
     setState((state: any) => ({ ...state, [name]: value }));
   };
 

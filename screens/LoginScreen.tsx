@@ -1,14 +1,24 @@
-import { View, Text, TextInput, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginScreen = () => {
-  const { user, inputHandler, loginHandler: submitHandler } = useAuth();
+  const { user, inputHandler, loginHandler } = useAuth();
   return (
     <View style={styles.loginForm}>
       <View style={styles.formContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Emater - PNAE Mobile</Text>
-          <Image source={require("../assets/demeter_logo.png")} style={styles.logo} />
+          <Image
+            source={require("../assets/demeter_logo.png")}
+            style={styles.logo}
+          />
           <Text style={styles.headerText}>Entre com sua matrícula e senha</Text>
         </View>
         <View style={styles.bodyContainer}>
@@ -17,7 +27,7 @@ const LoginScreen = () => {
               style={styles.formControl}
               inputMode="tel"
               placeholder="Matrícula"
-              value={user?.matricula}
+              value={user?.matricula_usuario + "-" + user?.digito_matricula}
               onChangeText={(value) => inputHandler("matricula", value)}
             />
           </View>
@@ -33,7 +43,7 @@ const LoginScreen = () => {
           <Pressable
             style={styles.btn}
             android_ripple={{ color: "green" }}
-            onPress={() => submitHandler()}
+            onPress={loginHandler}
           >
             <Text style={styles.btnText}>Entrar</Text>
           </Pressable>

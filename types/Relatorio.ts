@@ -1,14 +1,15 @@
-import { Produtor } from "../../produtor/types/Produtor";
+import { Produtor } from "./Produtor";
 
 export type Relatorio = {
   id?: number;
+  produtorId?: string;
+  tecnicoId?: string;
   numeroRelatorio?: number;
-  nr_relatorio?: number;
   assunto?: string;
   orientacao?: string;
   produtor?: Produtor;
-  produtorId?: string;
-  tecnicoId?: string;
-  files?: any;
+  pictureURI?: string;
+  assinaturaURI?: string;
   createdAt?: any;
+  updatedAt?: any;
 } | null;

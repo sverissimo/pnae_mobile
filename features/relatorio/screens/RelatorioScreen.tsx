@@ -7,6 +7,7 @@ import { RelatorioList } from "../components/RelatorioList";
 import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
 import { ListTitle } from "../../../components/atoms/ListTitle";
 import { AddButton } from "../../../components/atoms/AddButton";
+import { getAllRelatorios } from "../../../@services/relatorioService";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
@@ -15,6 +16,12 @@ export const RelatorioScreen = () => {
   const handlePress = () => {
     navigation.navigate("CreateRelatorioScreen");
   };
+
+  /* const getData = async () => {
+    const a = await getAllRelatorios();
+    console.log("-----------------\n\n");
+    console.log("🚀 ~ file: RelatorioScreen.tsx:22 ~ getData ~ a:", a);
+  }; */
 
   if (!produtor) {
     return (

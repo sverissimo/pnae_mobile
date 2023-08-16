@@ -102,7 +102,6 @@ export const perfilForm: FormElement[] = [
     options: ["FAMILIAR", "COLETIVA"],
   },
   {
-    // ## TODO - CREATE input field
     field: "pessoas_processamento_alimentos",
     label: "Pessoas no Processamento de Alimentos",
     type: "input",
@@ -160,13 +159,13 @@ export const perfilForm: FormElement[] = [
     type: "select",
     options: ["CERTIDAO_USO_INSIGNIFICANTE", "OUTORGA", "NAO_POSSUI"],
   },
-  // ## TODO - CREATE input field
+
   {
     field: "valor_total_obtido_pnae",
     label: "Valor Total Obtido PNAE",
     type: "input",
   },
-  // ## TODO - CREATE input field
+
   {
     field: "valor_total_obtido_outros",
     label: "Valor Total Obtido de Outros",
@@ -190,7 +189,7 @@ export const perfilForm: FormElement[] = [
     type: "select",
     options: ["OPÇÃO1", "OPÇÃO2"],
   },
-  // ## TODO - CREATE input field
+
   {
     field: "informacoes_adicionais",
     label: "Informações Adicionais",
