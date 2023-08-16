@@ -3,7 +3,7 @@ import {
   getAllRelatoriosFromLocal,
   getRelatoriosFromDB,
   saveRelatorioLocal,
-} from "../@infrastructure/database/dao/relatorioDAO";
+} from "../@infrastructure/database/RelatorioDB";
 import { Relatorio } from "../types/Relatorio";
 import { RelatorioDTO } from "../@infrastructure/database/dto/RelatorioDTO";
 

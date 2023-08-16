@@ -4,4 +4,5 @@ export type FormElement = {
   type: "select" | "radio" | "input" | "image";
   options?: string[] | number[];
   value?: string | boolean;
+  keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
 };

@@ -9,12 +9,14 @@ type TextInputComponentProps = {
   onChangeText: (value: string) => void;
   item: FormElement;
   value: string;
+  keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
 };
 
 export const TextInputComponent = ({
   label,
   item,
   value,
+  keyboardType,
   onChangeText,
 }: TextInputComponentProps) => {
   return (
@@ -25,6 +27,7 @@ export const TextInputComponent = ({
           onChangeText={onChangeText}
           value={value}
           style={styles.input}
+          keyboardType={keyboardType || "default"}
         />
       </View>
     </FormFieldContainer>

@@ -1,23 +1,9 @@
 import { FC, ReactNode, createContext, useState } from "react";
+import { Usuario } from "../types/Usuario";
 
-export type User = {
-  login_usuario: string;
-  matricula_usuario?: string;
-  digito_matricula?: string;
-  nome_usuario: string;
-  password: string;
-  role?: string;
-} | null;
-
-const a = {
-  digito_matricula: "7",
-  login_usuario: "10382",
-  matricula_usuario: "10382",
-  nome_usuario: "Flavio Sena Ferreira",
-};
 type UserContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: Usuario | null;
+  setUser: (user: Usuario | null) => void;
 };
 
 export const UserContext = createContext<UserContextType>(
@@ -31,7 +17,7 @@ type UserContextProviderProps = {
 export const UserContextProvider: FC<UserContextProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Usuario | null>(null);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

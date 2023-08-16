@@ -44,6 +44,7 @@ export function FormTemplate({ form, data, onValueChange }: FormTemplateProps) {
                 onChangeText={(value: any) => onValueChange(item.field, value)}
                 //@ts-ignore
                 value={data[item.field]}
+                keyboardType={item.keyboardType}
               />
             );
           default:

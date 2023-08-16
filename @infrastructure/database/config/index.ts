@@ -1,5 +1,5 @@
 import * as SQLite from "expo-sqlite";
-import { createRelatorioTableQuery } from "./queries/createTableQueries";
+import { createRelatorioTableQuery } from "../queries/createTableQueries";
 
 export const db = SQLite.openDatabase("pnae_mobile.db");
 

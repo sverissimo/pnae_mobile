@@ -5,6 +5,7 @@ export const relatorioForm: FormElement[] = [
     field: "numeroRelatorio",
     label: "Número do Relatório",
     type: "input",
+    keyboardType: "numeric",
   },
   {
     field: "assunto",

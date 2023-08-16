@@ -1,9 +1,15 @@
-import humps from "humps";
-import { Relatorio } from "../../../types/Relatorio";
-import { db } from "../config";
-import { RelatorioDTO } from "../dto/RelatorioDTO";
+import { Relatorio } from "_types/Relatorio";
+import { db } from "./config";
+import { RelatorioDTO } from "./dto/RelatorioDTO";
 
-export const saveRelatorioLocal = (relatorio: RelatorioDTO): Promise<void> => {
+export const RelatorioDB = {
+  createRelatorio,
+  getRelatorios,
+  getAllRelatorios,
+  updateRelatorio,
+};
+
+function createRelatorio(relatorio: RelatorioDTO): Promise<void> {
   return new Promise((resolve, reject) => {
     if (!relatorio) {
       reject(new Error("Relatorio is null or undefined"));
@@ -42,11 +48,9 @@ export const saveRelatorioLocal = (relatorio: RelatorioDTO): Promise<void> => {
       );
     });
   });
-};
+}
 
-export async function getRelatoriosFromDB(
-  produtorId: any
-) /* : Promise<RelatorioDTO>  */ {
+async function getRelatorios(produtorId: any) /* : Promise<RelatorioDTO>  */ {
   const result = new Promise<RelatorioDTO[]>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -68,7 +72,7 @@ export async function getRelatoriosFromDB(
   return result;
 }
 
-export function getAllRelatoriosFromLocal(): Promise<Relatorio[]> {
+function getAllRelatorios(): Promise<Relatorio[]> {
   return new Promise((resolve, reject) => {
     const relatorios: Relatorio[] = [];
     db.transaction((tx) => {

@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
-import { User, UserContext } from "../contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
+import { Usuario } from "../types/Usuario";
 import { env } from "../config";
 
 export const useAuth = () => {
@@ -12,7 +13,7 @@ export const useAuth = () => {
 
   const loginHandler = () => {
     const testUser = env.TEST_USER;
-    setUser(testUser || ({} as User));
+    setUser(testUser || ({} as Usuario));
   };
 
   const logoutHandler = () => {

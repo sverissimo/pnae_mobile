@@ -7,7 +7,7 @@ import { ProdutorContextProvider } from "./contexts/ProdutorContext";
 import { StatusBar } from "react-native";
 import { Loading } from "./components/organisms/Loading";
 import { globalColors } from "./constants/themes";
-import { getAllRelatoriosFromLocal } from "./@infrastructure/database/dao/relatorioDAO";
+import { RelatorioService } from "@services/RelatorioService_rn";
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -18,12 +18,9 @@ export default function App() {
         setDbInitialized(true);
         console.log("---------------\n");
         //checkDBSchema();
-        getAllRelatoriosFromLocal().then((relatorios) => {
-          console.log(
-            "🚀 ~ file: App.tsx:21 ~ .then ~ relatorios:",
-            relatorios
-          );
-        });
+        RelatorioService.getAllRelatorios().then((relatorios) =>
+          relatorios.forEach((relatorio) => console.log(relatorio))
+        );
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);

@@ -1,9 +1,7 @@
 import { useContext, useState } from "react";
 import { ProdutorContext } from "../../../contexts/ProdutorContext";
-import { Produtor } from "../../../types/Produtor";
-import { getProdutorData } from "../../../@infrastructure/api/produtorAPI";
-import { getRelatoriosFromDB } from "../../../@infrastructure/database/dao/relatorioDAO";
-import { getProdutor } from "../../../@services/produtorService";
+import { Produtor } from "_types/Produtor";
+import { ProdutorService } from "@services/ProdutorService_rn";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =
@@ -15,8 +13,7 @@ export const useSelectProdutor = () => {
   };
 
   const fetchProdutor = async (CPFProdutor: string) => {
-    const produtor = await getProdutor(CPFProdutor);
-
+    const produtor = await ProdutorService.getProdutor(CPFProdutor);
     setProdutor(produtor);
   };
 

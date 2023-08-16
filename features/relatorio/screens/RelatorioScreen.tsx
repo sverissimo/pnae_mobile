@@ -7,7 +7,7 @@ import { RelatorioList } from "../components/RelatorioList";
 import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
 import { ListTitle } from "../../../components/atoms/ListTitle";
 import { AddButton } from "../../../components/atoms/AddButton";
-import { getAllRelatorios } from "../../../@services/relatorioService";
+import { getAllRelatorios } from "../../../@services/RelatorioService_rn";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();

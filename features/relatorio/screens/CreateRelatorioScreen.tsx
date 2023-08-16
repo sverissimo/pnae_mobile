@@ -1,39 +1,22 @@
 import { ScrollView, StyleSheet } from "react-native";
-import React, { useState } from "react";
-import { createRelatorio } from "../../../@services/relatorioService";
 import { ListTitle } from "../../../components/atoms/ListTitle";
 import { FormTemplate } from "../../../components/templates/FormTemplate";
 import { Button } from "react-native-paper";
 import { relatorioForm } from "../relatorioForm";
-import { useAuth } from "../../../hooks/useAuth";
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
+import { useManageRelatorio } from "../hooks/useManageRelatorios";
 
 export const CreateRelatorioScreen = () => {
-  const [state, setState] = useState<any>({});
-  const { user } = useAuth();
-  const { produtor } = useSelectProdutor();
-  const handleChange = (name: string, value: any) => {
-    setState((state: any) => ({ ...state, [name]: value }));
-  };
-
-  const handleSubmit = async () => {
-    const relatorio = {
-      ...state,
-      tecnicoId: user?.digito_matricula,
-      produtorId: produtor?.id_pessoa_demeter,
-    };
-    const result = createRelatorio(relatorio);
-  };
+  const { relatorio, handleChange, setRelatorio } = useManageRelatorio();
 
   return (
     <ScrollView style={styles.container}>
       <ListTitle title="Preencha as informações abaixo" />
       <FormTemplate
         form={relatorioForm}
-        data={state}
+        data={relatorio}
         onValueChange={handleChange}
       />
-      <Button mode="contained" style={styles.button} onPress={handleSubmit}>
+      <Button mode="contained" style={styles.button} onPress={setRelatorio}>
         Salvar
       </Button>
     </ScrollView>
