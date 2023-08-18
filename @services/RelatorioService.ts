@@ -18,7 +18,7 @@ export const RelatorioService = {
       "🚀 ~ file: relatorioService.ts:17 ~ createRelatorio: ~ relatorioDTO:",
       relatorioDTO
     );
-
+    return;
     const result = await RelatorioDB.createRelatorio(relatorioDTO);
     return result;
   },

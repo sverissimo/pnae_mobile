@@ -12,7 +12,7 @@ import { useManageRelatorio } from "../hooks/useManageRelatorios";
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { relatorios } = useManageRelatorio(produtor?.id_pessoa_demeter!);
+  const { relatorios } = useManageRelatorio();
 
   const handlePress = () => {
     navigation.navigate("CreateRelatorioScreen");

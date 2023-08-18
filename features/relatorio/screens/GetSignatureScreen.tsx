@@ -1,43 +1,36 @@
-import { useContext, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { useRef } from "react";
+import { LogBox, StyleSheet, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
 import { globalColors } from "../../../constants/themes";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { RouteParamsList } from "navigation/types";
+import { getSignatureFileURI } from "@shared/utils/signatureUtils";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
-import { RelatorioContext } from "../../../contexts/RelatorioContext";
+import { deleteFile } from "@shared/utils/fileSystemUtils";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 const style = `.m-signature-pad--footer
 .button {
-  background-color: #000000;
+  background-color: #000;
   color: #FFF;
 }`;
 
-type GetSignatureRouteProp = RouteProp<RouteParamsList, "params">;
-
-export const GetSignatureScreen = ({
-  signatureCaptureHandler,
-  setShowSignature,
-}: any) => {
-  const { handleGetSignature } = useContext(RelatorioContext);
+export const GetSignatureScreen = ({ route }: any) => {
   const ref = useRef(null);
-  /*
-  const { params } = useRoute<GetSignatureRouteProp>();
-
-  const { signatureCaptureHandler } = params;
+  const { assinaturaURI, handleChange } = route.params;
 
   const { navigation } = useCustomNavigation();
 
-  const handleSaveSignature = async (signature: string) => {
-    const fileURI = await handleGetSignature!(signature);
-    signatureCaptureHandler!("assintauraURI", fileURI!);
-    navigation.goBack();
-  }; */
-
   const handleSignature = async (signature: string) => {
-    const fileURI = await handleGetSignature!(signature);
-    signatureCaptureHandler("assinaturaURI", fileURI);
-    setShowSignature(false);
+    const fileURI = await getSignatureFileURI(signature);
+    if (fileURI) {
+      if (assinaturaURI) {
+        await deleteFile(assinaturaURI);
+      }
+      handleChange("assinaturaURI", fileURI);
+      navigation.goBack();
+    }
   };
 
   const handleEmpty = () => {

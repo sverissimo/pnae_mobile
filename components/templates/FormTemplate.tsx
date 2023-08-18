@@ -9,20 +9,15 @@ type FormTemplateProps = {
   form: FormElement[];
   data: any;
   onValueChange: any;
-  signatureCaptureHandler: any;
-  setShowSignature: any;
+  showSignatureScreen: any;
 };
 
 export function FormTemplate({
   form,
   data,
   onValueChange,
-  setShowSignature,
+  showSignatureScreen,
 }: FormTemplateProps) {
-  // console.log(
-  //   "🚀 ~ file: FormTemplate.tsx:76 ~ {form.map ~ data[item.field]:",
-  //   data
-  // );
   return (
     <View>
       {form.map((item) => {
@@ -73,7 +68,7 @@ export function FormTemplate({
                 item={item}
                 key={item.field}
                 type="signature"
-                setShowSignature={setShowSignature}
+                showSignatureScreen={showSignatureScreen}
                 imageURI={data[item.field]}
               />
             );

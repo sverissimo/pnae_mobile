@@ -1,27 +1,19 @@
-import { ScrollView, StyleSheet } from "react-native";
-import { ListTitle } from "../../../components/atoms/ListTitle";
-import { FormTemplate } from "../../../components/templates/FormTemplate";
-import { Button } from "react-native-paper";
-import { relatorioForm } from "../relatorioForm";
-import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { useCustomNavigation } from "hooks/useCustomNavigation";
-import { useSelectProdutor } from "features/produtor/hooks/useSelectProdutor";
-import { Toast } from "components/molecules/Toast";
 import { useState } from "react";
-import { GetSignatureScreen } from "./GetSignatureScreen";
+import { ScrollView, StyleSheet } from "react-native";
+import { Button } from "react-native-paper";
+import { useCustomNavigation } from "hooks/useCustomNavigation";
+import { useManageRelatorio } from "../hooks/useManageRelatorios";
+import { FormTemplate } from "../../../components/templates/FormTemplate";
+import { Toast } from "components/molecules/Toast";
+import { ListTitle } from "../../../components/atoms/ListTitle";
+import { relatorioForm } from "../relatorioForm";
 
 export const CreateRelatorioScreen = () => {
+  const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
+  const { navigation } = useCustomNavigation();
+
   const [visible, setVisible] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
-  const [showSignature, setShowSignature] = useState(false);
-  const { navigation } = useCustomNavigation();
-  const { produtor } = useSelectProdutor();
-  const { relatorio, handleChange, saveRelatorio, handleGetSignature } =
-    useManageRelatorio(produtor?.id_pessoa_demeter);
-  console.log(
-    "🚀 ~ file: CreateRelatorioScreen.tsx:20 ~ CreateRelatorioScreen ~ relatorio:",
-    relatorio
-  );
 
   const handleSaveRelatorio = async () => {
     await saveRelatorio();
@@ -36,14 +28,12 @@ export const CreateRelatorioScreen = () => {
     setVisible(false);
   };
 
-  if (showSignature) {
-    return (
-      <GetSignatureScreen
-        signatureCaptureHandler={handleChange}
-        setShowSignature={setShowSignature}
-      />
-    );
-  }
+  const showSignatureScreen = () => {
+    navigation.navigate("GetSignatureScreen", {
+      assinaturaURI: relatorio.assinaturaURI,
+      handleChange,
+    });
+  };
 
   return (
     <>
@@ -53,8 +43,7 @@ export const CreateRelatorioScreen = () => {
           form={relatorioForm}
           data={relatorio}
           onValueChange={handleChange}
-          signatureCaptureHandler={handleGetSignature}
-          setShowSignature={setShowSignature}
+          showSignatureScreen={showSignatureScreen}
         />
         <Button
           mode="contained"

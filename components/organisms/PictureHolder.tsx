@@ -1,17 +1,17 @@
-import * as FileSystem from "expo-file-system";
-import React, { useEffect, useState } from "react";
-import { launchCameraAsync } from "expo-image-picker";
+import { useEffect, useState } from "react";
 import { ButtonInputComponent } from "./ButtonInputComponent";
 import { FormElement } from "@shared/types/FormElement";
 import { PictureTextListItem } from "components/molecules/PictureTextListItem";
 import { FormFieldContainer } from "components/molecules/FormFieldContainer";
+import { takePicture } from "@shared/utils/cameraUtils";
+import { deleteFile } from "@shared/utils/fileSystemUtils";
 
 type PictureHolderProps = {
   item: FormElement;
   imageURI?: string;
   type: "image" | "signature";
   onValueChange?: (value: any) => void;
-  setShowSignature?: (status: boolean) => void;
+  showSignatureScreen?: (status: boolean) => void;
 };
 
 export const PictureHolder = ({
@@ -19,7 +19,7 @@ export const PictureHolder = ({
   type,
   imageURI,
   onValueChange,
-  setShowSignature,
+  showSignatureScreen,
 }: PictureHolderProps) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -32,56 +32,30 @@ export const PictureHolder = ({
   }, [imageURI]);
 
   const handleTakeSignature = async () => {
-    if (setShowSignature) setShowSignature(true);
-  };
-
-  const handleTakePicture = async () => {
-    const image = await launchCameraAsync({
-      //allowsEditing: true,
-      quality: 0.5,
-    });
-    try {
-      if (imageURI) {
-        await deleteImage(imageURI);
-      }
-
-      if (image.assets && image.assets.length) {
-        const pictureURI = image.assets[0]?.uri;
-        console.log({ pictureURI });
-        //setPictureURI(pictureURI);
-        onValueChange!(pictureURI);
-        //setLoaded(true);
-      } else if (image.canceled) {
-        console.log("User canceled the picture");
-      } else {
-        console.log("No image selected");
-      }
-    } catch (error) {
-      console.log("🚀file: CreateRelatorioScreen.tsx:37", error);
+    if (showSignatureScreen) {
+      showSignatureScreen(true);
     }
   };
 
-  const deleteImage = async (oldImageURI: string) => {
-    const fileInfo = await FileSystem.getInfoAsync(oldImageURI);
-    if (fileInfo.exists) {
-      await FileSystem.deleteAsync(fileInfo.uri, { idempotent: true });
-      console.log("deleted cachedImage:", !fileInfo.exists);
+  const handleTakePicture = async () => {
+    const pictureURI = await takePicture();
+    if (pictureURI) onValueChange!(pictureURI);
+    console.log({ pictureURI });
+    if (pictureURI && imageURI) {
+      await deleteFile(imageURI);
     }
   };
 
   const handlePress = () => {
     if (type === "image") {
-      console.log("🚀 ~ file: PictureHolder.tsx:74 ~ handlePress ~ image:");
       handleTakePicture();
     }
     if (type === "signature") {
-      console.log("🚀 ~ file: PictureHolder.tsx:78 ~ handlePress ~ signature:");
       handleTakeSignature();
     }
   };
 
   if (!loaded && !imageURI)
-    //if (!imageURI)
     return (
       <ButtonInputComponent
         key={item.field}
