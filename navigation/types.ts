@@ -1,4 +1,18 @@
-export type RootStackParamList = {
+type ParamListBase = {
+  [key: string]: object | undefined;
+};
+
+export type RouteParamsList = {
+  params: {
+    perfil: any;
+    signatureCaptureHandler?: (
+      field: string,
+      signatureURI: string
+    ) => Promise<void>;
+  };
+};
+
+export type RootStackParamList = ParamListBase & {
   HomeScreen: undefined;
   ProdutorScreen: { title: string } | undefined;
   RelatorioScreen: undefined;
@@ -8,4 +22,6 @@ export type RootStackParamList = {
   CreatePerfilScreen: undefined;
   EditPerfilScreen: { perfil: any };
   tabs: undefined;
+  GetSignature: RouteParamsList;
+  // GetSignatureScreen: { signatureCaptureHandler: (signature: any) => void };
 };

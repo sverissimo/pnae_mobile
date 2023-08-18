@@ -1,23 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { View } from "react-native";
 import { FormElement } from "../../@shared/types/FormElement";
 import { SelectDropdown } from "../organisms/SelectDropdown";
 import { RadioComponent } from "../organisms/RadioComponent";
 import { TextInputComponent } from "../organisms/TextInputComponent";
-import { ButtonInputComponent } from "components/organisms/ButtonInputComponent";
+import { PictureHolder } from "components/organisms/PictureHolder";
 
 type FormTemplateProps = {
   form: FormElement[];
   data: any;
   onValueChange: any;
-  onPressButton?: any;
+  signatureCaptureHandler: any;
+  setShowSignature: any;
 };
+
 export function FormTemplate({
   form,
   data,
   onValueChange,
-  onPressButton,
+  setShowSignature,
 }: FormTemplateProps) {
+  // console.log(
+  //   "🚀 ~ file: FormTemplate.tsx:76 ~ {form.map ~ data[item.field]:",
+  //   data
+  // );
   return (
     <View>
       {form.map((item) => {
@@ -29,7 +34,6 @@ export function FormTemplate({
                 label={item.label}
                 options={item.options}
                 onSelect={(value: any) => onValueChange(item.field, value)}
-                //@ts-ignore
                 value={data[item.field]}
               />
             );
@@ -49,21 +53,31 @@ export function FormTemplate({
                 label={item.label}
                 item={item}
                 onChangeText={(value: any) => onValueChange(item.field, value)}
-                //@ts-ignore
                 value={data[item.field]}
                 keyboardType={item.keyboardType}
               />
             );
-          case "button":
+          case "image":
             return (
-              <ButtonInputComponent
-                key={item.field}
-                label={item.label}
+              <PictureHolder
                 item={item}
-                buttonLabel={item.buttonLabel}
-                onPress={(field: string) => onPressButton(field)}
+                key={item.field}
+                type="image"
+                onValueChange={(value: any) => onValueChange(item.field, value)}
+                imageURI={data[item.field]}
               />
             );
+          case "signature":
+            return (
+              <PictureHolder
+                item={item}
+                key={item.field}
+                type="signature"
+                setShowSignature={setShowSignature}
+                imageURI={data[item.field]}
+              />
+            );
+
           default:
             return null;
         }
@@ -71,5 +85,3 @@ export function FormTemplate({
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

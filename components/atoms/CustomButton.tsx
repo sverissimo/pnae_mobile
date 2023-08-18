@@ -13,13 +13,13 @@ type CustomButtonProps = {
 };
 
 export const CustomButton = (props: CustomButtonProps) => {
-  console.log("🚀 ~ file: CustomButton.tsx:16 ~ CustomButton ~ props:", props);
   return (
     <Button
       style={styles.button}
       icon="camera"
       contentStyle={props.style}
       mode="text"
+      // mode="contained"
       {...props}
       //textColor={globalColors.primary[600]}
       //buttonColor={globalColors.primary[500]}
@@ -33,7 +33,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  button: {
-    // marginTop: "5%",
-  },
+  button: {},
 });

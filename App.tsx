@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import Authentication from "./Authentication";
 import { init_db } from "./@infrastructure/database/config";
-import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { UserContextProvider } from "./contexts/UserContext";
 import { ProdutorContextProvider } from "./contexts/ProdutorContext";
+import { RelatorioContextProvider } from "./contexts/RelatorioContext";
 import { StatusBar } from "react-native";
 import { Loading } from "./components/organisms/Loading";
 import { globalColors } from "./constants/themes";
 import { RelatorioService } from "@services/RelatorioService";
+import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -16,11 +17,11 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("---------------\n");
+        console.log("-------------------\n");
         //checkDBSchema();
-        /*  RelatorioService.getAllRelatorios().then((relatorios) =>
-          relatorios.forEach((relatorio) => console.log(relatorio))
-        ); */
+        // RelatorioService.getAllRelatorios().then((relatorios) =>
+        //   relatorios.forEach((relatorio) => console.log(relatorio))
+        // );
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
@@ -42,7 +43,9 @@ export default function App() {
       />
       <UserContextProvider>
         <ProdutorContextProvider>
-          <Authentication />
+          <RelatorioContextProvider>
+            <Authentication />
+          </RelatorioContextProvider>
         </ProdutorContextProvider>
       </UserContextProvider>
     </>

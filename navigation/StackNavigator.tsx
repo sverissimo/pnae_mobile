@@ -6,6 +6,7 @@ import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
 import { CreateRelatorioScreen } from "../features/relatorio/screens/CreateRelatorioScreen";
 import { CreatePerfilScreen } from "../features/perfil/screens/CreatePerfilScreen";
 import { EditPerfilScreen } from "../features/perfil/screens/EditPerfilScreen";
+import { GetSignatureScreen } from "features/relatorio/screens/GetSignatureScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -37,6 +38,13 @@ export function StackNavigator() {
         component={CreateRelatorioScreen}
         options={{
           title: "Criar Novo Relatório",
+        }}
+      />
+      <Stack.Screen
+        name="GetSignatureScreen"
+        component={GetSignatureScreen}
+        options={{
+          title: "Assinatura do Produtor",
         }}
       />
       <Stack.Screen

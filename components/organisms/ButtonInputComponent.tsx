@@ -1,10 +1,8 @@
 import { StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
 import { FormFieldContainer } from "../molecules/FormFieldContainer";
 import { FormElement } from "../../@shared/types/FormElement";
 import { CustomButton } from "components/atoms/CustomButton";
 
-//create type for this component props
 type ButtonInputComponentProps = {
   label: string;
   item: FormElement;

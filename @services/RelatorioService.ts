@@ -14,6 +14,11 @@ export const RelatorioService = {
     }
 
     const relatorioDTO = mapToDTO(relatorio);
+    console.log(
+      "🚀 ~ file: relatorioService.ts:17 ~ createRelatorio: ~ relatorioDTO:",
+      relatorioDTO
+    );
+
     const result = await RelatorioDB.createRelatorio(relatorioDTO);
     return result;
   },

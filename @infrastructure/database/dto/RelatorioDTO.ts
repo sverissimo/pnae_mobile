@@ -12,4 +12,5 @@ export type RelatorioDTO = {
   assinatura_uri?: string;
   created_at?: any;
   updated_at?: any;
-} | null;
+  [key: string]: any;
+};

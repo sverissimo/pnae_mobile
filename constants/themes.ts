@@ -2,12 +2,14 @@ import * as colors from "./colorsPallete";
 const { grayscale } = colors;
 
 const selectedColor = colors.materialTeal;
+const secondaryColor = colors.materialPurple;
 const lightTheme = {
   background: "white",
   background2: grayscale[50],
   background3: selectedColor[100],
   text: "black",
   primary: selectedColor,
+  secondary: secondaryColor,
   grayscale: colors.grayscale,
 };
 const darkTheme = {

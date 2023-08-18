@@ -4,9 +4,11 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@contexts/": ["./contexts/*"],
+      "@constants/*": ["./constants/*"],
+      "@contexts/*": ["./contexts/*"],
       "@infrastructure/*": ["./@infrastructure/*"],
       "@services/*": ["./@services/*"],
+      "@shared/*": ["./@shared/*"],
       "_types/*": ["./types/*"]
     }
   }

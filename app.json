@@ -26,6 +26,16 @@
     },
     "experiments": {
       "tsconfigPaths": true
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "O app PNAE precisa de permissão para usar a câmera.",
+          "photosPermission": "O app PNAE precisa de permissão para acessar as fotos.",
+          "microphonePermission": "O app PNAE precisa de permissão para gravar áudio."
+        }
+      ]
+    ]
   }
 }

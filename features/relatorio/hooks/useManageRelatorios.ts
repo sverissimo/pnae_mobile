@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import * as FileSystem from "expo-file-system";
+import { useContext, useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { RelatorioService } from "@services/RelatorioService";
 import { Relatorio } from "_types/Relatorio";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { Usuario } from "_types/Usuario";
+import { RelatorioContext } from "@contexts/RelatorioContext";
 
 export const useManageRelatorio = (produtorId: string = "") => {
   const [relatorio, setState] = useState<any>({});
+  //const { relatorio, setRelatorio } = useContext(RelatorioContext);
   const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const { user } = useAuth();
 
@@ -16,11 +19,35 @@ export const useManageRelatorio = (produtorId: string = "") => {
     }
   }, [produtorId]);
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
 
-  const setRelatorio = async () => {
+  const handleGetSignature = async (signature: any) => {
+    try {
+      const fileName = `signature_${Date.now()}.jpeg`;
+      const filePath = `${FileSystem.documentDirectory}${fileName}`;
+      const base64Data = signature.replace("data:image/png;base64,", "");
+
+      await FileSystem.writeAsStringAsync(filePath, base64Data, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const file = await FileSystem.getInfoAsync(filePath);
+      console.log(
+        "🚀 ~ file: useManageRelatorios.ts:37 ~ handleGetSignature ~ file:",
+        file
+      );
+      const fileURI = file.uri;
+
+      setState((state: any) => ({ ...state, assinaturaURI: fileURI }));
+      return fileURI;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const saveRelatorio = async () => {
     const relatorioInput = {
       ...relatorio,
       produtorId,
@@ -66,5 +93,11 @@ export const useManageRelatorio = (produtorId: string = "") => {
     }
   };
 
-  return { relatorio, relatorios, handleChange, setRelatorio };
+  return {
+    relatorio,
+    relatorios,
+    handleChange,
+    saveRelatorio,
+    handleGetSignature,
+  };
 };

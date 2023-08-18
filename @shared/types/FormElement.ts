@@ -1,10 +1,11 @@
 export type FormElement = {
   field: string;
   label: string;
-  type: "select" | "radio" | "input" | "image" | "button";
+  type: "select" | "radio" | "input" | "image" | "button" | "signature";
   options?: string[] | number[];
   value?: string | boolean;
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
   buttonLabel?: string;
+  buttonLabelAlt?: string;
   icon?: string;
 };

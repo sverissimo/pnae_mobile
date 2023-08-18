@@ -5,14 +5,30 @@ import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import React from "react";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
+import { ListTitle } from "components/atoms/ListTitle";
 
 export const PropriedadeScreen = () => {
   const { produtor } = useSelectProdutor();
 
+  if (!produtor) {
+    return (
+      <View style={styles.container}>
+        <ProdutorSearchBar />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {produtor ? <ProdutorInfo /> : <ProdutorSearchBar />}
-      <PropriedadesList />
+      <ProdutorInfo />
+      {produtor.propriedades?.length ? (
+        <>
+          <ListTitle title={"Propriedades cadastradas"} />
+          <PropriedadesList />
+        </>
+      ) : (
+        <ListTitle title={"Nenhum relatório cadastrado"} />
+      )}
     </View>
   );
 };

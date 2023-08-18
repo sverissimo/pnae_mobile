@@ -2,14 +2,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { FormFieldContainer } from "../../../components/molecules/FormFieldContainer";
 
-// Define the type for the expected parameters
-type EditPerfilScreenRouteParams = {
-  perfil: any; // Replace with the actual type of 'perfil'
-};
-
 // Define the type for the route, assuming 'YourStackName' is the name of your stack
 type EditPerfEditPerfilScreenRouteProp = RouteProp<
-  { EditPerfilScreen: EditPerfilScreenRouteParams },
+  { EditPerfilScreen: { perfil: any } },
   "EditPerfilScreen"
 >;
 

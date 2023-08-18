@@ -5,31 +5,72 @@ import { Button } from "react-native-paper";
 import { relatorioForm } from "../relatorioForm";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
+import { useSelectProdutor } from "features/produtor/hooks/useSelectProdutor";
+import { Toast } from "components/molecules/Toast";
+import { useState } from "react";
+import { GetSignatureScreen } from "./GetSignatureScreen";
 
 export const CreateRelatorioScreen = () => {
-  const { relatorio, handleChange, setRelatorio } = useManageRelatorio();
+  const [visible, setVisible] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
+  const [showSignature, setShowSignature] = useState(false);
   const { navigation } = useCustomNavigation();
-  const handlePressButton = (field: string) => {
-    console.log(
-      "🚀 ~ file: CreateRelatorioScreen.tsx:12 ~ onPressButton ~ field:",
-      field
-    );
-    console.log("HI IM ELFO");
+  const { produtor } = useSelectProdutor();
+  const { relatorio, handleChange, saveRelatorio, handleGetSignature } =
+    useManageRelatorio(produtor?.id_pessoa_demeter);
+  console.log(
+    "🚀 ~ file: CreateRelatorioScreen.tsx:20 ~ CreateRelatorioScreen ~ relatorio:",
+    relatorio
+  );
+
+  const handleSaveRelatorio = async () => {
+    await saveRelatorio();
+    setVisible(true);
+    setDisableButton(true);
+    setTimeout(() => {
+      navigation.goBack();
+    }, 1000);
   };
 
-  return (
-    <ScrollView style={styles.container}>
-      <ListTitle title="Preencha as informações abaixo" />
-      <FormTemplate
-        form={relatorioForm}
-        data={relatorio}
-        onValueChange={handleChange}
-        onPressButton={handlePressButton}
+  const handleDismissSnackbar = () => {
+    setVisible(false);
+  };
+
+  if (showSignature) {
+    return (
+      <GetSignatureScreen
+        signatureCaptureHandler={handleChange}
+        setShowSignature={setShowSignature}
       />
-      <Button mode="contained" style={styles.button} onPress={setRelatorio}>
-        Salvar
-      </Button>
-    </ScrollView>
+    );
+  }
+
+  return (
+    <>
+      <ScrollView style={styles.container}>
+        <ListTitle title="Preencha as informações abaixo" />
+        <FormTemplate
+          form={relatorioForm}
+          data={relatorio}
+          onValueChange={handleChange}
+          signatureCaptureHandler={handleGetSignature}
+          setShowSignature={setShowSignature}
+        />
+        <Button
+          mode="contained"
+          style={styles.button}
+          onPress={handleSaveRelatorio}
+          disabled={disableButton}
+        >
+          Salvar
+        </Button>
+      </ScrollView>
+      <Toast
+        message="Relatório salvo com sucesso!"
+        visible={visible}
+        onDismiss={handleDismissSnackbar}
+      />
+    </>
   );
 };
 
@@ -48,44 +89,3 @@ const styles = StyleSheet.create({
     marginVertical: "6%",
   },
 });
-
-/*
-<>
-<TextInput
-        placeholder="Número do Relatório"
-        value={numeroRelatorio}
-        onChangeText={setNumeroRelatorio}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Assunto"
-        value={assunto}
-        onChangeText={setAssunto}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Orientação"
-        value={orientacao}
-        onChangeText={setOrientacao}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="ID do Produtor"
-        value={produtorId}
-        onChangeText={setProdutorId}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="ID do Técnico"
-        value={tecnicoId}
-        onChangeText={setTecnicoId}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <Pressable onPress={handleSubmit} style={styles.button}>
-
-        <Text style={styles.buttonText}>Submit</Text>
-      </Pressable>
-</> */
