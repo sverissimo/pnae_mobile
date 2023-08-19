@@ -7,7 +7,7 @@ import { useCustomNavigation } from "hooks/useCustomNavigation";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
 
 LogBox.ignoreLogs([
-  "Non-serializable values were found in the navigation state",
+  "Non-serializable values were found in the navigation state.",
 ]);
 
 const style = `.m-signature-pad--footer
@@ -24,6 +24,7 @@ export const GetSignatureScreen = ({ route }: any) => {
 
   const handleSignature = async (signature: string) => {
     const fileURI = await getSignatureFileURI(signature);
+
     if (fileURI) {
       if (assinaturaURI) {
         await deleteFile(assinaturaURI);

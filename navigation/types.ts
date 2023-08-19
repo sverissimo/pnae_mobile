@@ -1,3 +1,5 @@
+import { Relatorio } from "_types/Relatorio";
+
 type ParamListBase = {
   [key: string]: object | undefined;
 };
@@ -18,7 +20,7 @@ export type RootStackParamList = ParamListBase & {
   RelatorioScreen: undefined;
   PerfilScreen: undefined;
   PropriedadeScreen: undefined;
-  CreateRelatorioScreen: undefined;
+  CreateRelatorioScreen: { relatorios: Relatorio[] | undefined };
   CreatePerfilScreen: undefined;
   EditPerfilScreen: { perfil: any };
   tabs: undefined;

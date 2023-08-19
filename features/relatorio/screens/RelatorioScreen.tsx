@@ -1,22 +1,38 @@
+import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { globalColors } from "../../../constants/themes";
+import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
+import { useManageRelatorio } from "../hooks/useManageRelatorios";
+import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { RelatorioList } from "../components/RelatorioList";
-import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
 import { ListTitle } from "../../../components/atoms/ListTitle";
 import { AddButton } from "../../../components/atoms/AddButton";
-import { useManageRelatorio } from "../hooks/useManageRelatorios";
+import { Relatorio } from "_types/Relatorio";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { relatorios } = useManageRelatorio();
+  const { getRelatorios } = useManageRelatorio();
+  const [relatorios, setRelatorios] = useState<Relatorio[]>();
+
+  useEffect(() => {
+    if (!produtor?.id_pessoa_demeter) {
+      return;
+    }
+
+    const fetchRelatorios = async () => {
+      const relatorios = await getRelatorios(produtor?.id_pessoa_demeter);
+      setRelatorios(relatorios);
+    };
+    fetchRelatorios();
+  }, [produtor]);
 
   const handlePress = () => {
-    navigation.navigate("CreateRelatorioScreen");
+    navigation.navigate("CreateRelatorioScreen", { relatorios });
   };
+
   if (!produtor) {
     return (
       <View style={styles.container}>

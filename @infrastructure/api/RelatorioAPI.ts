@@ -1,55 +1,35 @@
-import { RelatorioDTO } from "@infrastructure/database/dto/RelatorioDTO";
+import { Relatorio } from "_types/Relatorio";
 import { env } from "config";
-import * as FileSystem from "expo-file-system";
 
-export const RelatorioAPI = { sendFormData };
-const url = `${env.BASE_URL}/relatorio`;
-const TST_DATA = {
-  assinatura_uri:
-    "file:///data/user/0/host.exp.exponent/cache/signature_1692327161198.png",
-  assunto: "mtherfkr!!!",
-  numero_relatorio: 456,
-  orientacao: "1234",
-  picture_uri:
-    "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Fpnae_mobile-a4b9289e-2812-49a3-9b18-9dd82a6f9e84/ImagePicker/9e2a4e93-b937-4b81-9246-4c2ab834dd47.jpeg",
-  produtor_id: "363189",
-  tecnico_id: "835",
-};
+export const RelatorioAPI = { createRelatorio };
+const url = `${env.BASE_URL}/relatorios`;
 
-async function sendFormData(relatorioDTO: RelatorioDTO) {
+async function createRelatorio(relatorioDTO: Relatorio) {
+  if (!relatorioDTO) return null;
   try {
-    const formData = new FormData();
-
-    // Add the picture file to the form data
-    const pictureFile = await FileSystem.readAsStringAsync(
-      relatorioDTO.picture_uri,
-      {
-        encoding: FileSystem.EncodingType.Base64,
-      }
-    );
-    const pictureBlob = new Blob([pictureFile], { type: "image/jpeg" });
-    formData.append("picture", pictureBlob, "picture.jpg");
-
-    // Add the signature file to the form data
-    if (relatorioDTO.assinatura_uri) {
-      const signatureFile = await FileSystem.readAsStringAsync(
-        relatorioDTO.assinatura_uri,
-        {
-          encoding: FileSystem.EncodingType.Base64,
-        }
-      );
-      const signatureBlob = new Blob([signatureFile], { type: "image/jpeg" });
-      formData.append("signature", signatureBlob, "signature.jpg");
-    }
-
-    // Add the other fields to the form data
-    Object.keys(relatorioDTO).forEach((key) => {
-      if (key !== "picture_uri" && key !== "assinatura_uri") {
-        formData.append(key, relatorioDTO[key]);
+    const formData: any = new FormData();
+    Object.entries(relatorioDTO).forEach(([key, value]) => {
+      if (!!key && key !== "pictureURI" && key !== "assinaturaURI") {
+        formData.append(key, value);
       }
     });
 
-    // Send the form data to the backend
+    if (relatorioDTO?.pictureURI) {
+      formData.append("foto", {
+        uri: relatorioDTO?.pictureURI,
+        name: "test.jpg",
+        type: "image/jpeg",
+      });
+    }
+
+    if (relatorioDTO?.assinaturaURI) {
+      formData.append("foto", {
+        uri: relatorioDTO?.assinaturaURI,
+        name: "test.jpg",
+        type: "image/jpeg",
+      });
+    }
+
     const response = await fetch(url, {
       method: "POST",
       body: formData,
@@ -61,5 +41,67 @@ async function sendFormData(relatorioDTO: RelatorioDTO) {
   } catch (error) {
     console.error("Error submitting form data:", error);
     return null;
+  } finally {
+    console.log("finally");
   }
 }
+
+/*
+async function createRelatorio(relatorio: Relatorio) {
+  if (!relatorio) return null;
+  try {
+    const formData = [];
+
+    // Add the other fields to the form data
+    Object.entries(relatorio).forEach(([key, value]) => {
+      if (!!key && key !== "pictureURI" && key !== "assinaturaURI") {
+        formData.push({
+          name: key,
+          data: value,
+        });
+      }
+    });
+
+    if (relatorio?.pictureURI) {
+      const pictureFile = ReactNativeBlobUtil.wrap(relatorio?.pictureURI);
+      formData.push({
+        name: "foto",
+        filename: "foto.png",
+        type: "image/png",
+        data: pictureFile,
+      });
+    }
+
+    if (relatorio?.assinaturaURI) {
+      const signatureFile = ReactNativeBlobUtil.wrap(relatorio.assinaturaURI);
+      formData.push({
+        name: "assinatura",
+        filename: "assinatura.png",
+        type: "image/png",
+        data: signatureFile,
+      });
+    }
+
+    //@ts-ignore
+    for (const part of formData.getParts()) {
+      console.log(
+        "🚀 ~ file: RelatorioAPI.ts:58 ~ createRelatorio ~ part:",
+        part
+      );
+    }
+
+    const response = await ReactNativeBlobUtil.fetch(
+      "POST",
+      url,
+      {
+        "Content-Type": "multipart/form-data",
+      },
+      formData
+    );
+
+    console.log(response.data);
+  } catch (error) {
+    console.log("Error uploading relatorio:", error);
+  }
+}
+ */

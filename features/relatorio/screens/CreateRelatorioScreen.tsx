@@ -8,7 +8,7 @@ import { Toast } from "components/molecules/Toast";
 import { ListTitle } from "../../../components/atoms/ListTitle";
 import { relatorioForm } from "../relatorioForm";
 
-export const CreateRelatorioScreen = () => {
+export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
 

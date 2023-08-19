@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { RelatorioService } from "@services/RelatorioService";
@@ -8,21 +8,8 @@ import { Usuario } from "_types/Usuario";
 
 export const useManageRelatorio = () => {
   const { produtor } = useContext(ProdutorContext);
-  const produtorId = produtor?.id_pessoa_demeter;
-
   const [relatorio, setState] = useState<any>({});
-  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const { user } = useAuth();
-
-  useEffect(() => {
-    if (produtorId) {
-      console.log(
-        "🚀 ~ ------------------------------ ************ ###########",
-        produtorId
-      );
-      getRelatorios(produtorId);
-    }
-  }, [produtorId]);
 
   const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
@@ -31,20 +18,22 @@ export const useManageRelatorio = () => {
   const saveRelatorio = async () => {
     const relatorioInput = {
       ...relatorio,
-      produtorId,
+      produtorId: produtor?.id_pessoa_demeter,
       tecnicoId: user?.id_usuario,
     };
-    const result = await RelatorioService.createRelatorio(relatorioInput);
-    return result;
+    const relatorioId = await RelatorioService.createRelatorio(relatorioInput);
+    return relatorioId;
   };
 
-  const getRelatorios = async (produtorId: string) => {
+  const getRelatorios = async (
+    produtorId: string | undefined
+  ): Promise<Relatorio[]> => {
+    if (!produtorId) return [];
     try {
       const relatoriosData = await RelatorioService.getRelatorios(produtorId);
       if (!relatoriosData.length) {
         return relatoriosData;
       }
-
       const tecnicoIds = [
         ...new Set(
           relatoriosData
@@ -52,7 +41,6 @@ export const useManageRelatorio = () => {
             .filter((id) => !!id)
         ),
       ];
-
       const tecnicos = (
         await Promise.allSettled(
           tecnicoIds.map((tecnicoId: any) => UsuarioAPI.getUsuario(tecnicoId))
@@ -67,16 +55,16 @@ export const useManageRelatorio = () => {
         const nome_tecnico = tecnico?.nome_usuario;
         return { ...r, nome_tecnico };
       });
-
-      setRelatorios(relatorios);
+      return relatorios;
     } catch (error) {
       console.log("🚀useManageRelatorios.ts:60 error:", error);
     }
+    return [];
   };
 
   return {
     relatorio,
-    relatorios,
+    getRelatorios,
     handleChange,
     saveRelatorio,
   };
