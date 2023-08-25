@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
-import { globalColors } from "../../constants/themes";
+import { globalColors } from "../../../constants/themes";
 
 export const SignaturePad = () => {
   const ref = useRef(null);

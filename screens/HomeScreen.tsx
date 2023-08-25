@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { Card } from "../components/organisms/HomeCard";
+import { Card } from "../@shared/components/organisms/HomeCard";
 import { useCustomNavigation } from "../hooks/useCustomNavigation";
 import { RootStackParamList } from "../navigation/types";
 import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
@@ -7,7 +7,9 @@ import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
   const pressHandler = (screenName: keyof RootStackParamList) => {
-    navigation.navigate(screenName);
+    const screen =
+      typeof screenName === "string" ? screenName : screenName.toString();
+    navigation.navigate(screen);
   };
 
   return (

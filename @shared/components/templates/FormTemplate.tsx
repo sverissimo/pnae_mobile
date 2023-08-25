@@ -1,15 +1,17 @@
+import { FormElement } from "@shared/types/FormElement";
 import { View } from "react-native";
-import { FormElement } from "../../@shared/types/FormElement";
-import { SelectDropdown } from "../organisms/SelectDropdown";
-import { RadioComponent } from "../organisms/RadioComponent";
-import { TextInputComponent } from "../organisms/TextInputComponent";
-import { PictureHolder } from "components/organisms/PictureHolder";
+import {
+  RadioComponent,
+  PictureHolder,
+  SelectDropdown,
+  TextInputComponent,
+} from "../organisms";
 
 type FormTemplateProps = {
   form: FormElement[];
   data: any;
   onValueChange: any;
-  showSignatureScreen: any;
+  showSignatureScreen?: any;
 };
 
 export function FormTemplate({

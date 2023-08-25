@@ -3,10 +3,10 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { FormTemplate } from "../../../components/templates/FormTemplate";
-import { Toast } from "components/molecules/Toast";
-import { ListTitle } from "../../../components/atoms/ListTitle";
+import { FormTemplate } from "../../../@shared/components/templates/FormTemplate";
+import { Toast } from "@shared/components/molecules/Toast";
 import { relatorioForm } from "../relatorioForm";
+import { ListTitle } from "@shared/components/atoms";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
@@ -18,10 +18,10 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   const handleSaveRelatorio = async () => {
     await saveRelatorio();
     setVisible(true);
-    setDisableButton(true);
-    setTimeout(() => {
-      navigation.goBack();
-    }, 1000);
+    // setDisableButton(true);
+    // setTimeout(() => {
+    //   navigation.goBack();
+    // }, 1000);
   };
 
   const handleDismissSnackbar = () => {

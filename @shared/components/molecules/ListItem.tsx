@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { globalColors } from "../../constants/themes";
+import { globalColors } from "../../../constants/themes";
 
 type RowProps = {
   data?: any;

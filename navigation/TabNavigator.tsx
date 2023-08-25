@@ -6,9 +6,10 @@ import { PropriedadeScreen } from "../features/propriedade/screens/PropriedadeSc
 import { PerfilScreen } from "../features/perfil/screens/PerfilScreen";
 import { RelatorioScreen } from "../features/relatorio/screens/RelatorioScreen";
 import { RootStackParamList } from "./types";
-import { LogoutComponent } from "../components/molecules/Logout";
-import { Icon } from "../components/atoms/Icon";
+import { LogoutComponent } from "../@shared/components/molecules/Logout";
+
 import { globalColors } from "../constants/themes";
+import { Icon } from "@shared/components/atoms";
 
 const { primary, grayscale } = globalColors;
 const itemInactiveColor = grayscale[900];

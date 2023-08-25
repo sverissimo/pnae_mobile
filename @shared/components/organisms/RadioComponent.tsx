@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { RadioButton } from "react-native-paper";
-import { FormFieldContainer } from "../molecules/FormFieldContainer";
+import { FormFieldContainer } from "../molecules";
 
 export const RadioComponent = (props: any) => {
   const { onValueChange, value, label } = props;

@@ -4,9 +4,8 @@ import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import PerfilList from "../components/PerfilList";
-import { ListTitle } from "../../../components/atoms/ListTitle";
 import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
-import { AddButton } from "../../../components/atoms/AddButton";
+import { AddButton, ListTitle } from "@shared/components/atoms";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();

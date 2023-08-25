@@ -1,11 +1,8 @@
 import { useState } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { TextInput, RadioButton, Button, Menu } from "react-native-paper";
-import { Provider as PaperProvider } from "react-native-paper";
-import { RadioComponent } from "../../../components/organisms/RadioComponent";
-import { SelectDropdown } from "../../../components/organisms/SelectDropdown";
-import { ListTitle } from "../../../components/atoms/ListTitle";
-import { FormTemplate } from "../../../components/templates/FormTemplate";
+import { StyleSheet, ScrollView } from "react-native";
+import { Button } from "react-native-paper";
+import { FormTemplate } from "@shared/components/templates";
+import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../forms/perfilForm";
 
 type PerfilFormState = {

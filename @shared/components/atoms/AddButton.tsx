@@ -1,6 +1,6 @@
 import { StyleSheet, ViewStyle } from "react-native";
 import { Button } from "react-native-paper";
-import { globalColors } from "../../constants/themes";
+import { globalColors } from "../../../constants/themes";
 
 type AddButonProps = {
   onPress: () => void;

@@ -7,9 +7,8 @@ import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { RelatorioList } from "../components/RelatorioList";
-import { ListTitle } from "../../../components/atoms/ListTitle";
-import { AddButton } from "../../../components/atoms/AddButton";
 import { Relatorio } from "_types/Relatorio";
+import { AddButton, ListTitle } from "@shared/components/atoms";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();

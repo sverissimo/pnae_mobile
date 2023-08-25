@@ -1,6 +1,6 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { globalColors } from "../../constants/themes";
+import { globalColors } from "../../../constants/themes";
 
 export function LogoutComponent({
   onLogout: logoutHandler,

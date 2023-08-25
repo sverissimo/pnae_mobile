@@ -6,8 +6,8 @@ import PerfilList from "../../perfil/components/PerfilList";
 import { RelatorioList } from "../../relatorio/components/RelatorioList";
 import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
 import { globalColors } from "../../../constants/themes";
-import { ListTitle } from "components/atoms/ListTitle";
 import { ProdutorDetails } from "../components/ProdutorDetails";
+import { ListTitle } from "@shared/components/atoms";
 
 export const ProdutorScreen = () => {
   const { produtor } = useSelectProdutor();

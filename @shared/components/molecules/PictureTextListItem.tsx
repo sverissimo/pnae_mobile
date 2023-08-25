@@ -1,8 +1,6 @@
-//write a rn component that takes in a picture and text and displays side by side it in a list item
-import { CustomButton } from "components/atoms/CustomButton";
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Text } from "react-native-paper";
+import { CustomButton } from "../atoms";
 
 type PictureTextListItemProps = {
   pictureURI: string;

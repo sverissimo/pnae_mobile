@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text } from "react-native";
 
 export const ListTitle = ({ title }: { title: string | undefined }) => {
   return <Text style={styles.title}>{title} </Text>;

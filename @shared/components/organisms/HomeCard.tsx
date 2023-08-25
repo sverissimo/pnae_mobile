@@ -1,8 +1,8 @@
 // src/screens/HomeScreen/components/Card.tsx
 import React from "react";
-import { Text, StyleSheet, View, Pressable } from "react-native";
-import { Icon } from "../atoms/Icon";
-import { globalColors } from "../../constants/themes";
+import { Text, StyleSheet, Pressable } from "react-native";
+import { Icon } from "../atoms";
+import { globalColors } from "../../../constants/themes";
 
 const { primary, grayscale } = globalColors;
 

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
+import { deleteFile, takePicture } from "@shared/utils";
 import { ButtonInputComponent } from "./ButtonInputComponent";
-import { FormElement } from "@shared/types/FormElement";
-import { PictureTextListItem } from "components/molecules/PictureTextListItem";
-import { FormFieldContainer } from "components/molecules/FormFieldContainer";
-import { takePicture } from "@shared/utils/cameraUtils";
-import { deleteFile } from "@shared/utils/fileSystemUtils";
+import { FormFieldContainer, PictureTextListItem } from "../molecules";
+import { FormElement } from "@shared/types";
 
 type PictureHolderProps = {
   item: FormElement;

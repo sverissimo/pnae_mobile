@@ -1,5 +1,5 @@
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
-import { ListItem } from "../molecules/ListItem";
+import { ListItem } from "../molecules";
 
 type ListProps = {
   data?: any;

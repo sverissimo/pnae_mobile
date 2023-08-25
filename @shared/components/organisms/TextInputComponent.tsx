@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
-import { FormFieldContainer } from "../molecules/FormFieldContainer";
-import { FormElement } from "../../@shared/types/FormElement";
+import { FormFieldContainer } from "../molecules";
+import { FormElement } from "@shared/types";
 
 //create type for this component props
 type TextInputComponentProps = {

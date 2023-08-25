@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { Icon } from "../../../components/atoms/Icon";
+import { Icon } from "@shared/components/atoms";
 import { globalColors } from "../../../constants/themes";
 
 export function ProdutorSearchBar() {

@@ -1,7 +1,7 @@
 import { StyleSheet, ScrollView } from "react-native";
 import SelectDropDownNative from "react-native-select-dropdown";
-import { Icon } from "../atoms/Icon";
-import { FormFieldContainer } from "../molecules/FormFieldContainer";
+import { FormFieldContainer } from "../molecules";
+import { Icon } from "../atoms";
 
 type SelectDropdownProps = {
   label: string;

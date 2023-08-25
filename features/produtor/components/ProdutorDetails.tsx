@@ -1,5 +1,5 @@
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { List } from "../../../components/organisms/List";
+import { List } from "../../../@shared/components/organisms/List";
 import { PRODUTOR_COLUMNS } from "../produtorColumns";
 import { formatDate } from "@shared/utils/formatDate";
 import { formatCPF } from "@shared/utils/formatCPF";

@@ -23,6 +23,10 @@ export const RelatorioService = {
 
   getAllRelatorios: async () => {
     const relatorios = (await RelatorioDB.getAllRelatorios()) as RelatorioDTO[];
+    console.log(
+      "🚀 ~ file: RelatorioService.ts:26 ~ getAllRelatorios: ~ relatorios:",
+      relatorios
+    );
     return relatorios.map(
       (relatorio) => humps.camelizeKeys(relatorio) as Relatorio
     );

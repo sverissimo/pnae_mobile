@@ -5,7 +5,7 @@ import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import React from "react";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { ListTitle } from "components/atoms/ListTitle";
+import { ListTitle } from "@shared/components/atoms";
 
 export const PropriedadeScreen = () => {
   const { produtor } = useSelectProdutor();
