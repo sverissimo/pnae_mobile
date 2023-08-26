@@ -26,7 +26,9 @@ export const Icon = (props: IconProps) => {
       color={defaultColor}
       {...props}
     />
-  ) : iconName === "building" || iconName === "pencil-square-o" ? (
+  ) : iconName === "building" ||
+    iconName === "pencil" ||
+    iconName === "pencil-square-o" ? (
     <FontAwesome
       name={iconName}
       size={defaultSize}

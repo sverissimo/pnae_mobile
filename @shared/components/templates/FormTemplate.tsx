@@ -50,7 +50,7 @@ export function FormTemplate({
                 label={item.label}
                 item={item}
                 onChangeText={(value: any) => onValueChange(item.field, value)}
-                value={data[item.field]}
+                value={"" + data[item.field]}
                 keyboardType={item.keyboardType}
               />
             );

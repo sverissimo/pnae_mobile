@@ -1,28 +1,74 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { RelatorioService } from "@services/RelatorioService";
 import { useAuth } from "../../../hooks/useAuth";
-import { Relatorio } from "_types/Relatorio";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 import { Usuario } from "_types/Usuario";
+import { RelatorioContext } from "@contexts/RelatorioContext";
 
-export const useManageRelatorio = () => {
+export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
-  const [relatorio, setState] = useState<any>({});
+  const { relatorios, setRelatorios } = useContext(RelatorioContext);
+  const [relatorio, setState] = useState<Relatorio>({});
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (produtorId) {
+      getRelatorios(produtorId);
+    }
+  }, [produtorId]);
 
   const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
 
-  const saveRelatorio = async () => {
-    const relatorioInput = {
+  const saveRelatorio = async (relatorio: Relatorio) => {
+    try {
+      const relatorioInput = {
+        ...relatorio,
+        produtorId: produtor?.id_pessoa_demeter,
+        tecnicoId: user?.id_usuario,
+      };
+      //|TODO: IMPLEMENT THIS CALL AND UPDATE TO BACKEND, GET RID OF useManageRelatorios "relatorio" state
+      //await RelatorioService.createRelatorio(relatorioInput);
+      updateRelatorio({ relatorio });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: useManageRelatorios.ts:38 ~ saveRelatorio ~ error:",
+        error
+      );
+    }
+  };
+
+  const updateRelatorio = async ({
+    relatorio,
+    sync = false,
+  }: {
+    relatorio: Relatorio;
+    sync?: boolean;
+  }) => {
+    if (sync) {
+      await RelatorioService.updateRelatorio(relatorio);
+    }
+    const updatedRelatorio: Relatorio = {
       ...relatorio,
-      produtorId: produtor?.id_pessoa_demeter,
-      tecnicoId: user?.id_usuario,
+      produtor,
+      nomeTecnico: user?.nome_usuario,
     };
-    const relatorioId = await RelatorioService.createRelatorio(relatorioInput);
-    return relatorioId;
+
+    if (relatorio.id) {
+      const updatedList = [...relatorios];
+      const updateIndex = updatedList.findIndex((r) => r.id === relatorio.id);
+      updatedList.splice(updateIndex, 1, updatedRelatorio);
+      setRelatorios(updatedList);
+      return;
+    }
+
+    setRelatorios((relatorios: Relatorio[]) => [
+      ...relatorios,
+      updatedRelatorio,
+    ]);
   };
 
   const getRelatorios = async (
@@ -55,6 +101,7 @@ export const useManageRelatorio = () => {
         const nome_tecnico = tecnico?.nome_usuario;
         return { ...r, nome_tecnico };
       });
+      setRelatorios(relatorios);
       return relatorios;
     } catch (error) {
       console.log("🚀useManageRelatorios.ts:60 error:", error);
@@ -64,6 +111,7 @@ export const useManageRelatorio = () => {
 
   return {
     relatorio,
+    relatorios,
     getRelatorios,
     handleChange,
     saveRelatorio,

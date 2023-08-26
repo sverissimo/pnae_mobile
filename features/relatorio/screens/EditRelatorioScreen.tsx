@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
@@ -7,25 +7,34 @@ import { FormTemplate } from "../../../@shared/components/templates/FormTemplate
 import { Toast } from "@shared/components/molecules/Toast";
 import { relatorioForm } from "../relatorioForm";
 import { ListTitle } from "@shared/components/atoms";
-import { useRoute } from "@react-navigation/native";
+import { Relatorio } from "../types/Relatorio";
 
-export const CreateRelatorioScreen = ({ route }: any) => {
-  const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
+export const EditRelatorioScreen = ({ route }: any) => {
+  const [relatorio, setRelatorio] = useState<Relatorio>({});
+  const { saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
+  const { relatorios } = useManageRelatorio();
+
+  useEffect(() => {
+    const relatorioId = route.params.relatorioId;
+    const existingRelatorio = relatorios.find((r) => r!.id === relatorioId);
+    setRelatorio({ ...existingRelatorio });
+  }, [relatorios]);
+
+  const handleChange = (name: string, value: string) => {
+    setRelatorio({ ...relatorio, [name]: value });
+  };
 
   const [visible, setVisible] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
   // const relatorios = useRoute().params
   const handleSaveRelatorio = async () => {
-    //TODO: refactor this
     await saveRelatorio(relatorio);
-    /* //@ts-ignore
-    relatorios.push(relatorio) */
     setVisible(true);
-    // setDisableButton(true);
-    // setTimeout(() => {
-    //   navigation.goBack();
-    // }, 1000);
+    setDisableButton(true);
+    setTimeout(() => {
+      navigation.goBack();
+    }, 1000);
   };
 
   const handleDismissSnackbar = () => {
@@ -34,7 +43,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
 
   const showSignatureScreen = () => {
     navigation.navigate("GetSignatureScreen", {
-      assinaturaURI: relatorio!.assinaturaURI,
+      assinaturaURI: relatorio?.assinaturaURI,
       handleChange,
     });
   };

@@ -1,13 +1,15 @@
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import { ListItem } from "../molecules";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 
 type ListProps = {
   data?: any;
   columns?: any;
   onPress?: any;
+  onEdit?: (id: number | string) => void;
 };
 
-export const List = ({ data, columns, onPress }: ListProps) => {
+export const List = ({ data, columns, onPress, onEdit }: ListProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.listContainer}>
@@ -15,7 +17,12 @@ export const List = ({ data, columns, onPress }: ListProps) => {
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <ListItem data={item} columns={columns} onPress={onPress} />
+            <ListItem
+              data={item}
+              columns={columns}
+              onPress={onPress}
+              onEdit={() => onEdit && onEdit(item.id)}
+            />
           )}
           keyExtractor={(item) => item.id}
         />

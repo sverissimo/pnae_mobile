@@ -7,29 +7,27 @@ import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { RelatorioList } from "../components/RelatorioList";
-import { Relatorio } from "_types/Relatorio";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { getRelatorios } = useManageRelatorio();
-  const [relatorios, setRelatorios] = useState<Relatorio[]>();
+  const { getRelatorios, relatorios } = useManageRelatorio(
+    produtor?.id_pessoa_demeter
+  );
+  //const [relatorios, setRelatorios] = useState<Relatorio[]>();
 
-  useEffect(() => {
-    if (!produtor?.id_pessoa_demeter) {
-      return;
-    }
-
-    const fetchRelatorios = async () => {
-      const relatorios = await getRelatorios(produtor?.id_pessoa_demeter);
-      setRelatorios(relatorios);
-    };
-    fetchRelatorios();
+  /* useEffect(() => {
+  if(!relatorios )
   }, [produtor]);
-
-  const handlePress = () => {
+ */
+  const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
+  };
+
+  const handleEditRelatorio = (relatorioId: string | number) => {
+    navigation.navigate("EditRelatorioScreen", { relatorioId });
   };
 
   if (!produtor) {
@@ -46,12 +44,12 @@ export const RelatorioScreen = () => {
       {relatorios?.length ? (
         <>
           <ListTitle title={"Relatorios cadastrados"} />
-          <RelatorioList relatorios={relatorios} />
+          <RelatorioList relatorios={relatorios} onEdit={handleEditRelatorio} />
         </>
       ) : (
         <ListTitle title={"Nenhum relatório cadastrado"} />
       )}
-      <AddButton label="Criar Novo Relatório" onPress={handlePress} />
+      <AddButton label="Criar Novo Relatório" onPress={handleCreateRelatorio} />
     </View>
   );
 };

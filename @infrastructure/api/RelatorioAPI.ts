@@ -1,4 +1,4 @@
-import { Relatorio } from "_types/Relatorio";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 import { env } from "config";
 
 export const RelatorioAPI = { createRelatorio };
@@ -6,27 +6,29 @@ const url = `${env.BASE_URL}/relatorios`;
 
 async function createRelatorio(relatorioDTO: Relatorio) {
   if (!relatorioDTO) return null;
+  console.log(
+    "🚀 ~ file: RelatorioAPI.ts:9 ~ createRelatorio ~ relatorioDTO:",
+    relatorioDTO
+  );
   try {
     const formData: any = new FormData();
     Object.entries(relatorioDTO).forEach(([key, value]) => {
-      if (!!key && key !== "pictureURI" && key !== "assinaturaURI") {
-        formData.append(key, value);
-      }
+      formData.append(key, value);
     });
 
     if (relatorioDTO?.pictureURI) {
       formData.append("foto", {
         uri: relatorioDTO?.pictureURI,
-        name: "test.jpg",
-        type: "image/jpeg",
+        name: "foto_visita.png",
+        type: "image/png",
       });
     }
 
     if (relatorioDTO?.assinaturaURI) {
-      formData.append("foto", {
+      formData.append("assinatura", {
         uri: relatorioDTO?.assinaturaURI,
-        name: "test.jpg",
-        type: "image/jpeg",
+        name: "assinatura.png",
+        type: "image/png",
       });
     }
 

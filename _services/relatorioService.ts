@@ -4,7 +4,7 @@ import {
   getRelatoriosFromDB,
   saveRelatorioLocal,
 } from "../@infrastructure/database/RelatorioDB";
-import { Relatorio } from "../types/Relatorio";
+import { Relatorio } from "../features/relatorio/types/Relatorio";
 import { RelatorioDTO } from "../@infrastructure/database/dto/RelatorioDTO";
 
 export async function createRelatorio(relatorio: Relatorio) {

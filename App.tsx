@@ -17,9 +17,10 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("-------------------\n");
-        checkDBSchema();
+        console.log("--------------------\n");
+        // checkDBSchema();
         RelatorioService.getAllRelatorios().then((relatorios) =>
+          //@ts-ignore
           relatorios.forEach((relatorio) => console.log(relatorio))
         );
       })

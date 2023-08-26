@@ -4,4 +4,5 @@ export const RELATORIO_COLUMNS = [
   { key: "assunto", label: "Assunto" },
   { key: "nome_tecnico", label: "Técnico" },
   { key: "createdAt", label: "Data" },
+  { key: "edit", label: "Editar", icon: "pencil" },
 ];

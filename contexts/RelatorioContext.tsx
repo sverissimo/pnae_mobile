@@ -1,10 +1,12 @@
 import * as FileSystem from "expo-file-system";
-import { Relatorio } from "_types/Relatorio";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 import { createContext, useState } from "react";
 
 type RelatorioContextType = {
-  relatorio: Relatorio | null;
-  setRelatorio: (relatorio: Relatorio | null) => void;
+  relatorios: Relatorio[];
+  setRelatorios: (
+    relatorios: Relatorio[] | ((relatorios: Relatorio[]) => Relatorio[])
+  ) => void;
   handleGetSignature: (signature: any) => Promise<string | null>;
 };
 
@@ -19,7 +21,7 @@ type RelatorioContextProviderProps = {
 export const RelatorioContextProvider = ({
   children,
 }: RelatorioContextProviderProps) => {
-  const [relatorio, setRelatorio] = useState<any>(null);
+  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const [state, setState] = useState({});
 
   async function handleGetSignature(signature: any) {
@@ -50,7 +52,7 @@ export const RelatorioContextProvider = ({
 
   return (
     <RelatorioContext.Provider
-      value={{ relatorio, setRelatorio, handleGetSignature }}
+      value={{ relatorios, setRelatorios, handleGetSignature }}
     >
       {children}
     </RelatorioContext.Provider>

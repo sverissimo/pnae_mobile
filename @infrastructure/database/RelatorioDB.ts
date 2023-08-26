@@ -1,4 +1,4 @@
-import { Relatorio } from "_types/Relatorio";
+import { Relatorio } from "features/relatorio/types/Relatorio";
 import { db } from "./config";
 import { RelatorioDTO } from "./dto/RelatorioDTO";
 
@@ -9,7 +9,7 @@ export const RelatorioDB = {
   updateRelatorio,
 };
 
-function createRelatorio(relatorio: RelatorioDTO): Promise<void> {
+function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
   return new Promise((resolve, reject) => {
     if (!relatorio) {
       reject(new Error("Relatorio is null or undefined"));
@@ -38,7 +38,7 @@ function createRelatorio(relatorio: RelatorioDTO): Promise<void> {
         queryString,
         values,
         () => {
-          resolve();
+          resolve(true);
           return true;
         },
         (_, error) => {

@@ -3,10 +3,13 @@ import { useAuth } from "../hooks/useAuth";
 import { RootStackParamList } from "./types";
 import { TabNavigator } from "./TabNavigator";
 import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
-import { CreateRelatorioScreen } from "../features/relatorio/screens/CreateRelatorioScreen";
 import { CreatePerfilScreen } from "../features/perfil/screens/CreatePerfilScreen";
 import { EditPerfilScreen } from "../features/perfil/screens/EditPerfilScreen";
-import { GetSignatureScreen } from "features/relatorio/screens/GetSignatureScreen";
+import {
+  CreateRelatorioScreen,
+  EditRelatorioScreen,
+  GetSignatureScreen,
+} from "features/relatorio/screens";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -38,6 +41,13 @@ export function StackNavigator() {
         component={CreateRelatorioScreen}
         options={{
           title: "Criar Novo Relatório",
+        }}
+      />
+      <Stack.Screen
+        name="EditRelatorioScreen"
+        component={EditRelatorioScreen}
+        options={{
+          title: "Editar Relatório",
         }}
       />
       <Stack.Screen
