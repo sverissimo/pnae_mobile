@@ -3,7 +3,6 @@ import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
 import { RelatorioDTO } from "../@infrastructure/database/dto/RelatorioDTO";
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
-import { parseURI } from "@shared/utils/parseURI";
 
 export const RelatorioService = {
   createRelatorio: async (relatorio: Relatorio) => {
@@ -11,23 +10,10 @@ export const RelatorioService = {
       const relatorioLocalDTO = mapToDTO(relatorio);
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
 
-      return resultLocal;
-
-      // const relatorioDTO = {
-      //   ...relatorio,
-      //   assinaturaFileName: parseURI(relatorio?.assinaturaURI),
-      //   fotoFileName: parseURI(relatorio?.pictureURI),
-      //   numeroRelatorio: relatorio?.numeroRelatorio
-      //     ? +relatorio?.numeroRelatorio
-      //     : undefined,
-      // };
-      // const result = await RelatorioAPI.createRelatorio(relatorioDTO);
-      // return result;
+      const relatorioId = await RelatorioAPI.createRelatorio(relatorio);
+      return relatorioId;
     } catch (error: any) {
-      console.log(
-        "🚀 ~ file: RelatorioService.ts:31 ~ createRelatorio: ~ error:",
-        error
-      );
+      console.error("🚀 RelatorioService.ts:31: ", error);
       throw new Error(error.message);
     }
   },

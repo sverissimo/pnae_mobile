@@ -20,6 +20,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
     clearDiscardedPictures,
     assinaturaURI,
     setAssinatura,
+    clearURIs,
   } = useManagePictures();
 
   const [relatorio, setRelatorio] = useState<Partial<Relatorio>>({});
@@ -44,10 +45,12 @@ export const EditRelatorioScreen = ({ route }: any) => {
   useEffect(() => {
     return () => {
       const keepOriginalOnly = !disableButton;
-      clearDiscardedPictures(keepOriginalOnly);
+      clearDiscardedPictures(keepOriginalOnly).then(() => clearURIs());
+      console.log("Component Unmounted");
     };
   }, []);
 
+  //TODO: refactor this -> HandleChange should be in useManageRelatorio
   const handleChange = (name: string, value: string) => {
     setRelatorio({ ...relatorio, [name]: value });
   };
@@ -57,7 +60,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
       await updateRelatorio(updatedRelatorio as Relatorio);
       setRelatorio(updatedRelatorio);
-      clearDiscardedPictures();
+      clearDiscardedPictures().then(() => clearURIs());
 
       toast("success");
       setTimeout(() => {

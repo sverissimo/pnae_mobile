@@ -1,33 +1,34 @@
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { env } from "config";
+import { parseURI } from "@shared/utils/parseURI";
 
 export const RelatorioAPI = { createRelatorio };
 const url = `${env.BASE_URL}/relatorios`;
 
 async function createRelatorio(relatorioDTO: Relatorio) {
   if (!relatorioDTO) return null;
-  console.log(
-    "🚀 ~ file: RelatorioAPI.ts:9 ~ createRelatorio ~ relatorioDTO:",
-    relatorioDTO
-  );
   try {
     const formData: any = new FormData();
     Object.entries(relatorioDTO).forEach(([key, value]) => {
+      if (key === "pictureURI" || key === "assinaturaURI") {
+        formData.append(key, parseURI(value));
+        return;
+      }
       formData.append(key, value);
     });
 
     if (relatorioDTO?.pictureURI) {
       formData.append("foto", {
-        uri: relatorioDTO?.pictureURI,
-        name: "foto_visita.png",
+        uri: relatorioDTO.pictureURI,
+        name: parseURI(relatorioDTO.pictureURI),
         type: "image/png",
       });
     }
 
     if (relatorioDTO?.assinaturaURI) {
       formData.append("assinatura", {
-        uri: relatorioDTO?.assinaturaURI,
-        name: "assinatura.png",
+        uri: relatorioDTO.assinaturaURI,
+        name: parseURI(relatorioDTO.assinaturaURI),
         type: "image/png",
       });
     }
@@ -43,7 +44,5 @@ async function createRelatorio(relatorioDTO: Relatorio) {
   } catch (error) {
     console.error("Error submitting form data:", error);
     return null;
-  } finally {
-    console.log("finally");
   }
 }

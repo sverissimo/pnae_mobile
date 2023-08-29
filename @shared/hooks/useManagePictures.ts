@@ -60,7 +60,14 @@ export function useManagePictures() {
         picturesToDelete.push(...picturesToDeleteInList);
       }
     }
-    await Promise.all(picturesToDelete.map(deleteFile));
+    return Promise.all(picturesToDelete.map(deleteFile));
+  };
+
+  const clearURIs = () => {
+    setAssinaturaURI("");
+    setPictureURI("");
+    setAssinaturaURIList([]);
+    setPictureURIList([]);
   };
 
   const setPicture = (pictureURI: string) => {
@@ -82,5 +89,6 @@ export function useManagePictures() {
     setAssinaturaURIList,
     handleTakePicture,
     handleGetSignature,
+    clearURIs,
   };
 }

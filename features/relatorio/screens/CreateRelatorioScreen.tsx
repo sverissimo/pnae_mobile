@@ -14,30 +14,21 @@ import { useManagePictures } from "@shared/hooks";
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
-  const { setPicture, setAssinatura } = useManagePictures();
+  const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
   const [visible, setVisible] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
 
-  console.log(
-    "🚀 ~ file: CreateRelatorioScreen.tsx:16 ~ CreateRelatorioScreen ~ relatorio:",
-    relatorio
-  );
   useEffect(() => {
-    setPicture("");
-    setAssinatura("");
+    clearURIs();
   }, []);
 
-  // const relatorios = useRoute().params
   const handleSaveRelatorio = async () => {
-    //TODO: refactor this
-    await saveRelatorio(relatorio);
-    /* //@ts-ignore
-    relatorios.push(relatorio) */
+    await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
     setVisible(true);
-    // setDisableButton(true);
-    // setTimeout(() => {
-    //   navigation.goBack();
-    // }, 1000);
+    setDisableButton(true);
+    setTimeout(() => {
+      navigation.goBack();
+    }, 1000);
   };
 
   const handleDismissSnackbar = () => {

@@ -7,6 +7,7 @@ import { Relatorio } from "features/relatorio/types/Relatorio";
 import { Usuario } from "_types/Usuario";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
+import { formatDate } from "@shared/utils";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
@@ -29,22 +30,23 @@ export const useManageRelatorio = (produtorId?: string) => {
     try {
       const relatorioInput = {
         ...relatorio,
-        produtorId: produtor?.id_pessoa_demeter,
-        tecnicoId: user?.id_usuario,
+        produtorId: produtor!.id_pessoa_demeter!,
+        tecnicoId: user!.id_usuario,
       };
-      //|TODO: IMPLEMENT THIS CALL AND UPDATE TO BACKEND, GET RID OF useManageRelatorios "relatorio" state
-      //await RelatorioService.createRelatorio(relatorioInput);
-      updateRelatoriosList(relatorio);
+
+      await RelatorioService.createRelatorio(relatorioInput);
+      updateRelatoriosList({
+        ...relatorio,
+        nomeTecnico: user?.nome_usuario,
+        produtor,
+        createdAt: formatDate(new Date().toISOString()),
+      });
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
     }
   };
 
   const updateRelatorio = async (relatorio: Relatorio) => {
-    console.log(
-      "🚀 ~ file: useManageRelatorios.ts:44 ~ updateRelatorio ~ relatorio:",
-      relatorio
-    );
     const updates = getUpdatedProps(relatorio, relatorios);
     await RelatorioService.updateRelatorio(updates);
     updateRelatoriosList(relatorio);

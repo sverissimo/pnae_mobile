@@ -16,7 +16,7 @@ export const RelatorioList = ({ relatorios, onEdit }: RelatoriosListProps) => {
     id: r?.id,
     numeroRelatorio: r?.numeroRelatorio,
     assunto: truncateString(r?.assunto),
-    nome_tecnico: r?.nome_tecnico,
+    nomeTecnico: r?.nomeTecnico,
     createdAt: formatDate(r?.createdAt),
   }));
 

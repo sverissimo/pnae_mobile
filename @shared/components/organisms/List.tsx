@@ -1,6 +1,5 @@
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import { ListItem } from "../molecules";
-import { Relatorio } from "features/relatorio/types/Relatorio";
 
 type ListProps = {
   data?: any;
@@ -24,7 +23,7 @@ export const List = ({ data, columns, onPress, onEdit }: ListProps) => {
               onEdit={() => onEdit && onEdit(item.id)}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString() || item.assunto}
         />
       </View>
     </SafeAreaView>
