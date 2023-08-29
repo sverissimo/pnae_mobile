@@ -1,14 +1,21 @@
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import { ListItem } from "../molecules";
 
-type ListProps = {
-  data?: any;
+type ListProps<T> = {
+  data: any[];
   columns?: any;
   onPress?: any;
   onEdit?: (id: number | string) => void;
+  onDelete?: (entity: T) => void;
 };
 
-export const List = ({ data, columns, onPress, onEdit }: ListProps) => {
+export const List = <T extends Object>({
+  data,
+  columns,
+  onPress,
+  onEdit,
+  onDelete,
+}: ListProps<T>) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.listContainer}>
@@ -19,11 +26,11 @@ export const List = ({ data, columns, onPress, onEdit }: ListProps) => {
             <ListItem
               data={item}
               columns={columns}
-              onPress={onPress}
               onEdit={() => onEdit && onEdit(item.id)}
+              onDelete={onDelete}
             />
           )}
-          keyExtractor={(item) => item.id.toString() || item.assunto}
+          keyExtractor={(item) => item.id || item.assunto}
         />
       </View>
     </SafeAreaView>

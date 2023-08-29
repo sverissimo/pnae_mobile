@@ -12,6 +12,7 @@ import { RelatorioService } from "@services/RelatorioService";
 import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
+import { PaperProvider } from "react-native-paper";
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -20,11 +21,11 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("--------------------\n");
+        console.log("---------------------------\n");
         // checkDBSchema();
-        // RelatorioService.getAllRelatorios().then((relatorios) =>
-        //   relatorios.forEach((relatorio) => console.log(relatorio))
-        // );
+        RelatorioService.getAllRelatorios().then((relatorios) =>
+          relatorios.forEach((relatorio) => console.log(relatorio))
+        );
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
@@ -48,7 +49,9 @@ export default function App() {
         <ProdutorContextProvider>
           <RelatorioContextProvider>
             <ImageContextProvider>
-              <Authentication />
+              <PaperProvider>
+                <Authentication />
+              </PaperProvider>
             </ImageContextProvider>
           </RelatorioContextProvider>
         </ProdutorContextProvider>

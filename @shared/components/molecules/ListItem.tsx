@@ -1,44 +1,59 @@
+import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { globalColors } from "../../../constants/themes";
 import { Icon } from "../atoms";
 
-type RowProps = {
-  data?: any;
+type RowProps<T> = {
+  data?: T;
   isHeader?: boolean;
-  columns?: any;
-  onPress?: any;
+  columns: any;
   onEdit?: (data: any) => void;
+  onDelete?: (entity: T) => void;
 };
 
-export const ListItem: React.FC<RowProps> = ({
+export const ListItem = <T extends { [key: string]: any }>({
   data,
   isHeader,
   columns,
   onEdit,
-  onPress,
-}) => {
+  onDelete,
+}: RowProps<T>) => {
   return (
-    <View style={isHeader ? styles.headerContainer : styles.itemContainer}>
+    <View
+      style={isHeader ? styles.headerContainer : { ...styles.itemContainer }}
+    >
       {columns.map((column: any) =>
-        !column.icon || isHeader ? (
+        !column.icons || isHeader ? (
           <Text
             key={column.key}
-            style={isHeader ? styles.headerText : styles.itemText}
+            style={
+              isHeader
+                ? { ...styles.headerText, ...column.styles }
+                : { ...styles.itemText, ...column.styles }
+            }
           >
-            {isHeader ? column.label : data?.[column.key]}
+            {isHeader ? column.label : (data![column.key] as T)}
           </Text>
         ) : (
-          <View style={styles.iconContainer} key={column.key}>
-            <Icon
-              iconName="pencil"
-              size={16}
-              color={globalColors.primary[500]}
-              onPress={
-                column.key === "edit" && onEdit
-                  ? () => onEdit(data)
-                  : () => console.log("fkkkkkkkkkkkkkkkkkk")
-              }
-            />
+          <View
+            style={{ ...styles.iconContainer, ...column.styles }}
+            key={column.key}
+          >
+            {column.icons.map((icon: any) => (
+              <Icon
+                key={icon.iconName}
+                iconName={icon.iconName}
+                size={16}
+                color={icon.color || globalColors.primary[600]}
+                onPress={
+                  icon.action === "edit" && onEdit
+                    ? () => onEdit(data)
+                    : icon.action === "delete" && onDelete
+                    ? () => onDelete(data!)
+                    : () => console.log("fkkkkkkkkkkkkkkkkkk")
+                }
+              />
+            ))}
           </View>
         )
       )}
@@ -46,7 +61,7 @@ export const ListItem: React.FC<RowProps> = ({
   );
 };
 // const bgColor = globalColors.grayscale[200];
-const bgColor = globalColors.primary[100];
+const bgColor = globalColors.primary[50];
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
   itemText: {
     textAlign: "center",
     flex: 1,
-    fontSize: 12,
+    fontSize: 11,
     borderColor: bgColor,
     borderWidth: 0.3,
     backgroundColor: "white",
@@ -82,7 +97,8 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     alignItems: "center",
     textAlign: "center",
 

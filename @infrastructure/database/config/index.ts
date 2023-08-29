@@ -1,5 +1,9 @@
 import * as SQLite from "expo-sqlite";
-import { createRelatorioTableQuery } from "../queries/createTableQueries";
+import {
+  createRelatorioTableQuery,
+  dropRelatorioTableQuery,
+  renameRelatorioTableQuery,
+} from "../queries/createTableQueries";
 
 export const db = SQLite.openDatabase("pnae_mobile.db");
 
@@ -8,6 +12,9 @@ export function init_db(): Promise<void> {
     db.transaction((tx) => {
       tx.executeSql(
         createRelatorioTableQuery,
+        //renameRelatorioTableQuery,
+        //migrateData,
+        // dropRelatorioTableQuery,
         [],
         () => {
           resolve();

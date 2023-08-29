@@ -3,15 +3,13 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { FormTemplate } from "../../../@shared/components/templates/FormTemplate";
-import { Toast } from "@shared/components/molecules/Toast";
-import { relatorioForm } from "../relatorioForm";
-import { ListTitle } from "@shared/components/atoms";
-import { useRoute } from "@react-navigation/native";
-import { Relatorio } from "../types/Relatorio";
 import { useManagePictures } from "@shared/hooks";
+import { FormTemplate } from "@shared/components/templates";
+import { Toast } from "@shared/components/molecules";
+import { ListTitle } from "@shared/components/atoms";
+import { relatorioForm } from "../relatorioForm";
 
-export const CreateRelatorioScreen = ({ route }: any) => {
+export const CreateRelatorioScreen = () => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
@@ -36,10 +34,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   };
 
   const showSignatureScreen = () => {
-    navigation.navigate("GetSignatureScreen", {
-      assinaturaURI: relatorio!.assinaturaURI,
-      handleChange,
-    });
+    navigation.navigate("GetSignatureScreen");
   };
 
   return (

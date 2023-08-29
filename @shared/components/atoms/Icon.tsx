@@ -19,6 +19,8 @@ export const Icon = (props: IconProps) => {
     iconName === "home" ||
     iconName === "send" ||
     iconName === "chevron-up" ||
+    iconName === "trash" ||
+    iconName === "search" ||
     iconName === "chevron-down" ? (
     <Ionicons
       name={iconName}
@@ -28,6 +30,7 @@ export const Icon = (props: IconProps) => {
     />
   ) : iconName === "building" ||
     iconName === "pencil" ||
+    iconName === "file-pdf-o" ||
     iconName === "pencil-square-o" ? (
     <FontAwesome
       name={iconName}

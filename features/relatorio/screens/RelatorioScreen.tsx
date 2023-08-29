@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { globalColors } from "../../../constants/themes";
 import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
@@ -6,22 +5,25 @@ import { useManageRelatorio } from "../hooks/useManageRelatorios";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import { RelatorioList } from "../components/RelatorioList";
-import { Relatorio } from "features/relatorio/types/Relatorio";
 import { AddButton, ListTitle } from "@shared/components/atoms";
+import { CustomDialog } from "@shared/components/organisms/CustomDialog";
+import { List } from "@shared/components/organisms";
+import { Relatorio } from "../types/Relatorio";
+import { RELATORIO_COLUMNS } from "../relatorioColumns";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { getRelatorios, relatorios } = useManageRelatorio(
-    produtor?.id_pessoa_demeter
-  );
-  //const [relatorios, setRelatorios] = useState<Relatorio[]>();
+  const {
+    relatorio,
+    relatorios,
+    onDelete,
+    showDeleteDialog,
+    setShowDeleteDialog,
+    formatRelatorioRows,
+    onConfirmDelete,
+  } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
-  /* useEffect(() => {
-  if(!relatorios )
-  }, [produtor]);
- */
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
   };
@@ -44,7 +46,19 @@ export const RelatorioScreen = () => {
       {relatorios?.length ? (
         <>
           <ListTitle title={"Relatorios cadastrados"} />
-          <RelatorioList relatorios={relatorios} onEdit={handleEditRelatorio} />
+          <List<Relatorio>
+            data={formatRelatorioRows(relatorios)}
+            columns={RELATORIO_COLUMNS}
+            onEdit={handleEditRelatorio}
+            onDelete={onDelete}
+          />
+          <CustomDialog
+            show={showDeleteDialog}
+            setShowDeleteDialog={setShowDeleteDialog}
+            deleteDialogMessage="Deseja realmente excluir este relatório?"
+            deleteDialogTitle={`Excluir Relatório nº ${relatorio.numeroRelatorio}`}
+            onConfirmDelete={onConfirmDelete}
+          />
         </>
       ) : (
         <ListTitle title={"Nenhum relatório cadastrado"} />

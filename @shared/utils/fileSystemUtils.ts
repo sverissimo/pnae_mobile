@@ -4,7 +4,7 @@ export const deleteFile = async (fileURI: string) => {
   const fileInfo = await FileSystem.getInfoAsync(fileURI);
   if (fileInfo.exists) {
     await FileSystem.deleteAsync(fileInfo.uri, { idempotent: true });
-    console.log("deleted file:", !fileInfo.exists);
+    console.log("deleted file:", fileInfo.exists);
   }
 };
 

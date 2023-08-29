@@ -1,9 +1,8 @@
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { ProdutorSearchBar } from "../components/ProdutorSearchBar";
 import { ProdutorInfo } from "../components/ProdutorInfo";
 import PerfilList from "../../perfil/components/PerfilList";
-import { RelatorioList } from "../../relatorio/components/RelatorioList";
 import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
 import { globalColors } from "../../../constants/themes";
 import { ProdutorDetails } from "../components/ProdutorDetails";
@@ -34,7 +33,6 @@ export const ProdutorScreen = () => {
         <ListTitle title={"Perfis cadastrados"} />
       </View>
       <PerfilList />
-      <RelatorioList />
     </View>
   );
 };
@@ -43,8 +41,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
-    //justifyContent: "flex-end",
-    //alignItems: "center",
   },
   title: {
     marginLeft: "2%",

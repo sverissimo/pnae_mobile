@@ -7,7 +7,7 @@ import { Relatorio } from "features/relatorio/types/Relatorio";
 import { Usuario } from "_types/Usuario";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
-import { formatDate } from "@shared/utils";
+import { fileExists, formatDate, truncateString } from "@shared/utils";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
@@ -15,6 +15,7 @@ export const useManageRelatorio = (produtorId?: string) => {
   const { user } = useAuth();
 
   const [relatorio, setState] = useState<Relatorio>({} as Relatorio);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   useEffect(() => {
     if (produtorId) {
@@ -46,32 +47,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
-  const updateRelatorio = async (relatorio: Relatorio) => {
-    const updates = getUpdatedProps(relatorio, relatorios);
-    await RelatorioService.updateRelatorio(updates);
-    updateRelatoriosList(relatorio);
-  };
-
-  const updateRelatoriosList = (relatorio: Relatorio) => {
-    const updatedRelatorio: Relatorio = {
-      ...relatorio,
-      produtor,
-      nomeTecnico: user?.nome_usuario,
-    };
-    if (relatorio.id) {
-      const updatedList = [...relatorios];
-      const updateIndex = updatedList.findIndex((r) => r.id === relatorio.id);
-      updatedList.splice(updateIndex, 1, updatedRelatorio);
-      setRelatorios(updatedList);
-      return;
-    }
-
-    setRelatorios((relatorios: Relatorio[]) => [
-      ...relatorios,
-      updatedRelatorio,
-    ]);
-  };
-
   const getRelatorios = async (
     produtorId: string | undefined
   ): Promise<Relatorio[]> => {
@@ -99,8 +74,8 @@ export const useManageRelatorio = (produtorId?: string) => {
 
       const relatorios = relatoriosData.map((r: Relatorio) => {
         const tecnico = tecnicos.find((t) => t?.id_usuario == r?.tecnicoId);
-        const nome_tecnico = tecnico?.nome_usuario;
-        return { ...r, nome_tecnico };
+        const nomeTecnico = tecnico?.nome_usuario;
+        return { ...r, nomeTecnico };
       });
       setRelatorios(relatorios);
       return relatorios;
@@ -110,12 +85,71 @@ export const useManageRelatorio = (produtorId?: string) => {
     return [];
   };
 
+  const updateRelatorio = async (relatorio: Relatorio) => {
+    const updates = getUpdatedProps(relatorio, relatorios);
+    await RelatorioService.updateRelatorio(updates);
+    updateRelatoriosList(relatorio);
+  };
+
+  const updateRelatoriosList = (relatorio: Relatorio) => {
+    const updatedRelatorio: Relatorio = {
+      ...relatorio,
+      produtor,
+      nomeTecnico: user?.nome_usuario,
+    };
+    if (relatorio.id) {
+      const updatedList = [...relatorios];
+      const updateIndex = updatedList.findIndex((r) => r.id === relatorio.id);
+      updatedList.splice(updateIndex, 1, updatedRelatorio);
+      setRelatorios(updatedList);
+      return;
+    }
+
+    setRelatorios((relatorios: Relatorio[]) => [
+      ...relatorios,
+      updatedRelatorio,
+    ]);
+  };
+
+  const onDelete = async (relatorio: Relatorio) => {
+    setState(relatorio);
+    setShowDeleteDialog(true);
+  };
+
+  const onConfirmDelete = async () => {
+    try {
+      await RelatorioService.deleteRelatorio(relatorio.id!);
+      const updatedList = relatorios.filter((r) => r.id !== relatorio.id);
+      setRelatorios(updatedList);
+      setState({} as Relatorio);
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error("🚀 ~ useManageRelatorios.ts ~ line 127", error);
+    }
+  };
+
+  const formatRelatorioRows = (relatorios: Relatorio[]) => {
+    const relatorioTableData = relatorios.map((r: Relatorio) => ({
+      id: r?.id,
+      numeroRelatorio: r?.numeroRelatorio,
+      assunto: truncateString(r?.assunto),
+      nomeTecnico: r?.nomeTecnico,
+      createdAt: formatDate(r?.createdAt),
+    }));
+    return relatorioTableData;
+  };
+
   return {
     relatorio,
     relatorios,
+    showDeleteDialog,
     getRelatorios,
     handleChange,
     saveRelatorio,
     updateRelatorio,
+    setShowDeleteDialog,
+    onDelete,
+    onConfirmDelete,
+    formatRelatorioRows,
   };
 };

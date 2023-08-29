@@ -3,10 +3,17 @@ import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
 import { RelatorioDTO } from "../@infrastructure/database/dto/RelatorioDTO";
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
+import { generateUUID } from "@shared/utils/generateUUID";
+import { deleteFile } from "@shared/utils";
 
 export const RelatorioService = {
   createRelatorio: async (relatorio: Relatorio) => {
     try {
+      relatorio.id = generateUUID();
+      console.log(
+        "🚀 ~ file: RelatorioService.ts:12 ~ createRelatorio: ~ relatorio:",
+        relatorio
+      );
       const relatorioLocalDTO = mapToDTO(relatorio);
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
 
@@ -26,6 +33,11 @@ export const RelatorioService = {
     return data;
   },
 
+  getAllRelatorios: async () => {
+    const relatorios = (await RelatorioDB.getAllRelatorios()) as RelatorioDTO[];
+    return relatorios.map(toModel) as Relatorio[];
+  },
+
   updateRelatorio: async (relatorio: Relatorio) => {
     try {
       const relatorioDTO = mapToDTO(relatorio);
@@ -41,9 +53,35 @@ export const RelatorioService = {
     }
   },
 
-  getAllRelatorios: async () => {
-    const relatorios = (await RelatorioDB.getAllRelatorios()) as RelatorioDTO[];
-    return relatorios.map(toModel) as Relatorio[];
+  deleteRelatorio: async (relatorioId: string) => {
+    try {
+      const relatorios = await RelatorioDB.getAllRelatorios();
+      const { assinatura_uri, picture_uri } = relatorios.find(
+        (r) => r.id === relatorioId
+      )!;
+
+      for (const file of [assinatura_uri, picture_uri]) {
+        await deleteFile(file);
+      }
+
+      const resultLocal = await RelatorioDB.deleteRelatorio(relatorioId);
+      if (!resultLocal) {
+        throw new Error(`Failed to delete relatorio locally: ${relatorioId}`);
+      }
+
+      const result = await RelatorioAPI.deleteRelatorio(relatorioId);
+      console.log(
+        "🚀 ~ file: RelatorioService.ts:59 ~ deleteRelatorio: ~ result:",
+        result
+      );
+      return result;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`RelatorioService line80: ${error.message}`);
+      } else {
+        throw new Error(`Failed to delete relatorio: ${error}`);
+      }
+    }
   },
 };
 

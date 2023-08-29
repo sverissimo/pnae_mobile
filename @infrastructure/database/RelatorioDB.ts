@@ -8,6 +8,7 @@ export const RelatorioDB = {
   getRelatorios,
   getAllRelatorios,
   updateRelatorio,
+  deleteRelatorio,
 };
 
 function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
@@ -97,7 +98,7 @@ function getAllRelatorios(): Promise<RelatorioDTO[]> {
   });
 }
 
-function updateRelatorio(relatorio: Partial<RelatorioDTO> & { id: number }) {
+function updateRelatorio(relatorio: Partial<RelatorioDTO> & { id: string }) {
   console.log(
     "🚀 ~ file: RelatorioDB.ts:101 ~ updateRelatorio ~ relatorio:",
     relatorio
@@ -120,6 +121,35 @@ function updateRelatorio(relatorio: Partial<RelatorioDTO> & { id: number }) {
             return true;
           } else {
             reject(new Error("O Relatório não foi atualizado."));
+          }
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
+}
+
+function deleteRelatorio(relatorioId: string) {
+  return new Promise<boolean>((resolve, reject) => {
+    if (!relatorioId) {
+      reject(new Error("RelatorioId is needed to delete an entry."));
+      return;
+    }
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM relatorio WHERE id = ?;`,
+        [relatorioId],
+        (_, result) => {
+          if (result.rowsAffected > 0) {
+            resolve(true);
+            return true;
+          } else {
+            reject(new Error("O Relatório não foi excluído."));
+            return false;
           }
         },
         (_, error) => {

@@ -1,7 +1,7 @@
 import { Produtor } from "../../../types/Produtor";
 
 export type Relatorio = {
-  id: number;
+  id: string;
   produtorId: string;
   tecnicoId: string;
   nomeTecnico?: string;

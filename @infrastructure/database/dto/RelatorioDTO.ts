@@ -1,7 +1,7 @@
 import { Produtor } from "../../../types/Produtor";
 
 export type RelatorioDTO = {
-  id: number;
+  id: string;
   produtor_id: string | BigInt;
   tecnico_id: string | BigInt;
   numero_relatorio: number;
