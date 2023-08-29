@@ -41,16 +41,23 @@ export const RelatorioService = {
   },
 
   updateRelatorio: async (relatorio: Relatorio) => {
-    console.log("updated! NOt! ...to be implemented");
+    try {
+      const relatorioDTO = mapToDTO(relatorio);
+      const result = await RelatorioDB.updateRelatorio(relatorioDTO);
+      console.log("🚀 ~ file: RelatorioService.ts:47 ~ result:", result);
+      return result;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`${error.message}`);
+      } else {
+        throw new Error(`Failed to update relatorio: ${error}`);
+      }
+    }
   },
 
   getAllRelatorios: async () => {
     const relatorios = (await RelatorioDB.getAllRelatorios()) as RelatorioDTO[];
-    console.log(
-      "🚀 ~ file: RelatorioService.ts:26 ~ getAllRelatorios: ~ relatorios:",
-      relatorios
-    );
-    return relatorios.map(toModel) as Relatorio;
+    return relatorios.map(toModel) as Relatorio[];
   },
 };
 
@@ -66,6 +73,9 @@ function mapToDTO(relatorio: Relatorio): RelatorioDTO {
       return convert(key, options);
     },
   }) as RelatorioDTO;
+  if (relatorioDTO.numero_relatorio) {
+    relatorioDTO.numero_relatorio = +relatorioDTO.numero_relatorio;
+  }
   return relatorioDTO;
 }
 

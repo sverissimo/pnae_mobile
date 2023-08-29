@@ -9,7 +9,7 @@ export type RouteParamsList = {
     perfil: any;
     signatureCaptureHandler?: (
       field: string,
-      signatureURI: string
+      assinaturaURI: string
     ) => Promise<void>;
   };
 };

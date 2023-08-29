@@ -8,7 +8,12 @@ export const deleteFile = async (fileURI: string) => {
   }
 };
 
-export const fileExists = async (fileURI: string) => {
+export const fileExists = async (fileURI?: string) => {
+  if (!fileURI) return { exists: false };
   const fileInfo = await FileSystem.getInfoAsync(fileURI);
+  console.log(
+    "🚀 ~ file: fileSystemUtils.ts:14 ~ fileExists ~ fileInfo:",
+    fileInfo
+  );
   return fileInfo;
 };

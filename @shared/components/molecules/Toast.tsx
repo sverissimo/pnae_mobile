@@ -3,11 +3,12 @@ import { Snackbar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { globalColors } from "constants/themes";
 
-type ToastProps = {
+export type ToastProps = {
   visible: boolean;
   onDismiss: () => void;
   message: string;
   duration?: number;
+  color?: string;
 };
 
 export const Toast = ({
@@ -15,6 +16,7 @@ export const Toast = ({
   onDismiss,
   message,
   duration,
+  color,
 }: ToastProps) => {
   return (
     <Snackbar
@@ -25,7 +27,10 @@ export const Toast = ({
       action={{
         label: "",
       }}
-      style={styles.toast}
+      style={{
+        ...styles.toast,
+        backgroundColor: color || styles.toast.backgroundColor,
+      }}
     >
       {message}
     </Snackbar>

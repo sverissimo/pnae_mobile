@@ -3,43 +3,80 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { FormTemplate } from "../../../@shared/components/templates/FormTemplate";
-import { Toast } from "@shared/components/molecules/Toast";
-import { relatorioForm } from "../relatorioForm";
+import { useManagePictures } from "@shared/hooks";
+import { FormTemplate } from "@shared/components/templates";
+import { Toast, ToastProps } from "@shared/components/molecules/Toast";
 import { ListTitle } from "@shared/components/atoms";
+import { relatorioForm } from "../relatorioForm";
 import { Relatorio } from "../types/Relatorio";
 
 export const EditRelatorioScreen = ({ route }: any) => {
-  const [relatorio, setRelatorio] = useState<Relatorio>({});
-  const { saveRelatorio } = useManageRelatorio();
+  const { updateRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { relatorios } = useManageRelatorio();
+  const {
+    pictureURI,
+    setPicture,
+    clearDiscardedPictures,
+    assinaturaURI,
+    setAssinatura,
+  } = useManagePictures();
+
+  const [relatorio, setRelatorio] = useState<Partial<Relatorio>>({});
+  const [disableButton, setDisableButton] = useState(false);
+  const [toastOptions, setToastOptions] = useState<ToastProps>({
+    visible: false,
+    onDismiss: handleDismissSnackbar,
+    message: "",
+  });
+
+  const relatorioId = route.params.relatorioId;
 
   useEffect(() => {
-    const relatorioId = route.params.relatorioId;
-    const existingRelatorio = relatorios.find((r) => r!.id === relatorioId);
-    setRelatorio({ ...existingRelatorio });
+    const originalRelatorio = relatorios.find(
+      (r) => r!.id === relatorioId
+    ) as Relatorio;
+    setRelatorio({ ...originalRelatorio });
+    setPicture(originalRelatorio.pictureURI);
+    setAssinatura(originalRelatorio.assinaturaURI);
   }, [relatorios]);
+
+  useEffect(() => {
+    return () => {
+      const keepOriginalOnly = !disableButton;
+      clearDiscardedPictures(keepOriginalOnly);
+    };
+  }, []);
 
   const handleChange = (name: string, value: string) => {
     setRelatorio({ ...relatorio, [name]: value });
   };
 
-  const [visible, setVisible] = useState(false);
-  const [disableButton, setDisableButton] = useState(false);
-  // const relatorios = useRoute().params
   const handleSaveRelatorio = async () => {
-    await saveRelatorio(relatorio);
-    setVisible(true);
-    setDisableButton(true);
-    setTimeout(() => {
-      navigation.goBack();
-    }, 1000);
+    try {
+      const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
+      await updateRelatorio(updatedRelatorio as Relatorio);
+      setRelatorio(updatedRelatorio);
+      clearDiscardedPictures();
+
+      toast("success");
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
+    } catch (error) {
+      setToastOptions({
+        ...toastOptions,
+        visible: true,
+        message: "Erro ao salvar relatório",
+        color: "red",
+      });
+      console.error("🚀 EditRelatorioScreen.tsx:44: ", error);
+    }
   };
 
-  const handleDismissSnackbar = () => {
-    setVisible(false);
-  };
+  function handleDismissSnackbar() {
+    setToastOptions((toastOptions) => ({ ...toastOptions, visible: false }));
+  }
 
   const showSignatureScreen = () => {
     navigation.navigate("GetSignatureScreen", {
@@ -47,6 +84,19 @@ export const EditRelatorioScreen = ({ route }: any) => {
       handleChange,
     });
   };
+
+  function toast(status: string) {
+    setToastOptions({
+      ...toastOptions,
+      visible: true,
+      message:
+        status === "error"
+          ? "Erro ao salvar relatório"
+          : "Relatório salvo com sucesso",
+      color: status === "error" ? "red" : "",
+    });
+    status === "success" && setDisableButton(true);
+  }
 
   return (
     <>
@@ -67,11 +117,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
           Salvar
         </Button>
       </ScrollView>
-      <Toast
-        message="Relatório salvo com sucesso!"
-        visible={visible}
-        onDismiss={handleDismissSnackbar}
-      />
+      <Toast {...toastOptions} />
     </>
   );
 };

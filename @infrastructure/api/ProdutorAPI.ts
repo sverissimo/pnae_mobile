@@ -13,7 +13,12 @@ export const ProdutorAPI = {
         method: "POST",
       });
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: ProdutorAPI.ts:17 ~ createProdutor: ~ error:",
+        error
+      );
+    }
   },
 
   getProdutor: async (cpf: string) => {
@@ -24,7 +29,6 @@ export const ProdutorAPI = {
       const url = `${env.BASE_URL}/produtor/${cpf}`;
       const response = await fetch(url);
       const data = await response.json();
-
       return data;
     } catch (error) {
       console.log(

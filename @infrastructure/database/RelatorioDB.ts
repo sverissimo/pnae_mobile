@@ -1,6 +1,7 @@
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { db } from "./config";
 import { RelatorioDTO } from "./dto/RelatorioDTO";
+import { createQueryString } from "./utils/createQueryString";
 
 export const RelatorioDB = {
   createRelatorio,
@@ -50,7 +51,9 @@ function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
   });
 }
 
-async function getRelatorios(produtorId: any) /* : Promise<RelatorioDTO>  */ {
+async function getRelatorios(
+  produtorId: string
+) /* : Promise<RelatorioDTO>  */ {
   const result = new Promise<RelatorioDTO[]>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -72,9 +75,9 @@ async function getRelatorios(produtorId: any) /* : Promise<RelatorioDTO>  */ {
   return result;
 }
 
-function getAllRelatorios(): Promise<Relatorio[]> {
+function getAllRelatorios(): Promise<RelatorioDTO[]> {
   return new Promise((resolve, reject) => {
-    const relatorios: Relatorio[] = [];
+    const relatorios: RelatorioDTO[] = [];
     db.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM relatorio;",
@@ -94,34 +97,36 @@ function getAllRelatorios(): Promise<Relatorio[]> {
   });
 }
 
-function updateRelatorio(id: number, assunto: string, orientacao: string) {
-  db.transaction((tx) => {
-    tx.executeSql(
-      "UPDATE relatorio SET assunto = ?, orientacao = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?;",
-      [assunto, orientacao, id]
-    );
+function updateRelatorio(relatorio: Partial<RelatorioDTO> & { id: number }) {
+  console.log(
+    "🚀 ~ file: RelatorioDB.ts:101 ~ updateRelatorio ~ relatorio:",
+    relatorio
+  );
+  return new Promise<void | boolean>((resolve, reject) => {
+    if (!relatorio) {
+      reject(new Error("Relatorio is null or undefined"));
+      return;
+    }
+
+    const { values, setClause } = createQueryString(relatorio);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE relatorio SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = ?;`,
+        [...values, relatorio.id],
+        (_, result) => {
+          if (result.rowsAffected > 0) {
+            resolve(true);
+            return true;
+          } else {
+            reject(new Error("O Relatório não foi atualizado."));
+          }
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
   });
 }
-
-/* export const insertRelatorio = (relatorio: Relatorio) => {
-  if (!relatorio) return;
-  const relatorioValues = Object.values(relatorio).map(
-    (value) => value ?? "NULL"
-  );
-
-  db.transaction((tx) => {
-    tx.executeSql(
-      `INSERT INTO relatorio (
-        produtor_id,
-        tecnico_id,
-        nr_relatorio,
-        assunto,
-        orientacao,
-        picture_uri,
-        assinatura_uri
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-      `,
-      relatorioValues
-    );
-  });
-}; */

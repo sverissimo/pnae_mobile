@@ -2,9 +2,8 @@ import { useRef } from "react";
 import { LogBox, StyleSheet, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
 import { globalColors } from "../../../constants/themes";
-import { getSignatureFileURI } from "@shared/utils/signatureUtils";
+import { useManagePictures } from "@shared/hooks";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
-import { deleteFile } from "@shared/utils/fileSystemUtils";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state.",
@@ -18,20 +17,13 @@ const style = `.m-signature-pad--footer
 
 export const GetSignatureScreen = ({ route }: any) => {
   const ref = useRef(null);
-  const { assinaturaURI, handleChange } = route.params;
+  const { handleGetSignature } = useManagePictures();
 
   const { navigation } = useCustomNavigation();
 
-  const handleSignature = async (signature: string) => {
-    const fileURI = await getSignatureFileURI(signature);
-
-    if (fileURI) {
-      if (assinaturaURI) {
-        await deleteFile(assinaturaURI);
-      }
-      handleChange("assinaturaURI", fileURI);
-      navigation.goBack();
-    }
+  const handleSignature = async (signatureURI: string) => {
+    await handleGetSignature(signatureURI);
+    navigation.goBack();
   };
 
   const handleEmpty = () => {

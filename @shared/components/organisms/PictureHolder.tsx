@@ -1,59 +1,38 @@
 import { useEffect, useState } from "react";
-import { deleteFile, takePicture } from "@shared/utils";
 import { ButtonInputComponent } from "./ButtonInputComponent";
 import { FormFieldContainer, PictureTextListItem } from "../molecules";
 import { FormElement } from "@shared/types";
+import { useManagePictures } from "@shared/hooks/useManagePictures";
 
 type PictureHolderProps = {
   item: FormElement;
-  imageURI?: string;
+  pictureURI?: string;
   type: "image" | "signature";
-  onValueChange?: (value: any) => void;
   showSignatureScreen?: (status: boolean) => void;
 };
 
 export const PictureHolder = ({
   item,
   type,
-  imageURI,
-  onValueChange,
   showSignatureScreen,
 }: PictureHolderProps) => {
+  const { pictureURI, handleTakePicture, assinaturaURI } = useManagePictures();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (imageURI) {
-      setLoaded(true);
-    } else {
-      setLoaded(false);
-    }
-  }, [imageURI]);
+    setLoaded(!!pictureURI);
+  }, [pictureURI]);
 
-  const handleTakeSignature = async () => {
-    if (showSignatureScreen) {
-      showSignatureScreen(true);
-    }
-  };
-
-  const handleTakePicture = async () => {
-    const pictureURI = await takePicture();
-    if (pictureURI) onValueChange!(pictureURI);
-    console.log({ pictureURI });
-    if (pictureURI && imageURI) {
-      await deleteFile(imageURI);
-    }
-  };
-
-  const handlePress = () => {
+  const handlePress = async () => {
     if (type === "image") {
       handleTakePicture();
     }
     if (type === "signature") {
-      handleTakeSignature();
+      showSignatureScreen!(true);
     }
   };
 
-  if (!loaded && !imageURI)
+  if (!loaded && !pictureURI)
     return (
       <ButtonInputComponent
         key={item.field}
@@ -67,7 +46,7 @@ export const PictureHolder = ({
   return (
     <FormFieldContainer label={item.label}>
       <PictureTextListItem
-        pictureURI={imageURI!}
+        pictureURI={type === "image" ? pictureURI! : assinaturaURI}
         text={item.buttonLabelAlt || ""}
         icon={item.icon || ""}
         onPress={handlePress}
@@ -75,3 +54,15 @@ export const PictureHolder = ({
     </FormFieldContainer>
   );
 };
+
+// if (pictureURIList) {
+//   console.log("🚀 PictureHolder.tsx:41 length:", pictureURIList.length);
+// for (const uri of pictureURIList) {
+//   console.log("🚀 ~ PictureHolder.tsx:47:", uri.split("/").pop());
+//   const { exists } = await fileExists(uri);
+//   console.log(
+//     "🚀 ~ file: PictureHolder.tsx:50 ~ handlePress ~ exists:",
+//     exists
+//   );
+// }
+// }

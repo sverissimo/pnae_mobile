@@ -50,7 +50,11 @@ export function FormTemplate({
                 label={item.label}
                 item={item}
                 onChangeText={(value: any) => onValueChange(item.field, value)}
-                value={"" + data[item.field]}
+                value={
+                  typeof data[item.field] === "number"
+                    ? data[item.field].toString()
+                    : data[item.field]
+                }
                 keyboardType={item.keyboardType}
               />
             );
@@ -60,8 +64,8 @@ export function FormTemplate({
                 item={item}
                 key={item.field}
                 type="image"
-                onValueChange={(value: any) => onValueChange(item.field, value)}
-                imageURI={data[item.field]}
+                // onValueChange={(value: any) => onValueChange(item.field, value)}
+                //imageURI={data[item.field]}
               />
             );
           case "signature":
@@ -71,7 +75,7 @@ export function FormTemplate({
                 key={item.field}
                 type="signature"
                 showSignatureScreen={showSignatureScreen}
-                imageURI={data[item.field]}
+                //imageURI={data[item.field]}
               />
             );
 

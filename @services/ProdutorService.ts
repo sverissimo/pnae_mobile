@@ -10,10 +10,7 @@ export const ProdutorService = {
     const relatorios = await RelatorioDB.getRelatorios(
       produtor?.id_pessoa_demeter
     );
-    console.log(
-      "🚀 ~ file: ProdutorService.ts:13 ~ getProdutor: ~ relatorios:",
-      relatorios
-    );
+
     produtor.relatorios = humps.camelizeKeys(relatorios);
     return produtor;
   },

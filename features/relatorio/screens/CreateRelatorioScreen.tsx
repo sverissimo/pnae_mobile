@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
@@ -8,13 +8,25 @@ import { Toast } from "@shared/components/molecules/Toast";
 import { relatorioForm } from "../relatorioForm";
 import { ListTitle } from "@shared/components/atoms";
 import { useRoute } from "@react-navigation/native";
+import { Relatorio } from "../types/Relatorio";
+import { useManagePictures } from "@shared/hooks";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
-
+  const { setPicture, setAssinatura } = useManagePictures();
   const [visible, setVisible] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
+
+  console.log(
+    "🚀 ~ file: CreateRelatorioScreen.tsx:16 ~ CreateRelatorioScreen ~ relatorio:",
+    relatorio
+  );
+  useEffect(() => {
+    setPicture("");
+    setAssinatura("");
+  }, []);
+
   // const relatorios = useRoute().params
   const handleSaveRelatorio = async () => {
     //TODO: refactor this

@@ -1,6 +1,6 @@
 import * as FileSystem from "expo-file-system";
 import { Relatorio } from "features/relatorio/types/Relatorio";
-import { createContext, useState } from "react";
+import { FC, createContext, useState } from "react";
 
 type RelatorioContextType = {
   relatorios: Relatorio[];
@@ -18,9 +18,9 @@ type RelatorioContextProviderProps = {
   children: React.ReactNode;
 };
 
-export const RelatorioContextProvider = ({
+export const RelatorioContextProvider: FC<RelatorioContextProviderProps> = ({
   children,
-}: RelatorioContextProviderProps) => {
+}) => {
   const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const [state, setState] = useState({});
 

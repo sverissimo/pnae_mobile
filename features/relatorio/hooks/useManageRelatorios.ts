@@ -6,12 +6,14 @@ import { useAuth } from "../../../hooks/useAuth";
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { Usuario } from "_types/Usuario";
 import { RelatorioContext } from "@contexts/RelatorioContext";
+import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
 export const useManageRelatorio = (produtorId?: string) => {
-  const { produtor } = useContext(ProdutorContext);
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
-  const [relatorio, setState] = useState<Relatorio>({});
+  const { produtor } = useContext(ProdutorContext);
   const { user } = useAuth();
+
+  const [relatorio, setState] = useState<Relatorio>({} as Relatorio);
 
   useEffect(() => {
     if (produtorId) {
@@ -32,31 +34,28 @@ export const useManageRelatorio = (produtorId?: string) => {
       };
       //|TODO: IMPLEMENT THIS CALL AND UPDATE TO BACKEND, GET RID OF useManageRelatorios "relatorio" state
       //await RelatorioService.createRelatorio(relatorioInput);
-      updateRelatorio({ relatorio });
+      updateRelatoriosList(relatorio);
     } catch (error) {
-      console.log(
-        "🚀 ~ file: useManageRelatorios.ts:38 ~ saveRelatorio ~ error:",
-        error
-      );
+      console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
     }
   };
 
-  const updateRelatorio = async ({
-    relatorio,
-    sync = false,
-  }: {
-    relatorio: Relatorio;
-    sync?: boolean;
-  }) => {
-    if (sync) {
-      await RelatorioService.updateRelatorio(relatorio);
-    }
+  const updateRelatorio = async (relatorio: Relatorio) => {
+    console.log(
+      "🚀 ~ file: useManageRelatorios.ts:44 ~ updateRelatorio ~ relatorio:",
+      relatorio
+    );
+    const updates = getUpdatedProps(relatorio, relatorios);
+    await RelatorioService.updateRelatorio(updates);
+    updateRelatoriosList(relatorio);
+  };
+
+  const updateRelatoriosList = (relatorio: Relatorio) => {
     const updatedRelatorio: Relatorio = {
       ...relatorio,
       produtor,
       nomeTecnico: user?.nome_usuario,
     };
-
     if (relatorio.id) {
       const updatedList = [...relatorios];
       const updateIndex = updatedList.findIndex((r) => r.id === relatorio.id);
@@ -115,5 +114,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     getRelatorios,
     handleChange,
     saveRelatorio,
+    updateRelatorio,
   };
 };

@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import { StatusBar } from "react-native";
 import Authentication from "./Authentication";
 import { init_db } from "./@infrastructure/database/config";
-import { UserContextProvider } from "./contexts/UserContext";
-import { ProdutorContextProvider } from "./contexts/ProdutorContext";
-import { RelatorioContextProvider } from "./contexts/RelatorioContext";
-import { StatusBar } from "react-native";
+import {
+  ImageContextProvider,
+  ProdutorContextProvider,
+  RelatorioContextProvider,
+  UserContextProvider,
+} from "./contexts";
+import { RelatorioService } from "@services/RelatorioService";
 import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./constants/themes";
-import { RelatorioService } from "@services/RelatorioService";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 
 export default function App() {
@@ -17,10 +20,9 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("--------------------\n");
+        console.log("---------------------\n");
         // checkDBSchema();
         RelatorioService.getAllRelatorios().then((relatorios) =>
-          //@ts-ignore
           relatorios.forEach((relatorio) => console.log(relatorio))
         );
       })
@@ -45,7 +47,9 @@ export default function App() {
       <UserContextProvider>
         <ProdutorContextProvider>
           <RelatorioContextProvider>
-            <Authentication />
+            <ImageContextProvider>
+              <Authentication />
+            </ImageContextProvider>
           </RelatorioContextProvider>
         </ProdutorContextProvider>
       </UserContextProvider>
