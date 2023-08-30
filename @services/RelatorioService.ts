@@ -5,6 +5,7 @@ import { Relatorio } from "features/relatorio/types/Relatorio";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
 import { generateUUID } from "@shared/utils/generateUUID";
 import { deleteFile } from "@shared/utils";
+import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
 export const RelatorioService = {
   createRelatorio: async (relatorio: Relatorio) => {
@@ -38,11 +39,30 @@ export const RelatorioService = {
     return relatorios.map(toModel) as Relatorio[];
   },
 
-  updateRelatorio: async (relatorio: Relatorio) => {
+  updateRelatorio: async (relatorioInput: Relatorio) => {
     try {
-      const relatorioDTO = mapToDTO(relatorio);
-      const result = await RelatorioDB.updateRelatorio(relatorioDTO);
-      console.log("🚀 ~ file: RelatorioService.ts:47 ~ result:", result);
+      const updatedAt = new Date().toISOString();
+      const { nomeTecnico, ...relatorio } = relatorioInput;
+      const allRelatorios = await RelatorioDB.getAllRelatorios();
+
+      const relatorioUpdate = getUpdatedProps(
+        { ...relatorio, updatedAt },
+        allRelatorios.map(toModel)
+      );
+
+      const relatorioDTO = mapToDTO(relatorioUpdate);
+      const relatorioUpdatedDTO = await RelatorioDB.updateRelatorio(
+        relatorioDTO
+      );
+      if (!relatorioUpdatedDTO) {
+        throw new Error(`Failed to update relatorio locally: ${relatorio.id}`);
+      }
+
+      const result = await RelatorioAPI.updateRelatorio({
+        ...relatorioUpdate,
+        updatedAt,
+      });
+
       return result;
     } catch (error) {
       if (error instanceof Error) {
@@ -70,10 +90,6 @@ export const RelatorioService = {
       }
 
       const result = await RelatorioAPI.deleteRelatorio(relatorioId);
-      console.log(
-        "🚀 ~ file: RelatorioService.ts:59 ~ deleteRelatorio: ~ result:",
-        result
-      );
       return result;
     } catch (error) {
       if (error instanceof Error) {

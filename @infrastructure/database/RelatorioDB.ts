@@ -1,7 +1,6 @@
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { db } from "./config";
 import { RelatorioDTO } from "./dto/RelatorioDTO";
-import { createQueryString } from "./utils/createQueryString";
 
 export const RelatorioDB = {
   createRelatorio,
@@ -98,30 +97,21 @@ function getAllRelatorios(): Promise<RelatorioDTO[]> {
   });
 }
 
-function updateRelatorio(relatorio: Partial<RelatorioDTO> & { id: string }) {
-  console.log(
-    "🚀 ~ file: RelatorioDB.ts:101 ~ updateRelatorio ~ relatorio:",
-    relatorio
-  );
-  return new Promise<void | boolean>((resolve, reject) => {
-    if (!relatorio) {
-      reject(new Error("Relatorio is null or undefined"));
-      return;
-    }
+async function updateRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
+  const { id, ...rest } = relatorio;
+  const setClause = Object.keys(rest)
+    .map((key) => `${key} = ?`)
+    .join(", ");
+  const values = Object.values(rest);
 
-    const { values, setClause } = createQueryString(relatorio);
-
+  return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE relatorio SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = ?;`,
-        [...values, relatorio.id],
+        `UPDATE relatorio SET ${setClause} WHERE id = ?;`,
+        [...values, id],
         (_, result) => {
-          if (result.rowsAffected > 0) {
-            resolve(true);
-            return true;
-          } else {
-            reject(new Error("O Relatório não foi atualizado."));
-          }
+          resolve(true);
+          return true;
         },
         (_, error) => {
           reject(error);

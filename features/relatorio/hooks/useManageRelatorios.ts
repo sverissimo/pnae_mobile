@@ -86,15 +86,13 @@ export const useManageRelatorio = (produtorId?: string) => {
   };
 
   const updateRelatorio = async (relatorio: Relatorio) => {
-    const updates = getUpdatedProps(relatorio, relatorios);
-    await RelatorioService.updateRelatorio(updates);
+    await RelatorioService.updateRelatorio(relatorio);
     updateRelatoriosList(relatorio);
   };
 
   const updateRelatoriosList = (relatorio: Relatorio) => {
     const updatedRelatorio: Relatorio = {
       ...relatorio,
-      produtor,
       nomeTecnico: user?.nome_usuario,
     };
     if (relatorio.id) {

@@ -21,11 +21,11 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("---------------------------\n");
+        console.log("-----------------------\n");
         // checkDBSchema();
-        RelatorioService.getAllRelatorios().then((relatorios) =>
-          relatorios.forEach((relatorio) => console.log(relatorio))
-        );
+        // RelatorioService.getAllRelatorios().then((relatorios) =>
+        //   relatorios.forEach((relatorio) => console.log(relatorio))
+        // );
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
