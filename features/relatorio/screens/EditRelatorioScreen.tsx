@@ -3,9 +3,9 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useCustomNavigation } from "hooks/useCustomNavigation";
 import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { useManagePictures } from "@shared/hooks";
+import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { FormTemplate } from "@shared/components/templates";
-import { Toast, ToastProps } from "@shared/components/molecules/Toast";
+import { SnackBar } from "@shared/components/molecules";
 import { ListTitle } from "@shared/components/atoms";
 import { relatorioForm } from "../relatorioForm";
 import { Relatorio } from "../types/Relatorio";
@@ -14,6 +14,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
   const { updateRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { relatorios } = useManageRelatorio();
+  const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
   const {
     pictureURI,
     setPicture,
@@ -25,11 +26,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
 
   const [relatorio, setRelatorio] = useState<Partial<Relatorio>>({});
   const [disableButton, setDisableButton] = useState(false);
-  const [toastOptions, setToastOptions] = useState<ToastProps>({
-    visible: false,
-    onDismiss: handleDismissSnackbar,
-    message: "",
-  });
 
   const relatorioId = route.params.relatorioId;
 
@@ -50,7 +46,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
     };
   }, []);
 
-  //TODO: refactor this -> HandleChange should be in useManageRelatorio
   const handleChange = (name: string, value: string) => {
     setRelatorio({ ...relatorio, [name]: value });
   };
@@ -62,24 +57,21 @@ export const EditRelatorioScreen = ({ route }: any) => {
       setRelatorio(updatedRelatorio);
       clearDiscardedPictures().then(() => clearURIs());
 
-      toast("success");
+      setSnackBarOptions({
+        message: "Relatório salvo com sucesso",
+      });
+      setDisableButton(true);
       setTimeout(() => {
         navigation.goBack();
       }, 1000);
     } catch (error) {
-      setToastOptions({
-        ...toastOptions,
-        visible: true,
+      setSnackBarOptions({
+        status: "error",
         message: "Erro ao salvar relatório",
-        color: "red",
       });
       console.error("🚀 EditRelatorioScreen.tsx:44: ", error);
     }
   };
-
-  function handleDismissSnackbar() {
-    setToastOptions((toastOptions) => ({ ...toastOptions, visible: false }));
-  }
 
   const showSignatureScreen = () => {
     navigation.navigate("GetSignatureScreen", {
@@ -87,19 +79,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
       handleChange,
     });
   };
-
-  function toast(status: string) {
-    setToastOptions({
-      ...toastOptions,
-      visible: true,
-      message:
-        status === "error"
-          ? "Erro ao salvar relatório"
-          : "Relatório salvo com sucesso",
-      color: status === "error" ? "red" : "",
-    });
-    status === "success" && setDisableButton(true);
-  }
 
   return (
     <>
@@ -120,7 +99,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
           Salvar
         </Button>
       </ScrollView>
-      <Toast {...toastOptions} />
+      <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
     </>
   );
 };

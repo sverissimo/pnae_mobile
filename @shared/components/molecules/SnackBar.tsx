@@ -3,7 +3,7 @@ import { Snackbar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { globalColors } from "constants/themes";
 
-export type ToastProps = {
+export type SnackBarProps = {
   visible: boolean;
   onDismiss: () => void;
   message: string;
@@ -11,13 +11,13 @@ export type ToastProps = {
   color?: string;
 };
 
-export const Toast = ({
+export const SnackBar = ({
   visible,
   onDismiss,
   message,
   duration,
   color,
-}: ToastProps) => {
+}: SnackBarProps) => {
   return (
     <Snackbar
       visible={visible}
@@ -29,7 +29,7 @@ export const Toast = ({
       }}
       style={{
         ...styles.toast,
-        backgroundColor: color || styles.toast.backgroundColor,
+        backgroundColor: color,
       }}
     >
       {message}
@@ -39,7 +39,6 @@ export const Toast = ({
 
 const styles = StyleSheet.create({
   toast: {
-    backgroundColor: globalColors.secondary[500],
     marginBottom: "10%",
   },
 });
