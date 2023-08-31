@@ -9,7 +9,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 
 const LoginScreen = () => {
-  const { user, inputHandler, loginHandler } = useAuth();
+  const { user, inputHandler, loginHandler, userInput } = useAuth();
   return (
     <View style={styles.loginForm}>
       <View style={styles.formContainer}>
@@ -25,10 +25,10 @@ const LoginScreen = () => {
           <View style={styles.inputGroup}>
             <TextInput
               style={styles.formControl}
-              inputMode="tel"
+              inputMode={userInput?.matricula_usuario?.length ? "tel" : "text"}
               placeholder="Matrícula"
-              value={user?.matricula_usuario + "-" + user?.digito_matricula}
-              onChangeText={(value) => inputHandler("matricula", value)}
+              value={user?.matricula_usuario}
+              onChangeText={(value) => inputHandler("matricula_usuario", value)}
             />
           </View>
           <View style={styles.inputGroup}>
