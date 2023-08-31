@@ -6,6 +6,7 @@ type ListProps<T> = {
   columns?: any;
   onPress?: any;
   onEdit?: (id: number | string) => void;
+  getPDFLink?: (id: number | string) => void;
   onDelete?: (entity: T) => void;
 };
 
@@ -14,6 +15,7 @@ export const List = <T extends Object>({
   columns,
   onPress,
   onEdit,
+  getPDFLink,
   onDelete,
 }: ListProps<T>) => {
   return (
@@ -27,6 +29,7 @@ export const List = <T extends Object>({
               data={item}
               columns={columns}
               onEdit={() => onEdit && onEdit(item.id)}
+              getPDFLink={() => getPDFLink && getPDFLink(item.id)}
               onDelete={onDelete}
             />
           )}

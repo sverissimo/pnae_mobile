@@ -6,8 +6,9 @@ import { useAuth } from "../../../hooks/useAuth";
 import { Relatorio } from "features/relatorio/types/Relatorio";
 import { Usuario } from "_types/Usuario";
 import { RelatorioContext } from "@contexts/RelatorioContext";
-import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
-import { fileExists, formatDate, truncateString } from "@shared/utils";
+import { formatDate, truncateString } from "@shared/utils";
+import * as Clipboard from "expo-clipboard";
+import { env } from "config/env";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
@@ -126,6 +127,18 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
+  //TODO: Gerar toast de confirmação de cópia do link e implantar download de pdf no backend
+  const getPDFLink = (relatorioId: any) => {
+    const getPDFUrl = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
+    console.log(
+      "🚀 ~ file: useManageRelatorios.ts:134 ~ getPDFLink ~ getPDFUrl:",
+      getPDFUrl
+    );
+    Clipboard.setStringAsync(getPDFUrl)
+      .then(() => console.log("Copied to Clipboard!"))
+      .catch((error) => console.log("error", error));
+  };
+
   const formatRelatorioRows = (relatorios: Relatorio[]) => {
     const relatorioTableData = relatorios.map((r: Relatorio) => ({
       id: r?.id,
@@ -149,5 +162,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     onDelete,
     onConfirmDelete,
     formatRelatorioRows,
+    getPDFLink,
   };
 };

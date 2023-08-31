@@ -22,6 +22,7 @@ export const RelatorioScreen = () => {
     setShowDeleteDialog,
     formatRelatorioRows,
     onConfirmDelete,
+    getPDFLink,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
   const handleCreateRelatorio = () => {
@@ -50,6 +51,7 @@ export const RelatorioScreen = () => {
             data={formatRelatorioRows(relatorios)}
             columns={RELATORIO_COLUMNS}
             onEdit={handleEditRelatorio}
+            getPDFLink={getPDFLink}
             onDelete={onDelete}
           />
           <CustomDialog

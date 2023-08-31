@@ -1,4 +1,3 @@
-import * as FileSystem from "expo-file-system";
 import { env } from "../../config";
 import { Usuario } from "_types/Usuario";
 

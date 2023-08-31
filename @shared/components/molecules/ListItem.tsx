@@ -8,6 +8,7 @@ type RowProps<T> = {
   isHeader?: boolean;
   columns: any;
   onEdit?: (data: any) => void;
+  getPDFLink?: (data: T) => void;
   onDelete?: (entity: T) => void;
 };
 
@@ -16,6 +17,7 @@ export const ListItem = <T extends { [key: string]: any }>({
   isHeader,
   columns,
   onEdit,
+  getPDFLink,
   onDelete,
 }: RowProps<T>) => {
   return (
@@ -46,7 +48,9 @@ export const ListItem = <T extends { [key: string]: any }>({
                 size={16}
                 color={icon.color || globalColors.primary[600]}
                 onPress={
-                  icon.action === "edit" && onEdit
+                  icon.action === "getPDF" && getPDFLink
+                    ? () => getPDFLink(data!)
+                    : icon.action === "edit" && onEdit
                     ? () => onEdit(data)
                     : icon.action === "delete" && onDelete
                     ? () => onDelete(data!)

@@ -18,7 +18,7 @@ export const RELATORIO_COLUMNS = [
     },
     icons: [
       { iconName: "search", action: "view" },
-      { iconName: "file-pdf-o", color: "darkred", action: "pdf" },
+      { iconName: "file-pdf-o", color: "darkred", action: "getPDF" },
       { iconName: "pencil", color: "blue", action: "edit" },
       {
         iconName: "trash",
