@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 
 const LoginScreen = () => {
   const { user, inputHandler, loginHandler, userInput } = useAuth();

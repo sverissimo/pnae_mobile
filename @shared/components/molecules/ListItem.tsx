@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { globalColors } from "../../../constants/themes";
+import { globalColors } from "../../constants/themes";
 import { Icon } from "../atoms";
 
 type RowProps<T> = {

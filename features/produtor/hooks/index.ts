@@ -1,0 +1,1 @@
+export { useSelectProdutor } from "./useSelectProdutor";

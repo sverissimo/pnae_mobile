@@ -1,4 +1,4 @@
-import { globalColors } from "@constants/themes";
+import { globalColors } from "@shared/constants/themes";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";

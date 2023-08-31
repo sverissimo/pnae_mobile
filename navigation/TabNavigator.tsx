@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";
 import { PropriedadeScreen } from "../features/propriedade/screens/PropriedadeScreen";
@@ -8,7 +8,7 @@ import { RelatorioScreen } from "../features/relatorio/screens/RelatorioScreen";
 import { RootStackParamList } from "./types";
 import { LogoutComponent } from "../@shared/components/molecules/Logout";
 
-import { globalColors } from "../constants/themes";
+import { globalColors } from "../@shared/constants/themes";
 import { Icon } from "@shared/components/atoms";
 
 const { primary, grayscale } = globalColors;

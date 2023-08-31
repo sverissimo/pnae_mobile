@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { ProdutorContext } from "../../../contexts/ProdutorContext";
-import { Produtor } from "_types/Produtor";
+import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
+import { Produtor } from "@features/produtor/types/Produtor";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =

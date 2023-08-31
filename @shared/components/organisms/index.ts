@@ -1,4 +1,5 @@
 export { ButtonInputComponent } from "./ButtonInputComponent";
+export { CustomDialog } from "./CustomDialog";
 export { Card } from "./HomeCard";
 export { List } from "./List";
 export { Loading } from "./Loading";

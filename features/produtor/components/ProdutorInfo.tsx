@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable } from "react-native";
 import { Chip } from "react-native-paper";
-import { globalColors } from "../../../constants/themes";
+import { globalColors } from "../../../@shared/constants/themes";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 
 const { grayscale } = globalColors;

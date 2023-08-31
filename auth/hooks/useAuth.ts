@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../contexts/UserContext";
-import { Usuario } from "../types/Usuario";
-import { env } from "../config";
+import { UserContext } from "../../contexts/UserContext";
+import { Usuario } from "../../@shared/types/Usuario";
+import { env } from "../../config";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 
 export const useAuth = () => {

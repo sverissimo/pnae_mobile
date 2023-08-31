@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import { LogBox, StyleSheet, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
-import { globalColors } from "../../../constants/themes";
+import { LogBox, StyleSheet, View } from "react-native";
+import { useCustomNavigation } from "@navigation/hooks";
 import { useManagePictures } from "@shared/hooks";
-import { useCustomNavigation } from "hooks/useCustomNavigation";
+import { globalColors } from "@shared/constants/themes";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state.",

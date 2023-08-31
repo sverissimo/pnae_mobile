@@ -1,5 +1,5 @@
 import { FC, ReactNode, createContext, useState } from "react";
-import { Produtor } from "../types/Produtor";
+import { Produtor } from "../features/produtor/types/Produtor";
 
 type ProdutorContextType = {
   produtor: Produtor | null;

@@ -1,4 +1,4 @@
-import { globalColors } from "@constants/themes";
+import { globalColors } from "@shared/constants/themes";
 import { useState } from "react";
 
 export type SnackBarStateProps = {
@@ -21,7 +21,9 @@ export const useSnackBar = () => {
 
   const editSnackBarOptions = (options: Partial<SnackBarStateProps>) => {
     const color =
-      options.status === "error"
+      options.status === "success"
+        ? globalColors.primary[300]
+        : options.status === "error"
         ? "red"
         : options.status === "warning"
         ? "orange"
@@ -29,12 +31,12 @@ export const useSnackBar = () => {
         ? "blue"
         : globalColors.secondary[500];
 
-    options.color ?? color;
+    options.color = options.color ?? color;
     setSnackBarOptions({ ...snackBarOptions, ...options, visible: true });
   };
 
   const hideSnackBar = () => {
-    setSnackBarOptions(intialState);
+    setSnackBarOptions((options) => ({ ...intialState, color: options.color }));
   };
 
   return {

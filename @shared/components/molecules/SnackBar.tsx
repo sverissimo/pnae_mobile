@@ -1,7 +1,6 @@
 // write a toast component using react-native-easy-toast or react-native-paper
 import { Snackbar } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { globalColors } from "constants/themes";
 
 export type SnackBarProps = {
   visible: boolean;

@@ -1,10 +1,10 @@
 import { View, StyleSheet } from "react-native";
-import { globalColors } from "../../../constants/themes";
+import { globalColors } from "../../../@shared/constants/themes";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import PerfilList from "../components/PerfilList";
-import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
+import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 
 export const PerfilScreen = () => {

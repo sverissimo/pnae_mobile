@@ -10,7 +10,7 @@ import {
 } from "./contexts";
 import { RelatorioService } from "@services/RelatorioService";
 import { Loading } from "./@shared/components/organisms/Loading";
-import { globalColors } from "./constants/themes";
+import { globalColors } from "./@shared/constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { PaperProvider } from "react-native-paper";
 

@@ -1,5 +1,5 @@
 import { env } from "../../config";
-import { Usuario } from "_types/Usuario";
+import { Usuario } from "@shared/types/Usuario";
 
 export const UsuarioAPI = {
   getUsuario: async (id: string): Promise<Usuario | void> => {

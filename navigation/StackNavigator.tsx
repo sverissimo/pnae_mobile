@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 import { RootStackParamList } from "./types";
 import { TabNavigator } from "./TabNavigator";
 import { ProdutorScreen } from "../features/produtor/screens/ProdutorScreen";

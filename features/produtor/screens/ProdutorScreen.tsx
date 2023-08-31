@@ -1,11 +1,13 @@
 import { View, StyleSheet } from "react-native";
-import { useSelectProdutor } from "../hooks/useSelectProdutor";
-import { ProdutorSearchBar } from "../components/ProdutorSearchBar";
-import { ProdutorInfo } from "../components/ProdutorInfo";
-import PerfilList from "../../perfil/components/PerfilList";
-import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
-import { globalColors } from "../../../constants/themes";
-import { ProdutorDetails } from "../components/ProdutorDetails";
+import { useSelectProdutor } from "../hooks";
+import {
+  ProdutorDetails,
+  ProdutorInfo,
+  ProdutorSearchBar,
+} from "../components";
+import PerfilList from "@features/perfil/components/PerfilList";
+import { PropriedadesList } from "@features/propriedade/components/PropriedadeList";
+import { globalColors } from "@shared/constants/themes";
 import { ListTitle } from "@shared/components/atoms";
 
 export const ProdutorScreen = () => {

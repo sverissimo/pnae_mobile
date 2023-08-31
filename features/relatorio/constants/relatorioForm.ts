@@ -1,4 +1,4 @@
-import { FormElement } from "../../@shared/types/FormElement";
+import { FormElement } from "../../../@shared/types/FormElement";
 
 export const relatorioForm: FormElement[] = [
   {

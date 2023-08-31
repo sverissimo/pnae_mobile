@@ -2,7 +2,7 @@
 import React from "react";
 import { Text, StyleSheet, Pressable } from "react-native";
 import { Icon } from "../atoms";
-import { globalColors } from "../../../constants/themes";
+import { globalColors } from "../../constants/themes";
 
 const { primary, grayscale } = globalColors;
 

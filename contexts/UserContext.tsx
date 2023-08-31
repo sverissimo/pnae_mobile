@@ -1,5 +1,5 @@
 import { FC, ReactNode, createContext, useState } from "react";
-import { Usuario } from "../types/Usuario";
+import { Usuario } from "../@shared/types/Usuario";
 
 type UserContextType = {
   user: Usuario;

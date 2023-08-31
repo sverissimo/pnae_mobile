@@ -2,7 +2,7 @@ import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
 import { formatDate } from "../../../@shared/utils/formatDate";
 import { List } from "../../../@shared/components/organisms/List";
 import { PERFIL_COLUMNS } from "../forms/perfilColumns";
-import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
+import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
 
 const PerfilList = () => {
   const { produtor } = useSelectProdutor();

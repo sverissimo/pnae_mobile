@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-import { useCustomNavigation } from "hooks/useCustomNavigation";
-import { useManageRelatorio } from "../hooks/useManageRelatorios";
+import { useCustomNavigation } from "@navigation/hooks/useCustomNavigation";
+import { useManageRelatorio } from "../hooks";
 import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { FormTemplate } from "@shared/components/templates";
 import { SnackBar } from "@shared/components/molecules";
 import { ListTitle } from "@shared/components/atoms";
-import { relatorioForm } from "../relatorioForm";
+import { relatorioForm } from "../constants";
 import { Relatorio } from "../types/Relatorio";
 
 export const EditRelatorioScreen = ({ route }: any) => {

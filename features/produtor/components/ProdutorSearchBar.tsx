@@ -3,7 +3,7 @@ import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { Icon } from "@shared/components/atoms";
-import { globalColors } from "../../../constants/themes";
+import { globalColors } from "../../../@shared/constants/themes";
 
 export function ProdutorSearchBar() {
   const { fetchProdutor } = useSelectProdutor();

@@ -1,10 +1,8 @@
-import { Text, View, StyleSheet } from "react-native";
-import { PropriedadesList } from "../../propriedade/components/PropriedadeList";
-import { globalColors } from "../../../constants/themes";
-import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
-import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import React from "react";
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
+import { View, StyleSheet } from "react-native";
+import { PropriedadesList } from "../components/PropriedadeList";
+import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
+import { globalColors } from "@shared/constants/themes";
+import { useSelectProdutor } from "@features/produtor/hooks";
 import { ListTitle } from "@shared/components/atoms";
 
 export const PropriedadeScreen = () => {

@@ -1,4 +1,4 @@
-import { Produtor } from "../../../types/Produtor";
+import { Produtor } from "../../../features/produtor/types/Produtor";
 
 export type RelatorioDTO = {
   id: string;

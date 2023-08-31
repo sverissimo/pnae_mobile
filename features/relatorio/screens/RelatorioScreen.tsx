@@ -1,15 +1,16 @@
 import { View, StyleSheet } from "react-native";
-import { globalColors } from "../../../constants/themes";
-import { useCustomNavigation } from "../../../hooks/useCustomNavigation";
-import { useManageRelatorio } from "../hooks/useManageRelatorios";
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
-import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import { AddButton, ListTitle } from "@shared/components/atoms";
-import { CustomDialog } from "@shared/components/organisms/CustomDialog";
+import { useCustomNavigation } from "@navigation/hooks";
+import { useManageRelatorio } from "../hooks";
+import { useSelectProdutor } from "@features/produtor/hooks";
+import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
 import { List } from "@shared/components/organisms";
+import { CustomDialog } from "@shared/components/organisms";
+import { SnackBar } from "@shared/components/molecules";
+import { AddButton, ListTitle } from "@shared/components/atoms";
+import { globalColors } from "@shared/constants/themes";
 import { Relatorio } from "../types/Relatorio";
-import { RELATORIO_COLUMNS } from "../relatorioColumns";
+import { RELATORIO_COLUMNS } from "../constants";
+import { useSnackBar } from "@shared/hooks";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
@@ -24,6 +25,7 @@ export const RelatorioScreen = () => {
     onConfirmDelete,
     getPDFLink,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
+  const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
 
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
@@ -31,6 +33,13 @@ export const RelatorioScreen = () => {
 
   const handleEditRelatorio = (relatorioId: string | number) => {
     navigation.navigate("EditRelatorioScreen", { relatorioId });
+  };
+
+  const handleGetPDF = () => {
+    setSnackBarOptions({
+      status: "success",
+      message: "Link do PDF copiado para a área de transferências",
+    });
   };
 
   if (!produtor) {
@@ -42,31 +51,37 @@ export const RelatorioScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <ProdutorInfo />
-      {relatorios?.length ? (
-        <>
-          <ListTitle title={"Relatorios cadastrados"} />
-          <List<Relatorio>
-            data={formatRelatorioRows(relatorios)}
-            columns={RELATORIO_COLUMNS}
-            onEdit={handleEditRelatorio}
-            getPDFLink={getPDFLink}
-            onDelete={onDelete}
-          />
-          <CustomDialog
-            show={showDeleteDialog}
-            setShowDeleteDialog={setShowDeleteDialog}
-            deleteDialogMessage="Deseja realmente excluir este relatório?"
-            deleteDialogTitle={`Excluir Relatório nº ${relatorio.numeroRelatorio}`}
-            onConfirmDelete={onConfirmDelete}
-          />
-        </>
-      ) : (
-        <ListTitle title={"Nenhum relatório cadastrado"} />
-      )}
-      <AddButton label="Criar Novo Relatório" onPress={handleCreateRelatorio} />
-    </View>
+    <>
+      <View style={styles.container}>
+        <ProdutorInfo />
+        {relatorios?.length ? (
+          <>
+            <ListTitle title={"Relatorios cadastrados"} />
+            <List<Relatorio>
+              data={formatRelatorioRows(relatorios)}
+              columns={RELATORIO_COLUMNS}
+              onEdit={handleEditRelatorio}
+              getPDFLink={handleGetPDF}
+              onDelete={onDelete}
+            />
+            <CustomDialog
+              show={showDeleteDialog}
+              setShowDeleteDialog={setShowDeleteDialog}
+              deleteDialogMessage="Deseja realmente excluir este relatório?"
+              deleteDialogTitle={`Excluir Relatório nº ${relatorio.numeroRelatorio}`}
+              onConfirmDelete={onConfirmDelete}
+            />
+          </>
+        ) : (
+          <ListTitle title={"Nenhum relatório cadastrado"} />
+        )}
+        <AddButton
+          label="Criar Novo Relatório"
+          onPress={handleCreateRelatorio}
+        />
+      </View>
+      <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { env } from "../../config";
-import { Produtor } from "../../types/Produtor";
+import { Produtor } from "../../features/produtor/types/Produtor";
 
 export const ProdutorAPI = {
   createProdutor: async (produtor: Produtor) => {

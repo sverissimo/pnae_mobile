@@ -1,4 +1,4 @@
-import { Produtor } from "../../../types/Produtor";
+import { Produtor } from "../../../features/produtor/types/Produtor";
 
 export type CreateRelatorioDTO = {
   produtor_id: string | BigInt;

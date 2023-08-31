@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Card } from "../@shared/components/organisms/HomeCard";
-import { useCustomNavigation } from "../hooks/useCustomNavigation";
+import { useCustomNavigation } from "../navigation/hooks/useCustomNavigation";
 import { RootStackParamList } from "../navigation/types";
 import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
-import { useAuth } from "hooks/useAuth";
-import { globalColors } from "@constants/themes";
+import { useAuth } from "auth/hooks/useAuth";
+import { globalColors } from "@shared/constants/themes";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();

@@ -4,9 +4,12 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@constants/*": ["./constants/*"],
+      "@auth/*": ["./auth/*"],
+      "@constants/*": ["@shared/constants/*"],
       "@contexts/*": ["./contexts/*"],
+      "@features/*": ["./features/*"],
       "@infrastructure/*": ["./@infrastructure/*"],
+      "@navigation/*": ["./navigation/*"],
       "@services/*": ["./@services/*"],
       "@shared/*": ["./@shared/*"],
       "_types/*": ["./types/*"]
