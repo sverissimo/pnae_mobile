@@ -19,7 +19,7 @@ export const useAuth = () => {
       return;
     }
 
-    const queryResult: any = await UsuarioAPI.getUsuario(
+    const queryResult: any = await UsuarioAPI.getUsuarioByMatricula(
       userInput.matricula_usuario
     );
 

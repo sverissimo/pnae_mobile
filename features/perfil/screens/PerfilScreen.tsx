@@ -2,14 +2,13 @@ import { View, StyleSheet } from "react-native";
 import { globalColors } from "../../../@shared/constants/themes";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
+import { useSelectProdutor } from "@features/produtor/hooks";
 import PerfilList from "../components/PerfilList";
 import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-
   const { navigation } = useCustomNavigation();
 
   const handlePress = () => {
@@ -27,7 +26,7 @@ export const PerfilScreen = () => {
   return (
     <View style={styles.container}>
       <ProdutorInfo />
-      {produtor.relatorios?.length ? (
+      {produtor.perfis?.length ? (
         <>
           <ListTitle title={"Perfis cadastrados"} />
           <PerfilList />

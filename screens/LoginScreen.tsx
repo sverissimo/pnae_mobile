@@ -7,6 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import { useAuth } from "../auth/hooks/useAuth";
+import { globalColors } from "@constants/themes";
 
 const LoginScreen = () => {
   const { user, inputHandler, loginHandler, userInput } = useAuth();
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   btn: {
-    backgroundColor: "#5cb85c",
+    backgroundColor: globalColors.primary[800],
     padding: 10,
     borderRadius: 5,
     alignItems: "center",

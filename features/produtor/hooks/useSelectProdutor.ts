@@ -2,10 +2,13 @@ import { useContext, useState } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
+import { useManageRelatorio } from "@features/relatorio/hooks";
+import { RelatorioContext } from "@contexts/RelatorioContext";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =
     useContext(ProdutorContext);
+  const { setRelatorios } = useContext(RelatorioContext);
   const [state, setState] = useState({} as Produtor);
 
   const inputHandler = (name: string, value: string) => {
@@ -35,6 +38,7 @@ export const useSelectProdutor = () => {
 
   const resetProdutor = () => {
     setProdutorContext(null);
+    setRelatorios([]);
   };
 
   return {

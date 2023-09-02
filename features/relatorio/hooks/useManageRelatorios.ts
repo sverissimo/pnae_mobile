@@ -36,11 +36,14 @@ export const useManageRelatorio = (produtorId?: string) => {
         tecnicoId: user!.id_usuario,
       };
 
-      await RelatorioService.createRelatorio(relatorioInput);
+      const relatorioId = await RelatorioService.createRelatorio(
+        relatorioInput
+      );
       updateRelatoriosList({
         ...relatorio,
+        id: relatorioId,
         nomeTecnico: user?.nome_usuario,
-        produtor,
+        produtorId: produtor!.id_pessoa_demeter!,
         createdAt: formatDate(new Date().toISOString()),
       });
     } catch (error) {
@@ -132,6 +135,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       const getPDFUrl = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
       await Clipboard.setStringAsync(getPDFUrl);
       console.log("Copied to Clipboard: ", getPDFUrl);
+      return;
     } catch (error) {
       console.log("Clipboard error", error);
     }

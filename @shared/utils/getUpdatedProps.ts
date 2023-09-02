@@ -1,5 +1,5 @@
 export function getUpdatedProps<T extends { id: string | number }>(
-  entity: T,
+  entity: Partial<T>,
   entityList: T[]
 ) {
   const originalEntity = entityList.find((e) => e.id === entity.id);

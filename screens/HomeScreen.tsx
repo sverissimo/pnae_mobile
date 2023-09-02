@@ -1,15 +1,13 @@
 import { Text, View, StyleSheet } from "react-native";
-import { Card } from "../@shared/components/organisms/HomeCard";
-import { useCustomNavigation } from "../navigation/hooks/useCustomNavigation";
-import { RootStackParamList } from "../navigation/types";
-import { ProdutorInfo } from "../features/produtor/components/ProdutorInfo";
-import { useAuth } from "auth/hooks/useAuth";
+import { Card } from "@shared/components/organisms/HomeCard";
+import { useCustomNavigation } from "@navigation/hooks";
+import { RootStackParamList } from "@navigation/types";
+import { useAuth } from "@auth/hooks/useAuth";
 import { globalColors } from "@shared/constants/themes";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
   const { user } = useAuth();
-  console.log("🚀 ~ file: HomeScreen.tsx:11 ~ user:", user);
   const pressHandler = (screenName: keyof RootStackParamList) => {
     const screen =
       typeof screenName === "string" ? screenName : screenName.toString();
@@ -37,7 +35,7 @@ export const HomeScreen: React.FC = () => {
           onPress={() => pressHandler("PerfilScreen")}
         />
         <Card
-          title="Cadastrar Relatório"
+          title="Cadastrar Relatório e Foto"
           iconName="pencil-square-o"
           onPress={() => pressHandler("RelatorioScreen")}
         />

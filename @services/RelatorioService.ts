@@ -8,17 +8,14 @@ import { deleteFile } from "@shared/utils";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
 export const RelatorioService = {
-  createRelatorio: async (relatorio: Relatorio) => {
+  createRelatorio: async (relatorio: Relatorio): Promise<string> => {
     try {
-      relatorio.id = generateUUID();
-      console.log(
-        "🚀 ~ file: RelatorioService.ts:12 ~ createRelatorio: ~ relatorio:",
-        relatorio
-      );
+      const relatorioId = generateUUID();
+      relatorio.id = relatorioId;
       const relatorioLocalDTO = mapToDTO(relatorio);
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
 
-      const relatorioId = await RelatorioAPI.createRelatorio(relatorio);
+      await RelatorioAPI.createRelatorio(relatorio);
       return relatorioId;
     } catch (error: any) {
       console.error("🚀 RelatorioService.ts:31: ", error);
@@ -42,7 +39,7 @@ export const RelatorioService = {
   updateRelatorio: async (relatorioInput: Relatorio) => {
     try {
       const updatedAt = new Date().toISOString();
-      const { nomeTecnico, ...relatorio } = relatorioInput;
+      const { nomeTecnico, createdAt, ...relatorio } = relatorioInput;
       const allRelatorios = await RelatorioDB.getAllRelatorios();
 
       const relatorioUpdate = getUpdatedProps(

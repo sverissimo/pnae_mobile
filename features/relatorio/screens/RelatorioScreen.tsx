@@ -35,11 +35,13 @@ export const RelatorioScreen = () => {
     navigation.navigate("EditRelatorioScreen", { relatorioId });
   };
 
-  const handleGetPDF = () => {
+  const handleGetPDF = async (relatorioId: string | number) => {
     setSnackBarOptions({
       status: "success",
       message: "Link do PDF copiado para a área de transferências",
     });
+    await getPDFLink(relatorioId);
+    return;
   };
 
   if (!produtor) {
