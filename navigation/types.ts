@@ -6,6 +6,7 @@ type ParamListBase = {
 
 export type RouteParamsList = {
   params: {
+    parentRoute: string;
     perfil: any;
     signatureCaptureHandler?: (
       field: string,
@@ -26,5 +27,6 @@ export type RootStackParamList = ParamListBase & {
   EditPerfilScreen: { perfil: any };
   tabs: undefined;
   GetSignature: RouteParamsList;
+  OrientacaoScreen: undefined;
   // GetSignatureScreen: { signatureCaptureHandler: (signature: any) => void };
 };

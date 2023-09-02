@@ -9,7 +9,8 @@ import {
   CreateRelatorioScreen,
   EditRelatorioScreen,
   GetSignatureScreen,
-} from "features/relatorio/screens";
+  OrientacaoScreen,
+} from "@features/relatorio/screens";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -48,6 +49,13 @@ export function StackNavigator() {
         component={EditRelatorioScreen}
         options={{
           title: "Editar Relatório",
+        }}
+      />
+      <Stack.Screen
+        name="OrientacaoScreen"
+        component={OrientacaoScreen}
+        options={{
+          title: "Inserir Orientação",
         }}
       />
       <Stack.Screen

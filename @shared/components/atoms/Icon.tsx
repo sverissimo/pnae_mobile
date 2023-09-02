@@ -31,6 +31,8 @@ export const Icon = (props: IconProps) => {
   ) : iconName === "building" ||
     iconName === "pencil" ||
     iconName === "file-pdf-o" ||
+    iconName === "edit" ||
+    iconName === "microphone" ||
     iconName === "pencil-square-o" ? (
     <FontAwesome
       name={iconName}

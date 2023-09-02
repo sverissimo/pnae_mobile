@@ -15,7 +15,10 @@ export const relatorioForm: FormElement[] = [
   {
     field: "orientacao",
     label: "Orientação",
-    type: "input",
+    type: "textEditor",
+    buttonLabel: "Inserir Orientação",
+    buttonLabelAlt: "Alterar Orientação",
+    icon: "file-document-edit-outline",
   },
   {
     field: "pictureURI",

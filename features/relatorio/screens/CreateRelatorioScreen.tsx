@@ -9,16 +9,27 @@ import { SnackBar } from "@shared/components/molecules";
 import { ListTitle } from "@shared/components/atoms";
 import { relatorioForm } from "../constants";
 
-export const CreateRelatorioScreen = () => {
+export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
   const [disableButton, setDisableButton] = useState(false);
 
+  console.log(
+    "🚀 ~ file: CreateRelatorioScreen.tsx:14 ~ CreateRelatorioScreen ~ relatorio:",
+    relatorio
+  );
   useEffect(() => {
     clearURIs();
   }, []);
+
+  useEffect(() => {
+    const { HTMLText } = route.params || {};
+    if (HTMLText) {
+      handleChange("orientacao", HTMLText);
+    }
+  }, [route.params]);
 
   const handleSaveRelatorio = async () => {
     await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
@@ -31,8 +42,11 @@ export const CreateRelatorioScreen = () => {
     }, 1000);
   };
 
-  const showSignatureScreen = () => {
-    navigation.navigate("GetSignatureScreen");
+  const navigateTo = (route: string) => {
+    navigation.navigate(route, {
+      parentRoute: "CreateRelatorioScreen",
+      orientacao: relatorio.orientacao,
+    });
   };
 
   return (
@@ -43,7 +57,7 @@ export const CreateRelatorioScreen = () => {
           form={relatorioForm}
           data={relatorio}
           onValueChange={handleChange}
-          showSignatureScreen={showSignatureScreen}
+          navigateTo={navigateTo}
         />
         <Button
           mode="contained"

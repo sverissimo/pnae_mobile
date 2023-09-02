@@ -6,14 +6,15 @@ import { useManagePictures } from "@shared/hooks/useManagePictures";
 type PictureHolderProps = {
   item: FormElement;
   pictureURI?: string;
-  type: "image" | "signature";
-  showSignatureScreen?: (status: boolean) => void;
+  type: "image" | "signature" | "textEditor";
+  navigateTo?: (route: string) => void;
+  onPressButton?: () => void;
 };
 
 export const PictureHolder = ({
   item,
   type,
-  showSignatureScreen,
+  navigateTo,
 }: PictureHolderProps) => {
   const { assinaturaURI, pictureURI, handleTakePicture } = useManagePictures();
 
@@ -22,13 +23,17 @@ export const PictureHolder = ({
       handleTakePicture();
     }
     if (type === "signature") {
-      showSignatureScreen!(true);
+      navigateTo!("GetSignatureScreen");
+    }
+    if (type === "textEditor") {
+      navigateTo!("OrientacaoScreen");
     }
   };
 
   if (
     (!pictureURI && type === "image") ||
-    (!assinaturaURI && type === "signature")
+    (!assinaturaURI && type === "signature") ||
+    type === "textEditor"
   )
     return (
       <ButtonInputComponent

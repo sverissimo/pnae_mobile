@@ -10,6 +10,7 @@ type CustomButtonProps = {
   buttonColor?: string;
   textColor?: string;
   mode?: "text" | "outlined" | "contained";
+  disabled?: boolean;
 };
 
 export const CustomButton = (props: CustomButtonProps) => {
@@ -18,11 +19,8 @@ export const CustomButton = (props: CustomButtonProps) => {
       style={styles.button}
       icon="camera"
       contentStyle={props.style}
-      mode="text"
-      // mode="contained"
+      mode="contained"
       {...props}
-      //textColor={globalColors.primary[600]}
-      //buttonColor={globalColors.primary[500]}
     >
       {props.label}
     </Button>

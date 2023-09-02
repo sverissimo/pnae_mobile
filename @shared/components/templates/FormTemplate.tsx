@@ -11,14 +11,14 @@ type FormTemplateProps = {
   form: FormElement[];
   data: any;
   onValueChange: any;
-  showSignatureScreen?: any;
+  navigateTo?: any;
 };
 
 export function FormTemplate({
   form,
   data,
   onValueChange,
-  showSignatureScreen,
+  navigateTo,
 }: FormTemplateProps) {
   return (
     <View>
@@ -58,6 +58,16 @@ export function FormTemplate({
                 keyboardType={item.keyboardType}
               />
             );
+
+          case "textEditor":
+            return (
+              <PictureHolder
+                item={item}
+                key={item.field}
+                type="textEditor"
+                navigateTo={navigateTo}
+              />
+            );
           case "image":
             return (
               <PictureHolder
@@ -74,7 +84,7 @@ export function FormTemplate({
                 item={item}
                 key={item.field}
                 type="signature"
-                showSignatureScreen={showSignatureScreen}
+                navigateTo={navigateTo}
                 //imageURI={data[item.field]}
               />
             );
