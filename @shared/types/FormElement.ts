@@ -8,4 +8,5 @@ export type FormElement = {
   buttonLabel?: string;
   buttonLabelAlt?: string;
   icon?: string;
+  iconAlt?: string;
 };

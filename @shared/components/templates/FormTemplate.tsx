@@ -58,34 +58,25 @@ export function FormTemplate({
                 keyboardType={item.keyboardType}
               />
             );
-
           case "textEditor":
             return (
               <PictureHolder
                 item={item}
                 key={item.field}
-                type="textEditor"
+                data={data[item.field]}
                 navigateTo={navigateTo}
               />
             );
           case "image":
-            return (
-              <PictureHolder
-                item={item}
-                key={item.field}
-                type="image"
-                // onValueChange={(value: any) => onValueChange(item.field, value)}
-                //imageURI={data[item.field]}
-              />
-            );
+            return <PictureHolder item={item} key={item.field} />;
+
           case "signature":
             return (
               <PictureHolder
                 item={item}
                 key={item.field}
-                type="signature"
+                data={data[item.field]}
                 navigateTo={navigateTo}
-                //imageURI={data[item.field]}
               />
             );
 

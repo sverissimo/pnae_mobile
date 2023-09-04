@@ -6,13 +6,15 @@ import { CustomButton } from "../atoms";
 type ButtonInputComponentProps = {
   label: string;
   item: FormElement;
-  buttonLabel?: string | undefined;
+  icon: string;
+  buttonLabel: string;
   onPress: (field: string) => void;
 };
 
 export const ButtonInputComponent = ({
   label,
   buttonLabel,
+  icon,
   item,
   onPress,
 }: ButtonInputComponentProps) => {
@@ -21,7 +23,7 @@ export const ButtonInputComponent = ({
       <View style={styles.container}>
         <CustomButton
           label={buttonLabel}
-          icon={item.icon}
+          icon={icon}
           mode="text"
           onPress={() => onPress(item.field)}
           style={styles.button}

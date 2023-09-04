@@ -13,8 +13,9 @@ import { Relatorio } from "../types/Relatorio";
 export const EditRelatorioScreen = ({ route }: any) => {
   const { updateRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
-  const { relatorios } = useManageRelatorio();
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
+  const { relatorio, setRelatorio, handleChange, relatorios } =
+    useManageRelatorio();
   const {
     pictureURI,
     setPicture,
@@ -24,15 +25,20 @@ export const EditRelatorioScreen = ({ route }: any) => {
     clearURIs,
   } = useManagePictures();
 
-  const [relatorio, setRelatorio] = useState<Partial<Relatorio>>({});
   const [disableButton, setDisableButton] = useState(false);
+  const { relatorioId, HTMLText } = route.params;
 
-  const relatorioId = route.params.relatorioId;
+  useEffect(() => {
+    if (HTMLText) {
+      setRelatorio((relatorio) => ({ ...relatorio, orientacao: HTMLText }));
+    }
+  }, [HTMLText]);
 
   useEffect(() => {
     const originalRelatorio = relatorios.find(
       (r) => r!.id === relatorioId
     ) as Relatorio;
+    if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
     setPicture(originalRelatorio.pictureURI);
     setAssinatura(originalRelatorio.assinaturaURI);
@@ -42,21 +48,15 @@ export const EditRelatorioScreen = ({ route }: any) => {
     return () => {
       const keepOriginalOnly = !disableButton;
       clearDiscardedPictures(keepOriginalOnly).then(() => clearURIs());
-      console.log("Component Unmounted");
     };
   }, []);
-
-  const handleChange = (name: string, value: string) => {
-    setRelatorio({ ...relatorio, [name]: value });
-  };
 
   const handleSaveRelatorio = async () => {
     try {
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
       await updateRelatorio(updatedRelatorio as Relatorio);
-      setRelatorio(updatedRelatorio);
-      clearDiscardedPictures().then(() => clearURIs());
 
+      clearDiscardedPictures().then(() => clearURIs());
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
       });
@@ -73,10 +73,10 @@ export const EditRelatorioScreen = ({ route }: any) => {
     }
   };
 
-  const showSignatureScreen = () => {
-    navigation.navigate("GetSignatureScreen", {
-      assinaturaURI: relatorio?.assinaturaURI,
-      handleChange,
+  const navigateTo = (route: string) => {
+    navigation.navigate(route, {
+      parentRoute: "EditRelatorioScreen",
+      orientacao: relatorio.orientacao,
     });
   };
 
@@ -88,7 +88,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
           form={relatorioForm}
           data={relatorio}
           onValueChange={handleChange}
-          showSignatureScreen={showSignatureScreen}
+          navigateTo={navigateTo}
         />
         <Button
           mode="contained"

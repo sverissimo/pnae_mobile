@@ -21,7 +21,7 @@ export const PictureTextListItem = ({
         <Image source={{ uri: pictureURI }} style={styles.picture} />
       </View>
       <View style={styles.textContainer}>
-        <CustomButton label={text} onPress={onPress} icon={icon} />
+        <CustomButton label={text} onPress={onPress} icon={icon} mode="text" />
       </View>
     </View>
   );

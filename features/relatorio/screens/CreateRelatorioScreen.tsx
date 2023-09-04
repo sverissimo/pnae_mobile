@@ -16,10 +16,6 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
   const [disableButton, setDisableButton] = useState(false);
 
-  console.log(
-    "🚀 ~ file: CreateRelatorioScreen.tsx:14 ~ CreateRelatorioScreen ~ relatorio:",
-    relatorio
-  );
   useEffect(() => {
     clearURIs();
   }, []);

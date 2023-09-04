@@ -18,7 +18,8 @@ export const relatorioForm: FormElement[] = [
     type: "textEditor",
     buttonLabel: "Inserir Orientação",
     buttonLabelAlt: "Alterar Orientação",
-    icon: "file-document-edit-outline",
+    icon: "file-edit-outline",
+    iconAlt: "file-document-edit",
   },
   {
     field: "pictureURI",
@@ -26,7 +27,8 @@ export const relatorioForm: FormElement[] = [
     type: "image",
     buttonLabel: "Registrar foto",
     buttonLabelAlt: "Alterar foto",
-    icon: "camera",
+    icon: "camera-outline",
+    iconAlt: "camera",
   },
   {
     field: "assinaturaURI",
@@ -34,7 +36,8 @@ export const relatorioForm: FormElement[] = [
     type: "signature",
     buttonLabel: "Adicionar Assinatura",
     buttonLabelAlt: "Alterar Assinatura",
-    icon: "pen",
+    icon: "pencil-outline",
+    iconAlt: "pen-remove",
     //icon: "signature",
   },
 ];

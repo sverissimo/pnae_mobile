@@ -39,6 +39,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       const relatorioId = await RelatorioService.createRelatorio(
         relatorioInput
       );
+
       updateRelatoriosList({
         ...relatorio,
         id: relatorioId,
@@ -141,18 +142,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
-  // //TODO: Gerar toast de confirmação de cópia do link e implantar download de pdf no backend
-  // const getPDFLink = (relatorioId: any) => {
-  //   const getPDFUrl = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
-  //   console.log(
-  //     "🚀 ~ file: useManageRelatorios.ts:134 ~ getPDFLink ~ getPDFUrl:",
-  //     getPDFUrl
-  //   );
-  //   Clipboard.setStringAsync(getPDFUrl)
-  //     .then(() => console.log("Copied to Clipboard!"))
-  //     .catch((error) => console.log("error", error));
-  // };
-
   const formatRelatorioRows = (relatorios: Relatorio[]) => {
     const relatorioTableData = relatorios.map((r: Relatorio) => ({
       id: r?.id,
@@ -166,6 +155,7 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   return {
     relatorio,
+    setRelatorio: setState,
     relatorios,
     showDeleteDialog,
     getRelatorios,
