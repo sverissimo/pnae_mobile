@@ -40,13 +40,17 @@ export const useManageRelatorio = (produtorId?: string) => {
         relatorioInput
       );
 
-      updateRelatoriosList({
-        ...relatorio,
-        id: relatorioId,
-        nomeTecnico: user?.nome_usuario,
-        produtorId: produtor!.id_pessoa_demeter!,
-        createdAt: formatDate(new Date().toISOString()),
-      });
+      const relatoriosListUpdated = [
+        ...relatorios,
+        {
+          ...relatorio,
+          id: relatorioId,
+          nomeTecnico: user?.nome_usuario,
+          produtorId: produtor!.id_pessoa_demeter!,
+          createdAt: formatDate(new Date().toISOString()),
+        },
+      ];
+      setRelatorios(relatoriosListUpdated);
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
     }

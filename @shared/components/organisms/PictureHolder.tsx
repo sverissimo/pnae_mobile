@@ -39,7 +39,7 @@ export const PictureHolder = <T extends Object>({
       <ButtonInputComponent
         key={item.field}
         label={item.label}
-        item={item}
+        fieldName={item.field}
         buttonLabel={!data ? item.buttonLabel! : item.buttonLabelAlt!}
         icon={!data ? item.icon! : item.iconAlt!}
         onPress={handlePress}

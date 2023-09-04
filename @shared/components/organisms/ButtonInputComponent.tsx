@@ -1,21 +1,20 @@
 import { StyleSheet, View } from "react-native";
 import { FormFieldContainer } from "../molecules/FormFieldContainer";
-import { FormElement } from "../../types/FormElement";
 import { CustomButton } from "../atoms";
 
 type ButtonInputComponentProps = {
   label: string;
-  item: FormElement;
   icon: string;
+  fieldName: string;
   buttonLabel: string;
-  onPress: (field: string) => void;
+  onPress: (fieldName: string) => void;
 };
 
 export const ButtonInputComponent = ({
   label,
   buttonLabel,
   icon,
-  item,
+  fieldName,
   onPress,
 }: ButtonInputComponentProps) => {
   return (
@@ -25,7 +24,7 @@ export const ButtonInputComponent = ({
           label={buttonLabel}
           icon={icon}
           mode="text"
-          onPress={() => onPress(item.field)}
+          onPress={() => onPress(fieldName)}
           style={styles.button}
         />
       </View>

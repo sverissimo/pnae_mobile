@@ -1,5 +1,5 @@
 import { globalColors } from "@constants/themes";
-import { useRef, useState, FC } from "react";
+import { FC, useRef } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -13,115 +13,77 @@ import {
   RichToolbar,
   actions,
 } from "react-native-pell-rich-editor";
-import { CustomButton, Icon } from "../atoms";
+import { Icon } from "../atoms";
 
 const toolbarColor = globalColors.primary[100];
 
 type TextEditorProps = {
   children?: React.ReactNode;
-  initialHTMLText: string;
-  handleSave: (HTMLText: string) => void;
+  HTMLText: string;
+  placeHolder: string;
+  handleInput: (HTMLText: string) => void;
+  handleRecordAudio: (HTMLText: string) => void;
 };
 
 export const TextEditor: FC<TextEditorProps> = ({
-  initialHTMLText,
-  handleSave,
+  HTMLText,
+  placeHolder,
+  handleInput,
+  handleRecordAudio,
 }) => {
   const richText = useRef<RichEditor>(null);
   const scrollRef = useRef<ScrollView>(null);
-  const [HTMLText, setHTMLText] = useState<string>(initialHTMLText || "");
-  const [disableButton, setDisableButton] = useState<boolean>(true);
-
-  const handleRecordAudio = () => {
-    console.log("Recording...");
-  };
-
-  const handleInput = (descriptionText: string) => {
-    if (descriptionText) {
-      setDisableButton(false);
-      setHTMLText(descriptionText);
-    }
-  };
 
   const onCursorPosition = (scrollY: number) => {
     scrollRef.current?.scrollTo({ y: scrollY - 30, animated: true });
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.container}>
-          <View style={styles.textEditorContainer}>
-            <RichToolbar
-              editor={richText}
-              selectedIconTint={globalColors.primary[600]}
-              iconTint={globalColors.grayscale[800]}
-              actions={[
-                actions.keyboard,
-                actions.setBold,
-                actions.setItalic,
-                actions.setUnderline,
-                actions.insertBulletsList,
-                actions.insertOrderedList,
-                actions.indent,
-                actions.outdent,
-                //   actions.undo,
-                //   actions.redo,
-                "recordAudio",
-              ]}
-              iconMap={{
-                recordAudio: () => (
-                  <Icon
-                    iconName="microphone"
-                    size={20}
-                    color={globalColors.grayscale[800]}
-                  />
-                ),
-              }}
-              recordAudio={handleRecordAudio}
-              style={styles.textToolbarStyle}
+    <View style={styles.textEditorContainer}>
+      <RichToolbar
+        editor={richText}
+        selectedIconTint={globalColors.primary[600]}
+        iconTint={globalColors.grayscale[800]}
+        actions={[
+          actions.keyboard,
+          actions.setBold,
+          actions.setItalic,
+          actions.setUnderline,
+          actions.insertBulletsList,
+          actions.insertOrderedList,
+          actions.indent,
+          actions.outdent,
+          "recordAudio",
+        ]}
+        iconMap={{
+          recordAudio: () => (
+            <Icon
+              iconName="microphone"
+              size={20}
+              color={globalColors.grayscale[800]}
             />
-            <ScrollView ref={scrollRef} style={styles.textContainer}>
-              <RichEditor
-                ref={richText}
-                onChange={handleInput}
-                placeholder="Escreva a orientação aqui..."
-                onCursorPosition={onCursorPosition}
-                style={styles.textEditorStyle}
-                initialHeight={500}
-                useContainer={true}
-                initialContentHTML={HTMLText}
-              />
-            </ScrollView>
-          </View>
-
-          <CustomButton
-            onPress={() => handleSave(HTMLText)}
-            icon="content-save"
-            mode="contained"
-            label="Salvar"
-            style={styles.saveButtonStyle}
-            buttonColor={globalColors.primary[600]}
-            disabled={disableButton}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          ),
+        }}
+        recordAudio={handleRecordAudio}
+        style={styles.textToolbarStyle}
+      />
+      <ScrollView ref={scrollRef} style={styles.textContainer}>
+        <RichEditor
+          ref={richText}
+          placeholder={placeHolder}
+          onChange={handleInput}
+          onCursorPosition={onCursorPosition}
+          style={styles.textEditorStyle}
+          initialHeight={500}
+          useContainer={true}
+          initialContentHTML={HTMLText}
+        />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: "100%",
-    backgroundColor: globalColors.background[100],
-    padding: 20,
-    alignItems: "center",
-  },
-
   textEditorContainer: {
     height: 400,
     width: "100%",
@@ -155,9 +117,5 @@ const styles = StyleSheet.create({
     height: 150,
     fontSize: 20,
     marginBottom: 10,
-  },
-
-  saveButtonStyle: {
-    alignSelf: "flex-end",
   },
 });
