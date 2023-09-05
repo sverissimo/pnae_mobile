@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +21,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "br.gov.mg.emater.pnae_mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +38,15 @@
     },
     "plugins": [
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "O app PNAE precisa de permissão para usar sua localização."
+        }
+      ],
+      [
+        "@react-native-voice/voice"
+      ],
+      [
         "expo-image-picker",
         {
           "cameraPermission": "O app PNAE precisa de permissão para usar a câmera.",
@@ -36,6 +54,11 @@
           "microphonePermission": "O app PNAE precisa de permissão para gravar áudio."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f7a6b2a6-686a-4439-a0fa-f0e26cd3eba3"
+      }
+    }
   }
 }
