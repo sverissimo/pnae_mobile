@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { globalColors } from "../../constants/themes";
 import { Icon } from "../atoms";
@@ -7,6 +6,7 @@ type RowProps<T> = {
   data?: T;
   isHeader?: boolean;
   columns: any;
+  onView?: () => void;
   onEdit?: (data: any) => void;
   getPDFLink?: (data: T) => void;
   onDelete?: (entity: T) => void;
@@ -16,6 +16,7 @@ export const ListItem = <T extends { [key: string]: any }>({
   data,
   isHeader,
   columns,
+  onView,
   onEdit,
   getPDFLink,
   onDelete,
@@ -48,13 +49,15 @@ export const ListItem = <T extends { [key: string]: any }>({
                 size={16}
                 color={icon.color || globalColors.primary[600]}
                 onPress={
-                  icon.action === "getPDF" && getPDFLink
+                  icon.action === "view" && onView
+                    ? () => onView()
+                    : icon.action === "getPDF" && getPDFLink
                     ? () => getPDFLink(data!)
                     : icon.action === "edit" && onEdit
                     ? () => onEdit(data)
                     : icon.action === "delete" && onDelete
                     ? () => onDelete(data!)
-                    : () => console.log("fkkkkkkkkkkkkkkkkkk")
+                    : () => console.log("no action available")
                 }
               />
             ))}

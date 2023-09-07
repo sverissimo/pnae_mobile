@@ -3,7 +3,6 @@ import { Usuario } from "@shared/types/Usuario";
 
 export const UsuarioAPI = {
   getUsuario: async (id: string): Promise<Usuario | void> => {
-    console.log("🚀 ~ file: UsuarioAPI.ts:6 ~ getUsuario: ~ id:", id);
     try {
       //id = id || "1545" ; // dev/test purposes only
       //id = id || "1535"; // dev/test purposes only

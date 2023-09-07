@@ -14,7 +14,7 @@ import { useSnackBar } from "@shared/hooks";
 import produtor from "./produtor.json";
 
 export const RelatorioScreen = () => {
-  // const { produtor } = useSelectProdutor();
+  const { produtor } = useSelectProdutor();
 
   const { navigation } = useCustomNavigation();
   const {
@@ -31,6 +31,10 @@ export const RelatorioScreen = () => {
 
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
+  };
+
+  const handleViewRelatorio = (relatorioId: string | number) => {
+    navigation.navigate("ViewRelatorioScreen", { relatorioId });
   };
 
   const handleEditRelatorio = (relatorioId: string | number) => {
@@ -64,6 +68,7 @@ export const RelatorioScreen = () => {
             <List<Relatorio>
               data={formatRelatorioRows(relatorios)}
               columns={RELATORIO_COLUMNS}
+              onView={handleViewRelatorio}
               onEdit={handleEditRelatorio}
               getPDFLink={handleGetPDF}
               onDelete={onDelete}

@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
-import { useManageRelatorio } from "@features/relatorio/hooks";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 
 export const useSelectProdutor = () => {

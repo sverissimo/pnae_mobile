@@ -4,7 +4,7 @@ import { ListItem } from "../molecules";
 type ListProps<T> = {
   data: any[];
   columns?: any;
-  onPress?: any;
+  onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   getPDFLink?: (id: number | string) => void;
   onDelete?: (entity: T) => void;
@@ -13,7 +13,7 @@ type ListProps<T> = {
 export const List = <T extends Object>({
   data,
   columns,
-  onPress,
+  onView,
   onEdit,
   getPDFLink,
   onDelete,
@@ -28,6 +28,7 @@ export const List = <T extends Object>({
             <ListItem
               data={item}
               columns={columns}
+              onView={() => onView && onView(item.id)}
               onEdit={() => onEdit && onEdit(item.id)}
               getPDFLink={() => getPDFLink && getPDFLink(item.id)}
               onDelete={onDelete}

@@ -10,6 +10,7 @@ import {
   EditRelatorioScreen,
   GetSignatureScreen,
   OrientacaoScreen,
+  ViewRelatorioScreen,
 } from "@features/relatorio/screens";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +43,13 @@ export function StackNavigator() {
         component={CreateRelatorioScreen}
         options={{
           title: "Criar Novo Relatório",
+        }}
+      />
+      <Stack.Screen
+        name="ViewRelatorioScreen"
+        component={ViewRelatorioScreen}
+        options={{
+          title: "Visualizar Relatório",
         }}
       />
       <Stack.Screen
