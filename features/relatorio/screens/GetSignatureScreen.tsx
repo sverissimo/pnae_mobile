@@ -1,13 +1,9 @@
 import { useRef } from "react";
 import SignatureCanvas from "react-native-signature-canvas";
-import { LogBox, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useCustomNavigation } from "@navigation/hooks";
 import { useManagePictures } from "@shared/hooks";
 import { globalColors } from "@shared/constants/themes";
-
-LogBox.ignoreLogs([
-  "Non-serializable values were found in the navigation state.",
-]);
 
 const style = `.m-signature-pad--footer
 .button {
@@ -15,7 +11,7 @@ const style = `.m-signature-pad--footer
   color: #FFF;
 }`;
 
-export const GetSignatureScreen = ({ route }: any) => {
+export const GetSignatureScreen = () => {
   const ref = useRef(null);
   const { handleGetSignature } = useManagePictures();
 

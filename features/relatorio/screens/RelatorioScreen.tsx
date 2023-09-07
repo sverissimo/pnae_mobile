@@ -11,9 +11,11 @@ import { globalColors } from "@shared/constants/themes";
 import { Relatorio } from "../types/Relatorio";
 import { RELATORIO_COLUMNS } from "../constants";
 import { useSnackBar } from "@shared/hooks";
+import produtor from "./produtor.json";
 
 export const RelatorioScreen = () => {
-  const { produtor } = useSelectProdutor();
+  // const { produtor } = useSelectProdutor();
+
   const { navigation } = useCustomNavigation();
   const {
     relatorio,

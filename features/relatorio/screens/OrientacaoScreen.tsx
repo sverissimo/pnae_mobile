@@ -2,6 +2,7 @@ import { globalColors } from "@constants/themes";
 import { useCustomNavigation } from "@navigation/hooks";
 import { CustomButton } from "@shared/components/atoms";
 import { TextEditor } from "@shared/components/templates/TextEditor";
+import { useVoiceRecognition } from "@shared/hooks/useVoiceRecognition";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -14,27 +15,31 @@ import {
 export function OrientacaoScreen({ route }: any) {
   const { parentRoute, orientacao } = route.params;
   const { navigation } = useCustomNavigation();
+  const { isRecording, speechText, startRecording, stopRecording } =
+    useVoiceRecognition();
   const [HTMLText, setHTMLText] = useState<string>(orientacao || "");
   const [disableButton, setDisableButton] = useState<boolean>(true);
 
   useEffect(() => {
-    // const emptyTags = /<[^>]*>(\s*|&nbsp;)<\/[^>]*>/;
-    const emptyTags = /<div><\/div>/;
-    const isEmptyInput = emptyTags.test(HTMLText) || HTMLText.length === 0;
+    const isEmptyInput = HTMLText === "<div></div>" || HTMLText.length === 0;
     setDisableButton(isEmptyInput);
   }, [HTMLText]);
 
   const handleInput = (descriptionText: string) => {
-    if (typeof descriptionText === "string") {
-      setHTMLText(descriptionText);
-    }
+    setHTMLText(descriptionText);
   };
 
   const handleSave = (HTMLText: string) => {
     navigation.navigate(parentRoute, { HTMLText });
   };
 
-  const handleRecordAudio = () => {};
+  const handleRecordAudio = () => {
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
+    startRecording();
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,9 +49,13 @@ export function OrientacaoScreen({ route }: any) {
       >
         <View style={styles.container}>
           <TextEditor
-            HTMLText={orientacao}
+            HTMLText={HTMLText}
+            setHTMLText={setHTMLText}
+            previousOrientacao={orientacao}
+            speechText={speechText}
             placeHolder="Digite aqui a orientação"
             handleInput={handleInput}
+            isRecording={isRecording}
             handleRecordAudio={handleRecordAudio}
           />
           <CustomButton

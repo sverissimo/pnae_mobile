@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import Authentication from "./Authentication";
 import { init_db } from "./@infrastructure/database/config";
 import {
@@ -14,6 +14,8 @@ import { globalColors } from "./@shared/constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { PaperProvider } from "react-native-paper";
 
+// LogBox.ignoreAllLogs(true);
+LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
 

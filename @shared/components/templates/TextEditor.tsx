@@ -1,13 +1,6 @@
 import { globalColors } from "@constants/themes";
-import { FC, useRef } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FC, useEffect, useRef, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
@@ -20,19 +13,39 @@ const toolbarColor = globalColors.primary[100];
 type TextEditorProps = {
   children?: React.ReactNode;
   HTMLText: string;
+  speechText: string;
+  previousOrientacao?: string;
   placeHolder: string;
+  isRecording?: boolean;
   handleInput: (HTMLText: string) => void;
+  setHTMLText: (HTMLText: string) => void;
   handleRecordAudio: (HTMLText: string) => void;
 };
 
 export const TextEditor: FC<TextEditorProps> = ({
   HTMLText,
   placeHolder,
+  isRecording,
+  speechText,
+  previousOrientacao,
   handleInput,
   handleRecordAudio,
 }) => {
   const richText = useRef<RichEditor>(null);
   const scrollRef = useRef<ScrollView>(null);
+  const [updateRender, triggerUpdateRender] = useState(false);
+
+  useEffect(() => {
+    if (speechText) {
+      richText.current?.setContentHTML(HTMLText + speechText);
+      handleInput(HTMLText + speechText);
+      triggerUpdateRender((prev) => !prev);
+    }
+  }, [speechText]);
+
+  useEffect(() => {
+    richText.current?.forceUpdate();
+  }, [updateRender]);
 
   const onCursorPosition = (scrollY: number) => {
     scrollRef.current?.scrollTo({ y: scrollY - 30, animated: true });
@@ -60,7 +73,7 @@ export const TextEditor: FC<TextEditorProps> = ({
             <Icon
               iconName="microphone"
               size={20}
-              color={globalColors.grayscale[800]}
+              color={isRecording ? "red" : globalColors.grayscale[800]}
             />
           ),
         }}
@@ -74,9 +87,9 @@ export const TextEditor: FC<TextEditorProps> = ({
           onChange={handleInput}
           onCursorPosition={onCursorPosition}
           style={styles.textEditorStyle}
-          initialHeight={500}
+          initialHeight={650}
           useContainer={true}
-          initialContentHTML={HTMLText}
+          initialContentHTML={previousOrientacao}
         />
       </ScrollView>
     </View>
@@ -85,7 +98,7 @@ export const TextEditor: FC<TextEditorProps> = ({
 
 const styles = StyleSheet.create({
   textEditorContainer: {
-    height: 400,
+    height: "75%",
     width: "100%",
     marginBottom: 10,
     borderRadius: 30,
@@ -114,8 +127,5 @@ const styles = StyleSheet.create({
 
   textEditorStyle: {
     borderRadius: 30,
-    height: 150,
-    fontSize: 20,
-    marginBottom: 10,
   },
 });
