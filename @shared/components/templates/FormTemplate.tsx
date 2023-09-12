@@ -10,7 +10,7 @@ import {
 type FormTemplateProps = {
   form: FormElement[];
   data: any;
-  onValueChange: any;
+  onValueChange?: any;
   navigateTo?: any;
 };
 
@@ -20,6 +20,8 @@ export function FormTemplate({
   onValueChange,
   navigateTo,
 }: FormTemplateProps) {
+  console.log("🚀 ~ file: FormTemplate.tsx:23 ~ data:", data);
+
   return (
     <View>
       {form.map((item) => {

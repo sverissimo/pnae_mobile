@@ -12,6 +12,7 @@ import {
   OrientacaoScreen,
   ViewRelatorioScreen,
 } from "@features/relatorio/screens";
+import { ViewPerfilScreen } from "@features/perfil/screens/ViewPerfilScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -78,6 +79,13 @@ export function StackNavigator() {
         component={CreatePerfilScreen}
         options={{
           title: "Criar Novo Perfil",
+        }}
+      />
+      <Stack.Screen
+        name="ViewPerfilScreen"
+        component={ViewPerfilScreen}
+        options={{
+          title: "Visualizar Perfil",
         }}
       />
       <Stack.Screen

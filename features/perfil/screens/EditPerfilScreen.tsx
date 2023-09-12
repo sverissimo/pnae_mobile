@@ -9,6 +9,7 @@ type EditPerfEditPerfilScreenRouteProp = RouteProp<
 >;
 
 export const EditPerfilScreen = () => {
+  return <></>;
   const routes = useRoute<EditPerfEditPerfilScreenRouteProp>();
   const { perfil } = routes.params;
   const keys = Object.keys(perfil).filter(

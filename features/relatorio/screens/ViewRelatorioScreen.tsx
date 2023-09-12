@@ -40,7 +40,6 @@ export const ViewRelatorioScreen = ({ route }: any) => {
       <ScrollView style={styles.orientacaoContainer} nestedScrollEnabled>
         <RichEditor
           initialContentHTML={relatorio?.orientacao}
-          // useContainer={true}
           disabled={true}
           editorStyle={{
             contentCSSText: "font-size: 12px;",
@@ -60,6 +59,8 @@ export const ViewRelatorioScreen = ({ route }: any) => {
           </View>
         </>
       )}
+      {/*********** TODO: Adicionar cálculo de largura/altura ao useManageImage e reproduzir aqui as props.
+       * Ver chatGPT  */}
       {pictureURI && (
         <>
           <ListTitle title="Foto da Visita" />

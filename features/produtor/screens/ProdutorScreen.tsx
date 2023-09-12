@@ -34,7 +34,7 @@ export const ProdutorScreen = () => {
       <View style={styles.title}>
         <ListTitle title={"Perfis cadastrados"} />
       </View>
-      <PerfilList />
+      <PerfilList data={produtor.perfis || []} />
     </View>
   );
 };

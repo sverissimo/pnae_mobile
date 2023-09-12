@@ -1,3 +1,4 @@
+import { Perfil } from "@features/perfil/types/Perfil";
 import { Relatorio } from "features/relatorio/types/Relatorio";
 
 type ParamListBase = {
@@ -25,6 +26,7 @@ export type RootStackParamList = ParamListBase & {
   EditRelatorioScreen: { relatorioId: string | number };
   CreatePerfilScreen: undefined;
   EditPerfilScreen: { perfil: any };
+  ViewPerfilScreen: { perfil: Perfil };
   tabs: undefined;
   GetSignature: RouteParamsList;
   OrientacaoScreen: undefined;

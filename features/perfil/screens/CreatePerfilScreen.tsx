@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { Button } from "react-native-paper";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
-import { perfilForm } from "../forms/perfilForm";
+import { perfilForm } from "../constants";
 
 type PerfilFormState = {
   tipoPerfil: string;

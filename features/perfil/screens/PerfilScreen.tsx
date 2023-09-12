@@ -3,17 +3,14 @@ import { globalColors } from "../../../@shared/constants/themes";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { useSelectProdutor } from "@features/produtor/hooks";
-import PerfilList from "../components/PerfilList";
-import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
 import { AddButton, ListTitle } from "@shared/components/atoms";
+import { useManagePerfil } from "../hooks/useManagePerfil";
+import PerfilList from "../components/PerfilList";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-  const { navigation } = useCustomNavigation();
-
-  const handlePress = () => {
-    navigation.navigate("CreatePerfilScreen");
-  };
+  const { perfis, handleCreatePerfil, handleViewPerfil, handleEditPerfil } =
+    useManagePerfil(produtor);
 
   if (!produtor) {
     return (
@@ -29,13 +26,17 @@ export const PerfilScreen = () => {
       {produtor.perfis?.length ? (
         <>
           <ListTitle title={"Perfis cadastrados"} />
-          <PerfilList />
+          <PerfilList
+            data={perfis}
+            handleViewPerfil={handleViewPerfil}
+            handleEditPerfil={handleEditPerfil}
+          />
         </>
       ) : (
         <ListTitle title={"Nenhum perfil cadastrado"} />
       )}
 
-      <AddButton label="Criar Novo Perfil" onPress={handlePress} />
+      <AddButton label="Criar Novo Perfil" onPress={handleCreatePerfil} />
     </View>
   );
 };
