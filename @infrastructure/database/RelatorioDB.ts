@@ -1,6 +1,6 @@
-import { Relatorio } from "features/relatorio/types/Relatorio";
 import { db } from "./config";
-import { RelatorioDTO } from "./dto/RelatorioDTO";
+import { RelatorioLocalDTO } from "./dto";
+// import { RelatorioLocalDTO } from "./dto/RelatorioLocalDTO";
 
 export const RelatorioDB = {
   createRelatorio,
@@ -10,18 +10,18 @@ export const RelatorioDB = {
   deleteRelatorio,
 };
 
-function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
+function createRelatorio(relatorio: RelatorioLocalDTO): Promise<boolean> {
   return new Promise((resolve, reject) => {
     if (!relatorio) {
       reject(new Error("Relatorio is null or undefined"));
       return;
     }
 
-    const keys: (keyof Relatorio)[] = Object.keys(relatorio).filter(
+    const keys: (keyof RelatorioLocalDTO)[] = Object.keys(relatorio).filter(
       (key) =>
-        relatorio[key as keyof Relatorio] !== null &&
-        relatorio[key as keyof Relatorio] !== undefined
-    ) as (keyof Relatorio)[];
+        relatorio[key as keyof RelatorioLocalDTO] !== null &&
+        relatorio[key as keyof RelatorioLocalDTO] !== undefined
+    ) as (keyof RelatorioLocalDTO)[];
 
     const values = keys.map((key) => relatorio[key]);
     const placeholders = keys.map(() => "?").join(", ");
@@ -29,10 +29,10 @@ function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
 
     const queryString = `
       INSERT INTO relatorio (${columns})
-      VALUES (${placeholders
-        .replace(/produtor_id/g, "CAST(? AS BIGINT)")
-        .replace(/tecnico_id/g, "CAST(? AS BIGINT)")})
-    `;
+      VALUES (${placeholders})
+      `;
+    // .replace(/produtor_id/g, "CAST(? AS BIGINT)")
+    // .replace(/tecnico_id/g, "CAST(? AS BIGINT)")})
 
     db.transaction((tx) => {
       tx.executeSql(
@@ -53,8 +53,8 @@ function createRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
 
 async function getRelatorios(
   produtorId: string
-) /* : Promise<RelatorioDTO>  */ {
-  const result = new Promise<RelatorioDTO[]>((resolve, reject) => {
+) /* : Promise<RelatorioLocalDTO>  */ {
+  const result = new Promise<RelatorioLocalDTO[]>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         `
@@ -75,9 +75,9 @@ async function getRelatorios(
   return result;
 }
 
-function getAllRelatorios(): Promise<RelatorioDTO[]> {
+function getAllRelatorios(): Promise<RelatorioLocalDTO[]> {
   return new Promise((resolve, reject) => {
-    const relatorios: RelatorioDTO[] = [];
+    const relatorios: RelatorioLocalDTO[] = [];
     db.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM relatorio;",
@@ -97,7 +97,7 @@ function getAllRelatorios(): Promise<RelatorioDTO[]> {
   });
 }
 
-async function updateRelatorio(relatorio: RelatorioDTO): Promise<boolean> {
+async function updateRelatorio(relatorio: RelatorioLocalDTO): Promise<boolean> {
   const { id, ...rest } = relatorio;
   const setClause = Object.keys(rest)
     .map((key) => `${key} = ?`)

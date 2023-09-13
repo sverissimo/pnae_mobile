@@ -13,11 +13,4 @@ export function createQueryString<T extends Object>(entity: T) {
     .join(", ");
 
   return { values, placeholders, columns, setClause };
-
-  const queryString = `
-        INSERT INTO entity (${columns})
-        VALUES (${placeholders
-          .replace(/produtor_id/g, "CAST(? AS BIGINT)")
-          .replace(/tecnico_id/g, "CAST(? AS BIGINT)")})
-      `;
 }

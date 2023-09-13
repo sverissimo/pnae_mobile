@@ -1,10 +1,20 @@
 export type FormElement = {
   field: string;
   label: string;
-  type: "select" | "radio" | "input" | "image" | "textEditor" | "signature";
+  type:
+    | "select"
+    | "radio"
+    | "input"
+    | "image"
+    | "textEditor"
+    | "signature"
+    | "toggle-input";
   options?: string[] | number[];
   value?: string | boolean;
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
+  customHelperField?: string;
+  maxLength?: number;
+  placeholder?: string;
   buttonLabel?: string;
   buttonLabelAlt?: string;
   icon?: string;

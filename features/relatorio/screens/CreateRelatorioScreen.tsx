@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+
+import { useCustomNavigation } from "navigation/hooks/useCustomNavigation";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-import { useCustomNavigation } from "navigation/hooks/useCustomNavigation";
-import { useManageRelatorio } from "../hooks";
-import { useManagePictures, useSnackBar } from "@shared/hooks";
-import { FormTemplate } from "@shared/components/templates";
-import { SnackBar } from "@shared/components/molecules";
+
 import { ListTitle } from "@shared/components/atoms";
+import { SnackBar } from "@shared/components/molecules";
+import { FormTemplate } from "@shared/components/templates";
+import { useManagePictures, useSnackBar } from "@shared/hooks";
+
 import { relatorioForm } from "../constants";
+import { useManageRelatorio } from "../hooks";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
@@ -29,13 +32,14 @@ export const CreateRelatorioScreen = ({ route }: any) => {
 
   const handleSaveRelatorio = async () => {
     await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
+
     setSnackBarOptions({
       message: "Relatório salvo com sucesso!",
     });
-    setDisableButton(true);
+    /* setDisableButton(true);
     setTimeout(() => {
       navigation.goBack();
-    }, 1000);
+    }, 1000); */
   };
 
   const navigateTo = (route: string) => {

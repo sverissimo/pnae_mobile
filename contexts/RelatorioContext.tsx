@@ -1,6 +1,8 @@
+import { createContext, FC, useState } from "react";
+
 import * as FileSystem from "expo-file-system";
-import { Relatorio } from "features/relatorio/types/Relatorio";
-import { FC, createContext, useState } from "react";
+
+import { Relatorio } from "@features/relatorio/types/RelatorioModel";
 
 type RelatorioContextType = {
   relatorios: Relatorio[];

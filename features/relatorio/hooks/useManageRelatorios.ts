@@ -1,22 +1,25 @@
 import { useContext, useEffect, useState } from "react";
-import * as Clipboard from "expo-clipboard";
-import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
-import { ProdutorContext } from "@contexts/ProdutorContext";
-import { RelatorioService } from "@services/RelatorioService";
-import { useAuth } from "@auth/hooks/useAuth";
-import { Relatorio } from "@features/relatorio/types/Relatorio";
-import { Usuario } from "@shared/types/Usuario";
-import { RelatorioContext } from "@contexts/RelatorioContext";
-import { formatDate, truncateString } from "@shared/utils";
+
 import { env } from "config/env";
+import * as Clipboard from "expo-clipboard";
+
+import { useAuth } from "@auth/hooks/useAuth";
+import { ProdutorContext } from "@contexts/ProdutorContext";
+import { RelatorioContext } from "@contexts/RelatorioContext";
+import { RelatorioModel } from "@features/relatorio/types";
+import { useManageTecnico } from "@features/tecnico/hooks";
+import { RelatorioService } from "@services/RelatorioService";
+import { formatDate, truncateString } from "@shared/utils";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
   const { produtor } = useContext(ProdutorContext);
   const { user } = useAuth();
 
-  const [relatorio, setState] = useState<Relatorio>({} as Relatorio);
+  const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const { extensionistas } = useManageTecnico(relatorio);
 
   useEffect(() => {
     if (produtorId) {
@@ -24,33 +27,44 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   }, [produtorId]);
 
+  useEffect(() => {
+    const nomeOutroExtensionista = extensionistas
+      .map((e) => e?.nome_usuario)
+      .join(",");
+    setState((state: any) => ({
+      ...state,
+      nomeOutroExtensionista,
+      outroExtensionista: extensionistas,
+    }));
+  }, [extensionistas]);
+
   const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
 
-  const saveRelatorio = async (relatorio: Relatorio) => {
+  const saveRelatorio = async (relatorio: RelatorioModel) => {
     try {
       const relatorioInput = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
+        outroExtensionista: extensionistas,
       };
 
       const relatorioId = await RelatorioService.createRelatorio(
         relatorioInput
       );
 
-      const relatoriosListUpdated = [
+      setRelatorios([
         ...relatorios,
         {
-          ...relatorio,
+          ...relatorioInput,
           id: relatorioId,
           nomeTecnico: user?.nome_usuario,
           produtorId: produtor!.id_pessoa_demeter!,
           createdAt: formatDate(new Date().toISOString()),
         },
-      ];
-      setRelatorios(relatoriosListUpdated);
+      ]);
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
     }
@@ -58,34 +72,16 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const getRelatorios = async (
     produtorId: string | undefined
-  ): Promise<Relatorio[]> => {
-    if (!produtorId) return [];
-    try {
-      const relatoriosData = await RelatorioService.getRelatorios(produtorId);
-      if (!relatoriosData.length) {
-        return relatoriosData;
-      }
-      const tecnicoIds = [
-        ...new Set(
-          relatoriosData
-            .map((r: Relatorio) => r?.tecnicoId?.toString())
-            .filter((id) => !!id)
-        ),
-      ];
-      const tecnicos = (
-        await Promise.allSettled(
-          tecnicoIds.map((tecnicoId: any) => UsuarioAPI.getUsuario(tecnicoId))
-        )
-      )
-        .filter((result) => result.status === "fulfilled")
-        .map((result) => (result.status === "fulfilled" ? result.value : null))
-        .filter((tecnico: any) => !!tecnico) as Usuario[];
+  ): Promise<RelatorioModel[]> => {
+    if (!produtorId) {
+      return [];
+    }
 
-      const relatorios = relatoriosData.map((r: Relatorio) => {
-        const tecnico = tecnicos.find((t) => t?.id_usuario == r?.tecnicoId);
-        const nomeTecnico = tecnico?.nome_usuario;
-        return { ...r, nomeTecnico };
-      });
+    try {
+      const relatorios = await RelatorioService.getRelatorios(produtorId);
+      if (!relatorios.length) {
+        return [];
+      }
       setRelatorios(relatorios);
       return relatorios;
     } catch (error) {
@@ -94,13 +90,13 @@ export const useManageRelatorio = (produtorId?: string) => {
     return [];
   };
 
-  const updateRelatorio = async (relatorio: Relatorio) => {
+  const updateRelatorio = async (relatorio: RelatorioModel) => {
     await RelatorioService.updateRelatorio(relatorio);
     updateRelatoriosList(relatorio);
   };
 
-  const updateRelatoriosList = (relatorio: Relatorio) => {
-    const updatedRelatorio: Relatorio = {
+  const updateRelatoriosList = (relatorio: RelatorioModel) => {
+    const updatedRelatorio: RelatorioModel = {
       ...relatorio,
       nomeTecnico: user?.nome_usuario,
     };
@@ -112,13 +108,13 @@ export const useManageRelatorio = (produtorId?: string) => {
       return;
     }
 
-    setRelatorios((relatorios: Relatorio[]) => [
+    setRelatorios((relatorios: RelatorioModel[]) => [
       ...relatorios,
       updatedRelatorio,
     ]);
   };
 
-  const onDelete = async (relatorio: Relatorio) => {
+  const onDelete = async (relatorio: RelatorioModel) => {
     setState(relatorio);
     setShowDeleteDialog(true);
   };
@@ -128,7 +124,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       await RelatorioService.deleteRelatorio(relatorio.id!);
       const updatedList = relatorios.filter((r) => r.id !== relatorio.id);
       setRelatorios(updatedList);
-      setState({} as Relatorio);
+      setState({} as RelatorioModel);
       setShowDeleteDialog(false);
     } catch (error) {
       console.error("🚀 ~ useManageRelatorios.ts ~ line 127", error);
@@ -146,8 +142,8 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
-  const formatRelatorioRows = (relatorios: Relatorio[]) => {
-    const relatorioTableData = relatorios.map((r: Relatorio) => ({
+  const formatRelatorioRows = (relatorios: RelatorioModel[]) => {
+    const relatorioTableData = relatorios.map((r: RelatorioModel) => ({
       id: r?.id,
       numeroRelatorio: r?.numeroRelatorio,
       assunto: truncateString(r?.assunto),

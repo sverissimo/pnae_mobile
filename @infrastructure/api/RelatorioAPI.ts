@@ -1,6 +1,8 @@
-import { Relatorio } from "features/relatorio/types/Relatorio";
 import { env } from "config";
+
+// import { RelatorioBackendDTO } from "@features/relatorio/types/RelatorioModel";
 import { parseURI } from "@shared/utils/parseURI";
+import { RelatorioBackendDTO } from "./dto";
 
 export const RelatorioAPI = {
   createRelatorio,
@@ -9,7 +11,7 @@ export const RelatorioAPI = {
 };
 const url = `${env.BASE_URL}/relatorios`;
 
-async function createRelatorio(relatorioDTO: Relatorio) {
+async function createRelatorio(relatorioDTO: Partial<RelatorioBackendDTO>) {
   if (!relatorioDTO) return null;
   try {
     const formData: any = new FormData();
@@ -55,11 +57,10 @@ async function getRelatorios(produtorId: string): Promise<string> {
   return "To do...";
 }
 
-async function updateRelatorio(relatorio: Relatorio): Promise<string> {
-  console.log(
-    "🚀 ~ file: RelatorioAPI.ts:59 ~ updateRelatorio ~ relatorio:",
-    relatorio
-  );
+async function updateRelatorio(
+  relatorioInput: RelatorioBackendDTO
+): Promise<string> {
+  const { id, ...relatorio } = relatorioInput;
   const formData: any = new FormData();
   Object.entries(relatorio).forEach(([key, value]) => {
     if (key === "pictureURI" || key === "assinaturaURI") {
@@ -85,7 +86,7 @@ async function updateRelatorio(relatorio: Relatorio): Promise<string> {
     });
   }
 
-  const response = await fetch(`${url}/${relatorio.id}`, {
+  const response = await fetch(`${url}/${id}`, {
     method: "PATCH",
     body: formData,
   });

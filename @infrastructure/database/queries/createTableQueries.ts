@@ -17,13 +17,14 @@ CREATE TABLE IF NOT EXISTS "relatorio" (
 export const createRelatorioTableQuery = `
 CREATE TABLE IF NOT EXISTS "relatorio" (
   id TEXT PRIMARY KEY,
-  produtor_id BIGINT,
-  tecnico_id BIGINT,
+  produtor_id TEXT,
+  tecnico_id TEXT,
   numero_relatorio INTEGER,
   assunto TEXT,
   orientacao TEXT,
   picture_uri TEXT,
   assinatura_uri TEXT,
+  outro_extensionista TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP
 );

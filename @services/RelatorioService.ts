@@ -1,21 +1,29 @@
 import humps from "humps";
-import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
-import { RelatorioDTO } from "../@infrastructure/database/dto/RelatorioDTO";
-import { Relatorio } from "features/relatorio/types/Relatorio";
+
+import { RelatorioModel } from "@features/relatorio/types";
+import { UsuarioAPI } from "@infrastructure/api";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
-import { generateUUID } from "@shared/utils/generateUUID";
+import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
+import { Usuario } from "@shared/types";
 import { deleteFile } from "@shared/utils";
+import { generateUUID } from "@shared/utils/generateUUID";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
+import { RelatorioLocalDTO } from "../@infrastructure/database/dto/RelatorioLocalDTO";
+import { Relatorio } from "@features/relatorio/entity";
+
 export const RelatorioService = {
-  createRelatorio: async (relatorio: Relatorio): Promise<string> => {
+  createRelatorio: async (relatorio: RelatorioModel): Promise<string> => {
     try {
       const relatorioId = generateUUID();
       relatorio.id = relatorioId;
-      const relatorioLocalDTO = mapToDTO(relatorio);
+      const relatorioModel = new Relatorio(relatorio);
+      const relatorioLocalDTO = relatorioModel.toLocalDTO();
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
+      console.log("🚀 RelatorioService.ts:22:", resultLocal);
 
-      await RelatorioAPI.createRelatorio(relatorio);
+      const relatorioDTO = relatorioModel.toDTO();
+      await RelatorioAPI.createRelatorio(relatorioDTO);
       return relatorioId;
     } catch (error: any) {
       console.error("🚀 RelatorioService.ts:31: ", error);
@@ -23,43 +31,53 @@ export const RelatorioService = {
     }
   },
 
-  getRelatorios: async (produtorId: string): Promise<Relatorio[]> => {
-    const relatorioDTOs: RelatorioDTO[] = await RelatorioDB.getRelatorios(
+  getRelatorios: async (produtorId: string): Promise<RelatorioModel[]> => {
+    const relatorioDTOs: RelatorioLocalDTO[] = await RelatorioDB.getRelatorios(
       produtorId
     );
-    const data = relatorioDTOs.map(toModel) as Relatorio[];
-    return data;
+    const tecnicoIds = getTecnicosIdsFromRelatoriosList(relatorioDTOs);
+    const tecnicos = (await UsuarioAPI.getUsuarios(tecnicoIds)) as Usuario[];
+
+    const relatorios = relatorioDTOs.map((r) =>
+      Relatorio.toModel(r, tecnicos)
+    ) as RelatorioModel[];
+
+    return relatorios;
   },
 
   getAllRelatorios: async () => {
-    const relatorios = (await RelatorioDB.getAllRelatorios()) as RelatorioDTO[];
-    return relatorios.map(toModel) as Relatorio[];
+    const relatorios =
+      (await RelatorioDB.getAllRelatorios()) as RelatorioLocalDTO[];
+    return relatorios;
   },
 
-  updateRelatorio: async (relatorioInput: Relatorio) => {
+  updateRelatorio: async (relatorioInput: RelatorioModel) => {
     try {
-      const updatedAt = new Date().toISOString();
       const { nomeTecnico, createdAt, ...relatorio } = relatorioInput;
-      const allRelatorios = await RelatorioDB.getAllRelatorios();
-
-      const relatorioUpdate = getUpdatedProps(
-        { ...relatorio, updatedAt },
-        allRelatorios.map(toModel)
+      const relatoriosList = await RelatorioService.getRelatorios(
+        relatorioInput.produtorId
+      );
+      const originalRelatorio = relatoriosList.find(
+        (r) => r.id === relatorio.id
       );
 
-      const relatorioDTO = mapToDTO(relatorioUpdate);
+      const relatorioUpdate = getUpdatedProps(
+        originalRelatorio!,
+        relatorio
+      ) as RelatorioModel;
+      relatorioUpdate.updatedAt = new Date().toISOString();
+
+      const relatorioLocalDTO = new Relatorio(relatorioUpdate).toLocalDTO();
       const relatorioUpdatedDTO = await RelatorioDB.updateRelatorio(
-        relatorioDTO
+        relatorioLocalDTO
       );
       if (!relatorioUpdatedDTO) {
         throw new Error(`Failed to update relatorio locally: ${relatorio.id}`);
       }
+      console.log("### Relatorio locally updated!!");
 
-      const result = await RelatorioAPI.updateRelatorio({
-        ...relatorioUpdate,
-        updatedAt,
-      });
-
+      const relatorioDTO = new Relatorio(relatorioUpdate).toDTO();
+      const result = await RelatorioAPI.updateRelatorio(relatorioDTO);
       return result;
     } catch (error) {
       if (error instanceof Error) {
@@ -98,35 +116,101 @@ export const RelatorioService = {
   },
 };
 
-function mapToDTO(relatorio: Relatorio): RelatorioDTO {
-  const relatorioDTO = humps.decamelizeKeys(relatorio, {
-    process: (key, convert, options) => {
-      if (key === "pictureURI") {
-        return "picture_uri";
-      }
-      if (key === "assinaturaURI") {
-        return "assinatura_uri";
-      }
-      return convert(key, options);
-    },
-  }) as RelatorioDTO;
-  if (relatorioDTO.numero_relatorio) {
-    relatorioDTO.numero_relatorio = +relatorioDTO.numero_relatorio;
-  }
-  return relatorioDTO;
+function getTecnicosIdsFromRelatoriosList(
+  relatoriosList: RelatorioLocalDTO[]
+): string[] {
+  const tecnicoIds = [
+    ...new Set(
+      relatoriosList
+        // .map((r: Relatorio) => r?.tecnicoId?.toString())
+        .reduce((acc: any, r: RelatorioLocalDTO) => {
+          acc.push(r?.tecnico_id?.toString());
+          acc.push(r?.outro_extensionista?.toString());
+          return acc;
+        }, [])
+        .filter((id: string) => !!id)
+    ),
+  ];
+  console.log("🚀 ~ file: RelatorioService.ts:129 ~ tecnicoIds:", tecnicoIds);
+  if (!tecnicoIds.length) return [];
+  return tecnicoIds as string[];
 }
 
-function toModel(relatorioDTO: RelatorioDTO): Relatorio {
-  const relatorio = humps.camelizeKeys(relatorioDTO, {
-    process: (key, convert, options) => {
-      if (key === "picture_uri") {
-        return "pictureURI";
-      }
-      if (key === "assinatura_uri") {
-        return "assinaturaURI";
-      }
-      return convert(key, options);
-    },
-  }) as Relatorio;
-  return relatorio;
-}
+// function mapToDTO(relatorio: Relatorio): Partial<RelatorioDTO> {
+//   const {
+//     numeroRelatorio,
+//     nomeTecnico,
+//     outroExtensionista,
+//     nomeOutroExtensionista,
+//     matriculaOutroExtensionista,
+//     ...rest
+//   } = relatorio;
+
+//   const relatorioDTO: Partial<Relatorio> = rest;
+//   if (numeroRelatorio) {
+//     relatorioDTO.numeroRelatorio = +numeroRelatorio;
+//   }
+
+//   relatorioDTO.outroExtensionista =
+//     outroExtensionista?.map((e) => e.id_usuario).join(",") || undefined;
+
+//   return relatorioDTO;
+// }
+
+// function toModel(relatorioDTO: RelatorioDTO, tecnicos?: Usuario[]): Relatorio {
+//   const relatorio = humps.camelizeKeys(relatorioDTO, {
+//     process: (key, convert, options) => {
+//       if (key === "picture_uri") {
+//         return "pictureURI";
+//       }
+//       if (key === "assinatura_uri") {
+//         return "assinaturaURI";
+//       }
+//       return convert(key, options);
+//     },
+//   }) as Relatorio;
+//   if (!tecnicos) return relatorio;
+
+//   const tecnico = tecnicos.find(
+//     (t) => t?.id_usuario == relatorioDTO?.tecnico_id
+//   );
+
+//   const outroExtensionista = tecnicos.filter(
+//     (t) =>
+//       relatorioDTO?.outro_extensionista &&
+//       relatorioDTO.outro_extensionista.match(t.id_usuario)
+//   );
+//   const { nomeOutroExtensionista, matriculaOutroExtensionista } =
+//     outroExtensionista.reduce(
+//       (acc, t) => {
+//         acc.nomeOutroExtensionista += t.nome_usuario + ",";
+//         acc.matriculaOutroExtensionista += t.matricula_usuario + ",";
+//         return acc;
+//       },
+//       { nomeOutroExtensionista: "", matriculaOutroExtensionista: "" }
+//     );
+
+//   const nomeTecnico = tecnico?.nome_usuario;
+//   return {
+//     ...relatorio,
+//     nomeTecnico,
+//     outroExtensionista,
+//     nomeOutroExtensionista,
+//     matriculaOutroExtensionista,
+//   };
+// }
+
+// function decamelizeRelatorio(relatorio: Relatorio) {
+//   const relatorioDTO = humps.decamelizeKeys(relatorio, {
+//     process: (key, convert, options) => {
+//       if (key === "pictureURI") {
+//         return "picture_uri";
+//       }
+//       if (key === "assinaturaURI") {
+//         return "assinatura_uri";
+//       }
+//       return convert(key, options);
+//     },
+//   }) as RelatorioDTO;
+//   return relatorioDTO;
+// }

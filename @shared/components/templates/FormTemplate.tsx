@@ -1,8 +1,10 @@
-import { FormElement } from "@shared/types/FormElement";
 import { View } from "react-native";
+
+import { FormElement } from "@shared/types/FormElement";
+
 import {
-  RadioComponent,
   PictureHolder,
+  RadioComponent,
   SelectDropdown,
   TextInputComponent,
 } from "../organisms";
@@ -20,8 +22,6 @@ export function FormTemplate({
   onValueChange,
   navigateTo,
 }: FormTemplateProps) {
-  console.log("🚀 ~ file: FormTemplate.tsx:23 ~ data:", data);
-
   return (
     <View>
       {form.map((item) => {
@@ -56,6 +56,9 @@ export function FormTemplate({
                   typeof data[item.field] === "number"
                     ? data[item.field].toString()
                     : data[item.field]
+                }
+                customHelper={
+                  item.customHelperField ? data[item.customHelperField] : ""
                 }
                 keyboardType={item.keyboardType}
               />

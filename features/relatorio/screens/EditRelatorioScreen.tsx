@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
+
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
+
 import { useCustomNavigation } from "@navigation/hooks/useCustomNavigation";
-import { useManageRelatorio } from "../hooks";
-import { useManagePictures, useSnackBar } from "@shared/hooks";
-import { FormTemplate } from "@shared/components/templates";
-import { SnackBar } from "@shared/components/molecules";
 import { ListTitle } from "@shared/components/atoms";
+import { SnackBar } from "@shared/components/molecules";
+import { FormTemplate } from "@shared/components/templates";
+import { useManagePictures, useSnackBar } from "@shared/hooks";
+
 import { relatorioForm } from "../constants";
-import { Relatorio } from "../types/Relatorio";
+import { useManageRelatorio } from "../hooks";
+import { RelatorioModel } from "../types";
 
 export const EditRelatorioScreen = ({ route }: any) => {
   const { updateRelatorio } = useManageRelatorio();
@@ -37,7 +40,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
   useEffect(() => {
     const originalRelatorio = relatorios.find(
       (r) => r!.id === relatorioId
-    ) as Relatorio;
+    ) as RelatorioModel;
     if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
     setPicture(originalRelatorio.pictureURI);
@@ -54,7 +57,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
   const handleSaveRelatorio = async () => {
     try {
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
-      await updateRelatorio(updatedRelatorio as Relatorio);
+      await updateRelatorio(updatedRelatorio as RelatorioModel);
 
       clearDiscardedPictures().then(() => clearURIs());
       setSnackBarOptions({

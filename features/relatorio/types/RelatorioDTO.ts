@@ -1,4 +1,4 @@
-import { Produtor } from "../../../features/produtor/types/Produtor";
+import { Produtor } from "../../produtor/types/Produtor";
 
 export type RelatorioDTO = {
   id: string;
@@ -10,7 +10,7 @@ export type RelatorioDTO = {
   produtor?: Produtor;
   picture_uri: string;
   assinatura_uri: string;
+  outro_extensionista?: string;
   created_at: any;
   updated_at?: any;
-  [key: string]: any;
 };

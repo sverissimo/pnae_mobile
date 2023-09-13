@@ -1,5 +1,5 @@
 import { Perfil } from "@features/perfil/types/Perfil";
-import { Relatorio } from "features/relatorio/types/Relatorio";
+import { Relatorio } from "@features/relatorio/types/RelatorioModel";
 
 type ParamListBase = {
   [key: string]: object | undefined;

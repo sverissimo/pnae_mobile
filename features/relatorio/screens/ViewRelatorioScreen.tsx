@@ -1,12 +1,15 @@
 import { useEffect } from "react";
-import { Image, ScrollView, StyleSheet, View, Text } from "react-native";
-import { useManageRelatorio } from "../hooks";
-import { useManagePictures } from "@shared/hooks";
-import { ListTitle } from "@shared/components/atoms";
-import { Relatorio } from "../types/Relatorio";
+
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { RichEditor } from "react-native-pell-rich-editor";
+
 import { useSelectProdutor } from "@features/produtor/hooks";
+import { ListTitle } from "@shared/components/atoms";
+import { useManagePictures } from "@shared/hooks";
 import { formatDate } from "@shared/utils";
+
+import { useManageRelatorio } from "../hooks";
+import { Relatorio } from "../types/RelatorioModel";
 
 export const ViewRelatorioScreen = ({ route }: any) => {
   const { relatorio, setRelatorio, relatorios } = useManageRelatorio();

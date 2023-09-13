@@ -1,16 +1,14 @@
-import { Produtor } from "../../produtor/types/Produtor";
-
-export type Relatorio = {
+export type RelatorioBackendDTO = {
   id: string;
   produtorId: string;
   tecnicoId: string;
-  nomeTecnico?: string;
+  nomeTecnico: string;
   numeroRelatorio: number;
   assunto: string;
   orientacao: string;
-  produtor?: Produtor;
   pictureURI: string;
   assinaturaURI: string;
+  outroExtensionista?: string;
   createdAt: any;
   updatedAt?: any;
 };
