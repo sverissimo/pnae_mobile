@@ -9,7 +9,7 @@ import { useManagePictures } from "@shared/hooks";
 import { formatDate } from "@shared/utils";
 
 import { useManageRelatorio } from "../hooks";
-import { Relatorio } from "../types/RelatorioModel";
+import { RelatorioModel } from "../types";
 
 export const ViewRelatorioScreen = ({ route }: any) => {
   const { relatorio, setRelatorio, relatorios } = useManageRelatorio();
@@ -23,7 +23,7 @@ export const ViewRelatorioScreen = ({ route }: any) => {
   useEffect(() => {
     const originalRelatorio = relatorios.find(
       (r) => r!.id === relatorioId
-    ) as Relatorio;
+    ) as RelatorioModel;
     if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
     setPicture(originalRelatorio.pictureURI);
@@ -35,6 +35,22 @@ export const ViewRelatorioScreen = ({ route }: any) => {
       <ListTitle
         title={`Relatório nº ${relatorio.numeroRelatorio} - ${date}`}
       />
+      {relatorio?.nomeOutroExtensionista && (
+        <>
+          <ListTitle title={`Extensionistas`} />
+          <View style={styles.assuntoContainer}>
+            <Text style={{ fontSize: 12 }}>{relatorio.nomeTecnico}</Text>
+            {relatorio?.outroExtensionista?.map((extensionista) => (
+              <Text
+                style={{ fontSize: 12 }}
+                key={extensionista.matricula_usuario}
+              >
+                {extensionista.nome_usuario}
+              </Text>
+            ))}
+          </View>
+        </>
+      )}
       <ListTitle title={"Assunto"} />
       <View style={styles.assuntoContainer}>
         <Text style={{ fontSize: 12 }}>{relatorio.assunto}</Text>
