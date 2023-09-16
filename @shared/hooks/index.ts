@@ -1,2 +1,5 @@
-export { useManagePictures } from "./useManagePictures";
-export { useSnackBar } from "./useSnackbar";
+export * from "./useLocation"
+export * from "./useManageConnection"
+export * from "./useManagePictures"
+export * from "./useSnackbar"
+export * from "./useVoiceRecognition"

@@ -9,4 +9,7 @@ export type CreateRelatorioDTO = {
   produtor?: Produtor;
   picture_uri: string;
   assinatura_uri: string;
+  outro_extensionista?: string;
+  read_only?: boolean;
+  coordenadas?: string;
 };

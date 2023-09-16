@@ -19,6 +19,7 @@ export const RelatorioService = {
       relatorio.id = relatorioId;
       const relatorioModel = new Relatorio(relatorio);
       const relatorioLocalDTO = relatorioModel.toLocalDTO();
+      relatorioLocalDTO.read_only = false;
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
       console.log("🚀 RelatorioService.ts:22:", resultLocal);
 

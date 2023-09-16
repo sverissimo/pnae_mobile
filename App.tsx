@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LogBox, StatusBar } from "react-native";
 import Authentication from "./Authentication";
 import { init_db } from "./@infrastructure/database/config";
 import {
   ImageContextProvider,
+  LocationContextProvider,
   ProdutorContextProvider,
   RelatorioContextProvider,
   UserContextProvider,
@@ -23,7 +24,7 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("--------------------------------------\n");
+        console.log("----------------------------------------\n");
         // checkDBSchema();
         // RelatorioService.getAllRelatorios().then((relatorios) =>
         //   relatorios.forEach((relatorio) => console.log(relatorio))
@@ -48,15 +49,17 @@ export default function App() {
         hidden={hidden} */
       />
       <UserContextProvider>
-        <ProdutorContextProvider>
-          <RelatorioContextProvider>
-            <ImageContextProvider>
-              <PaperProvider>
-                <Authentication />
-              </PaperProvider>
-            </ImageContextProvider>
-          </RelatorioContextProvider>
-        </ProdutorContextProvider>
+        <LocationContextProvider>
+          <ProdutorContextProvider>
+            <RelatorioContextProvider>
+              <ImageContextProvider>
+                <PaperProvider>
+                  <Authentication />
+                </PaperProvider>
+              </ImageContextProvider>
+            </RelatorioContextProvider>
+          </ProdutorContextProvider>
+        </LocationContextProvider>
       </UserContextProvider>
     </>
   );

@@ -19,15 +19,16 @@ export const useAuth = () => {
       return;
     }
 
-    const queryResult: any = await UsuarioAPI.getUsuarioByMatricula(
+    const queryResult: any = await UsuarioAPI.getUsuariosByMatricula(
       userInput.matricula_usuario
     );
+    const result = queryResult[0];
 
-    if (queryResult?.error) {
-      alert(queryResult.message);
+    if (result?.error) {
+      alert(result.message);
       return;
     }
-    setUser(queryResult);
+    setUser(result);
   };
 
   const logoutHandler = () => {

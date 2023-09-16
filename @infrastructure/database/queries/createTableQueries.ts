@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS "relatorio" (
   picture_uri TEXT,
   assinatura_uri TEXT,
   outro_extensionista TEXT,
+  read_only BOOLEAN,
+  coordenadas TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP
 );

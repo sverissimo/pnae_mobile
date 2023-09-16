@@ -16,6 +16,8 @@ export type RelatorioModel = {
   outroExtensionista?: Usuario[];
   matriculaOutroExtensionista?: string;
   nomeOutroExtensionista?: string;
+  readOnly?: boolean;
+  coordenadas?: string;
   createdAt: any;
   updatedAt?: any;
 };

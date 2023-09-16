@@ -4,6 +4,8 @@ import { useCustomNavigation } from "@navigation/hooks";
 import { RootStackParamList } from "@navigation/types";
 import { useAuth } from "@auth/hooks/useAuth";
 import { globalColors } from "@shared/constants/themes";
+import { useManageConnection } from "@shared/hooks";
+import { useEffect } from "react";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
@@ -13,6 +15,12 @@ export const HomeScreen: React.FC = () => {
       typeof screenName === "string" ? screenName : screenName.toString();
     navigation.navigate(screen);
   };
+
+  const { isConnected, connectionType } = useManageConnection();
+  console.log("🚀 ~ file: HomeScreen.tsx:19 ~ {isConnected, connectionType}:", {
+    isConnected,
+    connectionType,
+  });
 
   return (
     <View style={styles.container}>

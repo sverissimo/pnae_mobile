@@ -3,13 +3,14 @@ import { useContext, useEffect, useState } from "react";
 import { env } from "config/env";
 import * as Clipboard from "expo-clipboard";
 
-import { useAuth } from "@auth/hooks/useAuth";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
-import { RelatorioModel } from "@features/relatorio/types";
+import { useAuth } from "@auth/hooks/useAuth";
+import { useLocation } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
+import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioService } from "@services/RelatorioService";
-import { formatDate, truncateString } from "@shared/utils";
+import { formatDate, locationObjToText, truncateString } from "@shared/utils";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
@@ -20,6 +21,7 @@ export const useManageRelatorio = (produtorId?: string) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { extensionistas } = useManageTecnico(relatorio);
+  const { location, updateLocation } = useLocation();
 
   useEffect(() => {
     if (produtorId) {
@@ -44,11 +46,15 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const saveRelatorio = async (relatorio: RelatorioModel) => {
     try {
+      const updatedLocation = await updateLocation();
+      const coordenadas =
+        locationObjToText(updatedLocation) || locationObjToText(location);
       const relatorioInput = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
         outroExtensionista: extensionistas,
+        coordenadas,
       };
 
       const relatorioId = await RelatorioService.createRelatorio(
@@ -91,6 +97,10 @@ export const useManageRelatorio = (produtorId?: string) => {
   };
 
   const updateRelatorio = async (relatorio: RelatorioModel) => {
+    const updatedLocation = await updateLocation();
+    relatorio.coordenadas =
+      locationObjToText(updatedLocation) || locationObjToText(location);
+
     await RelatorioService.updateRelatorio(relatorio);
     updateRelatoriosList(relatorio);
   };
