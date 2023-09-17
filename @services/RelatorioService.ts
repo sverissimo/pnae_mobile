@@ -5,7 +5,7 @@ import { UsuarioAPI } from "@infrastructure/api";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
 import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
 import { Usuario } from "@shared/types";
-import { deleteFile } from "@shared/utils";
+import { deleteFile, syncDBs } from "@shared/utils";
 import { generateUUID } from "@shared/utils/generateUUID";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
@@ -36,12 +36,19 @@ export const RelatorioService = {
     const relatorioDTOs: RelatorioLocalDTO[] = await RelatorioDB.getRelatorios(
       produtorId
     );
+    const relatoriosFromServer = await RelatorioAPI.getRelatorios(produtorId);
+
     const tecnicoIds = getTecnicosIdsFromRelatoriosList(relatorioDTOs);
     const tecnicos = (await UsuarioAPI.getUsuarios(tecnicoIds)) as Usuario[];
 
-    const relatorios = relatorioDTOs.map((r) =>
-      Relatorio.toModel(r, tecnicos)
-    ) as RelatorioModel[];
+    const relatorios = relatorioDTOs.map((r) => {
+      const relatorioUpdatedPermissions = relatoriosFromServer.find(
+        (serverRel: any) => r.id === serverRel.id
+      );
+      const readOnly = relatorioUpdatedPermissions?.readOnly || false;
+      const updatedRelatorio = { ...r, read_only: readOnly };
+      return Relatorio.toModel(updatedRelatorio, tecnicos);
+    }) as RelatorioModel[];
 
     return relatorios;
   },

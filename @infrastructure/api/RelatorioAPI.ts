@@ -6,6 +6,7 @@ import { RelatorioBackendDTO } from "./dto";
 
 export const RelatorioAPI = {
   createRelatorio,
+  getRelatorios,
   updateRelatorio,
   deleteRelatorio,
 };
@@ -53,8 +54,9 @@ async function createRelatorio(relatorioDTO: Partial<RelatorioBackendDTO>) {
   }
 }
 
-async function getRelatorios(produtorId: string): Promise<string> {
-  return "To do...";
+async function getRelatorios(produtorId: string): Promise<any> {
+  const result = await fetch(`${url}?produtorId=${produtorId}`);
+  return await result.json();
 }
 
 async function updateRelatorio(

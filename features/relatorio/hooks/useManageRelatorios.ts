@@ -159,6 +159,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       assunto: truncateString(r?.assunto),
       nomeTecnico: r?.nomeTecnico,
       createdAt: formatDate(r?.createdAt),
+      readOnly: r?.readOnly,
     }));
     return relatorioTableData;
   };

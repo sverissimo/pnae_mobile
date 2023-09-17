@@ -8,6 +8,7 @@ type IconProps = {
   backgroundColor?: string;
   borderRadius?: number;
   onPress?: any;
+  disabled?: boolean | undefined;
 };
 
 export const Icon = (props: IconProps) => {

@@ -12,6 +12,8 @@ type RowProps<T> = {
   onDelete?: (entity: T) => void;
 };
 
+const { primary, grayscale } = globalColors;
+
 export const ListItem = <T extends { [key: string]: any }>({
   data,
   isHeader,
@@ -21,6 +23,13 @@ export const ListItem = <T extends { [key: string]: any }>({
   getPDFLink,
   onDelete,
 }: RowProps<T>) => {
+  const checkReadOnly = (action: string) => {
+    if (data?.readOnly && (action === "edit" || action === "delete")) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <View
       style={isHeader ? styles.headerContainer : { ...styles.itemContainer }}
@@ -42,20 +51,23 @@ export const ListItem = <T extends { [key: string]: any }>({
             style={{ ...styles.iconContainer, ...column.styles }}
             key={column.key}
           >
-            {column.icons.map((icon: any) => (
+            {column.icons.map(({ iconName, action, color }: any) => (
               <Icon
-                key={icon.iconName}
-                iconName={icon.iconName}
+                key={iconName}
+                disabled={checkReadOnly(action)}
+                iconName={iconName}
                 size={16}
-                color={icon.color || globalColors.primary[600]}
+                color={
+                  checkReadOnly(action) ? grayscale[300] : color || primary[600]
+                }
                 onPress={
-                  icon.action === "view" && onView
+                  action === "view" && onView
                     ? () => onView()
-                    : icon.action === "getPDF" && getPDFLink
+                    : action === "getPDF" && getPDFLink
                     ? () => getPDFLink(data!)
-                    : icon.action === "edit" && onEdit
+                    : action === "edit" && onEdit
                     ? () => onEdit(data)
-                    : icon.action === "delete" && onDelete
+                    : action === "delete" && onDelete
                     ? () => onDelete(data!)
                     : () => console.log("no action available")
                 }
@@ -67,8 +79,8 @@ export const ListItem = <T extends { [key: string]: any }>({
     </View>
   );
 };
-// const bgColor = globalColors.grayscale[200];
-const bgColor = globalColors.primary[50];
+// const bgColor = grayscale[200];
+const bgColor = primary[50];
 const styles = StyleSheet.create({
   container: {
     flex: 1,
