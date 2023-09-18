@@ -3,6 +3,7 @@ import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
+import produtorSample from "@config/produtor.json";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =
@@ -15,8 +16,8 @@ export const useSelectProdutor = () => {
   };
 
   const fetchProdutor = async (CPFProdutor: string) => {
-    const produtor = await ProdutorService.getProdutor(CPFProdutor);
-    setProdutor(produtor);
+    // const produtor = await ProdutorService.getProdutor(CPFProdutor);
+    setProdutor(produtorSample);
   };
 
   const setProdutor = async (produtorDTO: any) => {

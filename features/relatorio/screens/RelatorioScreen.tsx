@@ -12,6 +12,7 @@ import { useSnackBar } from "@shared/hooks";
 import { RELATORIO_COLUMNS } from "../constants";
 import { useManageRelatorio } from "../hooks";
 import { RelatorioModel } from "../types";
+import { env } from "config";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
@@ -25,7 +26,7 @@ export const RelatorioScreen = () => {
     setShowDeleteDialog,
     formatRelatorioRows,
     onConfirmDelete,
-    getPDFLink,
+    sharePDFLink,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
@@ -40,15 +41,6 @@ export const RelatorioScreen = () => {
 
   const handleEditRelatorio = (relatorioId: string | number) => {
     navigation.navigate("EditRelatorioScreen", { relatorioId });
-  };
-
-  const handleGetPDF = async (relatorioId: string | number) => {
-    setSnackBarOptions({
-      status: "success",
-      message: "Link do PDF copiado para a área de transferências",
-    });
-    await getPDFLink(relatorioId);
-    return;
   };
 
   if (!produtor) {
@@ -71,7 +63,7 @@ export const RelatorioScreen = () => {
               columns={RELATORIO_COLUMNS}
               onView={handleViewRelatorio}
               onEdit={handleEditRelatorio}
-              getPDFLink={handleGetPDF}
+              getPDFLink={sharePDFLink}
               onDelete={onDelete}
             />
             <CustomDialog

@@ -4,5 +4,5 @@ export type Usuario = {
   digito_matricula: string;
   nome_usuario: string;
   login_usuario: string;
-  password: string;
+  password?: string;
 };

@@ -1,16 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-
+import { Share } from "react-native";
 import { env } from "config/env";
-import * as Clipboard from "expo-clipboard";
-
+import { RelatorioService } from "@services/RelatorioService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useAuth } from "@auth/hooks/useAuth";
 import { useLocation } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
-import { RelatorioService } from "@services/RelatorioService";
 import { formatDate, locationObjToText, truncateString } from "@shared/utils";
+import relatoriosSample from "@config/relatorios.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
@@ -82,9 +81,9 @@ export const useManageRelatorio = (produtorId?: string) => {
     if (!produtorId) {
       return [];
     }
-
     try {
-      const relatorios = await RelatorioService.getRelatorios(produtorId);
+      // const relatorios = await RelatorioService.getRelatorios(produtorId);
+      const relatorios = relatoriosSample;
       if (!relatorios.length) {
         return [];
       }
@@ -141,17 +140,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
-  const getPDFLink = async (relatorioId: any) => {
-    try {
-      const getPDFUrl = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
-      await Clipboard.setStringAsync(getPDFUrl);
-      console.log("Copied to Clipboard: ", getPDFUrl);
-      return;
-    } catch (error) {
-      console.log("Clipboard error", error);
-    }
-  };
-
   const formatRelatorioRows = (relatorios: RelatorioModel[]) => {
     const relatorioTableData = relatorios.map((r: RelatorioModel) => ({
       id: r?.id,
@@ -162,6 +150,30 @@ export const useManageRelatorio = (produtorId?: string) => {
       readOnly: r?.readOnly,
     }));
     return relatorioTableData;
+  };
+
+  const sharePDFLink = async (relatorioId: string | number) => {
+    const { numeroRelatorio } = relatorios.find(
+      (relatorio) => relatorio.id === relatorioId
+    )!;
+    const nomeProdutor = produtor?.nm_pessoa;
+    const url = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
+    try {
+      const result = await Share.share(
+        {
+          title: `Relatório nº${numeroRelatorio} - PNAE Mobile APP`,
+          url: "../../../assets/images/logo.png",
+          message: `Link para o PDF \nProdutor ${nomeProdutor} \nRelatório nº${numeroRelatorio}
+          \n${url}`,
+        },
+        { dialogTitle: "Compartilhar Relatório" }
+      );
+      if (result.action === Share.sharedAction) {
+        console.info("🚀 useManageRelatorios.ts:185 ~ sharePDFLink:", result);
+      }
+    } catch (error: any) {
+      console.error("🚀 RelatorioScreen.tsx:49:", error);
+    }
   };
 
   return {
@@ -177,6 +189,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     onDelete,
     onConfirmDelete,
     formatRelatorioRows,
-    getPDFLink,
+    sharePDFLink,
   };
 };
