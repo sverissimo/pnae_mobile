@@ -1,5 +1,5 @@
-import { Perfil } from "@features/perfil/types/Perfil";
-import { Relatorio } from "@features/relatorio/types/RelatorioModel";
+import { Perfil } from "@features/perfil/types";
+import { RelatorioModel } from "@features/relatorio/types";
 
 type ParamListBase = {
   [key: string]: object | undefined;
@@ -22,11 +22,11 @@ export type RootStackParamList = ParamListBase & {
   RelatorioScreen: undefined;
   PerfilScreen: undefined;
   PropriedadeScreen: undefined;
-  CreateRelatorioScreen: { relatorios: Relatorio[] | undefined };
+  CreateRelatorioScreen: { relatorios: RelatorioModel[] | undefined };
   EditRelatorioScreen: { relatorioId: string | number };
   CreatePerfilScreen: undefined;
   EditPerfilScreen: { perfil: any };
-  ViewPerfilScreen: { perfil: Perfil };
+  ViewPerfilScreen: { perfil: Perfil; municipio: string };
   tabs: undefined;
   GetSignature: RouteParamsList;
   OrientacaoScreen: undefined;

@@ -3,7 +3,7 @@
 //   updatedAt: string;
 //   [key: string]: any;
 // };
-
+// TODO: Implementar...
 export async function syncDBs(
   localRecords: any,
   serverRecords: any

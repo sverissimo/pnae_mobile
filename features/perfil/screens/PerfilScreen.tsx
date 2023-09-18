@@ -6,11 +6,27 @@ import { useSelectProdutor } from "@features/produtor/hooks";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 import { useManagePerfil } from "../hooks/useManagePerfil";
 import PerfilList from "../components/PerfilList";
+import { useCustomNavigation } from "@navigation/hooks";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-  const { perfis, handleCreatePerfil, handleViewPerfil, handleEditPerfil } =
-    useManagePerfil(produtor);
+  const { perfis } = useManagePerfil(produtor);
+  const { navigation } = useCustomNavigation();
+
+  const handleCreatePerfil = () => {
+    navigation.navigate("CreatePerfilScreen");
+  };
+
+  const handleViewPerfil = (perfilId: string) => {
+    const perfil = produtor?.perfis!.find((p) => p.id === perfilId);
+    const { municipio } = produtor?.propriedades![0];
+    navigation.navigate("ViewPerfilScreen", { perfil, municipio });
+  };
+
+  const handleEditPerfil = (rowData: any) => {
+    const perfil = produtor?.perfis!.find((p) => p.id === rowData.id);
+    navigation.navigate("EditPerfilScreen", { perfil });
+  };
 
   if (!produtor) {
     return (

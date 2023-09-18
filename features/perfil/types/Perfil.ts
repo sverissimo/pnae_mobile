@@ -1,3 +1,6 @@
+import { Usuario } from "@shared/types";
+import { DadosProducao } from ".";
+
 export type Perfil = {
   aderiu_pra: boolean;
   agroindustria_precisa_adaptacao_reforma: boolean;
@@ -10,28 +13,8 @@ export type Perfil = {
   cient_iniciativas_regularizacao_pra: boolean;
   condicao_posse: string;
   credito_rural: boolean;
-  dados_producao_agro_industria: {
-    controla_custos_producao: boolean;
-    dificuldade_fornecimento: string;
-    forma_entrega_produtos: string;
-    informacoes_adicionais: string;
-    local_comercializacao: string;
-    tipo_regularizacao_ambiental: string;
-    tipo_regularizacao_uso_recursos_hidricos: string;
-    valor_total_obtido_outros: string;
-    valor_total_obtido_pnae: string;
-  };
-  dados_producao_in_natura: {
-    controla_custos_producao: boolean;
-    dificuldade_fornecimento: string;
-    forma_entrega_produtos: string;
-    informacoes_adicionais: string;
-    local_comercializacao: string;
-    tipo_regularizacao_ambiental: string;
-    tipo_regularizacao_uso_recursos_hidricos: string;
-    valor_total_obtido_outros: string;
-    valor_total_obtido_pnae: string;
-  };
+  dados_producao_agro_industria: DadosProducao;
+  dados_producao_in_natura: DadosProducao;
   dap_caf_vigente: boolean;
   data_atualizacao: string;
   data_preenchimento: string;
@@ -57,11 +40,5 @@ export type Perfil = {
   tipo_gestao_unidade: string;
   tipo_perfil: string;
   tipo_pessoa_juridica: string;
-  usuario: {
-    digito_matricula: string;
-    id_usuario: string;
-    login_usuario: string;
-    matricula_usuario: string;
-    nome_usuario: string;
-  };
+  usuario: Usuario;
 };

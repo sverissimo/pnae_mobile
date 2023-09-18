@@ -1,4 +1,4 @@
-export { perfilForm } from "./perfilForm";
-export { producaoIndustrialForm } from "./producaoIndustrialForm";
-export { producaoNaturaForm } from "./producaoNaturaForm";
-export { PERFIL_COLUMNS } from "./perfilColumns";
+export * from "./perfilColumns"
+export * from "./perfilForm"
+export * from "./producaoIndustrialForm"
+export * from "./producaoNaturaForm"

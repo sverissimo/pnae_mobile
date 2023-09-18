@@ -1,54 +1,29 @@
 import { ScrollView, StyleSheet, View, Text } from "react-native";
-import { formatDate } from "@shared/utils";
+import { Perfil } from "../types";
+import { GruposProdutosTable } from "../components";
+import { FormFieldContainer } from "@shared/components/molecules";
+import { formatDate, parseValue } from "@shared/utils";
 import {
-  perfilForm,
+  viewPerfilForm,
   producaoIndustrialForm,
   producaoNaturaForm,
 } from "../constants";
-import { FormFieldContainer } from "@shared/components/molecules";
-import { Perfil } from "../types/Perfil";
 
 export const ViewPerfilScreen = ({ route }: any) => {
-  const { perfil }: { perfil: Perfil } = route.params;
+  const { perfil, municipio } = route.params;
   const { atividade } = perfil.at_prf_see_propriedade;
-
   const {
     dados_producao_agro_industria,
     dados_producao_in_natura,
     at_prf_see_propriedade,
-    ...updatedPerfil
   } = perfil;
 
-  if (
-    Object.values(dados_producao_agro_industria).some((value) => value !== null)
-  ) {
-    Object.assign(updatedPerfil, dados_producao_agro_industria);
-  }
-  if (Object.values(dados_producao_in_natura).some((value) => value !== null)) {
-    Object.assign(updatedPerfil, dados_producao_in_natura);
-  }
-  if (Object.values(at_prf_see_propriedade).some((value) => value !== null)) {
-    Object.assign(updatedPerfil, at_prf_see_propriedade);
-  }
-
-  const parseValue = (value: unknown) => {
-    switch (typeof value) {
-      case "string":
-        return value;
-      case "number":
-        return value.toString();
-      case "object":
-        if (value === null) {
-          return "";
-        }
-        if (value instanceof Date) {
-          return formatDate(value.toISOString());
-        }
-      case "boolean":
-        return value ? "Sim" : "Não";
-      default:
-        return "";
-    }
+  const updatedPerfil = {
+    ...perfil,
+    ...dados_producao_agro_industria,
+    ...dados_producao_in_natura,
+    ...at_prf_see_propriedade,
+    municipio,
   };
 
   const date = formatDate(perfil?.data_preenchimento);
@@ -56,57 +31,54 @@ export const ViewPerfilScreen = ({ route }: any) => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{`Perfil cadastrado em ${date}`}</Text>
-      {perfilForm.map(({ field, label }) => (
+      {viewPerfilForm.map(({ field, label }) => (
         <FormFieldContainer label={label} key={field}>
           <View>
             <Text style={styles.text}>
-              {" "}
-              {/*@ts-ignore */}
               {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
             </Text>
           </View>
         </FormFieldContainer>
       ))}
-      {(atividade === "ATIVIDADE_PRIMARIA" || atividade === "AMBAS") && (
-        <>
-          <Text style={{ ...styles.title, marginTop: 20 }}>
-            DADOS DA PRODUÇÃO IN NATURA
-          </Text>
-          {producaoNaturaForm.map(({ field, label }) => (
-            <FormFieldContainer label={label} key={field}>
-              <View>
-                <Text style={styles.text}>
-                  {" "}
-                  {/*@ts-ignore */}
-                  {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
-                </Text>
-              </View>
-            </FormFieldContainer>
-          ))}
-        </>
+      {["Atividade Primária", "Ambas"].includes(atividade) && (
+        <Section
+          title="DADOS DA PRODUÇÃO IN NATURA"
+          form={producaoNaturaForm}
+          grupoProdutos={dados_producao_in_natura.at_prf_see_grupos_produtos}
+          type="inNatura"
+        />
       )}
-      {(atividade === "ATIVIDADE_SECUNDARIA" || atividade === "AMBAS") && (
-        <>
-          <Text style={{ ...styles.title, marginTop: 20 }}>
-            DADOS DA PRODUÇÃO DE AGROINDÚSTRIA
-          </Text>
-          {producaoIndustrialForm.map(({ field, label }) => (
-            <FormFieldContainer label={label} key={field}>
-              <View>
-                <Text style={styles.text}>
-                  {" "}
-                  {/*@ts-ignore */}
-                  {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
-                </Text>
-              </View>
-            </FormFieldContainer>
-          ))}
-        </>
+      {["Atividade Secundária", "Ambas"].includes(atividade) && (
+        <Section
+          title="DADOS DA PRODUÇÃO DE AGROINDÚSTRIA"
+          form={producaoIndustrialForm}
+          grupoProdutos={
+            dados_producao_agro_industria.at_prf_see_grupos_produtos
+          }
+          type="industrial"
+        />
       )}
-
-      <View style={{ marginVertical: 20 }}></View>
+      <View style={{ marginVertical: 20 }} />
     </ScrollView>
   );
+
+  function Section({ title, form, grupoProdutos, type }: any) {
+    return (
+      <>
+        <Text style={{ ...styles.title, marginTop: 20 }}>{title}</Text>
+        <GruposProdutosTable grupoProdutos={grupoProdutos} type={type} />
+        {form.map(({ field, label }: any) => (
+          <FormFieldContainer label={label} key={field}>
+            <View>
+              <Text style={styles.text}>
+                {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
+              </Text>
+            </View>
+          </FormFieldContainer>
+        ))}
+      </>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -123,6 +95,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: "bold",
+    marginBottom: 10,
   },
   text: {
     marginLeft: 10,

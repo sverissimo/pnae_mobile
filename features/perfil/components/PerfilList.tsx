@@ -4,7 +4,7 @@ import { List } from "../../../@shared/components/organisms/List";
 
 import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
 import { PERFIL_COLUMNS } from "../constants";
-import { Perfil } from "../types/Perfil";
+import { Perfil } from "../types/PerfilDTO";
 import { useManagePerfil } from "../hooks/useManagePerfil";
 
 const PerfilList = ({ data, handleViewPerfil, handleEditPerfil }: any) => {

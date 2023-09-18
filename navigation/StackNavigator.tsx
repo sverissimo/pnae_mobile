@@ -13,7 +13,9 @@ import {
   ViewRelatorioScreen,
 } from "@features/relatorio/screens";
 import { ViewPerfilScreen } from "@features/perfil/screens/ViewPerfilScreen";
+import { globalColors } from "@constants/themes";
 
+const { primary, grayscale } = globalColors;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function StackNavigator() {
@@ -23,6 +25,9 @@ export function StackNavigator() {
       screenOptions={{
         //cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide animation
         animation: "slide_from_right",
+        headerStyle: {
+          backgroundColor: primary[400],
+        },
       }}
     >
       <Stack.Screen
