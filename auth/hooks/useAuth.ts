@@ -5,6 +5,7 @@ import { env } from "../../config";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { getData, removeValue, storeData } from "@shared/utils";
 import { Alert } from "react-native";
+import { perfisAutorizados } from "@auth/constants";
 
 export const useAuth = () => {
   const { user, setUser } = useContext(UserContext);
@@ -31,16 +32,27 @@ export const useAuth = () => {
       await storeData("user", testUser);
       return;
     }
-
     const queryResult: any = await UsuarioAPI.getUsuariosByMatricula(
       userInput.matricula_usuario
     );
-    const result = queryResult[0];
 
+    const result = queryResult[0];
     if (result?.error) {
       alert(result.message);
       return;
     }
+    const usuario = result as Usuario;
+
+    const authorized = perfisAutorizados.includes(usuario?.perfil || "");
+    console.log({ authorized, result });
+    if (!authorized) {
+      Alert.alert(
+        "Usuário não autorizado",
+        "O perfil de usuário não está autorizado a acessar o aplicativo. Favor contatar o administrador do sistema."
+      );
+      return;
+    }
+
     setUser(result);
   };
 
@@ -66,9 +78,9 @@ export const useAuth = () => {
     );
 
   const logoutHandler = async () => {
-    console.log(" logoutHandler llllllllll");
-    // setUser({} as Usuario);
-    // await removeValue("user");
+    // console.log(" logoutHandler llllllllll");
+    setUser({} as Usuario);
+    await removeValue("user");
   };
 
   return {

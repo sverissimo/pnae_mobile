@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useCustomNavigation } from "navigation/hooks/useCustomNavigation";
+import { useLocation } from "@shared/hooks";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
@@ -14,6 +15,7 @@ import { useManageRelatorio } from "../hooks";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
+  const { updateLocation } = useLocation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
   const { relatorio, handleChange, saveRelatorio, enableSave } =
     useManageRelatorio();
@@ -30,6 +32,18 @@ export const CreateRelatorioScreen = ({ route }: any) => {
       handleChange("orientacao", HTMLText);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    if (pictureURI) {
+      (async () => {
+        const currentLocation = await updateLocation();
+        console.log(
+          "🚀 ~ file: PictureHolder.tsx:27 ~ handlePress ~ currentLocation:",
+          currentLocation
+        );
+      })();
+    }
+  }, [pictureURI]);
 
   const handleSaveRelatorio = async () => {
     await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });

@@ -5,4 +5,5 @@ export type Usuario = {
   nome_usuario: string;
   login_usuario: string;
   password?: string;
+  perfil?: string;
 };

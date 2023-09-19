@@ -26,7 +26,7 @@ const LoginScreen = () => {
           <View style={styles.inputGroup}>
             <TextInput
               style={styles.formControl}
-              inputMode={userInput?.matricula_usuario?.length ? "tel" : "text"}
+              inputMode="tel"
               placeholder="Matrícula"
               value={user?.matricula_usuario}
               onChangeText={(value) => inputHandler("matricula_usuario", value)}

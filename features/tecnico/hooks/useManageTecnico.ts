@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-
 import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioAPI } from "@infrastructure/api";
 import { Usuario } from "@shared/types";
@@ -51,40 +50,11 @@ export function useManageTecnico(relatorio: RelatorioModel) {
         setExtensionistas(sortedExtensionistas);
       } catch (error) {
         console.error("Failed to fetch extensionistas", error);
-        // Handle error appropriately, e.g., show a user-friendly error message
       }
     }, 300),
     []
   );
-  /*
-  const getExtensionistas = useCallback(
-    debounce(async (matricula: string) => {
-      const cleanedMatricula = matricula.replace(/\s/g, "");
-      const matriculas = matricula.split(",").filter((m) => m.length === 5);
-      const isValid =
-        matriculas.length > 0 &&
-        !matricula.split(",").some((m) => m.length > 0 && m.length < 5);
 
-      if (!isValid) {
-        setExtensionistas((prev) =>
-          prev.filter((ext) => matriculas.includes(ext.matricula_usuario))
-        );
-        return;
-      }
-
-      try {
-        const newExtensionistas = await UsuarioAPI.getUsuariosByMatricula(
-          matriculas.join(",")
-        );
-        setExtensionistas(newExtensionistas);
-      } catch (error) {
-        console.error("Failed to fetch extensionistas", error);
-        // Handle error appropriately, e.g., show a user-friendly error message
-      }
-    }, 300),
-    []
-  );
- */
   return {
     extensionistas,
     getExtensionistas,

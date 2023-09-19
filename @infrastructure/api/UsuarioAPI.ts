@@ -19,10 +19,6 @@ export const UsuarioAPI = {
   },
 
   getUsuariosByMatricula: async (matricula: string): Promise<Usuario[]> => {
-    console.log(
-      "🚀 ~ file: UsuarioAPI.ts:22 ~ getUsuariosByMatricula: ~ matricula:",
-      matricula
-    );
     try {
       const url = `${env.BASE_URL}/usuario?matricula=${matricula}`;
       const result = await fetch(url);
