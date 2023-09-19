@@ -12,15 +12,16 @@ import { formatDate, locationObjToText, truncateString } from "@shared/utils";
 import relatoriosSample from "@config/relatorios.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
-  const { relatorios, setRelatorios } = useContext(RelatorioContext);
   const { produtor } = useContext(ProdutorContext);
+  const { relatorios, setRelatorios } = useContext(RelatorioContext);
+  const { location, updateLocation } = useLocation();
   const { user } = useAuth();
 
   const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [enableSave, setEnableSave] = useState(false);
 
   const { extensionistas } = useManageTecnico(relatorio);
-  const { location, updateLocation } = useLocation();
 
   useEffect(() => {
     if (produtorId) {
@@ -38,6 +39,17 @@ export const useManageRelatorio = (produtorId?: string) => {
       outroExtensionista: extensionistas,
     }));
   }, [extensionistas]);
+
+  useEffect(() => {
+    const validInput = Object.entries(relatorio).every(([key, value]) => {
+      const requiredFields = ["assunto", "numeroRelatorio", "orientacao"];
+      if (requiredFields.includes(key)) {
+        return !!value;
+      }
+      return true;
+    });
+    setEnableSave(validInput);
+  }, [relatorio]);
 
   const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
@@ -178,9 +190,10 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   return {
     relatorio,
-    setRelatorio: setState,
     relatorios,
     showDeleteDialog,
+    enableSave,
+    setRelatorio: setState,
     getRelatorios,
     handleChange,
     saveRelatorio,
@@ -190,5 +203,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     onConfirmDelete,
     formatRelatorioRows,
     sharePDFLink,
+    setEnableSave,
   };
 };

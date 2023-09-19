@@ -17,8 +17,15 @@ export const EditRelatorioScreen = ({ route }: any) => {
   const { updateRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
-  const { relatorio, setRelatorio, handleChange, relatorios } =
-    useManageRelatorio();
+  const {
+    relatorio,
+    setRelatorio,
+    handleChange,
+    relatorios,
+    enableSave,
+    setEnableSave,
+  } = useManageRelatorio();
+
   const {
     pictureURI,
     setPicture,
@@ -28,7 +35,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
     clearURIs,
   } = useManagePictures();
 
-  const [disableButton, setDisableButton] = useState(false);
   const { relatorioId, HTMLText } = route.params;
 
   useEffect(() => {
@@ -49,7 +55,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
 
   useEffect(() => {
     return () => {
-      const keepOriginalOnly = !disableButton;
+      const keepOriginalOnly = enableSave;
       clearDiscardedPictures(keepOriginalOnly).then(() => clearURIs());
     };
   }, []);
@@ -63,7 +69,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
       });
-      setDisableButton(true);
+      setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
       }, 1000);
@@ -97,7 +103,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          disabled={disableButton}
+          disabled={!enableSave || !pictureURI || !assinaturaURI}
         >
           Salvar
         </Button>

@@ -19,7 +19,7 @@ const backgroundHeaderColor = primary[400];
 const BottomTabs = createBottomTabNavigator<RootStackParamList>();
 
 export function TabNavigator() {
-  const { logoutHandler } = useAuth();
+  const { confirmLogout } = useAuth();
 
   return (
     <BottomTabs.Navigator
@@ -33,7 +33,7 @@ export function TabNavigator() {
         tabBarStyle: {
           backgroundColor: backgroundHeaderColor,
         },
-        headerRight: () => <LogoutComponent onLogout={logoutHandler} />,
+        headerRight: () => <LogoutComponent onLogout={confirmLogout} />,
       }}
     >
       <BottomTabs.Screen

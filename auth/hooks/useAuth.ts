@@ -4,6 +4,7 @@ import { Usuario } from "../../@shared/types/Usuario";
 import { env } from "../../config";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { getData, removeValue, storeData } from "@shared/utils";
+import { Alert } from "react-native";
 
 export const useAuth = () => {
   const { user, setUser } = useContext(UserContext);
@@ -43,9 +44,31 @@ export const useAuth = () => {
     setUser(result);
   };
 
+  const confirmLogout = () =>
+    Alert.alert(
+      "Fazer Logout",
+      "Deseja realmente sair do PNAE APP?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "Sair", onPress: () => logoutHandler() },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {
+          setUser({} as Usuario);
+          removeValue("user");
+        },
+      }
+    );
+
   const logoutHandler = async () => {
-    setUser({} as Usuario);
-    await removeValue("user");
+    console.log(" logoutHandler llllllllll");
+    // setUser({} as Usuario);
+    // await removeValue("user");
   };
 
   return {
@@ -54,6 +77,7 @@ export const useAuth = () => {
     setUser,
     inputHandler,
     loginHandler,
+    confirmLogout,
     logoutHandler,
   };
 };

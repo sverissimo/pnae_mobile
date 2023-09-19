@@ -13,11 +13,12 @@ import { relatorioForm } from "../constants";
 import { useManageRelatorio } from "../hooks";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
-  const { relatorio, handleChange, saveRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
+  const { relatorio, handleChange, saveRelatorio, enableSave } =
+    useManageRelatorio();
+
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
-  const [disableButton, setDisableButton] = useState(false);
 
   useEffect(() => {
     clearURIs();
@@ -63,7 +64,8 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          disabled={disableButton}
+          disabled={!enableSave || !pictureURI || !assinaturaURI}
+          // disabled={false}
         >
           Salvar
         </Button>

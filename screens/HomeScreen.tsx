@@ -1,7 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useAuth } from "@auth/hooks/useAuth";
 import { useCustomNavigation } from "@navigation/hooks";
-import { useManageConnection } from "@shared/hooks";
 import { RootStackParamList } from "@navigation/types";
 import { Card } from "@shared/components/organisms/HomeCard";
 import { globalColors } from "@shared/constants/themes";
@@ -14,12 +13,6 @@ export const HomeScreen: React.FC = () => {
       typeof screenName === "string" ? screenName : screenName.toString();
     navigation.navigate(screen);
   };
-
-  const { isConnected, connectionType } = useManageConnection();
-  console.log("🚀 ~ file: HomeScreen.tsx:19 ~ {isConnected, connectionType}:", {
-    isConnected,
-    connectionType,
-  });
 
   return (
     <View style={styles.container}>
