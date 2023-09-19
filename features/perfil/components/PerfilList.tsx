@@ -1,18 +1,18 @@
-import { useSelectProdutor } from "../../produtor/hooks/useSelectProdutor";
-import { formatDate } from "../../../@shared/utils/formatDate";
-import { List } from "../../../@shared/components/organisms/List";
-
-import { useCustomNavigation } from "../../../navigation/hooks/useCustomNavigation";
-import { PERFIL_COLUMNS } from "../constants";
-import { Perfil } from "../types/PerfilDTO";
 import { useManagePerfil } from "../hooks/useManagePerfil";
+import { List } from "../../../@shared/components/organisms/List";
+import { PERFIL_COLUMNS } from "../constants";
+import { Perfil } from "../types";
 
 const PerfilList = ({ data, handleViewPerfil, handleEditPerfil }: any) => {
-  const { getPerfilListData } = useManagePerfil();
+  const columnsWithoutOpts = PERFIL_COLUMNS.filter(
+    (column) => column.key !== "options"
+  );
+
+  const { getPerfilListData } = useManagePerfil(data);
   return (
     <List<Perfil>
       data={getPerfilListData(data)}
-      columns={PERFIL_COLUMNS}
+      columns={!!handleViewPerfil ? PERFIL_COLUMNS : columnsWithoutOpts}
       onView={handleViewPerfil}
       onEdit={handleEditPerfil}
     />

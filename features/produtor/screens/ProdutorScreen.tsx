@@ -12,10 +12,6 @@ import { ListTitle } from "@shared/components/atoms";
 
 export const ProdutorScreen = () => {
   const { produtor } = useSelectProdutor();
-  console.log(
-    "🚀 ~ file: ProdutorScreen.tsx:15 ~ ProdutorScreen ~ produtor:",
-    produtor
-  );
   if (!produtor) {
     return (
       <View style={styles.container}>
@@ -47,6 +43,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
+    alignItems: "center",
   },
   title: {
     marginLeft: "2%",
