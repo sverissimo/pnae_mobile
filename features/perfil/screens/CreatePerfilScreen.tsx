@@ -3,7 +3,11 @@ import { StyleSheet, ScrollView } from "react-native";
 import { Button } from "react-native-paper";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
-import { perfilForm } from "../constants";
+import {
+  perfilForm,
+  producaoIndustrialForm,
+  producaoNaturaForm,
+} from "../constants";
 
 type PerfilFormState = {
   tipoPerfil: string;
@@ -18,12 +22,16 @@ export const CreatePerfilScreen: React.FC = () => {
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
-
+  const createPerfilForm = [
+    ...perfilForm,
+    ...producaoNaturaForm,
+    ...producaoIndustrialForm,
+  ];
   return (
     <ScrollView style={styles.container}>
       <ListTitle title="Preencha as informações abaixo" />
       <FormTemplate
-        form={perfilForm}
+        form={createPerfilForm}
         data={state}
         onValueChange={handleChange}
       />

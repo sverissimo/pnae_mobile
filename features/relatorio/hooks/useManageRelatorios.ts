@@ -94,8 +94,8 @@ export const useManageRelatorio = (produtorId?: string) => {
       return [];
     }
     try {
-      // const relatorios = await RelatorioService.getRelatorios(produtorId);
-      const relatorios = relatoriosSample;
+      const relatorios = await RelatorioService.getRelatorios(produtorId);
+      // const relatorios = relatoriosSample;
       if (!relatorios.length) {
         return [];
       }
@@ -108,12 +108,15 @@ export const useManageRelatorio = (produtorId?: string) => {
   };
 
   const updateRelatorio = async (relatorio: RelatorioModel) => {
-    const updatedLocation = await updateLocation();
-    relatorio.coordenadas =
-      locationObjToText(updatedLocation) || locationObjToText(location);
-
-    await RelatorioService.updateRelatorio(relatorio);
-    updateRelatoriosList(relatorio);
+    try {
+      relatorio.coordenadas = locationObjToText(location);
+      // const updatedLocation = await updateLocation();
+      //relatorio.coordenadas = locationObjToText(updatedLocation) || locationObjToText(location);
+      await RelatorioService.updateRelatorio(relatorio);
+      updateRelatoriosList(relatorio);
+    } catch (error) {
+      console.error("🚀 ~ file: useManageRelatorios.ts:118:", error);
+    }
   };
 
   const updateRelatoriosList = (relatorio: RelatorioModel) => {

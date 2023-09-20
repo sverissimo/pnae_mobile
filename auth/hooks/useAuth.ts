@@ -32,9 +32,9 @@ export const useAuth = () => {
       await storeData("user", testUser);
       return;
     }
-    const queryResult: any = await UsuarioAPI.getUsuariosByMatricula(
-      userInput.matricula_usuario
-    );
+    const queryResult: any = await UsuarioAPI.getUsuarios({
+      matricula: userInput.matricula_usuario,
+    });
 
     const result = queryResult[0];
     if (result?.error) {
@@ -43,7 +43,11 @@ export const useAuth = () => {
     }
     const usuario = result as Usuario;
 
-    const authorized = perfisAutorizados.includes(usuario?.perfil || "");
+    const authorized =
+      usuario?.perfis?.some((perfil: string) =>
+        perfisAutorizados.includes(perfil)
+      ) || false;
+
     console.log({ authorized, result });
     if (!authorized) {
       Alert.alert(

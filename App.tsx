@@ -13,10 +13,10 @@ import { RelatorioService } from "@services/RelatorioService";
 import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./@shared/constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
-import { PaperProvider } from "react-native-paper";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
 
-// LogBox.ignoreAllLogs(true);
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
+
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
 
@@ -37,12 +37,23 @@ export default function App() {
   if (!dbInitialized) {
     return <Loading />;
   }
+  const { primary, background } = globalColors;
+
+  const theme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: primary[600],
+      accent: primary.A400,
+    },
+  };
 
   return (
     <>
       <StatusBar
         animated={true}
-        backgroundColor={globalColors.background[700]}
+        backgroundColor={background[700]}
         barStyle="light-content"
         /* barStyle={statusBarStyle}
         showHideTransition={statusBarTransition}
@@ -53,7 +64,7 @@ export default function App() {
           <ProdutorContextProvider>
             <RelatorioContextProvider>
               <ImageContextProvider>
-                <PaperProvider>
+                <PaperProvider theme={theme}>
                   <Authentication />
                 </PaperProvider>
               </ImageContextProvider>

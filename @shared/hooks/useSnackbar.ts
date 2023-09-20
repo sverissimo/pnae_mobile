@@ -29,7 +29,7 @@ export const useSnackBar = () => {
         ? "orange"
         : options.status === "info"
         ? "blue"
-        : globalColors.secondary[500];
+        : globalColors.primary[400];
 
     options.color = options.color ?? color;
     setSnackBarOptions({ ...snackBarOptions, ...options, visible: true });

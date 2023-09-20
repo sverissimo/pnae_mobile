@@ -1,48 +1,37 @@
 import { Usuario } from "@shared/types/Usuario";
-
 import { env } from "../../config";
 
 export const UsuarioAPI = {
-  getUsuario: async (id: string): Promise<Usuario | void> => {
+  getUsuarios: async (params: {
+    ids?: string;
+    matricula?: string;
+  }): Promise<Usuario[]> => {
     try {
-      //id = id || "1545" ; // dev/test purposes only
-      //id = id || "1535"; // dev/test purposes only
-      id = id || "1620"; // dev/test purposes only
+      let { ids } = params;
+      const { matricula } = params;
+      //ids = ids || "1545" ; // dev/test purposes only
+      //ids = ids || "1535"; // dev/test purposes only
+      ids = ids || "1620"; // dev/test purposes only
 
-      const url = `${env.BASE_URL}/usuario/${id}`;
+      const url = `${env.BASE_URL}/usuario${
+        ids ? `/${ids}` : matricula ? `?matricula=${matricula}` : ""
+      }`;
+
+      if (!ids && !matricula) {
+        return [];
+        // throw new Error("You must provide either ids or matricula");
+      }
+
       const result = await fetch(url);
-      const usuario = await result.json();
-      return usuario;
+      const usuarios = await result.json();
+      if (result.status !== 200) {
+        throw new Error("Failed to fetch data");
+      }
+
+      return Array.isArray(usuarios) ? usuarios : [usuarios];
     } catch (error) {
-      console.log("🚀 ~ file: UsuarioAPI.ts:22 ~ getUsuario: ~ error:", error);
-    }
-  },
-
-  getUsuariosByMatricula: async (matricula: string): Promise<Usuario[]> => {
-    try {
-      const url = `${env.BASE_URL}/usuario?matricula=${matricula}`;
-      const result = await fetch(url);
-      let usuarios = await result.json();
-      if (!Array.isArray(usuarios)) usuarios = [usuarios];
-      return usuarios;
-    } catch (error) {
-      console.log("🚀 ~ file: UsuarioAPI.ts:22 ~ getUsuario: ~ error:", error);
-    }
-    return [];
-  },
-
-  getUsuarios: async (ids: string[]): Promise<Usuario[]> => {
-    try {
-      const url = `${env.BASE_URL}/usuario/${ids.join(",")}`;
-      const result = await fetch(url);
-
-      let usuarios = await result.json();
-      if (!Array.isArray(usuarios)) usuarios = [usuarios];
-
-      return usuarios;
-    } catch (error: any) {
-      console.error("🚀 ~ file: UsuarioAPI.ts:39 :", error);
-      throw new Error(error?.message || "Erro ao buscar usuários.");
+      console.error("🚀 ~ file: UsuarioAPI.ts:39:", error);
+      throw error;
     }
   },
 };

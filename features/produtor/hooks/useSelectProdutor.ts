@@ -16,8 +16,9 @@ export const useSelectProdutor = () => {
   };
 
   const fetchProdutor = async (CPFProdutor: string) => {
-    // const produtor = await ProdutorService.getProdutor(CPFProdutor);
-    setProdutor(produtorSample);
+    const produtor = await ProdutorService.getProdutor(CPFProdutor);
+    // const produtor = produtorSample;
+    setProdutor(produtor);
   };
 
   const setProdutor = async (produtorDTO: any) => {

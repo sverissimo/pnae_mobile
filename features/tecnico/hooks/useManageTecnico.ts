@@ -38,9 +38,9 @@ export function useManageTecnico(relatorio: RelatorioModel) {
         return;
       //   prevValidMatriculasRef.current = matriculas;
       try {
-        const newExtensionistas = await UsuarioAPI.getUsuariosByMatricula(
-          matriculas.join(",")
-        );
+        const newExtensionistas = await UsuarioAPI.getUsuarios({
+          matricula: matriculas.join(","),
+        });
         const sortedExtensionistas = matriculas
           .map((matricula) =>
             newExtensionistas.find((ext) => ext.matricula_usuario === matricula)
