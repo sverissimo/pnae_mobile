@@ -1,4 +1,4 @@
-import { env } from "config";
+import { env } from "config/env";
 
 // import { RelatorioBackendDTO } from "@features/relatorio/types/RelatorioModel";
 import { parseURI } from "@shared/utils/parseURI";

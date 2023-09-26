@@ -9,7 +9,7 @@ import { useLocation } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, locationObjToText, truncateString } from "@shared/utils";
-import relatoriosSample from "@config/relatorios.json";
+// import relatoriosSample from "@config/relatorios.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);

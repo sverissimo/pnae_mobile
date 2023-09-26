@@ -1,0 +1,28 @@
+export const env = {
+  SERVER_URL: "http://aterdigital-api-demeter.emater.mg.gov.br:3001",
+  BASE_URL: "http://10.0.2.2:3001",
+  // BASE_URL: "http://179.0.72.203:3001",
+
+  TEST_USER: {
+    id_usuario: "835",
+    login_usuario: "08516",
+    nome_usuario: "Joao Baptista Teixeira de Almeida",
+    email_usuario: "joao@not-real.br",
+    celular_usuario: null,
+    token_demeter: "3c8a60d4-06d0-11ea-99c1-00155d0023ef",
+    data_cadastro: "2023-03-21",
+    data_expiracao_token_demeter: "2024-03-21",
+    ativo: true,
+    cpf_usuario: "54940591620",
+    matricula_usuario: "08516",
+    digito_matricula: "1",
+    situacao_emater: "A",
+    id_und_empresa: "H0097",
+    id_cargo: "1002",
+    orgao_classe: "CFTA 54940591620",
+    sexo_usuario: "M",
+    dt_update_record: "2020-04-02",
+    password: "nah",
+    perfil: "MOD_ATIV_TECNICO",
+  },
+};
