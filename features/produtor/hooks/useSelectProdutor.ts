@@ -10,15 +10,17 @@ export const useSelectProdutor = () => {
     useContext(ProdutorContext);
   const { setRelatorios } = useContext(RelatorioContext);
   const [state, setState] = useState({} as Produtor);
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputHandler = (name: string, value: string) => {
     setState((state) => ({ ...state, [name]: value }));
   };
 
   const fetchProdutor = async (CPFProdutor: string) => {
+    setIsLoading(true);
     const produtor = await ProdutorService.getProdutor(CPFProdutor);
-    // const produtor = produtorSample;
     setProdutor(produtor);
+    setIsLoading(false);
   };
 
   const setProdutor = async (produtorDTO: any) => {
@@ -44,6 +46,7 @@ export const useSelectProdutor = () => {
 
   return {
     produtor,
+    isLoading,
     inputHandler,
     setProdutor,
     resetProdutor,

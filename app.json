@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/emater75_logo.png",
+      "image": "./assets/pnae_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -26,7 +26,15 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "br.gov.mg.emater.pnae_mobile"
+      "package": "br.gov.mg.emater.pnae_mobile",
+      "networkSecurityConfig": {
+        "domain-config": [
+          {
+            "domain": "aterdigital-api-demeter.emater.mg.gov.br",
+            "cleartextTrafficPermitted": true
+          }
+        ]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

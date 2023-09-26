@@ -1,6 +1,6 @@
 import humps from "humps";
 
-import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioDTO, RelatorioModel } from "@features/relatorio/types";
 import { UsuarioAPI } from "@infrastructure/api";
 import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
 import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
@@ -33,24 +33,43 @@ export const RelatorioService = {
   },
 
   getRelatorios: async (produtorId: string): Promise<RelatorioModel[]> => {
-    const relatorioDTOs: RelatorioLocalDTO[] = await RelatorioDB.getRelatorios(
-      produtorId
+    const [relatorioDTOs, relatoriosFromServer] = await Promise.all([
+      RelatorioDB.getRelatorios(produtorId),
+      RelatorioAPI.getRelatorios(produtorId),
+    ]);
+    console.log(
+      "🚀 ~ file: RelatorioService.ts:40 ~ getRelatorios: ~ relatorioDTOs:",
+      { produtorId, relatorioDTOs, relatoriosFromServer }
     );
-    const relatoriosFromServer = await RelatorioAPI.getRelatorios(produtorId);
 
     const tecnicoIds = getTecnicosIdsFromRelatoriosList(relatorioDTOs);
-    const tecnicos = (await UsuarioAPI.getUsuarios(tecnicoIds)) as Usuario[];
+    const tecnicos = await UsuarioAPI.getUsuarios({
+      ids: tecnicoIds.join(","),
+    });
 
-    const relatorios = relatorioDTOs.map((r) => {
-      const relatorioUpdatedPermissions = relatoriosFromServer.find(
-        (serverRel: any) => r.id === serverRel.id
+    // Update relatorioDTOs with server permissions and convert to models
+    const relatorios = relatorioDTOs.map((dto) => {
+      const serverRel = relatoriosFromServer.find(
+        (r: RelatorioModel) => r.id === dto.id
       );
-      const readOnly = relatorioUpdatedPermissions?.readOnly || false;
-      const updatedRelatorio = { ...r, read_only: readOnly };
-      return Relatorio.toModel(updatedRelatorio, tecnicos);
-    }) as RelatorioModel[];
+      const readOnly = serverRel?.readOnly || false;
+      return Relatorio.toModel({ ...dto, read_only: readOnly }, tecnicos);
+    });
 
-    return relatorios;
+    // Merge local and server relatorios, keeping the most recently updated
+    const relatorioMap = new Map<string, RelatorioModel>();
+    const updateMap = (relatorio: RelatorioModel) => {
+      const existing = relatorioMap.get(relatorio.id);
+      if (
+        !existing ||
+        new Date(relatorio.updatedAt) > new Date(existing.updatedAt)
+      ) {
+        relatorioMap.set(relatorio.id, relatorio);
+      }
+    };
+
+    [...relatorios, ...relatoriosFromServer].forEach(updateMap);
+    return Array.from(relatorioMap.values());
   },
 
   getAllRelatorios: async () => {
@@ -99,17 +118,18 @@ export const RelatorioService = {
   deleteRelatorio: async (relatorioId: string) => {
     try {
       const relatorios = await RelatorioDB.getAllRelatorios();
-      const { assinatura_uri, picture_uri } = relatorios.find(
-        (r) => r.id === relatorioId
-      )!;
+      if (relatorios.length) {
+        const resultLocal = await RelatorioDB.deleteRelatorio(relatorioId);
+        if (!resultLocal) {
+          throw new Error(`Failed to delete relatorio locally: ${relatorioId}`);
+        }
+        const { assinatura_uri, picture_uri } = relatorios.find(
+          (r) => r.id === relatorioId
+        )!;
 
-      for (const file of [assinatura_uri, picture_uri]) {
-        await deleteFile(file);
-      }
-
-      const resultLocal = await RelatorioDB.deleteRelatorio(relatorioId);
-      if (!resultLocal) {
-        throw new Error(`Failed to delete relatorio locally: ${relatorioId}`);
+        for (const file of [assinatura_uri, picture_uri]) {
+          await deleteFile(file);
+        }
       }
 
       const result = await RelatorioAPI.deleteRelatorio(relatorioId);

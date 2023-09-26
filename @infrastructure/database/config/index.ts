@@ -4,7 +4,11 @@ import {
   dropRelatorioTableQuery,
   renameRelatorioTableQuery,
 } from "../queries/createTableQueries";
-import { addCoordsRelatorioTable } from "../queries/migrations";
+import {
+  addCoordsRelatorioTable,
+  addOutroExtRelatorioTable,
+  addReadOnlyRelatorioTable,
+} from "../queries/migrations";
 
 export const db = SQLite.openDatabase("pnae_mobile.db");
 
@@ -13,7 +17,8 @@ export function init_db(): Promise<void> {
     db.transaction((tx) => {
       tx.executeSql(
         createRelatorioTableQuery,
-        // addColumnsRelatorioTable,
+        // addOutroExtRelatorioTable,
+        // addCoordsRelatorioTable,
         //renameRelatorioTableQuery,
         //migrateData,
         // dropRelatorioTableQuery,

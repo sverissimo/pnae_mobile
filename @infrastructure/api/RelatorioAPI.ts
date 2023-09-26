@@ -10,7 +10,7 @@ export const RelatorioAPI = {
   updateRelatorio,
   deleteRelatorio,
 };
-const url = `${env.BASE_URL}/relatorios`;
+const url = `${env.SERVER_URL}/relatorios`;
 
 async function createRelatorio(relatorioDTO: Partial<RelatorioBackendDTO>) {
   if (!relatorioDTO) return null;

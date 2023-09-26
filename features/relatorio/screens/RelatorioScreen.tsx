@@ -5,14 +5,13 @@ import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 import { SnackBar } from "@shared/components/molecules";
-import { CustomDialog, List } from "@shared/components/organisms";
+import { CustomDialog, List, Loading } from "@shared/components/organisms";
 import { globalColors } from "@shared/constants/themes";
 import { useSnackBar } from "@shared/hooks";
 
 import { RELATORIO_COLUMNS } from "../constants";
 import { useManageRelatorio } from "../hooks";
 import { RelatorioModel } from "../types";
-import { env } from "config";
 
 export const RelatorioScreen = () => {
   const { produtor } = useSelectProdutor();
@@ -27,6 +26,7 @@ export const RelatorioScreen = () => {
     formatRelatorioRows,
     onConfirmDelete,
     sharePDFLink,
+    isLoading,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
@@ -55,7 +55,9 @@ export const RelatorioScreen = () => {
     <>
       <View style={styles.container}>
         <ProdutorInfo />
-        {relatorios?.length ? (
+        {isLoading && relatorios?.length !== 0 ? (
+          <Loading />
+        ) : relatorios?.length ? (
           <>
             <ListTitle title={"Relatorios cadastrados"} />
             <List<RelatorioModel>
@@ -77,10 +79,12 @@ export const RelatorioScreen = () => {
         ) : (
           <ListTitle title={"Nenhum relatório cadastrado"} />
         )}
-        <AddButton
-          label="Criar Novo Relatório"
-          onPress={handleCreateRelatorio}
-        />
+        {(!isLoading || relatorios?.length === 0) && (
+          <AddButton
+            label="Criar Novo Relatório"
+            onPress={handleCreateRelatorio}
+          />
+        )}
       </View>
       <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
     </>

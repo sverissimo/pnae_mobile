@@ -31,15 +31,9 @@ export const ProdutorAPI = {
     // cpf = cpf || "81756364672"; // dev/test purposes only
     // cpf = cpf || "05241895604"; // dev/test purposes only
     try {
-      const url = `${env.BASE_URL}/produtor/${cpf}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const url = `${env.SERVER_URL}/produtor/${cpf}`;
+      const response = await fetch(url);
       const data = await response.json();
-      console.log("🚀 ~ file: ProdutorAPI.ts:42 ~ getProdutor: ~ data:", data);
       return data;
     } catch (error) {
       console.log(

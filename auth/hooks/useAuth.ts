@@ -17,6 +17,7 @@ export const useAuth = () => {
       if (loggedUser?.login_usuario) {
         setUser(loggedUser);
       }
+      return () => setUser({} as Usuario);
     })();
   }, []);
 
@@ -70,21 +71,22 @@ export const useAuth = () => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "Sair", onPress: () => logoutHandler() },
+        { text: "Sair", onPress: logoutHandler },
       ],
       {
         cancelable: true,
         onDismiss: () => {
-          setUser({} as Usuario);
-          removeValue("user");
+          // setUser({} as Usuario);
+          // removeValue("user");
         },
       }
     );
 
   const logoutHandler = async () => {
-    // console.log(" logoutHandler llllllllll");
     setUser({} as Usuario);
     await removeValue("user");
+    console.log(await getData("user"));
+    return;
   };
 
   return {

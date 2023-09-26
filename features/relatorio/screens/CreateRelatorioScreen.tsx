@@ -17,7 +17,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
   const { updateLocation } = useLocation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
-  const { relatorio, handleChange, saveRelatorio, enableSave } =
+  const { relatorio, handleChange, saveRelatorio, enableSave, setEnableSave } =
     useManageRelatorio();
 
   const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
@@ -46,15 +46,22 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   }, [pictureURI]);
 
   const handleSaveRelatorio = async () => {
-    await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
-
-    setSnackBarOptions({
-      message: "Relatório salvo com sucesso!",
-    });
-    /* setDisableButton(true);
-    setTimeout(() => {
-      navigation.goBack();
-    }, 1000); */
+    try {
+      await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
+      setSnackBarOptions({
+        message: "Relatório salvo com sucesso!",
+      });
+      setEnableSave(false);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
+    } catch (error) {
+      setSnackBarOptions({
+        status: "error",
+        message: "Erro ao salvar relatório",
+      });
+      console.error("🚀 EditRelatorioScreen.tsx:44: ", error);
+    }
   };
 
   const navigateTo = (route: string) => {

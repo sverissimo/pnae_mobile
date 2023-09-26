@@ -11,16 +11,16 @@ export const UsuarioAPI = {
       const { matricula } = params;
       //ids = ids || "1545" ; // dev/test purposes only
       //ids = ids || "1535"; // dev/test purposes only
-      ids = ids || "1620"; // dev/test purposes only
-
-      const url = `${env.BASE_URL}/usuario${
-        ids ? `/${ids}` : matricula ? `?matricula=${matricula}` : ""
-      }`;
+      // ids = ids || "1620"; // dev/test purposes only
 
       if (!ids && !matricula) {
-        return [];
+        ids = "1620";
         // throw new Error("You must provide either ids or matricula");
       }
+
+      let url = `${env.SERVER_URL}/usuario`;
+      if (ids) url += `/${ids}`;
+      if (matricula) url += `?matricula=${matricula}`;
 
       const result = await fetch(url);
       const usuarios = await result.json();

@@ -20,12 +20,13 @@ export const useManageRelatorio = (produtorId?: string) => {
   const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [enableSave, setEnableSave] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { extensionistas } = useManageTecnico(relatorio);
 
   useEffect(() => {
     if (produtorId) {
-      getRelatorios(produtorId);
+      (async () => await getRelatorios(produtorId))();
     }
   }, [produtorId]);
 
@@ -94,12 +95,14 @@ export const useManageRelatorio = (produtorId?: string) => {
       return [];
     }
     try {
+      setIsLoading(true);
       const relatorios = await RelatorioService.getRelatorios(produtorId);
-      // const relatorios = relatoriosSample;
       if (!relatorios.length) {
         return [];
       }
+
       setRelatorios(relatorios);
+      setIsLoading(false);
       return relatorios;
     } catch (error) {
       console.log("🚀useManageRelatorios.ts:60 error:", error);
@@ -196,6 +199,7 @@ export const useManageRelatorio = (produtorId?: string) => {
     relatorios,
     showDeleteDialog,
     enableSave,
+    isLoading,
     setRelatorio: setState,
     getRelatorios,
     handleChange,

@@ -8,12 +8,7 @@ export class Relatorio {
   constructor(private relatorio: RelatorioModel) {}
 
   toLocalDTO(): RelatorioLocalDTO {
-    console.log(
-      "🚀 ~ file: Relatorio.ts:12 ~ Relatorio ~ toLocalDTO ~ this:",
-      this
-    );
     const relatorioDTO = this.toDTO();
-
     const relatorioLocalDTO = this.decamelizeRelatorio(relatorioDTO);
     return relatorioLocalDTO;
   }

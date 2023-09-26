@@ -3,7 +3,7 @@ import { FormElement } from "../../../@shared/types/FormElement";
 export const relatorioForm: FormElement[] = [
   {
     field: "numeroRelatorio",
-    label: "Número do Relatório",
+    label: "Número da Visita",
     type: "input",
     keyboardType: "numeric",
   },

@@ -9,9 +9,10 @@ import PerfilList from "@features/perfil/components/PerfilList";
 import { PropriedadesList } from "@features/propriedade/components/PropriedadeList";
 import { globalColors } from "@shared/constants/themes";
 import { ListTitle } from "@shared/components/atoms";
+import { Loading } from "@shared/components/organisms";
 
 export const ProdutorScreen = () => {
-  const { produtor } = useSelectProdutor();
+  const { produtor, isLoading } = useSelectProdutor();
   if (!produtor) {
     return (
       <View style={styles.container}>
@@ -23,6 +24,7 @@ export const ProdutorScreen = () => {
   return (
     <View style={styles.container}>
       <ProdutorInfo />
+      {isLoading && <Loading />}
       <View style={styles.title}>
         <ListTitle title={"Dados do Produtor"} />
       </View>
