@@ -1,5 +1,7 @@
-import { env } from "../../config/env";
-import { Produtor } from "../../features/produtor/types/Produtor";
+/* eslint-env browser */
+/* global fetch Headers Request Response FileReader Blob FormData URLSearchParams AbortController XMLHttpRequest */
+import { env } from '../../config/env';
+import { Produtor } from '../../features/produtor/types/Produtor';
 
 export const ProdutorAPI = {
   createProdutor: async (produtor: Produtor) => {
@@ -14,10 +16,7 @@ export const ProdutorAPI = {
       });
       return result;
     } catch (error) {
-      console.log(
-        "🚀 ~ file: ProdutorAPI.ts:17 ~ createProdutor: ~ error:",
-        error
-      );
+      console.log("🚀 ~ file: ProdutorAPI.ts:17 ~ createProdutor: ~ error:", error);
     }
   },
 
@@ -36,10 +35,7 @@ export const ProdutorAPI = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.log(
-        "🚀 ~ file: produtorAPI.ts:10 ~ getProdutorData ~ error:",
-        error
-      );
+      console.log("🚀 ~ file: produtorAPI.ts:10 ~ getProdutorData ~ error:", error);
     }
   },
 };

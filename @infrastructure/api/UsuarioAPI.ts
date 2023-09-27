@@ -1,11 +1,11 @@
-import { Usuario } from "@shared/types/Usuario";
-import { env } from "../../config/env";
+/* eslint-env browser */
+/* global fetch Headers Request Response FileReader Blob FormData URLSearchParams AbortController XMLHttpRequest */
+import { Usuario } from '@shared/types/Usuario';
+
+import { env } from '../../config/env';
 
 export const UsuarioAPI = {
-  getUsuarios: async (params: {
-    ids?: string;
-    matricula?: string;
-  }): Promise<Usuario[]> => {
+  getUsuarios: async (params: { ids?: string; matricula?: string }): Promise<Usuario[]> => {
     try {
       let { ids } = params;
       const { matricula } = params;

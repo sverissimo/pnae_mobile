@@ -1,8 +1,11 @@
-import { env } from "config/env";
+/* eslint-env browser */
+/* global fetch Headers Request Response FileReader Blob FormData URLSearchParams AbortController XMLHttpRequest */
+import { env } from 'config/env';
 
 // import { RelatorioBackendDTO } from "@features/relatorio/types/RelatorioModel";
-import { parseURI } from "@shared/utils/parseURI";
-import { RelatorioBackendDTO } from "./dto";
+import { parseURI } from '@shared/utils/parseURI';
+
+import { RelatorioBackendDTO } from './dto';
 
 export const RelatorioAPI = {
   createRelatorio,
@@ -59,9 +62,7 @@ async function getRelatorios(produtorId: string): Promise<any> {
   return await result.json();
 }
 
-async function updateRelatorio(
-  relatorioInput: RelatorioBackendDTO
-): Promise<string> {
+async function updateRelatorio(relatorioInput: RelatorioBackendDTO): Promise<string> {
   const { id, ...relatorio } = relatorioInput;
   const formData: any = new FormData();
   Object.entries(relatorio).forEach(([key, value]) => {

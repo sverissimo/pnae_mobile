@@ -1,12 +1,12 @@
 export const env = {
-  SERVER_URL: "http://aterdigital-api-demeter.emater.mg.gov.br:3001",
+  SERVER_URL: "https://aterdigital-api-demeter.emater.mg.gov.br:3001",
   BASE_URL: "http://10.0.2.2:3001",
   // BASE_URL: "http://179.0.72.203:3001",
 
   TEST_USER: {
     id_usuario: "835",
     login_usuario: "08516",
-    nome_usuario: "Joao Baptista Teixeira de Almeida",
+    nome_usuario: "Joao Baptista Teixeira de Almeida J!",
     email_usuario: "joao@not-real.br",
     celular_usuario: null,
     token_demeter: "3c8a60d4-06d0-11ea-99c1-00155d0023ef",
