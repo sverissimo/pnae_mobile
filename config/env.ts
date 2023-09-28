@@ -6,7 +6,7 @@ export const env = {
   TEST_USER: {
     id_usuario: "835",
     login_usuario: "08516",
-    nome_usuario: "Joao Baptista Teixeira de Almeida J!",
+    nome_usuario: "Joao Baptista Teixeira de Almeida Jz",
     email_usuario: "joao@not-real.br",
     celular_usuario: null,
     token_demeter: "3c8a60d4-06d0-11ea-99c1-00155d0023ef",

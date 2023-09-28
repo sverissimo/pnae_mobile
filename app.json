@@ -4,7 +4,7 @@
     "slug": "pnae_mobile",
     "version": "1.2.1",
     "orientation": "portrait",
-    "icon": "./assets/icon_1024.png",
+    "icon": "./assets/icon_padding.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/pnae_splash.png",
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon_1024.png",
+        "foregroundImage": "./assets/icon_padding.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
