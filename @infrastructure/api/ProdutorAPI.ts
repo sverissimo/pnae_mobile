@@ -1,4 +1,4 @@
-import { env } from "../../config";
+import { env } from "../../config/env";
 import { Produtor } from "../../features/produtor/types/Produtor";
 
 export const ProdutorAPI = {

@@ -3,7 +3,7 @@ import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
-import produtorSample from "@config/produtor.json";
+// import produtorSample from "@config/produtor.json";
 
 export const useSelectProdutor = () => {
   const { produtor, setProdutor: setProdutorContext } =

@@ -1,5 +1,5 @@
 import { Usuario } from "@shared/types/Usuario";
-import { env } from "../../config";
+import { env } from "../../config/env";
 
 export const UsuarioAPI = {
   getUsuarios: async (params: {

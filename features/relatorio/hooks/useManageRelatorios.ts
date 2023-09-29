@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Share } from "react-native";
-import { env } from "config/env";
+import { env } from "@config/env";
 import { RelatorioService } from "@services/RelatorioService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
@@ -9,7 +9,7 @@ import { useLocation } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, locationObjToText, truncateString } from "@shared/utils";
-import relatoriosSample from "@config/relatorios.json";
+// import relatoriosSample from "@config/relatorios.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
