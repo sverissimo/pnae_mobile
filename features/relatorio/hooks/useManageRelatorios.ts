@@ -98,6 +98,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       setIsLoading(true);
       const relatorios = await RelatorioService.getRelatorios(produtorId);
       if (!relatorios.length) {
+        setIsLoading(false);
         return [];
       }
 

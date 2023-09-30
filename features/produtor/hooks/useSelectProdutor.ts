@@ -10,13 +10,7 @@ export const useSelectProdutor = () => {
     useContext(ProdutorContext);
   const { setRelatorios } = useContext(RelatorioContext);
   const [state, setState] = useState({} as Produtor);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (produtor) {
-      setIsLoading(false);
-    }
-  }, [produtor]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const inputHandler = (name: string, value: string) => {
     setState((state) => ({ ...state, [name]: value }));
@@ -26,6 +20,7 @@ export const useSelectProdutor = () => {
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "");
     const produtor = await ProdutorService.getProdutor(cpf);
+    setIsLoading(false);
     setProdutor(produtor);
   };
 
