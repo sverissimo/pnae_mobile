@@ -38,6 +38,15 @@ export const useAuth = () => {
     });
 
     const result = queryResult[0];
+    console.log("🚀 ~ file: useAuth.ts:41 ~ loginHandler ~ result:", result);
+    if (!result) {
+      Alert.alert(
+        "Usuário não encontrado",
+        "Favor verificar a matrícula e tentar novamente."
+      );
+      return;
+    }
+
     if (result?.error) {
       alert(result.message);
       return;

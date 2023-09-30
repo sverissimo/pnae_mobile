@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
@@ -12,15 +12,21 @@ export const useSelectProdutor = () => {
   const [state, setState] = useState({} as Produtor);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (produtor) {
+      setIsLoading(false);
+    }
+  }, [produtor]);
+
   const inputHandler = (name: string, value: string) => {
     setState((state) => ({ ...state, [name]: value }));
   };
 
   const fetchProdutor = async (CPFProdutor: string) => {
     setIsLoading(true);
-    const produtor = await ProdutorService.getProdutor(CPFProdutor);
+    const cpf = CPFProdutor.replace(/\D/g, "");
+    const produtor = await ProdutorService.getProdutor(cpf);
     setProdutor(produtor);
-    setIsLoading(false);
   };
 
   const setProdutor = async (produtorDTO: any) => {

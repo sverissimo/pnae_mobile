@@ -138,7 +138,9 @@ function deleteRelatorio(relatorioId: string) {
             resolve(true);
             return true;
           } else {
-            reject(new Error("O Relatório não foi excluído."));
+            reject(
+              new Error("O Relatório não existente on não excluído localmente.")
+            );
             return false;
           }
         },

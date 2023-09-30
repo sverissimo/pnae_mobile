@@ -12,6 +12,8 @@ export const UsuarioAPI = {
       //ids = ids || "1545" ; // dev/test purposes only
       //ids = ids || "1535"; // dev/test purposes only
       // ids = ids || "1620"; // dev/test purposes only
+      // ids = ids || "2363"; // dev/test purposes only
+      // matricula = matricula || "09860"; // dev/test purposes only
 
       if (!ids && !matricula) {
         ids = "1620";
@@ -24,8 +26,8 @@ export const UsuarioAPI = {
 
       const result = await fetch(url);
       const usuarios = await result.json();
-      if (result.status !== 200) {
-        throw new Error("Failed to fetch data");
+      if (result.status === 404) {
+        return [];
       }
 
       return Array.isArray(usuarios) ? usuarios : [usuarios];

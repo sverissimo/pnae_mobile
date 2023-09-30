@@ -17,6 +17,7 @@ export function ProdutorSearchBar() {
     <View style={styles.container}>
       <Searchbar
         placeholder="Digite o CPF do Produtor"
+        keyboardType="numeric"
         onChangeText={onChangeSearch}
         value={CPFProdutor}
         style={styles.input}

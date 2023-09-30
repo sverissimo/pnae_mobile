@@ -17,6 +17,7 @@ export const ProdutorScreen = () => {
     return (
       <View style={styles.container}>
         <ProdutorSearchBar />
+        {isLoading && <Loading />}
       </View>
     );
   }
@@ -24,7 +25,6 @@ export const ProdutorScreen = () => {
   return (
     <View style={styles.container}>
       <ProdutorInfo />
-      {isLoading && <Loading />}
       <View style={styles.title}>
         <ListTitle title={"Dados do Produtor"} />
       </View>

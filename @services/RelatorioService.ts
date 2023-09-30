@@ -119,16 +119,16 @@ export const RelatorioService = {
     try {
       const relatorios = await RelatorioDB.getAllRelatorios();
       if (relatorios.length) {
-        const resultLocal = await RelatorioDB.deleteRelatorio(relatorioId);
-        if (!resultLocal) {
-          throw new Error(`Failed to delete relatorio locally: ${relatorioId}`);
-        }
-        const { assinatura_uri, picture_uri } = relatorios.find(
-          (r) => r.id === relatorioId
-        )!;
-
-        for (const file of [assinatura_uri, picture_uri]) {
-          await deleteFile(file);
+        const resultLocal = await RelatorioDB.deleteRelatorio(
+          relatorioId
+        ).catch((e) => console.log(e));
+        if (resultLocal) {
+          const { assinatura_uri, picture_uri } = relatorios.find(
+            (r) => r.id === relatorioId
+          )!;
+          for (const file of [assinatura_uri, picture_uri]) {
+            await deleteFile(file);
+          }
         }
       }
 

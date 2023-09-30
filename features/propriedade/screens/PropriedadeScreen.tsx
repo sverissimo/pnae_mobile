@@ -25,7 +25,7 @@ export const PropriedadeScreen = () => {
           <PropriedadesList />
         </>
       ) : (
-        <ListTitle title={"Nenhum relatório cadastrado"} />
+        <ListTitle title={"Nenhuma propriedade cadastrada"} />
       )}
     </View>
   );
