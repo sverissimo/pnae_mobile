@@ -24,7 +24,11 @@ export const RelatorioService = {
       console.log("🚀 RelatorioService.ts:22:", resultLocal);
 
       const relatorioDTO = relatorioModel.toDTO();
-      await RelatorioAPI.createRelatorio(relatorioDTO);
+      const remoteResult = await RelatorioAPI.createRelatorio(relatorioDTO);
+      console.log(
+        "🚀 ~ file: RelatorioService.ts:28 ~ createRelatorio: ~ remoteResult:",
+        remoteResult
+      );
       return relatorioId;
     } catch (error: any) {
       console.error("🚀 RelatorioService.ts:31: ", error);

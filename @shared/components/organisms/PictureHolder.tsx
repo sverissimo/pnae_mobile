@@ -20,7 +20,15 @@ export const PictureHolder = <T extends Object>({
 
   const handlePress = async () => {
     if (type === "image") {
-      handleTakePicture();
+      try {
+        handleTakePicture();
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: PictureHolder.tsx:27 ~ handlePress ~ error:",
+          error
+        );
+        alert(JSON.stringify(error));
+      }
     }
     if (type === "signature") {
       navigateTo!("GetSignatureScreen");

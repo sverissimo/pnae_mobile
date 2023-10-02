@@ -11,6 +11,7 @@ export type FormElement = {
     | "toggle-input";
   options?: string[] | number[];
   value?: string | boolean;
+  key?: string;
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
   customHelperField?: string;
   maxLength?: number;

@@ -6,9 +6,11 @@ import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { getData, removeValue, storeData } from "@shared/utils";
 import { Alert } from "react-native";
 import { perfisAutorizados } from "@auth/constants";
+import { useSelectProdutor } from "@features/produtor/hooks";
 
 export const useAuth = () => {
   const { user, setUser } = useContext(UserContext);
+  const { setProdutor } = useSelectProdutor();
   const [userInput, setUserInput] = useState({} as Usuario);
 
   useEffect(() => {
@@ -92,7 +94,8 @@ export const useAuth = () => {
     );
 
   const logoutHandler = async () => {
-    setUser({} as Usuario);
+    setProdutor(null);
+    setUser(null);
     await removeValue("user");
     console.log(await getData("user"));
     return;

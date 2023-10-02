@@ -14,6 +14,10 @@ const url = `${env.SERVER_URL}/relatorios`;
 
 async function createRelatorio(relatorioDTO: Partial<RelatorioBackendDTO>) {
   if (!relatorioDTO) return null;
+  console.log(
+    "🚀 ~ file: RelatorioAPI.ts:16 ~ createRelatorio ~ relatorioDTO:",
+    relatorioDTO
+  );
   try {
     const formData: any = new FormData();
     Object.entries(relatorioDTO).forEach(([key, value]) => {

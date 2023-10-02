@@ -12,7 +12,7 @@ export const ProdutorDetails = () => {
   const { nr_cpf_cnpj, dt_nascimento, sn_ativo, dap } = produtor;
   const produtorDetails = [
     {
-      id: produtor.id_pessoa_demeter,
+      id: produtor?.id_pessoa_demeter,
       nr_cpf_cnpj: formatCPF(nr_cpf_cnpj),
       dt_nascimento: formatDate(dt_nascimento),
       sn_ativo,

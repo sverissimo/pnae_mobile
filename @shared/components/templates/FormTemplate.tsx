@@ -29,7 +29,7 @@ export function FormTemplate({
           case "select":
             return (
               <SelectDropdown
-                key={item.field}
+                key={item.key || item.field}
                 label={item.label}
                 options={item.options}
                 onSelect={(value: any) => onValueChange(item.field, value)}
@@ -39,7 +39,7 @@ export function FormTemplate({
           case "radio":
             return (
               <RadioComponent
-                key={item.field}
+                key={item.key || item.field}
                 onValueChange={(value: any) => onValueChange(item.field, value)}
                 label={item.label}
                 value={data[item.field]}
@@ -48,7 +48,7 @@ export function FormTemplate({
           case "input":
             return (
               <TextInputComponent
-                key={item.field}
+                key={item.key || item.field}
                 label={item.label}
                 item={item}
                 onChangeText={(value: any) => onValueChange(item.field, value)}

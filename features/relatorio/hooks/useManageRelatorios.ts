@@ -78,7 +78,7 @@ export const useManageRelatorio = (produtorId?: string) => {
         {
           ...relatorioInput,
           id: relatorioId,
-          nomeTecnico: user?.nome_usuario,
+          nomeTecnico: user?.nome_usuario || "",
           produtorId: produtor!.id_pessoa_demeter!,
           createdAt: formatDate(new Date().toISOString()),
         },
@@ -126,7 +126,7 @@ export const useManageRelatorio = (produtorId?: string) => {
   const updateRelatoriosList = (relatorio: RelatorioModel) => {
     const updatedRelatorio: RelatorioModel = {
       ...relatorio,
-      nomeTecnico: user?.nome_usuario,
+      nomeTecnico: user?.nome_usuario || "",
     };
     if (relatorio.id) {
       const updatedList = [...relatorios];

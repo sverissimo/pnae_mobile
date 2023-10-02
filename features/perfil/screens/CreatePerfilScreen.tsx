@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Text } from "react-native";
 import { Button } from "react-native-paper";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
@@ -35,10 +35,12 @@ export const CreatePerfilScreen: React.FC = () => {
         data={state}
         onValueChange={handleChange}
       />
+      <Text>Em desenvolvimento, aguarde a próxima versão do app.</Text>
       <Button
         mode="contained"
         style={styles.button}
         onPress={() => console.log("Submitted")}
+        disabled
       >
         Salvar
       </Button>
