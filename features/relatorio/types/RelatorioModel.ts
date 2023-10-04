@@ -1,7 +1,5 @@
 import { Usuario } from "@shared/types/Usuario";
 
-import { Produtor } from "../../produtor/types/Produtor";
-
 export type RelatorioModel = {
   id: string;
   produtorId: string;
@@ -10,7 +8,6 @@ export type RelatorioModel = {
   numeroRelatorio: number;
   assunto: string;
   orientacao: string;
-  produtor?: Produtor;
   pictureURI: string;
   assinaturaURI: string;
   outroExtensionista?: Usuario[];

@@ -9,6 +9,8 @@ export type RelatorioBackendDTO = {
   pictureURI: string;
   assinaturaURI: string;
   outroExtensionista?: string;
+  readOnly?: boolean;
+  coordenadas?: string;
   createdAt: any;
   updatedAt?: any;
 };

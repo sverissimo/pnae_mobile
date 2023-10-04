@@ -1,16 +1,13 @@
-import humps from "humps";
-
-import { RelatorioDTO, RelatorioModel } from "@features/relatorio/types";
-import { UsuarioAPI } from "@infrastructure/api";
-import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
 import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
-import { Usuario } from "@shared/types";
-import { deleteFile, syncDBs } from "@shared/utils";
+import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
+import { FileAPI } from "@infrastructure/api/FileAPI";
+import { UsuarioService } from "./UsuarioService";
 import { generateUUID } from "@shared/utils/generateUUID";
+import { deleteFile } from "@shared/utils";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
-
-import { RelatorioLocalDTO } from "../@infrastructure/database/dto/RelatorioLocalDTO";
 import { Relatorio } from "@features/relatorio/entity";
+import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioLocalDTO } from "../@infrastructure/database/dto/RelatorioLocalDTO";
 
 export const RelatorioService = {
   createRelatorio: async (relatorio: RelatorioModel): Promise<string> => {
@@ -25,10 +22,7 @@ export const RelatorioService = {
 
       const relatorioDTO = relatorioModel.toDTO();
       const remoteResult = await RelatorioAPI.createRelatorio(relatorioDTO);
-      console.log(
-        "🚀 ~ file: RelatorioService.ts:28 ~ createRelatorio: ~ remoteResult:",
-        remoteResult
-      );
+      console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
       return relatorioId;
     } catch (error: any) {
       console.error("🚀 RelatorioService.ts:31: ", error);
@@ -41,45 +35,27 @@ export const RelatorioService = {
       RelatorioDB.getRelatorios(produtorId),
       RelatorioAPI.getRelatorios(produtorId),
     ]);
-    console.log(
-      "🚀 ~ file: RelatorioService.ts:40 ~ getRelatorios: ~ relatorioDTOs:",
-      { produtorId, relatorioDTOs, relatoriosFromServer }
+
+    const relatoriosFromLocalDB = relatorioDTOs.map(Relatorio.toModel);
+
+    const updatedRelatorios = mergeRelatorios(
+      relatoriosFromLocalDB,
+      relatoriosFromServer
     );
 
-    const tecnicoIds = getTecnicosIdsFromRelatoriosList(relatorioDTOs);
-    const tecnicos = await UsuarioAPI.getUsuarios({
-      ids: tecnicoIds.join(","),
-    });
+    const tecnicos = await UsuarioService.fetchTecnicosByRelatorios(
+      updatedRelatorios
+    );
 
-    // Update relatorioDTOs with server permissions and convert to models
-    const relatorios = relatorioDTOs.map((dto) => {
-      const serverRel = relatoriosFromServer.find(
-        (r: RelatorioModel) => r.id === dto.id
-      );
-      const readOnly = serverRel?.readOnly || false;
-      return Relatorio.toModel({ ...dto, read_only: readOnly }, tecnicos);
-    });
+    const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
+      new Relatorio(relatorio).addTecnicos(tecnicos)
+    );
 
-    // Merge local and server relatorios, keeping the most recently updated
-    const relatorioMap = new Map<string, RelatorioModel>();
-    const updateMap = (relatorio: RelatorioModel) => {
-      const existing = relatorioMap.get(relatorio.id);
-      if (
-        !existing ||
-        new Date(relatorio.updatedAt) > new Date(existing.updatedAt)
-      ) {
-        relatorioMap.set(relatorio.id, relatorio);
-      }
-    };
-
-    [...relatorios, ...relatoriosFromServer].forEach(updateMap);
-    return Array.from(relatorioMap.values());
-  },
-
-  getAllRelatorios: async () => {
-    const relatorios =
-      (await RelatorioDB.getAllRelatorios()) as RelatorioLocalDTO[];
-    return relatorios;
+    const updates = await Promise.all(
+      relatoriosWithTecnicos.map(FileAPI.getMissingFilesFromServer)
+    );
+    console.log("🚀 RelatorioService.ts:65 ~ updates:", updates);
+    return relatoriosWithTecnicos;
   },
 
   updateRelatorio: async (relatorioInput: RelatorioModel) => {
@@ -146,24 +122,38 @@ export const RelatorioService = {
       }
     }
   },
+
+  getAllRelatorios: async () => {
+    const relatorios =
+      (await RelatorioDB.getAllRelatorios()) as RelatorioLocalDTO[];
+    return relatorios;
+  },
 };
 
-function getTecnicosIdsFromRelatoriosList(
-  relatoriosList: RelatorioLocalDTO[]
-): string[] {
-  const tecnicoIds = [
-    ...new Set(
-      relatoriosList
-        // .map((r: Relatorio) => r?.tecnicoId?.toString())
-        .reduce((acc: any, r: RelatorioLocalDTO) => {
-          acc.push(r?.tecnico_id?.toString());
-          acc.push(r?.outro_extensionista?.toString());
-          return acc;
-        }, [])
-        .filter((id: string) => !!id)
-    ),
-  ];
-  console.log("🚀 ~ file: RelatorioService.ts:129 ~ tecnicoIds:", tecnicoIds);
-  if (!tecnicoIds.length) return [];
-  return tecnicoIds as string[];
+function mergeRelatorios(
+  relatorios: RelatorioModel[],
+  relatoriosFromServer: RelatorioModel[]
+) {
+  const relatoriosFromLocalDB = relatorios.map((relatorio) => {
+    const serverRel = relatoriosFromServer.find(
+      (r: RelatorioModel) => r.id === relatorio.id
+    );
+    const readOnly = serverRel?.readOnly || false;
+    return { ...relatorio, read_only: readOnly };
+  });
+
+  const relatorioMap = new Map<string, RelatorioModel>();
+  const updateMap = (relatorio: RelatorioModel) => {
+    const existing = relatorioMap.get(relatorio.id);
+    if (
+      !existing ||
+      new Date(relatorio.updatedAt) > new Date(existing.updatedAt)
+    ) {
+      relatorioMap.set(relatorio.id, relatorio);
+    }
+  };
+
+  [...relatoriosFromLocalDB, ...relatoriosFromServer].forEach(updateMap);
+  const updatedRelatorios = Array.from(relatorioMap.values());
+  return updatedRelatorios;
 }

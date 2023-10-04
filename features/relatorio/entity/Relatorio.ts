@@ -1,8 +1,8 @@
 import humps from "humps";
 import { RelatorioLocalDTO } from "@infrastructure/database/dto";
 import { Usuario } from "@shared/types";
-import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioModel } from "../types";
+import { UsuarioService } from "@services/UsuarioService";
 
 export class Relatorio {
   constructor(private relatorio: RelatorioModel) {}
@@ -17,14 +17,11 @@ export class Relatorio {
     const {
       numeroRelatorio,
       nomeTecnico,
-      produtor,
       outroExtensionista,
       nomeOutroExtensionista,
       matriculaOutroExtensionista,
       ...rest
     } = this.relatorio;
-
-    console.log("🚀 ~ file: Relatorio.ts:27 ~ Relatorio ~ toDTO ~ rest:", rest);
 
     const relatorioDTO: any = rest;
     if (numeroRelatorio) {
@@ -37,40 +34,20 @@ export class Relatorio {
     return relatorioDTO;
   }
 
-  static toModel(
-    relatorioDTO: RelatorioLocalDTO,
-    tecnicos: Usuario[] = []
-  ): RelatorioModel {
+  static toModel(relatorioDTO: RelatorioLocalDTO): RelatorioModel {
     const relatorio = Relatorio.camelizeRelatorio(relatorioDTO);
-
-    const tecnico = tecnicos.find(
-      (t) => t?.id_usuario == relatorioDTO?.tecnico_id
-    );
-
-    const outroExtensionista = tecnicos.filter(
-      (t) =>
-        relatorioDTO?.outro_extensionista &&
-        relatorioDTO.outro_extensionista.match(t.id_usuario)
-    );
-    const { nomeOutroExtensionista, matriculaOutroExtensionista } =
-      outroExtensionista.reduce(
-        (acc, t) => {
-          acc.nomeOutroExtensionista += t.nome_usuario + ",";
-          acc.matriculaOutroExtensionista += t.matricula_usuario + ",";
-          return acc;
-        },
-        { nomeOutroExtensionista: "", matriculaOutroExtensionista: "" }
-      );
-
-    const nomeTecnico = tecnico!.nome_usuario;
-    return {
-      ...relatorio,
-      nomeTecnico,
-      outroExtensionista,
-      nomeOutroExtensionista,
-      matriculaOutroExtensionista,
-    } as RelatorioModel;
+    return relatorio;
   }
+
+  addTecnicos = (tecnicos: Usuario[]) => {
+    const { tecnicoId } = this.relatorio;
+    const nomeTecnico = UsuarioService.getTecnicoName(tecnicoId, tecnicos);
+    const outrosExtensionistasInfo =
+      UsuarioService.aggregateOutroExtensionistaInfo(tecnicos, this.relatorio);
+
+    Object.assign(this.relatorio, { ...outrosExtensionistasInfo, nomeTecnico });
+    return this.relatorio;
+  };
 
   private static camelizeRelatorio(relatorioLocalDTO: RelatorioLocalDTO) {
     const relatorio = humps.camelizeKeys(relatorioLocalDTO, {
@@ -83,7 +60,7 @@ export class Relatorio {
         }
         return convert(key, options);
       },
-    }) as Relatorio;
+    }) as RelatorioModel;
     return relatorio;
   }
 

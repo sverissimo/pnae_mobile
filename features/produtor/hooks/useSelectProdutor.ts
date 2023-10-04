@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
-// import produtorSample from "@config/produtor.json";
 
 export const useSelectProdutor = () => {
   const {
@@ -13,11 +12,6 @@ export const useSelectProdutor = () => {
     setIsLoading,
   } = useContext(ProdutorContext);
   const { setRelatorios } = useContext(RelatorioContext);
-  const [state, setState] = useState({} as Produtor);
-
-  const inputHandler = (name: string, value: string | undefined) => {
-    setState((state) => ({ ...state, [name]: value }));
-  };
 
   const fetchProdutor = async (CPFProdutor: string) => {
     setIsLoading(true);
@@ -56,7 +50,6 @@ export const useSelectProdutor = () => {
   return {
     produtor,
     isLoading,
-    inputHandler,
     setProdutor,
     resetProdutor,
     fetchProdutor,
