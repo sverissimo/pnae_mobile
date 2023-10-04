@@ -58,9 +58,10 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const saveRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      const updatedLocation = await updateLocation();
-      const coordenadas =
-        locationObjToText(updatedLocation) || locationObjToText(location);
+      // const updatedLocation = await updateLocation();
+      // const coordenadas =
+      //   locationObjToText(updatedLocation) || locationObjToText(location);
+      const coordenadas = locationObjToText(location);
       const relatorioInput = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
@@ -113,11 +114,17 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const updateRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      relatorio.coordenadas = locationObjToText(location);
-      // const updatedLocation = await updateLocation();
+      const coordenadas = locationObjToText(location);
+      // || await updateLocation();
       //relatorio.coordenadas = locationObjToText(updatedLocation) || locationObjToText(location);
-      await RelatorioService.updateRelatorio(relatorio);
-      updateRelatoriosList(relatorio);
+      const relatorioUpdate = {
+        ...relatorio,
+        tecnicoId: user!.id_usuario,
+        coordenadas,
+      };
+
+      await RelatorioService.updateRelatorio(relatorioUpdate);
+      updateRelatoriosList(relatorioUpdate);
     } catch (error) {
       console.error("🚀 ~ file: useManageRelatorios.ts:118:", error);
     }

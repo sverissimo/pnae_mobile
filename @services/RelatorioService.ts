@@ -154,6 +154,8 @@ function mergeRelatorios(
   };
 
   [...relatoriosFromLocalDB, ...relatoriosFromServer].forEach(updateMap);
-  const updatedRelatorios = Array.from(relatorioMap.values());
+  const updatedRelatorios = Array.from(relatorioMap.values()).sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
   return updatedRelatorios;
 }
