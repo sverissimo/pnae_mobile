@@ -1,29 +1,33 @@
 import { RelatorioDB } from "@infrastructure/database/RelatorioDB";
-import { RelatorioAPI } from "@infrastructure/api/RelatorioAPI";
+import { RelatorioAPI } from "@infrastructure/api/relatorio/repository/RelatorioAPI";
 import { FileAPI } from "@infrastructure/api/FileAPI";
 import { UsuarioService } from "./UsuarioService";
 import { generateUUID } from "@shared/utils/generateUUID";
-import { deleteFile } from "@shared/utils";
+import { deleteFile, formatDate } from "@shared/utils";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 import { Relatorio } from "@features/relatorio/entity";
 import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioLocalDTO } from "../@infrastructure/database/dto/RelatorioLocalDTO";
 
+const relatorioAPI = new RelatorioAPI();
 export const RelatorioService = {
-  createRelatorio: async (relatorio: RelatorioModel): Promise<string> => {
+  createRelatorio: async (relatorioInput: RelatorioModel): Promise<string> => {
     try {
-      const relatorioId = generateUUID();
-      relatorio.id = relatorioId;
+      const id = generateUUID();
+      const createdAt = new Date().toISOString();
+      console.log("🚀 ~ file: RelatorioService.ts:18 - createdAt:", createdAt);
+      const readOnly = false;
+      const relatorio = { ...relatorioInput, id, readOnly, createdAt };
+
       const relatorioModel = new Relatorio(relatorio);
       const relatorioLocalDTO = relatorioModel.toLocalDTO();
-      relatorioLocalDTO.read_only = false;
       const resultLocal = await RelatorioDB.createRelatorio(relatorioLocalDTO);
       console.log("🚀 RelatorioService.ts:22:", resultLocal);
 
-      const relatorioDTO = relatorioModel.toDTO();
-      const remoteResult = await RelatorioAPI.createRelatorio(relatorioDTO);
+      // const relatorioDTO = relatorioModel.toDTO();
+      const remoteResult = await relatorioAPI.create(relatorio);
       console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
-      return relatorioId;
+      return id;
     } catch (error: any) {
       console.error("🚀 RelatorioService.ts:31: ", error);
       throw new Error(error.message);
@@ -33,7 +37,7 @@ export const RelatorioService = {
   getRelatorios: async (produtorId: string): Promise<RelatorioModel[]> => {
     const [relatorioDTOs, relatoriosFromServer] = await Promise.all([
       RelatorioDB.getRelatorios(produtorId),
-      RelatorioAPI.getRelatorios(produtorId),
+      relatorioAPI.findByProdutorID(produtorId),
     ]);
 
     const relatoriosFromLocalDB = relatorioDTOs.map(Relatorio.toModel);
@@ -84,7 +88,7 @@ export const RelatorioService = {
       console.log("### Relatorio locally updated!!");
 
       const relatorioDTO = new Relatorio(relatorioUpdate).toDTO();
-      const result = await RelatorioAPI.updateRelatorio(relatorioDTO);
+      const result = await relatorioAPI.update(relatorioInput);
       return result;
     } catch (error) {
       if (error instanceof Error) {
@@ -112,7 +116,7 @@ export const RelatorioService = {
         }
       }
 
-      const result = await RelatorioAPI.deleteRelatorio(relatorioId);
+      const result = await relatorioAPI.delete(relatorioId);
       return result;
     } catch (error) {
       if (error instanceof Error) {

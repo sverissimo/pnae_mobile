@@ -1,3 +1,3 @@
-export * from "./ProdutorAPI"
-export * from "./RelatorioAPI"
-export * from "./UsuarioAPI"
+export * from "./ProdutorAPI";
+export * from "./relatorio/repository/RelatorioAPI";
+export * from "./UsuarioAPI";

@@ -1,11 +1,55 @@
 import humps from "humps";
 import { RelatorioLocalDTO } from "@infrastructure/database/dto";
 import { Usuario } from "@shared/types";
-import { RelatorioModel } from "../types";
+import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioService } from "@services/UsuarioService";
+import { RelatorioBackendDTO } from "@infrastructure/api/relatorio/dto";
 
 export class Relatorio {
-  constructor(private relatorio: RelatorioModel) {}
+  constructor(private readonly relatorio: RelatorioModel) {
+    this.relatorio = relatorio;
+    this.relatorio.numeroRelatorio = +relatorio.numeroRelatorio;
+    this.validate();
+  }
+
+  private validate() {
+    const { produtorId, tecnicoId, numeroRelatorio } = this.relatorio;
+    if (!produtorId) {
+      throw new Error("Produtor não pode ser vazio");
+    }
+    if (!tecnicoId) {
+      throw new Error("Técnico não pode ser vazio");
+    }
+    if (
+      isNaN(numeroRelatorio) ||
+      0 >= numeroRelatorio ||
+      numeroRelatorio > 999
+    ) {
+      throw new Error("Número do relatório inválido");
+    }
+  }
+
+  AddOutrosExtensionistas = (outroExtensionista: Usuario[]) => {
+    this.relatorio.outroExtensionista = outroExtensionista;
+  };
+
+  getOutrosExtensionistasNames = () => {
+    const { outroExtensionista } = this.relatorio ?? {};
+    const nomes = outroExtensionista?.map((e) => e.nome_usuario);
+    return nomes?.join(", ");
+  };
+
+  getOutrosExtensionistasMatriculas = () => {
+    const { outroExtensionista } = this.relatorio ?? {};
+    const matriculas = outroExtensionista?.map((e) => e.matricula_usuario);
+    return matriculas?.join(", ");
+  };
+
+  getOutrosExtensionistasIds = () => {
+    const { outroExtensionista } = this.relatorio ?? {};
+    const ids = outroExtensionista?.map((e) => e.id_usuario);
+    return ids?.join(",");
+  };
 
   toLocalDTO(): RelatorioLocalDTO {
     const relatorioDTO = this.toDTO();
@@ -13,7 +57,7 @@ export class Relatorio {
     return relatorioLocalDTO;
   }
 
-  toDTO(): any {
+  toDTO(): RelatorioBackendDTO {
     const {
       numeroRelatorio,
       nomeTecnico,
@@ -23,7 +67,8 @@ export class Relatorio {
       ...rest
     } = this.relatorio;
 
-    const relatorioDTO: any = rest;
+    const relatorioDTO = rest as RelatorioBackendDTO;
+
     if (numeroRelatorio) {
       relatorioDTO.numeroRelatorio = +numeroRelatorio;
     }
@@ -31,6 +76,7 @@ export class Relatorio {
     relatorioDTO.outroExtensionista = outroExtensionista
       ?.map((e) => e.id_usuario)
       .join(",");
+
     return relatorioDTO;
   }
 
@@ -45,8 +91,11 @@ export class Relatorio {
     const outrosExtensionistasInfo =
       UsuarioService.aggregateOutroExtensionistaInfo(tecnicos, this.relatorio);
 
-    Object.assign(this.relatorio, { ...outrosExtensionistasInfo, nomeTecnico });
-    return this.relatorio;
+    return {
+      ...this.relatorio,
+      ...outrosExtensionistasInfo,
+      nomeTecnico,
+    } as RelatorioModel;
   };
 
   private static camelizeRelatorio(relatorioLocalDTO: RelatorioLocalDTO) {
@@ -64,7 +113,7 @@ export class Relatorio {
     return relatorio;
   }
 
-  private decamelizeRelatorio(relatorio: Relatorio) {
+  private decamelizeRelatorio(relatorio: RelatorioBackendDTO) {
     const relatorioDTO = humps.decamelizeKeys(relatorio, {
       process: (key, convert, options) => {
         if (key === "pictureURI") {

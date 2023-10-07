@@ -16,7 +16,7 @@ export const useAuth = () => {
   useEffect(() => {
     (async () => {
       const loggedUser = (await getData("user")) as Usuario;
-      if (loggedUser?.login_usuario) {
+      if (loggedUser?.matricula_usuario) {
         setUser(loggedUser);
       }
       return () => setUser({} as Usuario);

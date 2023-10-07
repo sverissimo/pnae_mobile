@@ -60,7 +60,8 @@ export function useManagePictures() {
         picturesToDelete.push(...picturesToDeleteInList);
       }
     }
-    return Promise.all(picturesToDelete.map(deleteFile));
+    await Promise.all(picturesToDelete.map(deleteFile));
+    return;
   };
 
   const clearURIs = () => {

@@ -8,6 +8,7 @@
       "@config/*": ["./config/*"],
       "@constants/*": ["@shared/constants/*"],
       "@contexts/*": ["./contexts/*"],
+      "@domain/*": ["./@domain/*"],
       "@features/*": ["./features/*"],
       "@infrastructure/*": ["./@infrastructure/*"],
       "@navigation/*": ["./navigation/*"],

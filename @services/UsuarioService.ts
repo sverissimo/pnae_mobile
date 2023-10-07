@@ -1,5 +1,5 @@
 import { RelatorioModel } from "@features/relatorio/types";
-import { UsuarioAPI } from "@infrastructure/api";
+import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
 import { Usuario } from "@shared/types";
 
 export const UsuarioService = {

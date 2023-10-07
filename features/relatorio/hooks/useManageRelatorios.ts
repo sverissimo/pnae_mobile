@@ -16,6 +16,10 @@ export const useManageRelatorio = (produtorId?: string) => {
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
   const { location, updateLocation } = useLocation();
   const { user } = useAuth();
+  console.log(
+    "🚀 ~ file: useManageRelatorios.ts:17 ~ useManageRelatorio ~ relatorios:",
+    relatorios[2]
+  );
 
   const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -127,6 +131,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       updateRelatoriosList(relatorioUpdate);
     } catch (error) {
       console.error("🚀 ~ file: useManageRelatorios.ts:118:", error);
+      throw error;
     }
   };
 

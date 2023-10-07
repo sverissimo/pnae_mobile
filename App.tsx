@@ -14,6 +14,7 @@ import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./@shared/constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
+import { deleteFile, fileExists } from "@shared/utils";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 
@@ -24,7 +25,11 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("---------------------------------------\n");
+        console.log("-----------------------------------------\n");
+
+        // deleteFile(
+        //   "file:///data/user/0/br.gov.mg.emater.pnae_mobile/files/7419515e-ab7e-4819-ae76-fe6bdae3d96c.png"
+        // );
         // checkDBSchema();
         // RelatorioService.getAllRelatorios().then((relatorios) =>
         //   relatorios.forEach((relatorio) => console.log(relatorio))

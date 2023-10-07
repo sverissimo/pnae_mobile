@@ -12,6 +12,7 @@ import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { relatorioForm } from "../constants";
 import { useManageRelatorio } from "../hooks";
 import { RelatorioModel } from "../types";
+import { deleteFile } from "@shared/utils";
 
 export const EditRelatorioScreen = ({ route }: any) => {
   const { updateRelatorio } = useManageRelatorio();
@@ -64,8 +65,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
     try {
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
       await updateRelatorio(updatedRelatorio as RelatorioModel);
-
-      clearDiscardedPictures().then(() => clearURIs());
+      await clearOldPictures();
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
       });
@@ -87,6 +87,17 @@ export const EditRelatorioScreen = ({ route }: any) => {
       parentRoute: "EditRelatorioScreen",
       orientacao: relatorio.orientacao,
     });
+  };
+
+  const clearOldPictures = async () => {
+    await clearDiscardedPictures();
+    clearURIs();
+    const originalRelatorio = relatorios.find(
+      (r) => r!.id === relatorioId
+    ) as RelatorioModel;
+    if (originalRelatorio.pictureURI !== pictureURI) {
+      await deleteFile(originalRelatorio.pictureURI);
+    }
   };
 
   return (

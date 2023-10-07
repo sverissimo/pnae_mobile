@@ -1,1 +1,1 @@
-export * from "./Relatorio"
+export * from "@domain/relatorio/entities/Relatorio";

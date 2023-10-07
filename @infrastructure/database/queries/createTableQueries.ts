@@ -27,9 +27,14 @@ CREATE TABLE IF NOT EXISTS "relatorio" (
   outro_extensionista TEXT,
   read_only BOOLEAN,
   coordenadas TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
+`;
+
+export const changeDefaltTimestampValue = `
+ALTER TABLE "relatorio"
+MODIFY COLUMN "created_at" TIMESTAMP;
 `;
 
 export const migrateData = `
