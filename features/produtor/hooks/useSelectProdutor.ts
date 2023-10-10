@@ -15,6 +15,7 @@ export const useSelectProdutor = () => {
 
   const fetchProdutor = async (CPFProdutor: string) => {
     setIsLoading(true);
+    console.log("🚀 ~ file: useSelectProdutor.ts:18 ~ isLoading:", isLoading);
     const cpf = CPFProdutor.replace(/\D/g, "");
     const produtor = await ProdutorService.getProdutor(cpf);
     setIsLoading(false);

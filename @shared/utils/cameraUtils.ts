@@ -2,40 +2,48 @@ import {
   launchCameraAsync,
   requestCameraPermissionsAsync,
   getCameraPermissionsAsync,
+  ImagePickerResult,
 } from "expo-image-picker";
-import { PermissionsAndroid } from "react-native";
 import { Alert } from "react-native";
+
+type PickerResult = ImagePickerResult & { cancelled?: boolean };
 
 export const takePicture = async () => {
   try {
-    const grantedNative = await PermissionsAndroid.request(
-      "android.permission.CAMERA"
-    );
+    async function verifyPermission() {
+      const permission = await getCameraPermissionsAsync();
+      if (permission.granted) {
+        return true;
+      }
+      // if (permission !== PermissionResponse.GRANTED) {
+      //   await requestCameraPermissionsAsync();
+      //   if (!PermissionStatus.GRANTED) {
+      //     return false;
+      //   }
+      // }
+    }
 
-    console.log("🚀cameraUtils.ts:13 ~ grantedNative:", grantedNative);
-    // const { granted } = await getCameraPermissionsAsync();
-    // if (!granted) { }
-    const { granted } = await requestCameraPermissionsAsync();
-    console.log("🚀cameraUtils.ts:13 ~ takePicture ~ granted:", granted);
-    // if (grantedNative !== PermissionsAndroid.RESULTS.GRANTED) {
-    if (!granted) {
+    const permission = await verifyPermission();
+    if (!permission) {
       Alert.alert(
-        "Permissão para utilização da câmera é necessária.",
-        "Para utilizar essa funcioinalidade, favor habilitar a permissão para a utilização da câmera para o PNAE App."
+        "Permissão de câmera negada",
+        "Para tirar uma foto, é necessário permitir o acesso à câmera",
+        [
+          {
+            text: "Ok",
+            onPress: () => {},
+          },
+        ]
       );
       return;
     }
-
-    const image = await launchCameraAsync({
+    const image: PickerResult = await launchCameraAsync({
       //allowsEditing: true,
       quality: 0.5,
     });
+    delete image.cancelled;
     if (image.assets && image.assets.length) {
       return image.assets[0]?.uri;
-    } else if (image.canceled) {
-      console.log("User canceled the picture");
-    } else {
-      console.log("No image selected");
     }
   } catch (error) {
     console.log("🚀 ~ file: cameraUtils.ts:41 ~ error:", error);

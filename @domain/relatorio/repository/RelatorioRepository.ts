@@ -5,6 +5,7 @@ export interface RelatorioRepository extends Repository<RelatorioModel> {
   create(relatorio: RelatorioModel): Promise<void>;
   //   findById(id: string): Promise<RelatorioModel>;
   findByProdutorID(produtorId: string): Promise<RelatorioModel[]>;
+  // findAll(): Promise<RelatorioModel[]>;
   update(relatorio: RelatorioModel): Promise<void>;
   delete(id: string): Promise<void>;
 }

@@ -12,6 +12,7 @@ export const useAuth = () => {
   const { user, setUser } = useContext(UserContext);
   const { setProdutor } = useSelectProdutor();
   const [userInput, setUserInput] = useState({} as Usuario);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -19,7 +20,10 @@ export const useAuth = () => {
       if (loggedUser?.matricula_usuario) {
         setUser(loggedUser);
       }
-      return () => setUser({} as Usuario);
+      return () => {
+        setIsLoading(false);
+        setUser({} as Usuario);
+      };
     })();
   }, []);
 
@@ -29,10 +33,11 @@ export const useAuth = () => {
 
   const loginHandler = async () => {
     const testUser = env.TEST_USER;
-
+    setIsLoading(true);
     if (!userInput?.matricula_usuario && !user?.matricula_usuario) {
       setUser(testUser);
       await storeData("user", testUser);
+      // setIsLoading(false);
       return;
     }
     const queryResult: any = await UsuarioAPI.getUsuarios({
@@ -46,11 +51,13 @@ export const useAuth = () => {
         "Usuário não encontrado",
         "Favor verificar a matrícula e tentar novamente."
       );
+      setIsLoading(false);
       return;
     }
 
     if (result?.error) {
       alert(result.message);
+      setIsLoading(false);
       return;
     }
     const usuario = result as Usuario;
@@ -66,10 +73,12 @@ export const useAuth = () => {
         "Usuário não autorizado",
         "O perfil de usuário não está autorizado a acessar o aplicativo. Favor contatar o administrador do sistema."
       );
+      setIsLoading(false);
       return;
     }
 
     setUser(result);
+    setIsLoading(false);
   };
 
   const confirmLogout = () =>
@@ -104,6 +113,7 @@ export const useAuth = () => {
   return {
     user,
     userInput,
+    isLoading,
     setUser,
     inputHandler,
     loginHandler,

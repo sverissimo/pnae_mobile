@@ -1,3 +1,3 @@
-export * from "./CreateRelatorioDTO"
-export * from "./RelatorioLocalDTO"
-export * from "./UpdateRelatorioDTO"
+export * from "./CreateRelatorioDTO";
+export * from "../relatorio/dto/RelatorioLocalDTO";
+export * from "./UpdateRelatorioDTO";

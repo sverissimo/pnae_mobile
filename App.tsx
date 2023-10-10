@@ -26,14 +26,12 @@ export default function App() {
       .then(() => {
         setDbInitialized(true);
         console.log("-----------------------------------------\n");
-
-        // deleteFile(
-        //   "file:///data/user/0/br.gov.mg.emater.pnae_mobile/files/7419515e-ab7e-4819-ae76-fe6bdae3d96c.png"
-        // );
         // checkDBSchema();
-        // RelatorioService.getAllRelatorios().then((relatorios) =>
-        //   relatorios.forEach((relatorio) => console.log(relatorio))
-        // );
+        // new RelatorioService(true)
+        //   .getAllRelatorios()
+        //   .then((relatorios) =>
+        //     relatorios.forEach((relatorio) => console.log(relatorio))
+        //   );
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);

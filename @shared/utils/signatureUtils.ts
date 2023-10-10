@@ -8,11 +8,8 @@ export const getSignatureFileURI = async (signature: string) => {
     await FileSystem.writeAsStringAsync(filePath, base64Data, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    const file = await FileSystem.getInfoAsync(filePath);
-    console.log(
-      "🚀 ~ file: signatureUtils.ts:11 ~ getSignatureFileURI ~ file:",
-      file
-    );
+
+    await FileSystem.getInfoAsync(filePath);
     return filePath;
   } catch (error) {
     console.log("🚀file: signatureUtils.ts:20 error:", error);

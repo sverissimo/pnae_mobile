@@ -23,10 +23,7 @@ export const PictureHolder = <T extends Object>({
       try {
         handleTakePicture();
       } catch (error) {
-        console.log(
-          "🚀 ~ file: PictureHolder.tsx:27 ~ handlePress ~ error:",
-          error
-        );
+        console.log("🚀 ~ file: PictureHolder.tsx:27 ~  error:", error);
         alert(JSON.stringify(error));
       }
     }

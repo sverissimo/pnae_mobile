@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { useAuth } from "../auth/hooks/useAuth";
 import { globalColors } from "@constants/themes";
+const { primary, grayscale } = globalColors;
 
 const LoginScreen = () => {
-  const { user, inputHandler, loginHandler, userInput } = useAuth();
+  const { user, inputHandler, loginHandler, isLoading } = useAuth();
   return (
     <View style={styles.loginForm}>
       <View style={styles.formContainer}>
@@ -42,9 +43,13 @@ const LoginScreen = () => {
             />
           </View>
           <Pressable
-            style={styles.btn}
+            style={{
+              ...styles.btn,
+              backgroundColor: isLoading ? grayscale[300] : primary[800],
+            }}
             android_ripple={{ color: "green" }}
             onPress={loginHandler}
+            disabled={isLoading}
           >
             <Text style={styles.btnText}>Entrar</Text>
           </Pressable>
@@ -110,7 +115,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   btn: {
-    backgroundColor: globalColors.primary[800],
     padding: 10,
     borderRadius: 5,
     alignItems: "center",

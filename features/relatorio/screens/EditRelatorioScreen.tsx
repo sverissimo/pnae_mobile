@@ -63,22 +63,23 @@ export const EditRelatorioScreen = ({ route }: any) => {
 
   const handleSaveRelatorio = async () => {
     try {
+      setEnableSave(false);
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
       await updateRelatorio(updatedRelatorio as RelatorioModel);
+      console.log("🚀 ~ ******************");
       await clearOldPictures();
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
       });
-      setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       setSnackBarOptions({
         status: "error",
-        message: "Erro ao salvar relatório",
+        message: error?.message,
       });
-      console.error("🚀 EditRelatorioScreen.tsx:44: ", error);
+      console.log("🚀 EditRelatorioScreen.tsx:44: ", error);
     }
   };
 
@@ -95,6 +96,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
     const originalRelatorio = relatorios.find(
       (r) => r!.id === relatorioId
     ) as RelatorioModel;
+    if (!originalRelatorio?.pictureURI || !pictureURI) return;
     if (originalRelatorio.pictureURI !== pictureURI) {
       await deleteFile(originalRelatorio.pictureURI);
     }

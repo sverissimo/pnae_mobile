@@ -36,11 +36,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   useEffect(() => {
     if (pictureURI) {
       (async () => {
-        const currentLocation = await updateLocation();
-        console.log(
-          "🚀 ~ file: PictureHolder.tsx:27 ~ handlePress ~ currentLocation:",
-          currentLocation
-        );
+        await updateLocation();
       })();
     }
   }, [pictureURI]);

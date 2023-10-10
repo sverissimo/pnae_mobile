@@ -13,10 +13,6 @@ import { Loading } from "@shared/components/organisms";
 
 export const ProdutorScreen = () => {
   const { produtor, isLoading } = useSelectProdutor();
-  console.log(
-    "🚀 ~ file: ProdutorScreen.tsx:16 ~ ProdutorScreen ~ isLoading:",
-    isLoading
-  );
   if (!produtor) {
     return (
       <View style={styles.container}>

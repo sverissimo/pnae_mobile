@@ -5,8 +5,9 @@ import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { Icon } from "@shared/components/atoms";
 import { globalColors } from "../../../@shared/constants/themes";
 
+const { primary, grayscale } = globalColors;
 export function ProdutorSearchBar() {
-  const { fetchProdutor } = useSelectProdutor();
+  const { fetchProdutor, isLoading } = useSelectProdutor();
   const [CPFProdutor, setCPFProdutor] = useState("");
 
   const onChangeSearch = (value: string) => {
@@ -23,7 +24,13 @@ export function ProdutorSearchBar() {
         style={styles.input}
       />
       <Pressable
-        style={styles.button}
+        style={{
+          ...styles.button,
+          backgroundColor: isLoading
+            ? styles.button.disabledBackground
+            : styles.button.backgroundColor,
+        }}
+        disabled={isLoading}
         onPress={() => fetchProdutor(CPFProdutor)}
       >
         <Icon iconName="send" size={20} color="white" />
@@ -44,15 +51,16 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     marginRight: "2%",
     //backgroundColor: globalColors.primary[50],
-    backgroundColor: globalColors.grayscale[50],
+    backgroundColor: grayscale[50],
   },
   chip: {
-    backgroundColor: globalColors.grayscale[200],
+    backgroundColor: grayscale[200],
     borderRadius: 20,
   },
   inputContainer: {},
   button: {
-    backgroundColor: globalColors.primary[600],
+    backgroundColor: primary[600],
+    disabledBackground: grayscale[300],
     padding: 8,
     borderRadius: 25,
   },

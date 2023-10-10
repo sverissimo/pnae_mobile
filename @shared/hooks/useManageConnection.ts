@@ -6,15 +6,12 @@ export const useManageConnection = () => {
   const [connectionType, setConnectionType] = useState("none");
 
   const netInfo = useNetInfo();
-  console.log(
-    "🚀 ~ file: useManageConnection.ts:9 ~ useManageConnection ~ netInfo:",
-    netInfo
-  );
 
   useEffect(() => {
     setIsConnected(netInfo.isConnected);
     setConnectionType(netInfo.type);
   }, [netInfo.isConnected]);
+
   //   const unsubscribe = netInfo.addEventListener((state) => {
   //     console.log("Connection type", state.type);
   //     console.log("Is connected?", state.isConnected);

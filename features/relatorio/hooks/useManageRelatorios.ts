@@ -5,7 +5,7 @@ import { RelatorioService } from "@services/RelatorioService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useAuth } from "@auth/hooks/useAuth";
-import { useLocation } from "@shared/hooks";
+import { useLocation, useManageConnection } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, locationObjToText, truncateString } from "@shared/utils";
@@ -14,12 +14,9 @@ import { formatDate, locationObjToText, truncateString } from "@shared/utils";
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
-  const { location, updateLocation } = useLocation();
+  const { location } = useLocation();
+  const { isConnected, connectionType } = useManageConnection();
   const { user } = useAuth();
-  console.log(
-    "🚀 ~ file: useManageRelatorios.ts:17 ~ useManageRelatorio ~ relatorios:",
-    relatorios[2]
-  );
 
   const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -74,7 +71,9 @@ export const useManageRelatorio = (produtorId?: string) => {
         coordenadas,
       };
 
-      const relatorioId = await RelatorioService.createRelatorio(
+      const connected = !!(isConnected && connectionType !== "unknown");
+
+      const relatorioId = await new RelatorioService(connected).createRelatorio(
         relatorioInput
       );
 
@@ -101,7 +100,15 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
     try {
       setIsLoading(true);
-      const relatorios = await RelatorioService.getRelatorios(produtorId);
+      const connected = !!(isConnected && connectionType !== "unknown");
+      console.log(
+        "🚀 ~ file: useManageRelatorios.ts:104 ~ useManageRelatorio ~ connectionType:",
+        { connectionType, connected }
+      );
+
+      const relatorios = await new RelatorioService(connected).getRelatorios(
+        produtorId
+      );
       if (!relatorios.length) {
         setIsLoading(false);
         return [];
@@ -123,14 +130,16 @@ export const useManageRelatorio = (produtorId?: string) => {
       //relatorio.coordenadas = locationObjToText(updatedLocation) || locationObjToText(location);
       const relatorioUpdate = {
         ...relatorio,
+        produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
         coordenadas,
       };
 
-      await RelatorioService.updateRelatorio(relatorioUpdate);
+      const connected = !!(isConnected && connectionType !== "unknown");
+      await new RelatorioService(connected).updateRelatorio(relatorioUpdate);
       updateRelatoriosList(relatorioUpdate);
     } catch (error) {
-      console.error("🚀 ~ file: useManageRelatorios.ts:118:", error);
+      console.log("🚀 ~ file: useManageRelatorios.ts:118:", error);
       throw error;
     }
   };
@@ -161,13 +170,15 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const onConfirmDelete = async () => {
     try {
-      await RelatorioService.deleteRelatorio(relatorio.id!);
+      const connected = !!(isConnected && connectionType !== "unknown");
+      await new RelatorioService(connected).deleteRelatorio(relatorio.id!);
+
       const updatedList = relatorios.filter((r) => r.id !== relatorio.id);
       setRelatorios(updatedList);
       setState({} as RelatorioModel);
       setShowDeleteDialog(false);
     } catch (error) {
-      console.error("🚀 ~ useManageRelatorios.ts ~ line 127", error);
+      console.log("🚀 ~ useManageRelatorios.ts ~ line 127", error);
     }
   };
 
