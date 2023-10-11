@@ -44,7 +44,7 @@ export const relatorioForm: FormElement[] = [
     label: "Outro extensionista? (inserir nº matrícula)",
     type: "input",
     customHelperField: "nomeOutroExtensionista",
-    keyboardType: "phone-pad",
+    keyboardType: "numeric",
     placeholder: "nº matrícula sem dígito",
     maxLength: 36,
     buttonLabel: "Adicionar Extensionista",

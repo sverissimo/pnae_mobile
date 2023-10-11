@@ -81,7 +81,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          // disabled={!enableSave || !pictureURI || !assinaturaURI}
+          disabled={!enableSave || !pictureURI || !assinaturaURI}
           // disabled={false}
         >
           Salvar

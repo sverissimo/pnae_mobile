@@ -17,6 +17,7 @@ export const useAuth = () => {
   useEffect(() => {
     (async () => {
       const loggedUser = (await getData("user")) as Usuario;
+      // console.log("🚀 ~ file: useAuth.ts:20 ~ loggedUser:", loggedUser);
       if (loggedUser?.matricula_usuario) {
         setUser(loggedUser);
       }
@@ -77,6 +78,7 @@ export const useAuth = () => {
       return;
     }
 
+    await storeData("user", result);
     setUser(result);
     setIsLoading(false);
   };

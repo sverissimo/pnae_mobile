@@ -3,40 +3,34 @@ import {
   requestCameraPermissionsAsync,
   getCameraPermissionsAsync,
   ImagePickerResult,
+  getMediaLibraryPermissionsAsync,
+  requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import { Alert } from "react-native";
+import { Alert, Linking } from "react-native";
 
 type PickerResult = ImagePickerResult & { cancelled?: boolean };
 
 export const takePicture = async () => {
   try {
-    async function verifyPermission() {
-      const permission = await getCameraPermissionsAsync();
-      if (permission.granted) {
-        return true;
-      }
-      // if (permission !== PermissionResponse.GRANTED) {
-      //   await requestCameraPermissionsAsync();
-      //   if (!PermissionStatus.GRANTED) {
-      //     return false;
-      //   }
-      // }
-    }
-
-    const permission = await verifyPermission();
-    if (!permission) {
+    const hasPermission = await verifyPermission();
+    if (!hasPermission) {
       Alert.alert(
-        "Permissão de câmera negada",
-        "Para tirar uma foto, é necessário permitir o acesso à câmera",
+        "Permissão negada",
+        "Essa funcionalidade precisa de permissão de acesso à câmera e aos arquivos de mídia. Deseja abrir as configurações para habilitá-las?",
         [
           {
-            text: "Ok",
+            text: "Sim",
+            onPress: () => Linking.openSettings(),
+          },
+          {
+            text: "Não",
             onPress: () => {},
           },
         ]
       );
       return;
     }
+
     const image: PickerResult = await launchCameraAsync({
       //allowsEditing: true,
       quality: 0.5,
@@ -49,3 +43,20 @@ export const takePicture = async () => {
     console.log("🚀 ~ file: cameraUtils.ts:41 ~ error:", error);
   }
 };
+
+async function verifyPermission() {
+  const { granted: cameraPermission } = await getCameraPermissionsAsync();
+  const { granted: mediaLibraryPermission } =
+    await getMediaLibraryPermissionsAsync();
+  if (!cameraPermission) {
+    await requestCameraPermissionsAsync();
+  }
+  if (!mediaLibraryPermission) {
+    await requestMediaLibraryPermissionsAsync();
+  }
+
+  const cameraAfter = await getCameraPermissionsAsync();
+  const mediaAfter = await getMediaLibraryPermissionsAsync();
+
+  return cameraAfter.granted && mediaAfter.granted;
+}
