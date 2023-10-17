@@ -5,35 +5,23 @@ import { createRelatorioTableQuery } from "@infrastructure/database/queries/crea
 import { RelatorioSQLiteRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLiteRepository";
 import { RelatorioService } from "./RelatorioService";
 
-jest.mock("@shared/utils/fileSystemUtils", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      deleteFile: async () => jest.fn(),
-    };
-  });
-});
+jest.mock("@shared/utils/fileSystemUtils", () => ({
+  deleteFile: jest.fn().mockResolvedValue(undefined),
+}));
 
 jest.mock("@infrastructure/api/FileAPI", () =>
-  jest.fn().mockImplementation(() => {
-    return {
-      getMissingFilesFromServer: async () => jest.fn(),
-    };
-  })
+  jest.fn().mockImplementation(() => ({
+    getMissingFilesFromServer: async () => jest.fn(),
+  }))
 );
 
-jest.mock("@infrastructure/database/config", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      db: jest.fn().mockImplementation(() => {
-        return {
-          exec: async () => jest.fn(),
-          open: async () => jest.fn(),
-          close: async () => jest.fn(),
-        };
-      }),
-    };
-  });
-});
+jest.mock("@infrastructure/database/config", () => ({
+  db: {
+    exec: async () => jest.fn(),
+    open: async () => jest.fn(),
+    close: async () => jest.fn(),
+  },
+}));
 
 const relatorioInput: RelatorioModel = {
   id: "",
@@ -55,6 +43,7 @@ const relatorioInput: RelatorioModel = {
 describe("RelatorioService e2e tests", () => {
   let db: any;
   let relatorioService: RelatorioService;
+  let repository: RelatorioSQLiteRepository;
 
   beforeEach(async () => {
     db = await sqlite.open({
@@ -62,7 +51,7 @@ describe("RelatorioService e2e tests", () => {
       driver: sqlite3.Database,
     });
     await db.exec(createRelatorioTableQuery);
-    const repository = new RelatorioSQLiteRepository("relatorio", "id", db);
+    repository = new RelatorioSQLiteRepository("relatorio", "id", db);
     relatorioService = new RelatorioService(false, repository);
   });
 
@@ -71,8 +60,9 @@ describe("RelatorioService e2e tests", () => {
     await db.close();
   });
 
-  it("should insert data locally", async () => {
+  it("should insert relatorio locally", async () => {
     await relatorioService.createRelatorio(relatorioInput);
+
     const relatorio = (await relatorioService.getRelatorios(
       "1"
     )) as RelatorioModel[];
@@ -89,7 +79,7 @@ describe("RelatorioService e2e tests", () => {
     ).toBeTruthy();
   });
 
-  it("should update data", async () => {
+  it("should update relatorio", async () => {
     const relatorioId = await relatorioService.createRelatorio(relatorioInput);
     const relatorios = (await relatorioService.getRelatorios(
       "1"
@@ -133,5 +123,20 @@ describe("RelatorioService e2e tests", () => {
       Date.parse(updatedRelatorio.createdAt) <
         Date.parse(updatedRelatorio.updatedAt)
     ).toBeTruthy();
+  });
+  it("should delete relatorio by its id", async () => {
+    const relatorioId = await relatorioService.createRelatorio(relatorioInput);
+    const relatorio = (await repository.findById(
+      relatorioId
+    )) as RelatorioModel;
+
+    expect(relatorio).toHaveProperty("id", relatorioId);
+
+    await relatorioService.deleteRelatorio(relatorioId);
+    const updatedRelatorios = (await relatorioService.getRelatorios(
+      "1"
+    )) as RelatorioModel[];
+
+    expect(updatedRelatorios).toHaveLength(0);
   });
 });

@@ -18,10 +18,12 @@ export class RelatorioSQLiteRepository
   }
 
   async findByProdutorID(produtorId: string): Promise<RelatorioModel[]> {
-    const query = "SELECT * FROM relatorio WHERE produtor_id = ?;";
-    const values = [produtorId];
+    const { queryString, values } = this.findSQLQuery(
+      produtorId,
+      "produtor_id"
+    );
     const result = (await this.executeSqlQuery(
-      query,
+      queryString,
       values
     )) as RelatorioLocalDTO[];
 
@@ -29,6 +31,19 @@ export class RelatorioSQLiteRepository
     relatorios.forEach((r) => (r.readOnly = Boolean(r.readOnly)));
 
     return relatorios;
+  }
+  async findById(id: string): Promise<RelatorioModel | null> {
+    const { queryString, values } = this.findSQLQuery(id);
+    const result = (await this.executeSqlQuery(
+      queryString,
+      values
+    )) as RelatorioLocalDTO[];
+    if (result.length === 0) {
+      return null;
+    }
+    const relatorio = this.camelizeRelatorio(result[0]);
+    relatorio.readOnly = Boolean(relatorio.readOnly);
+    return relatorio;
   }
 
   async findAll(): Promise<RelatorioModel[]> {
@@ -45,7 +60,8 @@ export class RelatorioSQLiteRepository
   }
 
   async delete(relatorioId: string) {
-    await this.db.delete(relatorioId);
+    const { queryString, values } = this.deleteSQLQuery(relatorioId);
+    await this.executeSqlCommand(queryString, values);
   }
 
   executeSqlQuery = (

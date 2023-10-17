@@ -1,3 +1,6 @@
+test("RelatorioDB", () => {
+  expect(true).toBe(true);
+});
 // import { SQLiteRepository } from "@infrastructure/database/SQLiteRepository";
 // import { RelatorioDB } from "./RelatorioExpoSQLRepository";
 // import { RelatorioModel } from "@features/relatorio/types";

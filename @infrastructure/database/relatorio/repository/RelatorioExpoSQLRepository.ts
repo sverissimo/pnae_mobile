@@ -27,6 +27,20 @@ export class RelatorioExpoSQLRepository
     return relatorios;
   }
 
+  async findById(id: string): Promise<RelatorioModel | null> {
+    const { queryString, values } = this.findSQLQuery(id);
+    const result = (await this.db.find(
+      queryString,
+      values
+    )) as RelatorioLocalDTO[];
+    if (result.length === 0) {
+      return null;
+    }
+    const relatorio = this.camelizeRelatorio(result[0]);
+    relatorio.readOnly = Boolean(relatorio.readOnly);
+    return relatorio;
+  }
+
   async findAll(): Promise<RelatorioModel[]> {
     const relatorioDTOs = (await this.db.find()) as RelatorioLocalDTO[];
     const relatorios = relatorioDTOs.map(this.camelizeRelatorio);

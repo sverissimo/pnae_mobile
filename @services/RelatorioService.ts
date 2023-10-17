@@ -56,7 +56,6 @@ export class RelatorioService {
     const relatoriosFromLocalDB = await this.repository.findByProdutorID(
       produtorId
     );
-
     let relatoriosFromServer: RelatorioModel[] = [];
 
     if (this.isConnected) {
@@ -87,6 +86,7 @@ export class RelatorioService {
       const bDate = toDateMsec(b.createdAt);
       return aDate - bDate;
     });
+
     return relatoriosWithTecnicos;
   };
 
@@ -124,30 +124,30 @@ export class RelatorioService {
   };
 
   deleteRelatorio = async (relatorioId: string) => {
-    const relatorios = await this.repository?.findAll();
-    if (relatorios?.length) {
-      try {
-        await this.repository.delete(relatorioId);
+    try {
+      const relatorioToDelete = await this.repository.findById!(relatorioId);
+      if (!relatorioToDelete) {
+        throw new Error(`Relatório não encontrado.`);
+      }
 
-        const { assinaturaURI, pictureURI } = relatorios.find(
-          (r) => r.id === relatorioId
-        )!;
-        for (const file of [assinaturaURI, pictureURI]) {
-          await deleteFile(file);
-        }
-      } catch (e) {
-        console.log("🚀 RelatorioService.ts:126: Not deleted locally!!", e);
+      await this.repository.delete(relatorioId);
+
+      const { assinaturaURI, pictureURI } = relatorioToDelete;
+      for (const file of [assinaturaURI, pictureURI]) {
+        await deleteFile(file);
       }
-      try {
-        if (this.isConnected) {
-          const result = await relatorioAPI.delete(relatorioId);
-          return result;
-        }
-        return;
-      } catch (e) {
-        const error = e instanceof Error ? new Error(e.message) : e;
-        throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
+    } catch (e) {
+      console.log("🚀 RelatorioService.ts:126: Not deleted locally!!", e);
+    }
+    try {
+      if (this.isConnected) {
+        const result = await relatorioAPI.delete(relatorioId);
+        return result;
       }
+      return;
+    } catch (e) {
+      const error = e instanceof Error ? new Error(e.message) : e;
+      throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
     }
   };
 

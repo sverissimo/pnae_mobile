@@ -29,15 +29,17 @@ export abstract class SQLRepository<T extends Entity> {
         VALUES (${placeholders})
         `;
     return { queryString, values };
-    // await this.executeSqlCommand(queryString, values);
   }
 
-  async find(query?: string, values?: string[]) {
-    query = query || `SELECT * FROM ${this.tableName} `;
-    values = values || [];
+  findSQLQuery(values?: unknown, columnName?: string) {
+    let queryString = `SELECT * FROM ${this.tableName} `;
+    const column = columnName || this.primaryKey;
 
-    const result = await this.executeSqlQuery(query, values);
-    return result;
+    if (values) {
+      queryString += `WHERE ${column} = ?`;
+    }
+
+    return { queryString, values: [values] || [] };
   }
 
   updateSQLQuery(entity: T): builtQuery {
@@ -54,37 +56,12 @@ export abstract class SQLRepository<T extends Entity> {
     return { queryString, values: valuesWithId };
   }
 
-  async delete(id: string): Promise<void> {
-    const query = `DELETE FROM ${this.tableName} WHERE ${this.primaryKey} = ?;`;
-    const deleteResult = await this.executeSqlCommand(query, [id]);
-
-    if (deleteResult.rowsAffected === 0) {
-      throw new Error("Erro ao deletar relatório");
-    }
-    return;
+  deleteSQLQuery(id: string): builtQuery {
+    const queryString = `DELETE FROM ${this.tableName} WHERE ${this.primaryKey} = ?;`;
+    const values = [id];
+    return { queryString, values };
   }
 
-  // Implementation is needed in the child class
-  protected executeSqlQuery = async (
-    query: string,
-    values: any[]
-  ): Promise<T[]> => {
-    return [] as T[];
-  };
-
-  // Implementation is needed in the child class
-  protected executeSqlCommand = async (
-    query: string,
-    values: any[]
-  ): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      try {
-        resolve(null);
-        return true;
-      } catch (error) {
-        reject(error);
-        return false;
-      }
-    });
-  };
+  protected abstract executeSqlQuery(query: string, values: any[]): void;
+  protected abstract executeSqlCommand(query: string, values: any[]): void;
 }
