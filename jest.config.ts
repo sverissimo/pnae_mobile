@@ -6,10 +6,11 @@ const config: JestConfigWithTsJest = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
   preset: "ts-jest",
-  moduleDirectories: ["node_modules", "<rootDir>"],
+  moduleDirectories: ["<rootDir>/node_modules", "<rootDir>"],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: "<rootDir>/",
   }),
+
   // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
   // Stop running tests after `n` failures
   // bail: 0,
@@ -40,6 +41,22 @@ const config: JestConfigWithTsJest = {
   transform: {
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
+  // transformIgnorePatterns: ["<rootDir>/node_modules/(?!(sqlite|sqlite3)/)"],
+  // transformIgnorePatterns: [
+  // "node_modules/(?!((jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*|sqlite|sqlite3|expo-image-picker|expo-modules-core)/)",
+
+  // "node_modules/(?!react-native|native-base|react-clone-referenced-element|expo-image-picker|expo-modules-core)",
+  // ],
+
+  // transformIgnorePatterns: [
+  //   "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)",
+  //   "node_modules/(?!(sqlite|sqlite3))",
+  //   "<rootDir>/node_modules/(?!(expo-image-picker|expo-modules-core)/)",
+  // ],
+
+  // transformIgnorePatterns: [
+  //   "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)",
+  // ],
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

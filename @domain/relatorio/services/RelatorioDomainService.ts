@@ -11,7 +11,7 @@ export class RelatorioDomainService {
         (r: RelatorioModel) => r.id === relatorio.id
       );
       const readOnly = serverRel?.readOnly || false;
-      return { ...relatorio, read_only: readOnly };
+      return { ...relatorio, readOnly };
     });
 
     const relatorioMap = new Map<string, RelatorioModel>();

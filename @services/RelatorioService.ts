@@ -1,18 +1,31 @@
-import { RelatorioDB } from "@infrastructure/database/relatorio/repository/RelatorioDB";
+import { db } from "@infrastructure/database/config";
+import { generateUUID } from "@shared/utils/generateUUID";
+import { RelatorioExpoSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioExpoSQLRepository";
 import { RelatorioAPI } from "@infrastructure/api/relatorio/repository/RelatorioAPI";
 import { FileAPI } from "@infrastructure/api/FileAPI";
+import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { UsuarioService } from "./UsuarioService";
-import { generateUUID } from "@shared/utils/generateUUID";
-import { deleteFile, toDateMsec } from "@shared/utils";
 import { Relatorio } from "@features/relatorio/entity";
-import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { RelatorioDomainService } from "@domain/relatorio/services";
+import { toDateMsec } from "@shared/utils/formatDate";
+import { deleteFile } from "@shared/utils/fileSystemUtils";
 
 const relatorioAPI = new RelatorioAPI();
-const relatorioDB = new RelatorioDB();
+const relatorioExpoSQLRepository = new RelatorioExpoSQLRepository(
+  "relatorio",
+  "id",
+  db
+);
 
 export class RelatorioService {
-  constructor(private isConnected: boolean) {}
+  constructor(
+    private isConnected: boolean,
+    private repository: RelatorioRepository = relatorioExpoSQLRepository
+  ) {
+    this.isConnected = isConnected;
+    this.repository = repository;
+  }
 
   createRelatorio = async (input: RelatorioModel): Promise<string> => {
     try {
@@ -23,7 +36,7 @@ export class RelatorioService {
 
       const relatorioModel = new Relatorio(relatorio).toModel();
 
-      await relatorioDB.create(relatorioModel);
+      await this.repository.create(relatorioModel);
       console.log("### Saved resultLocal ok.");
 
       console.log("🚀 RelatorioService.ts:30 ~ isConnected:", this.isConnected);
@@ -40,7 +53,7 @@ export class RelatorioService {
   };
 
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
-    const relatoriosFromLocalDB = await relatorioDB.findByProdutorID(
+    const relatoriosFromLocalDB = await this.repository.findByProdutorID(
       produtorId
     );
 
@@ -91,11 +104,8 @@ export class RelatorioService {
       const relatorioUpdate = new Relatorio(relatorio).getUpdate(
         originalRelatorio
       );
-      console.log(
-        "🚀 ~ file: RelatorioService.ts:94 ~ RelatorioService ~ updateRelatorio= ~ relatorioUpdate:",
-        relatorioUpdate
-      );
-      await relatorioDB.update(relatorioUpdate);
+
+      await this.repository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
@@ -114,10 +124,10 @@ export class RelatorioService {
   };
 
   deleteRelatorio = async (relatorioId: string) => {
-    const relatorios = await relatorioDB.findAll();
-    if (relatorios.length) {
+    const relatorios = await this.repository?.findAll();
+    if (relatorios?.length) {
       try {
-        await relatorioDB.delete(relatorioId);
+        await this.repository.delete(relatorioId);
 
         const { assinaturaURI, pictureURI } = relatorios.find(
           (r) => r.id === relatorioId
@@ -141,5 +151,5 @@ export class RelatorioService {
     }
   };
 
-  getAllRelatorios = async () => await relatorioDB.findAll();
+  getAllRelatorios = async () => await this.repository.findAll();
 }

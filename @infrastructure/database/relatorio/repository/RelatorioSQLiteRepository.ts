@@ -1,45 +1,63 @@
-import humps from "humps";
-import { RelatorioLocalDTO } from "../../dto";
-import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
+import { SQLResultSet } from "expo-sqlite";
+
 import { RelatorioModel } from "@features/relatorio/types";
+import humps from "humps";
+
 import { SQLiteRepository } from "@infrastructure/database/SQLiteRepository";
+import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
+import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 
-export class RelatorioDB implements RelatorioRepository {
-  private entityManager = new SQLiteRepository("relatorio", "id");
-
+export class RelatorioSQLiteRepository
+  extends SQLiteRepository<RelatorioLocalDTO>
+  implements RelatorioRepository
+{
   async create(relatorio: RelatorioModel): Promise<void> {
     const relatorioLocalDTO = this.toLocalDTO(relatorio);
-    await this.entityManager.create(relatorioLocalDTO);
+    const { queryString, values } = this.createSQLQuery(relatorioLocalDTO);
+    await this.executeSqlCommand(queryString, values);
   }
 
   async findByProdutorID(produtorId: string): Promise<RelatorioModel[]> {
     const query = "SELECT * FROM relatorio WHERE produtor_id = ?;";
     const values = [produtorId];
-    const result = (await this.entityManager.find(
+    const result = (await this.executeSqlQuery(
       query,
       values
     )) as RelatorioLocalDTO[];
 
     const relatorios = result.map(this.camelizeRelatorio);
+    relatorios.forEach((r) => (r.readOnly = Boolean(r.readOnly)));
+
     return relatorios;
   }
 
   async findAll(): Promise<RelatorioModel[]> {
-    const relatorioDTOs =
-      (await this.entityManager.find()) as RelatorioLocalDTO[];
+    const relatorioDTOs = (await this.db.find()) as RelatorioLocalDTO[];
     const relatorios = relatorioDTOs.map(this.camelizeRelatorio);
     return relatorios;
   }
 
   async update(relatorio: Partial<RelatorioModel>): Promise<void> {
     const updates = this.toLocalDTO(relatorio);
-    await this.entityManager.update(updates);
+    const { queryString, values } = this.updateSQLQuery(updates);
+    await this.executeSqlCommand(queryString, values);
     return;
   }
 
   async delete(relatorioId: string) {
-    await this.entityManager.delete(relatorioId);
+    await this.db.delete(relatorioId);
   }
+
+  executeSqlQuery = (
+    query: string,
+    values: any[]
+  ): Promise<RelatorioLocalDTO[]> => {
+    return this.db.all(query, values);
+  };
+
+  executeSqlCommand = (query: string, values: any[]): Promise<SQLResultSet> => {
+    return this.db.run(query, values);
+  };
 
   private toLocalDTO(relatorio: Partial<RelatorioModel>): RelatorioLocalDTO {
     const {

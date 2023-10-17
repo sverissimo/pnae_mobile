@@ -1,6 +1,6 @@
-import { Usuario } from "@shared/types";
-import { RelatorioModel } from "@features/relatorio/types";
-import { getUpdatedProps } from "@shared/utils";
+import { Usuario } from "@shared/types/Usuario";
+import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
+import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 
 export class Relatorio {
   constructor(private readonly relatorio: RelatorioModel) {

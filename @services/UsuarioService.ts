@@ -1,7 +1,7 @@
-import { RelatorioDomainService } from "@domain/relatorio/services";
-import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioDomainService } from "@domain/relatorio/services/RelatorioDomainService";
+import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
-import { Usuario } from "@shared/types";
+import { Usuario } from "@shared/types/Usuario";
 
 export const UsuarioService = {
   fetchTecnicosByRelatorios,

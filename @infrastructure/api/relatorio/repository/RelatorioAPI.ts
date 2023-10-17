@@ -28,6 +28,11 @@ export class RelatorioAPI implements RelatorioRepository {
     return result;
   }
 
+  async findAll(): Promise<RelatorioModel[]> {
+    const result = await this.api.get(`${this.url}/all`);
+    return result;
+  }
+
   async update(relatorioInput: Partial<RelatorioModel>): Promise<void> {
     const relatorio = this.toDTO(relatorioInput);
     const { id, ...relatorioDTO } = relatorio;

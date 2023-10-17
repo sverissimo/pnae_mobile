@@ -8,6 +8,7 @@ export const UsuarioAPI = {
   }): Promise<Usuario[]> => {
     try {
       let { ids } = params;
+      console.log("🚀 ~ file: UsuarioAPI.ts:9 ~ ids:", ids);
       const { matricula } = params;
       //ids = ids || "1545" ; // dev/test purposes only
       //ids = ids || "1535"; // dev/test purposes only
@@ -26,6 +27,7 @@ export const UsuarioAPI = {
 
       const result = await fetch(url);
       const usuarios = await result.json();
+      console.log("🚀 ~ file: UsuarioAPI.ts:31 ~ usuarios:", usuarios);
       if (result.status === 404) {
         return [];
       }
