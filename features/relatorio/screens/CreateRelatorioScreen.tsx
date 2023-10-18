@@ -50,7 +50,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
       setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
-      }, 1000);
+      }, 900);
     } catch (error) {
       setSnackBarOptions({
         status: "error",

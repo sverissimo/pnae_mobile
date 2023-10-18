@@ -73,7 +73,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
       });
       setTimeout(() => {
         navigation.goBack();
-      }, 1000);
+      }, 900);
     } catch (error: any) {
       setSnackBarOptions({
         status: "error",

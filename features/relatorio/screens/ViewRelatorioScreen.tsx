@@ -69,9 +69,7 @@ export const ViewRelatorioScreen = ({ route }: any) => {
       {assinaturaURI && (
         <>
           <ListTitle title="Assinatura do Proprietário" />
-          <View
-            style={{ ...styles.pictureContainer, backgroundColor: "white" }}
-          >
+          <View style={styles.assinaturaContainer}>
             <Image source={{ uri: assinaturaURI }} style={styles.assinatura} />
 
             <Text style={styles.assinaturaLabel}>{nomeProdutor}</Text>
@@ -126,12 +124,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
   },
+  assinaturaContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    paddingTop: 30,
+    borderBlockColor: "#ccc",
+    borderWidth: 1,
+    marginBottom: 10,
+    width: "100%",
+    height: 200,
+  },
   assinatura: {
-    width: 80,
-    height: 80,
+    minWidth: 230,
+    minHeight: 85,
+    width: "85%",
+    height: "85%",
   },
   assinaturaLabel: {
-    width: "70%",
+    width: "85%",
     paddingTop: 5,
     borderTopColor: "#555",
     borderTopWidth: 1,

@@ -1,8 +1,3 @@
-import { globalColors } from "@constants/themes";
-import { useCustomNavigation } from "@navigation/hooks";
-import { CustomButton } from "@shared/components/atoms";
-import { TextEditor } from "@shared/components/templates/TextEditor";
-import { useVoiceRecognition } from "@shared/hooks/useVoiceRecognition";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -11,6 +6,11 @@ import {
   Platform,
   SafeAreaView,
 } from "react-native";
+import { useVoiceRecognition } from "@shared/hooks/useVoiceRecognition";
+import { useCustomNavigation } from "@navigation/hooks";
+import { TextEditor } from "@shared/components/templates/TextEditor";
+import { Icon } from "@shared/components/atoms";
+import { globalColors } from "@constants/themes";
 
 export function OrientacaoScreen({ route }: any) {
   const { parentRoute, orientacao } = route.params;
@@ -25,12 +25,23 @@ export function OrientacaoScreen({ route }: any) {
     setDisableButton(isEmptyInput);
   }, [HTMLText]);
 
-  const handleInput = (descriptionText: string) => {
-    setHTMLText(descriptionText);
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <View style={{ marginRight: 30 }}>
+          <Icon iconName="arrow-back" size={26} onPress={handleBackPress} />
+        </View>
+      ),
+    });
+  }, [navigation, HTMLText]);
+
+  const handleBackPress = () => {
+    console.log("first");
+    navigation.navigate(parentRoute, { HTMLText });
   };
 
-  const handleSave = (HTMLText: string) => {
-    navigation.navigate(parentRoute, { HTMLText });
+  const handleInput = (descriptionText: string) => {
+    setHTMLText(descriptionText);
   };
 
   const handleRecordAudio = () => {
@@ -57,15 +68,6 @@ export function OrientacaoScreen({ route }: any) {
             handleInput={handleInput}
             isRecording={isRecording}
             handleRecordAudio={handleRecordAudio}
-          />
-          <CustomButton
-            icon="content-save"
-            mode="contained"
-            label="Salvar"
-            style={styles.saveButtonStyle}
-            buttonColor={globalColors.primary[600]}
-            disabled={disableButton}
-            onPress={() => handleSave(HTMLText)}
           />
         </View>
       </KeyboardAvoidingView>

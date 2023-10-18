@@ -22,6 +22,7 @@ export const Icon = (props: IconProps) => {
     iconName === "chevron-up" ||
     iconName === "trash" ||
     iconName === "search" ||
+    iconName === "arrow-back" ||
     iconName === "chevron-down" ? (
     <Ionicons
       name={iconName}
