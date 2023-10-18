@@ -10,13 +10,12 @@ import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { RelatorioDomainService } from "@domain/relatorio/services";
 import { toDateMsec } from "@shared/utils/formatDate";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
+import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
+import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
 
-const relatorioAPI = new RelatorioAPI();
-const relatorioExpoSQLRepository = new RelatorioExpoSQLRepository(
-  "relatorio",
-  "id",
-  db
-);
+const relatorioAPI: RelatorioRepository = new RelatorioAPI();
+const relatorioDAO = new RelatorioExpoSQLDAO(db);
+const relatorioExpoSQLRepository = new RelatorioRepositoryImpl(relatorioDAO);
 
 export class RelatorioService {
   constructor(
@@ -39,7 +38,6 @@ export class RelatorioService {
       await this.repository.create(relatorioModel);
       console.log("### Saved resultLocal ok.");
 
-      console.log("🚀 RelatorioService.ts:30 ~ isConnected:", this.isConnected);
       if (this.isConnected) {
         const remoteResult = await relatorioAPI.create(relatorioModel);
         console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);

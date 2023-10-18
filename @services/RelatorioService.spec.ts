@@ -2,8 +2,10 @@ import sqlite3 from "sqlite3";
 import * as sqlite from "sqlite";
 import { RelatorioModel } from "@features/relatorio/types";
 import { createRelatorioTableQuery } from "@infrastructure/database/queries/createTableQueries";
-import { RelatorioSQLiteRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLiteRepository";
 import { RelatorioService } from "./RelatorioService";
+import { RelatorioSQLiteDAO } from "@infrastructure/database/relatorio/dao/RelatorioSQLiteDAO";
+import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
+import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 
 jest.mock("@shared/utils/fileSystemUtils", () => ({
   deleteFile: jest.fn().mockResolvedValue(undefined),
@@ -43,7 +45,9 @@ const relatorioInput: RelatorioModel = {
 describe("RelatorioService e2e tests", () => {
   let db: any;
   let relatorioService: RelatorioService;
-  let repository: RelatorioSQLiteRepository;
+  // let repository: RelatorioSQLiteRepository;
+  let repository: RelatorioRepository;
+  let relatorioDAO: RelatorioSQLiteDAO;
 
   beforeEach(async () => {
     db = await sqlite.open({
@@ -51,7 +55,9 @@ describe("RelatorioService e2e tests", () => {
       driver: sqlite3.Database,
     });
     await db.exec(createRelatorioTableQuery);
-    repository = new RelatorioSQLiteRepository("relatorio", "id", db);
+    // repository = new RelatorioSQLiteRepository("relatorio", "id", db);
+    relatorioDAO = new RelatorioSQLiteDAO(db);
+    repository = new RelatorioRepositoryImpl(relatorioDAO);
     relatorioService = new RelatorioService(false, repository);
   });
 
@@ -60,12 +66,17 @@ describe("RelatorioService e2e tests", () => {
     await db.close();
   });
 
-  it("should insert relatorio locally", async () => {
+  it("should create relatorio locally", async () => {
     await relatorioService.createRelatorio(relatorioInput);
+    console.log("----------------- a -------------");
 
     const relatorio = (await relatorioService.getRelatorios(
       "1"
     )) as RelatorioModel[];
+    console.log(
+      "🚀 ~ file: RelatorioService.spec.ts:76 ~ it.only ~ relatorio:",
+      relatorio
+    );
 
     expect(relatorio[0].id).toHaveLength(36);
     expect(relatorio[0].produtorId).toBe("1");
@@ -126,7 +137,7 @@ describe("RelatorioService e2e tests", () => {
   });
   it("should delete relatorio by its id", async () => {
     const relatorioId = await relatorioService.createRelatorio(relatorioInput);
-    const relatorio = (await repository.findById(
+    const relatorio = (await repository.findById!(
       relatorioId
     )) as RelatorioModel;
 
