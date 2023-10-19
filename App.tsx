@@ -15,6 +15,7 @@ import { globalColors } from "./@shared/constants/themes";
 import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { deleteFile, fileExists } from "@shared/utils";
+import { SnackBarProvider } from "@contexts/SnackbarContext";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 
@@ -25,7 +26,7 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("--------------------------------------\n");
+        console.log("----------------------------------------\n");
         // checkDBSchema();
         new RelatorioService(true).getAllRelatorios().then((relatorios) => {
           console.log(
@@ -70,7 +71,9 @@ export default function App() {
             <RelatorioContextProvider>
               <ImageContextProvider>
                 <PaperProvider theme={theme}>
-                  <Authentication />
+                  <SnackBarProvider>
+                    <Authentication />
+                  </SnackBarProvider>
                 </PaperProvider>
               </ImageContextProvider>
             </RelatorioContextProvider>

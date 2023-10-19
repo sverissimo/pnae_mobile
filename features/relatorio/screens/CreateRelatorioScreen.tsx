@@ -6,7 +6,6 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
 import { ListTitle } from "@shared/components/atoms";
-import { SnackBar } from "@shared/components/molecules";
 import { FormTemplate } from "@shared/components/templates";
 import { useManagePictures, useSnackBar } from "@shared/hooks";
 
@@ -15,12 +14,11 @@ import { useManageRelatorio } from "../hooks";
 
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
+  const { setSnackBarOptions } = useSnackBar();
   const { updateLocation } = useLocation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
   const { relatorio, handleChange, saveRelatorio, enableSave, setEnableSave } =
     useManageRelatorio();
-
-  const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
 
   useEffect(() => {
     clearURIs();
@@ -46,6 +44,8 @@ export const CreateRelatorioScreen = ({ route }: any) => {
       await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
       setSnackBarOptions({
         message: "Relatório salvo com sucesso!",
+        status: "success",
+        duration: 1000,
       });
       setEnableSave(false);
       setTimeout(() => {
@@ -56,7 +56,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
         status: "error",
         message: "Erro ao salvar relatório",
       });
-      console.error("🚀 EditRelatorioScreen.tsx:44: ", error);
+      console.error("🚀 CreateRelatorioScreen.tsx:59: ", error);
     }
   };
 
@@ -82,12 +82,10 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           style={styles.button}
           onPress={handleSaveRelatorio}
           disabled={!enableSave || !pictureURI || !assinaturaURI}
-          // disabled={false}
         >
           Salvar
         </Button>
       </ScrollView>
-      <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
     </>
   );
 };

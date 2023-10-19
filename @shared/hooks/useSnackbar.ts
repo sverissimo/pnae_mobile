@@ -1,24 +1,9 @@
-import { globalColors } from "@shared/constants/themes";
-import { useState } from "react";
-
-export type SnackBarStateProps = {
-  visible: boolean;
-  message: string;
-  status?: "success" | "error" | "warning" | "info";
-  duration?: number;
-  color?: string;
-};
-const intialState = {
-  visible: false,
-  message: "",
-  duration: 3000,
-  color: globalColors.secondary[500],
-};
+import { useContext } from "react";
+import { SnackBarContext, SnackBarStateProps } from "@contexts/SnackbarContext";
+import { globalColors } from "@constants/themes";
 
 export const useSnackBar = () => {
-  const [snackBarOptions, setSnackBarOptions] =
-    useState<SnackBarStateProps>(intialState);
-
+  const { snackBarOptions, setSnackBarOptions } = useContext(SnackBarContext);
   const editSnackBarOptions = (options: Partial<SnackBarStateProps>) => {
     const color =
       options.status === "success"
@@ -26,22 +11,18 @@ export const useSnackBar = () => {
         : options.status === "error"
         ? "red"
         : options.status === "warning"
-        ? "orange"
+        ? "darkorange"
         : options.status === "info"
         ? "blue"
         : globalColors.primary[400];
 
     options.color = options.color ?? color;
-    setSnackBarOptions({ ...snackBarOptions, ...options, visible: true });
+    setSnackBarOptions({
+      ...snackBarOptions,
+      ...options,
+      visible: true,
+    });
   };
 
-  const hideSnackBar = () => {
-    setSnackBarOptions((options) => ({ ...intialState, color: options.color }));
-  };
-
-  return {
-    snackBarOptions,
-    hideSnackBar,
-    setSnackBarOptions: editSnackBarOptions,
-  };
+  return { setSnackBarOptions: editSnackBarOptions };
 };

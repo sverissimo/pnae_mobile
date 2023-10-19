@@ -1,9 +1,8 @@
-// write a toast component using react-native-easy-toast or react-native-paper
 import { Snackbar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 
 export type SnackBarProps = {
-  visible: boolean;
+  visible?: boolean;
   onDismiss: () => void;
   message: string;
   duration?: number;
@@ -19,7 +18,7 @@ export const SnackBar = ({
 }: SnackBarProps) => {
   return (
     <Snackbar
-      visible={visible}
+      visible={!!visible}
       onDismiss={onDismiss}
       onIconPress={onDismiss}
       duration={duration || 600}
@@ -38,6 +37,6 @@ export const SnackBar = ({
 
 const styles = StyleSheet.create({
   toast: {
-    marginBottom: "10%",
+    marginBottom: "14%",
   },
 });

@@ -3,6 +3,8 @@ import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
+import { useSnackBar } from "@shared/hooks";
+import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
 
 export const useSelectProdutor = () => {
   const {
@@ -12,12 +14,29 @@ export const useSelectProdutor = () => {
     setIsLoading,
   } = useContext(ProdutorContext);
   const { setRelatorios } = useContext(RelatorioContext);
+  const { setSnackBarOptions } = useSnackBar();
 
   const fetchProdutor = async (CPFProdutor: string) => {
+    const cpfIsValid = isValidCPForCNPJ(CPFProdutor);
+    if (!cpfIsValid && !!CPFProdutor) {
+      const doc = CPFProdutor.length > 14 ? "CNPJ" : "CPF";
+      setSnackBarOptions({
+        message: `${doc} inválido`,
+        status: "error",
+      });
+      return;
+    }
     setIsLoading(true);
-    console.log("🚀 ~ file: useSelectProdutor.ts:18 ~ isLoading:", isLoading);
     const cpf = CPFProdutor.replace(/\D/g, "");
     const produtor = await ProdutorService.getProdutor(cpf);
+    if (!produtor) {
+      setSnackBarOptions({
+        message: "Produtor não encontrado",
+        status: "warning",
+      });
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(false);
     setProdutor(produtor);
   };

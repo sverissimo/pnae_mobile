@@ -4,6 +4,7 @@ import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { Icon } from "@shared/components/atoms";
 import { globalColors } from "../../../@shared/constants/themes";
+import { formatCPForCNPJ } from "@shared/utils/cpfUtils";
 
 const { primary, grayscale } = globalColors;
 export function ProdutorSearchBar() {
@@ -11,7 +12,8 @@ export function ProdutorSearchBar() {
   const [CPFProdutor, setCPFProdutor] = useState("");
 
   const onChangeSearch = (value: string) => {
-    setCPFProdutor(value);
+    const formattedCPForCNPJ = formatCPForCNPJ(value);
+    setCPFProdutor(formattedCPForCNPJ);
   };
 
   return (

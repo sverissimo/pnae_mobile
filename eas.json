@@ -9,12 +9,9 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "skipDevDependencies": true
+      "distribution": "internal"
     },
-    "production": {
-      "skipDevDependencies": true
-    }
+    "production": {}
   },
   "submit": {
     "production": {}

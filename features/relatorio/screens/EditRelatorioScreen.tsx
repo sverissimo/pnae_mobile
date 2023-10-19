@@ -1,23 +1,20 @@
-import { useEffect, useState } from "react";
-
+import { useEffect } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
+import { useManageRelatorio } from "../hooks";
+import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { useCustomNavigation } from "@navigation/hooks/useCustomNavigation";
 import { ListTitle } from "@shared/components/atoms";
-import { SnackBar } from "@shared/components/molecules";
 import { FormTemplate } from "@shared/components/templates";
-import { useManagePictures, useSnackBar } from "@shared/hooks";
-
-import { relatorioForm } from "../constants";
-import { useManageRelatorio } from "../hooks";
-import { RelatorioModel } from "../types";
 import { deleteFile } from "@shared/utils";
+import { relatorioForm } from "../constants";
+import { RelatorioModel } from "../types";
 
 export const EditRelatorioScreen = ({ route }: any) => {
-  const { updateRelatorio } = useManageRelatorio();
   const { navigation } = useCustomNavigation();
-  const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
+  const { setSnackBarOptions } = useSnackBar();
+
   const {
     relatorio,
     setRelatorio,
@@ -25,6 +22,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
     relatorios,
     enableSave,
     setEnableSave,
+    updateRelatorio,
   } = useManageRelatorio();
 
   const {
@@ -70,6 +68,8 @@ export const EditRelatorioScreen = ({ route }: any) => {
       await clearOldPictures();
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
+        status: "success",
+        duration: 1000,
       });
       setTimeout(() => {
         navigation.goBack();
@@ -121,7 +121,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
           Salvar
         </Button>
       </ScrollView>
-      <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
     </>
   );
 };

@@ -1,17 +1,13 @@
 import { StyleSheet, View } from "react-native";
-
-import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
-import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
-import { AddButton, ListTitle } from "@shared/components/atoms";
-import { SnackBar } from "@shared/components/molecules";
-import { CustomDialog, List, Loading } from "@shared/components/organisms";
-import { globalColors } from "@shared/constants/themes";
-import { useSnackBar } from "@shared/hooks";
-
-import { RELATORIO_COLUMNS } from "../constants";
+import { useSelectProdutor } from "@features/produtor/hooks";
 import { useManageRelatorio } from "../hooks";
+import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
+import { AddButton, ListTitle } from "@shared/components/atoms";
+import { CustomDialog, List, Loading } from "@shared/components/organisms";
 import { RelatorioModel } from "../types";
+import { globalColors } from "@shared/constants/themes";
+import { RELATORIO_COLUMNS } from "../constants";
 
 export const RelatorioScreen = () => {
   const { produtor, isLoading: isLoadingProdutor } = useSelectProdutor();
@@ -28,8 +24,6 @@ export const RelatorioScreen = () => {
     sharePDFLink,
     isLoading,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
-
-  const { snackBarOptions, setSnackBarOptions, hideSnackBar } = useSnackBar();
 
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
@@ -102,7 +96,6 @@ export const RelatorioScreen = () => {
           />
         )}
       </View>
-      <SnackBar {...snackBarOptions} onDismiss={hideSnackBar} />
     </>
   );
 };
