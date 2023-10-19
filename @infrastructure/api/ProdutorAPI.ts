@@ -33,7 +33,14 @@ export const ProdutorAPI = {
     try {
       const url = `${env.SERVER_URL}/produtor/${cpf}`;
       const response = await fetch(url);
+
       const data = await response.json();
+      if (
+        data?.response?.errors.length > 0 &&
+        data?.response?.data?.produtor === null
+      ) {
+        return null;
+      }
       return data;
     } catch (error) {
       console.log(

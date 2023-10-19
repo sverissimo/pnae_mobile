@@ -2,7 +2,7 @@ import { useSelectProdutor } from "../hooks/useSelectProdutor";
 import { List } from "../../../@shared/components/organisms/List";
 import { PRODUTOR_COLUMNS } from "../produtorColumns";
 import { formatDate } from "@shared/utils/formatDate";
-import { formatCPF } from "@shared/utils/formatCPF";
+import { formatCPF_CNPJ } from "@shared/utils/formatCPF";
 
 export const ProdutorDetails = () => {
   const { produtor } = useSelectProdutor();
@@ -13,7 +13,7 @@ export const ProdutorDetails = () => {
   const produtorDetails = [
     {
       id: produtor?.id_pessoa_demeter,
-      nr_cpf_cnpj: formatCPF(nr_cpf_cnpj),
+      nr_cpf_cnpj: formatCPF_CNPJ(nr_cpf_cnpj),
       dt_nascimento: formatDate(dt_nascimento),
       sn_ativo,
       dap,
