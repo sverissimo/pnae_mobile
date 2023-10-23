@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useSelectProdutor } from "../hooks/useSelectProdutor";
@@ -19,11 +19,13 @@ export function ProdutorSearchBar() {
   return (
     <View style={styles.container}>
       <Searchbar
-        placeholder="Digite o CPF do Produtor"
+        placeholder={"Digite o CPF ou CNPJ do produtor"}
         keyboardType="numeric"
         onChangeText={onChangeSearch}
         value={CPFProdutor}
         style={styles.input}
+        inputStyle={styles.inputStyle}
+        placeholderTextColor={grayscale[500]}
       />
       <Pressable
         style={{
@@ -50,16 +52,17 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderWidth: 0.2,
+    backgroundColor: primary[50],
     marginRight: "2%",
-    //backgroundColor: globalColors.primary[50],
-    backgroundColor: grayscale[50],
+  },
+  inputStyle: {
+    marginRight: 0,
+    fontSize: 16,
   },
   chip: {
     backgroundColor: grayscale[200],
     borderRadius: 20,
   },
-  inputContainer: {},
   button: {
     backgroundColor: primary[600],
     disabledBackground: grayscale[300],

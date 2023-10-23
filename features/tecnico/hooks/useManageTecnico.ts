@@ -7,7 +7,7 @@ import { debounce } from "@shared/utils";
 export function useManageTecnico(relatorio: RelatorioModel) {
   const [extensionistas, setExtensionistas] = useState<Usuario[]>([]);
   const { matriculaOutroExtensionista } = relatorio || {};
-  //   const prevValidMatriculasRef = useRef<string[]>([]);
+
   useEffect(() => {
     if (matriculaOutroExtensionista)
       getExtensionistas(matriculaOutroExtensionista);
@@ -15,7 +15,7 @@ export function useManageTecnico(relatorio: RelatorioModel) {
 
   const getExtensionistas = useCallback(
     debounce(async (matricula: string) => {
-      const cleanedMatricula = matricula.replace(/\s/g, "");
+      const cleanedMatricula = matricula.replace(/\s/g, "").replace(/-/g, "C");
       const matriculas = cleanedMatricula
         .split(",")
         .filter((m) => m.length === 5);

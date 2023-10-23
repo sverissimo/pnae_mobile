@@ -51,12 +51,12 @@ export const CreateRelatorioScreen = ({ route }: any) => {
       setTimeout(() => {
         navigation.goBack();
       }, 900);
-    } catch (error) {
+    } catch (error: Error | any) {
       setSnackBarOptions({
         status: "error",
-        message: "Erro ao salvar relatório",
+        message: error?.message || "Erro ao salvar relatório",
       });
-      console.error("🚀 CreateRelatorioScreen.tsx:59: ", error);
+      console.log("🚀 CreateRelatorioScreen.tsx:59: ", error);
     }
   };
 

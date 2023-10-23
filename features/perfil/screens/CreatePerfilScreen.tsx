@@ -9,12 +9,6 @@ import {
   producaoNaturaForm,
 } from "../constants";
 
-type PerfilFormState = {
-  tipoPerfil: string;
-  participaOrganizacao: boolean;
-  // ... other state variables
-};
-
 export const CreatePerfilScreen: React.FC = () => {
   const [state, setState] = useState<any>({});
   console.log("🚀 ~ file: CreatePerfilScreen.tsx:23 ~ state:", state);
@@ -29,13 +23,16 @@ export const CreatePerfilScreen: React.FC = () => {
   ];
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.obs}>
+        * Funcionalidade em desenvolvimento, aguarde a próxima versão do app.
+      </Text>
       <ListTitle title="Preencha as informações abaixo" />
       <FormTemplate
         form={createPerfilForm}
         data={state}
         onValueChange={handleChange}
       />
-      <Text>Em desenvolvimento, aguarde a próxima versão do app.</Text>
+
       <Button
         mode="contained"
         style={styles.button}
@@ -54,5 +51,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: "6%",
+  },
+  obs: {
+    marginVertical: "6%",
+    fontSize: 14,
+    fontStyle: "italic",
+    color: "red",
   },
 });
