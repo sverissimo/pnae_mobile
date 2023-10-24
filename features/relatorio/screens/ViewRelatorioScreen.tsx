@@ -5,30 +5,58 @@ import { RichEditor } from "react-native-pell-rich-editor";
 
 import { useSelectProdutor } from "@features/produtor/hooks";
 import { ListTitle } from "@shared/components/atoms";
-import { useManagePictures } from "@shared/hooks";
+import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { formatDate } from "@shared/utils";
 
 import { useManageRelatorio } from "../hooks";
 import { RelatorioModel } from "../types";
 
 export const ViewRelatorioScreen = ({ route }: any) => {
-  const { relatorio, setRelatorio, relatorios } = useManageRelatorio();
   const { produtor } = useSelectProdutor();
-  const nomeProdutor = produtor?.nm_pessoa || "";
+  const { setSnackBarOptions } = useSnackBar();
+  const { relatorio, setRelatorio, relatorios, downloadPictureAndSignature } =
+    useManageRelatorio();
   const { pictureURI, setPicture, assinaturaURI, setAssinatura } =
     useManagePictures();
 
+  const nomeProdutor = produtor?.nm_pessoa || "";
   const { relatorioId } = route.params;
 
   useEffect(() => {
     const originalRelatorio = relatorios.find(
       (r) => r!.id === relatorioId
     ) as RelatorioModel;
+
     if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
-    setPicture(originalRelatorio.pictureURI);
-    setAssinatura(originalRelatorio.assinaturaURI);
-  }, [relatorios]);
+  }, []);
+
+  useEffect(() => {
+    if (!relatorio?.id) return;
+    const fetchData = async () => {
+      try {
+        const { pictureURI: picURI, assinaturaURI: assURI } =
+          await downloadPictureAndSignature(relatorio);
+        const pictureURI = picURI || relatorio.pictureURI;
+        const assinaturaURI = assURI || relatorio.assinaturaURI;
+
+        setPicture(pictureURI);
+        setAssinatura(assinaturaURI);
+      } catch (error) {
+        setSnackBarOptions({
+          message: "Erro ao baixar assinatura e/ou foto",
+          status: "error",
+        });
+      }
+    };
+    fetchData();
+    return () => {
+      setRelatorio({} as RelatorioModel);
+      setPicture("");
+      setAssinatura("");
+    };
+  }, [relatorio]);
+
   const date = formatDate(relatorio?.createdAt);
   return (
     <ScrollView style={styles.container}>
@@ -76,8 +104,6 @@ export const ViewRelatorioScreen = ({ route }: any) => {
           </View>
         </>
       )}
-      {/*********** TODO: Adicionar cálculo de largura/altura ao useManageImage e reproduzir aqui as props.
-       * Ver chatGPT  */}
       {pictureURI && (
         <>
           <ListTitle title="Foto da Visita" />

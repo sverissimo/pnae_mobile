@@ -99,9 +99,5 @@ export const formatCPForCNPJ = (input: string): string => {
 
 export const isValidCPForCNPJ = (input: string): boolean => {
   const numbers = input.replace(/\D/g, "").substring(0, 14);
-  console.log(
-    "🚀 ~ file: cpfUtils.ts:118 ~ isValidCPForCNPJ ~ numbers:",
-    numbers.length
-  );
   return numbers.length > 11 ? isValidCNPJ(numbers) : isValidCPF(numbers);
 };

@@ -1,8 +1,6 @@
 import { db } from "@infrastructure/database/config";
 import { generateUUID } from "@shared/utils/generateUUID";
-import { RelatorioExpoSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioExpoSQLRepository";
 import { RelatorioAPI } from "@infrastructure/api/relatorio/repository/RelatorioAPI";
-import { FileAPI } from "@infrastructure/api/FileAPI";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { UsuarioService } from "./UsuarioService";
 import { Relatorio } from "@features/relatorio/entity";
@@ -12,6 +10,7 @@ import { toDateMsec } from "@shared/utils/formatDate";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
 import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
 import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
+import { FileService } from "./FileService";
 
 const relatorioAPI: RelatorioRepository = new RelatorioAPI();
 const relatorioDAO = new RelatorioExpoSQLDAO(db);
@@ -45,47 +44,46 @@ export class RelatorioService {
 
       return id;
     } catch (error: any) {
-      console.error("🚀 RelatorioService.ts:31: ", error);
+      console.log("🚀 RelatorioService.ts:31: ", error);
       throw new Error(error.message);
     }
   };
 
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
-    const relatoriosFromLocalDB = await this.repository.findByProdutorID(
-      produtorId
-    );
-    let relatoriosFromServer: RelatorioModel[] = [];
-
-    if (this.isConnected) {
-      relatoriosFromServer = await relatorioAPI.findByProdutorID(produtorId);
-    }
-
-    const updatedRelatorios = RelatorioDomainService.mergeRelatorios(
-      relatoriosFromLocalDB,
-      relatoriosFromServer
-    );
-
-    const tecnicos = await UsuarioService.fetchTecnicosByRelatorios(
-      updatedRelatorios
-    );
-
-    const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
-      RelatorioDomainService.addTecnicos(tecnicos, relatorio)
-    ) as RelatorioModel[];
-
-    if (this.isConnected) {
-      await Promise.all(
-        relatoriosWithTecnicos.map(FileAPI.getMissingFilesFromServer)
+    try {
+      const relatoriosFromLocalDB = await this.repository.findByProdutorID(
+        produtorId
       );
-    }
-    // console.log("🚀 RelatorioService.ts:65 ~ updates:", updates);
-    relatoriosWithTecnicos.sort((a, b) => {
-      const aDate = toDateMsec(a.createdAt);
-      const bDate = toDateMsec(b.createdAt);
-      return aDate - bDate;
-    });
+      let relatoriosFromServer: RelatorioModel[] = [];
 
-    return relatoriosWithTecnicos;
+      if (this.isConnected) {
+        relatoriosFromServer = await relatorioAPI.findByProdutorID(produtorId);
+      }
+
+      const updatedRelatorios = RelatorioDomainService.mergeRelatorios(
+        relatoriosFromLocalDB,
+        relatoriosFromServer
+      );
+
+      const tecnicos = await UsuarioService.fetchTecnicosByRelatorios(
+        updatedRelatorios
+      );
+
+      const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
+        RelatorioDomainService.addTecnicos(tecnicos, relatorio)
+      ) as RelatorioModel[];
+
+      relatoriosWithTecnicos.sort((a, b) => {
+        const aDate = toDateMsec(a.createdAt);
+        const bDate = toDateMsec(b.createdAt);
+        return aDate - bDate;
+      });
+
+      return relatoriosWithTecnicos;
+    } catch (error) {
+      console.log("🚀 ~ file: RelatorioService.ts:92 ~ getRelatorios:", error);
+      throw error;
+    }
   };
 
   updateRelatorio = async (relatorio: RelatorioModel) => {
@@ -146,6 +144,15 @@ export class RelatorioService {
     } catch (e) {
       const error = e instanceof Error ? new Error(e.message) : e;
       throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
+    }
+  };
+
+  downloadPictureAndSignature = async (relatorio: RelatorioModel) => {
+    if (this.isConnected) {
+      const fileService = new FileService();
+      const { pictureURI, assinaturaURI } =
+        await fileService.getMissingFilesFromServer(relatorio);
+      return { pictureURI, assinaturaURI };
     }
   };
 

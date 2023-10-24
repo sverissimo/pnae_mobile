@@ -89,6 +89,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       ]);
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
+      throw error;
     }
   };
 
@@ -101,11 +102,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     try {
       setIsLoading(true);
       const connected = !!(isConnected && connectionType !== "unknown");
-      console.log(
-        "🚀 ~ file: useManageRelatorios.ts:104 ~ useManageRelatorio ~ connectionType:",
-        { connectionType, connected }
-      );
-
       const relatorios = await new RelatorioService(connected).getRelatorios(
         produtorId
       );
@@ -118,7 +114,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       setIsLoading(false);
       return relatorios;
     } catch (error) {
-      console.log("🚀useManageRelatorios.ts:60 error:", error);
+      console.error("🚀useManageRelatorios.ts:60 error:", error);
     }
     return [];
   };
@@ -218,6 +214,22 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
+  const downloadPictureAndSignature = async (relatorio: RelatorioModel) => {
+    try {
+      const updatedURIs = await new RelatorioService(
+        !!isConnected
+      ).downloadPictureAndSignature(relatorio);
+      const { pictureURI, assinaturaURI } = updatedURIs || {};
+      return { pictureURI, assinaturaURI };
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: useManageRelatorios.ts:234 ~ downloadPictureAndSignature ~ error:",
+        error
+      );
+      throw new Error("Erro ao baixar as imagens do servidor.");
+    }
+  };
+
   return {
     relatorio,
     relatorios,
@@ -235,5 +247,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     formatRelatorioRows,
     sharePDFLink,
     setEnableSave,
+    downloadPictureAndSignature,
   };
 };

@@ -34,6 +34,9 @@ yarn-error.*
 /config/env.ts
 *.sh
 
+# tests mock data
+_mockData
+
 # typescript
 *.tsbuildinfo
 

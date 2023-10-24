@@ -2,10 +2,11 @@ import * as FileSystem from "expo-file-system";
 
 export const saveFile = async (
   id: string,
-  blob: Blob
+  blob: Blob,
+  fileExtension: string = "png"
 ): Promise<string | void> => {
   try {
-    const localUri = `${FileSystem.documentDirectory}${id}.png`;
+    const localUri = `${FileSystem.documentDirectory}${id}.${fileExtension}`;
     const { exists } = await fileExists(localUri);
     if (exists) {
       return localUri;
@@ -23,7 +24,7 @@ export const saveFile = async (
     return localUri;
   } catch (error) {
     console.log(
-      "🚀 ~ file: FileAPI.ts:23 ~ saveFileFromServer ~ error:",
+      "🚀 ~ file: FileAPI.ts:23 ~ downloadFileFromServer ~ error:",
       error
     );
   }

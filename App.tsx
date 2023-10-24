@@ -16,6 +16,7 @@ import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema"
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { deleteFile, fileExists } from "@shared/utils";
 import { SnackBarProvider } from "@contexts/SnackbarContext";
+import { ConnectionContextProvider } from "@contexts/ConnectionContext";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 
@@ -28,13 +29,13 @@ export default function App() {
         setDbInitialized(true);
         console.log("----------------------------------------\n");
         // checkDBSchema();
-        new RelatorioService(true).getAllRelatorios().then((relatorios) => {
-          console.log(
-            "🚀 ~ file: App.tsx:33 ~ .then ~ relatorios:",
-            relatorios
-          );
-          return relatorios.forEach((relatorio) => console.log(relatorio));
-        });
+        // new RelatorioService(true).getAllRelatorios().then((relatorios) => {
+        //   console.log(
+        //     "🚀 ~ file: App.tsx:33 ~ .then ~ relatorios:",
+        //     relatorios
+        //   );
+        //   return relatorios.forEach((relatorio) => console.log(relatorio));
+        // });
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
@@ -67,17 +68,19 @@ export default function App() {
       />
       <UserContextProvider>
         <LocationContextProvider>
-          <ProdutorContextProvider>
-            <RelatorioContextProvider>
-              <ImageContextProvider>
-                <PaperProvider theme={theme}>
-                  <SnackBarProvider>
-                    <Authentication />
-                  </SnackBarProvider>
-                </PaperProvider>
-              </ImageContextProvider>
-            </RelatorioContextProvider>
-          </ProdutorContextProvider>
+          <ConnectionContextProvider>
+            <ProdutorContextProvider>
+              <RelatorioContextProvider>
+                <ImageContextProvider>
+                  <PaperProvider theme={theme}>
+                    <SnackBarProvider>
+                      <Authentication />
+                    </SnackBarProvider>
+                  </PaperProvider>
+                </ImageContextProvider>
+              </RelatorioContextProvider>
+            </ProdutorContextProvider>
+          </ConnectionContextProvider>
         </LocationContextProvider>
       </UserContextProvider>
     </>
