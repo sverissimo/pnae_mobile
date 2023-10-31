@@ -11,6 +11,8 @@ import { deleteFile } from "@shared/utils/fileSystemUtils";
 import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
 import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
 import { FileService } from "./FileService";
+import { getURIFromID } from "@shared/utils";
+import createRelatorioInput from "../_mockData/createRelatorioInput.json";
 
 const relatorioAPI: RelatorioRepository = new RelatorioAPI();
 const relatorioDAO = new RelatorioExpoSQLDAO(db);
@@ -32,19 +34,21 @@ export class RelatorioService {
       const readOnly = false;
       const relatorio = { ...input, id, readOnly, createdAt };
 
+      // Object.assign(relatorio, createRelatorioInput); // Testing ONLY!!!
+
       const relatorioModel = new Relatorio(relatorio).toModel();
 
       await this.repository.create(relatorioModel);
       console.log("### Saved resultLocal ok.");
 
       if (this.isConnected) {
-        const remoteResult = await relatorioAPI.create(relatorioModel);
+        const remoteResult = await new RelatorioAPI().create(relatorioModel);
         console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
       }
 
       return id;
     } catch (error: any) {
-      console.log("🚀 RelatorioService.ts:31: ", error);
+      console.log("🚀 RelatorioService.ts:60: ", error);
       throw new Error(error.message);
     }
   };
@@ -97,8 +101,14 @@ export class RelatorioService {
         );
       }
       // Adicona updatedAt, remove unmodified props
-      const relatorioUpdate = new Relatorio(relatorio).getUpdate(
-        originalRelatorio
+      const relatorioUpdate = new Relatorio(relatorio).getUpdate({
+        ...originalRelatorio,
+        pictureURI: getURIFromID(originalRelatorio.pictureURI),
+        assinaturaURI: getURIFromID(originalRelatorio.assinaturaURI),
+      });
+      console.log(
+        "🚀 - RelatorioService - originalRelatorio:",
+        JSON.stringify({ originalRelatorio, relatorioUpdate }, null, 2)
       );
 
       await this.repository.update(relatorioUpdate);
@@ -144,15 +154,6 @@ export class RelatorioService {
     } catch (e) {
       const error = e instanceof Error ? new Error(e.message) : e;
       throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
-    }
-  };
-
-  downloadPictureAndSignature = async (relatorio: RelatorioModel) => {
-    if (this.isConnected) {
-      const fileService = new FileService();
-      const { pictureURI, assinaturaURI } =
-        await fileService.getMissingFilesFromServer(relatorio);
-      return { pictureURI, assinaturaURI };
     }
   };
 

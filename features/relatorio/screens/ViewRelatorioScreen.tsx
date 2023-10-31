@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { RichEditor } from "react-native-pell-rich-editor";
 
@@ -7,17 +6,20 @@ import { useSelectProdutor } from "@features/produtor/hooks";
 import { ListTitle } from "@shared/components/atoms";
 import { useManagePictures, useSnackBar } from "@shared/hooks";
 import { formatDate } from "@shared/utils";
-
 import { useManageRelatorio } from "../hooks";
 import { RelatorioModel } from "../types";
 
 export const ViewRelatorioScreen = ({ route }: any) => {
   const { produtor } = useSelectProdutor();
   const { setSnackBarOptions } = useSnackBar();
-  const { relatorio, setRelatorio, relatorios, downloadPictureAndSignature } =
-    useManageRelatorio();
-  const { pictureURI, setPicture, assinaturaURI, setAssinatura } =
-    useManagePictures();
+  const { relatorio, setRelatorio, relatorios } = useManageRelatorio();
+  const {
+    pictureURI,
+    setPicture,
+    assinaturaURI,
+    setAssinatura,
+    downloadPictureAndSignature,
+  } = useManagePictures();
 
   const nomeProdutor = produtor?.nm_pessoa || "";
   const { relatorioId } = route.params;
@@ -29,33 +31,21 @@ export const ViewRelatorioScreen = ({ route }: any) => {
 
     if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
-  }, []);
 
-  useEffect(() => {
-    if (!relatorio?.id) return;
-    const fetchData = async () => {
-      try {
-        const { pictureURI: picURI, assinaturaURI: assURI } =
-          await downloadPictureAndSignature(relatorio);
-        const pictureURI = picURI || relatorio.pictureURI;
-        const assinaturaURI = assURI || relatorio.assinaturaURI;
+    downloadPictureAndSignature(originalRelatorio).catch((err) => {
+      console.log("🚀 ViewRelatorioScreen 37: useEffect - err:", err);
+      setSnackBarOptions({
+        status: "error",
+        message: "Erro ao baixar assinatura e/ou foto",
+      });
+    });
 
-        setPicture(pictureURI);
-        setAssinatura(assinaturaURI);
-      } catch (error) {
-        setSnackBarOptions({
-          message: "Erro ao baixar assinatura e/ou foto",
-          status: "error",
-        });
-      }
-    };
-    fetchData();
     return () => {
       setRelatorio({} as RelatorioModel);
       setPicture("");
       setAssinatura("");
     };
-  }, [relatorio]);
+  }, []);
 
   const date = formatDate(relatorio?.createdAt);
   return (

@@ -7,15 +7,19 @@ import { RelatorioBackendDTO } from "../dto";
 import { RelatorioModel } from "@features/relatorio/types";
 
 export class RelatorioAPI implements RelatorioRepository {
-  private api = new API();
+  private api = new API<RelatorioModel>();
   private url = `${env.SERVER_URL}/relatorios`;
 
   async create(relatorio: RelatorioModel): Promise<void> {
     if (!relatorio) throw new Error("Relatorio não pode ser vazio");
     try {
       const relatorioDTO = this.toDTO(relatorio);
+      console.log(
+        "🚀 ~ file: RelatorioAPI.ts:17 ~ RelatorioAPI ~ create ~ relatorioDTO:",
+        relatorioDTO
+      );
       const formData = await this.createFormData(relatorioDTO);
-      const response = await this.api.post(this.url, formData);
+      const response = await this.api.postFormData(this.url, formData);
       console.log("Form data submitted successfully:", response);
     } catch (error) {
       console.error("RelatorioAPI.ts:49 - error submitting form data: ", error);
@@ -23,12 +27,12 @@ export class RelatorioAPI implements RelatorioRepository {
     }
   }
 
-  async findByProdutorID(produtorId: string): Promise<any> {
+  async findByProdutorID(produtorId: string) {
     const result = await this.api.get(`${this.url}?produtorId=${produtorId}`);
     return result;
   }
 
-  async findAll(): Promise<RelatorioModel[]> {
+  async findAll() {
     const result = await this.api.get(`${this.url}/all`);
     return result;
   }
@@ -36,13 +40,13 @@ export class RelatorioAPI implements RelatorioRepository {
   async update(relatorioInput: Partial<RelatorioModel>): Promise<void> {
     const relatorio = this.toDTO(relatorioInput);
     const { id, ...relatorioDTO } = relatorio;
-    console.log(
-      "🚀 ~ file: RelatorioAPI.ts:34 ~ RelatorioAPI ~ update ~ relatorioDTO:",
-      relatorioDTO
-    );
+    console.log("🚀 RelatorioAPI.ts:40 - update ~ relatorioDTO:", relatorioDTO);
     const formData = await this.createFormData(relatorioDTO);
 
-    const response = await this.api.patch(`${this.url}/${id}`, formData);
+    const response = await this.api.patchFormData(
+      `${this.url}/${id}`,
+      formData
+    );
     console.log("Form data submitted successfully:", response);
   }
 

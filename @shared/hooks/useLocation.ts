@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import * as Location from "expo-location";
 import { LocationContext } from "@contexts/index";
 import { Linking } from "react-native";
+import { locationObjToText } from "@shared/utils";
 
 export function useLocation() {
   const { location, setLocation } = useContext(LocationContext);
@@ -28,6 +29,16 @@ export function useLocation() {
     }
   };
 
+  function getLocation() {
+    return locationObjToText(location);
+  }
+
+  async function getUpdatedLocation(): Promise<string> {
+    const updatedLocation = await updateLocation();
+    const locationObj = updatedLocation ?? location;
+    return locationObjToText(locationObj);
+  }
+
   const updateLocation = async () => {
     try {
       if (locationPermission === "granted") {
@@ -45,6 +56,7 @@ export function useLocation() {
     location,
     locationPermission,
     getLocationPermission,
-    updateLocation,
+    getLocation,
+    getUpdatedLocation,
   };
 }

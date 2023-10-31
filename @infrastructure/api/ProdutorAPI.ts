@@ -23,9 +23,9 @@ export const ProdutorAPI = {
 
   getProdutor: async (cpf: string) => {
     // cpf = cpf || "06627559609"; // dev/test purposes only
-    // cpf = cpf || "15609048605"; // dev/test purposes only
+    cpf = cpf || "15609048605"; // dev/test purposes only
     // cpf = cpf || "04548773665"; // dev/test purposes only
-    cpf = cpf || "02491855631"; // dev/test purposes only
+    // cpf = cpf || "02491855631"; // dev/test purposes only
     // cpf = cpf || "53804131107"; // dev/test purposes only
     // cpf = cpf || "14205771070"; // dev/test purposes only
     // cpf = cpf || "81756364672"; // dev/test purposes only

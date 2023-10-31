@@ -15,7 +15,7 @@ import { useManageRelatorio } from "../hooks";
 export const CreateRelatorioScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
   const { setSnackBarOptions } = useSnackBar();
-  const { updateLocation } = useLocation();
+  const { getUpdatedLocation } = useLocation();
   const { pictureURI, assinaturaURI, clearURIs } = useManagePictures();
   const { relatorio, handleChange, saveRelatorio, enableSave, setEnableSave } =
     useManageRelatorio();
@@ -34,7 +34,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   useEffect(() => {
     if (pictureURI) {
       (async () => {
-        await updateLocation();
+        await getUpdatedLocation();
       })();
     }
   }, [pictureURI]);
@@ -47,6 +47,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
         status: "success",
         duration: 1000,
       });
+
       setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
@@ -81,7 +82,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          disabled={!enableSave || !pictureURI || !assinaturaURI}
+          // disabled={!enableSave || !pictureURI || !assinaturaURI}
         >
           Salvar
         </Button>

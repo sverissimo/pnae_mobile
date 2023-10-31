@@ -1,22 +1,71 @@
-export class API {
-  async get(url: string) {
-    const result = await fetch(url);
-    return await result.json();
+enum HttpMethod {
+  GET = "GET",
+  POST = "POST",
+  PATCH = "PATCH",
+}
+
+interface FetchOptions {
+  url: string;
+  method: HttpMethod;
+  body?: any;
+  isFormData?: boolean;
+}
+
+export class API<T> {
+  private async fetchResource({
+    url,
+    method,
+    body,
+    isFormData,
+  }: FetchOptions): Promise<any> {
+    const headers = isFormData
+      ? undefined
+      : {
+          "Content-Type": "application/json",
+        };
+
+    const response = await fetch(url, {
+      method,
+      headers,
+      body: isFormData ? body : JSON.stringify(body),
+    });
+
+    if (response.ok) {
+      return method === HttpMethod.GET
+        ? await response.json()
+        : await response.text();
+    } else {
+      throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+    }
   }
 
-  async post(url: string, body: any) {
-    const result = await fetch(url, {
-      method: "POST",
-      body: body,
-    });
-    return await result.text();
+  async get(url: string): Promise<T[]> {
+    return this.fetchResource({ url, method: HttpMethod.GET });
   }
 
-  async patch(url: string, body: any) {
-    const result = await fetch(url, {
-      method: "PATCH",
-      body: body,
+  async post<T>(url: string, body: any): Promise<T> {
+    return this.fetchResource({ url, method: HttpMethod.POST, body });
+  }
+
+  async patch<T>(url: string, body: any): Promise<T> {
+    return this.fetchResource({ url, method: HttpMethod.PATCH, body });
+  }
+
+  async postFormData<T>(url: string, body: any): Promise<T> {
+    return this.fetchResource({
+      url,
+      method: HttpMethod.POST,
+      body,
+      isFormData: true,
     });
-    return await result.text();
+  }
+
+  async patchFormData<T>(url: string, body: any): Promise<T> {
+    return this.fetchResource({
+      url,
+      method: HttpMethod.PATCH,
+      body,
+      isFormData: true,
+    });
   }
 }

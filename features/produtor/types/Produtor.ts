@@ -1,5 +1,5 @@
 export type Produtor = {
-  id_pessoa_demeter?: string;
+  id_pessoa_demeter: string;
   nm_pessoa?: string;
   nr_cpf_cnpj?: string;
   tp_sexo?: string;

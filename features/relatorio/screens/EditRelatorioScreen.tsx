@@ -32,6 +32,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
     assinaturaURI,
     setAssinatura,
     clearURIs,
+    downloadPictureAndSignature,
   } = useManagePictures();
 
   const { relatorioId, HTMLText } = route.params;
@@ -48,14 +49,23 @@ export const EditRelatorioScreen = ({ route }: any) => {
     ) as RelatorioModel;
     if (!originalRelatorio) return;
     setRelatorio({ ...originalRelatorio });
-    setPicture(originalRelatorio.pictureURI);
-    setAssinatura(originalRelatorio.assinaturaURI);
+
+    downloadPictureAndSignature(originalRelatorio).catch((err) => {
+      console.log("🚀 ViewRelatorioScreen 37 ~ err:", err);
+      setSnackBarOptions({
+        message: "Erro ao baixar assinatura e/ou foto",
+        status: "error",
+      });
+    });
   }, [relatorios]);
 
   useEffect(() => {
     return () => {
       const keepOriginalOnly = enableSave;
       clearDiscardedPictures(keepOriginalOnly).then(() => clearURIs());
+      setRelatorio({} as RelatorioModel);
+      setPicture("");
+      setAssinatura("");
     };
   }, []);
 

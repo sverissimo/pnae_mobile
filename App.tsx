@@ -27,15 +27,11 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("----------------------------------------\n");
+        console.log("------------------------------------------\n");
         // checkDBSchema();
-        // new RelatorioService(true).getAllRelatorios().then((relatorios) => {
-        //   console.log(
-        //     "🚀 ~ file: App.tsx:33 ~ .then ~ relatorios:",
-        //     relatorios
-        //   );
-        //   return relatorios.forEach((relatorio) => console.log(relatorio));
-        // });
+        new RelatorioService(true)
+          .getAllRelatorios()
+          .then((r) => console.log("\nrelatorios", JSON.stringify(r, null, 2)));
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);

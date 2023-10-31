@@ -2,19 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
 import { RelatorioService } from "@services/RelatorioService";
+import { AtendimentoService } from "@services/AtendimentoService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useAuth } from "@auth/hooks/useAuth";
 import { useLocation, useManageConnection } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
-import { formatDate, locationObjToText, truncateString } from "@shared/utils";
-// import relatoriosSample from "@config/relatorios.json";
+import { formatDate, truncateString } from "@shared/utils";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
-  const { location } = useLocation();
+  const { getLocation } = useLocation();
   const { isConnected, connectionType } = useManageConnection();
   const { user } = useAuth();
 
@@ -59,10 +59,7 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const saveRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      // const updatedLocation = await updateLocation();
-      // const coordenadas =
-      //   locationObjToText(updatedLocation) || locationObjToText(location);
-      const coordenadas = locationObjToText(location);
+      const coordenadas = getLocation();
       const relatorioInput = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
@@ -76,6 +73,19 @@ export const useManageRelatorio = (produtorId?: string) => {
       const relatorioId = await new RelatorioService(connected).createRelatorio(
         relatorioInput
       );
+
+      //Cria o atendimento se conectado na internet
+      if (connected) {
+        const propriedade = produtor?.propriedades![0];
+        const atendimento = {
+          id_usuario: user!.id_usuario,
+          id_pessoa_demeter: produtor!.id_pessoa_demeter,
+          id_pl_propriedade: propriedade.id_pl_propriedade,
+          id_und_empresa: propriedade.id_und_empresa,
+          id_relatorio: relatorioId,
+        };
+        await new AtendimentoService().create(atendimento);
+      }
 
       setRelatorios([
         ...relatorios,
@@ -121,9 +131,7 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const updateRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      const coordenadas = locationObjToText(location);
-      // || await updateLocation();
-      //relatorio.coordenadas = locationObjToText(updatedLocation) || locationObjToText(location);
+      const coordenadas = getLocation();
       const relatorioUpdate = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
@@ -214,22 +222,6 @@ export const useManageRelatorio = (produtorId?: string) => {
     }
   };
 
-  const downloadPictureAndSignature = async (relatorio: RelatorioModel) => {
-    try {
-      const updatedURIs = await new RelatorioService(
-        !!isConnected
-      ).downloadPictureAndSignature(relatorio);
-      const { pictureURI, assinaturaURI } = updatedURIs || {};
-      return { pictureURI, assinaturaURI };
-    } catch (error) {
-      console.log(
-        "🚀 ~ file: useManageRelatorios.ts:234 ~ downloadPictureAndSignature ~ error:",
-        error
-      );
-      throw new Error("Erro ao baixar as imagens do servidor.");
-    }
-  };
-
   return {
     relatorio,
     relatorios,
@@ -247,6 +239,5 @@ export const useManageRelatorio = (produtorId?: string) => {
     formatRelatorioRows,
     sharePDFLink,
     setEnableSave,
-    downloadPictureAndSignature,
   };
 };
