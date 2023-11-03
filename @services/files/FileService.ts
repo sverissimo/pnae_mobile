@@ -1,8 +1,9 @@
 import * as FileSystem from "expo-file-system";
 import { env } from "@config/env";
 import { RelatorioModel } from "@features/relatorio/types";
-import { FileAPI } from "@infrastructure/api/FileAPI";
-import { fileExists, saveFile } from "@shared/utils";
+import { FileAPI } from "@infrastructure/api/files/FileAPI";
+import { deleteFile, fileExists, listFiles, saveFile } from "@shared/utils";
+import { log } from "@shared/utils/log";
 
 export class FileService {
   async getMissingFilesFromServer(relatorio: RelatorioModel) {
@@ -70,4 +71,43 @@ export class FileService {
     const fileExtension = type === "pictureURI" ? "jpeg" : "png";
     return { folder, fileWithExtension: `${fileId}.${fileExtension}` };
   }
+
+  removeDanglingFiles = async (relatorios: RelatorioModel[]) => {
+    const cacheFolder = env.PICTURE_FOLDER;
+    const filesFolder = env.FILES_FOLDER;
+    const allFiles = await Promise.all([
+      listFiles(filesFolder),
+      listFiles(cacheFolder),
+    ]);
+    const allImageFiles = allFiles
+      .flat()
+      .filter((file) => file.includes(".png") || file.includes(".jpeg"));
+    // log(allImageFiles);
+    const relatorioFiles = relatorios
+      .map((r) => [r.pictureURI, r.assinaturaURI])
+      .flat();
+
+    const filesToRemove = allImageFiles.filter((file) => {
+      const fileExistsInRelatorios = relatorioFiles.some((r) =>
+        r?.includes(file)
+      );
+      return !fileExistsInRelatorios;
+    });
+
+    console.log("🚀 FileService.ts:99 ~ Storage:", {
+      allImages: allImageFiles.length,
+      relatorioFiles: relatorioFiles.length,
+      filesToRemove: filesToRemove.length,
+    });
+
+    // log(relatorioFiles);
+    // console.log(filesToRemove);
+    // for (const file of filesToRemove) {
+    //   if (file.includes(".jpeg")) {
+    //     await deleteFile(`${cacheFolder}/${file}`);
+    //     console.log(`${cacheFolder}/${file}`);
+    //   }
+    //   await deleteFile(`${filesFolder}/${file}`);
+    // }
+  };
 }

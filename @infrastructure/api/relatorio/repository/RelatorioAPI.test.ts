@@ -1,43 +1,13 @@
 import { RelatorioModel } from "@features/relatorio/types";
-import { RelatorioAPI } from "./RelatorioAPI";
+import { RelatorioAPIRepository } from "./RelatorioAPIRepository";
 import { RelatorioBackendDTO } from "../dto";
+import relatorioModel from "_mockData/relatorioModel.json";
+import relatorioDTO from "_mockData/relatorioBackendDTO.json";
 
-const relatorio: RelatorioModel = {
-  id: "123",
-  produtorId: "123",
-  tecnicoId: "123",
-  numeroRelatorio: 1,
-  nomeTecnico: "John Doe",
-  assunto: "Assunto",
-  orientacao: "Orientação",
-  pictureURI: "pictureURI",
-  assinaturaURI: "assinaturaURI",
-  outroExtensionista: [
-    { id_usuario: "456", matricula_usuario: "456", nome_usuario: "Jane Doe" },
-  ],
-  nomeOutroExtensionista: "Jane Doe",
-  matriculaOutroExtensionista: "456",
-  coordenadas: "",
-  readOnly: true,
-  createdAt: "2021-10-01T00:00:00.000Z",
-};
+const relatorio = relatorioModel as RelatorioModel;
+const expectedDTO = relatorioDTO as RelatorioBackendDTO;
 
-const expectedDTO: RelatorioBackendDTO = {
-  id: "123",
-  produtorId: "123",
-  tecnicoId: "123",
-  numeroRelatorio: 1,
-  assunto: "Assunto",
-  orientacao: "Orientação",
-  pictureURI: "pictureURI",
-  assinaturaURI: "assinaturaURI",
-  outroExtensionista: "456",
-  readOnly: true,
-  coordenadas: "",
-  createdAt: "2021-10-01T00:00:00.000Z",
-};
-
-const api = new RelatorioAPI() as any;
+const api = new RelatorioAPIRepository() as any;
 describe("Test RelatorioAPI methods", () => {
   describe("toDTO", () => {
     it("should convert a RelatorioModel to a RelatorioBackendDTO", () => {

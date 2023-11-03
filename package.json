@@ -10,6 +10,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eas-build-pre-install": "echo $ENV_BASE64 | tr -d '[:space:]' | base64 --decode > ./config/env.ts",
+    "test3": "npm run tsc -- --noEmit && jest --no-cache --force-exit --verbose=true --maxWorkers=1 --silent=false",
     "test2": "jest --no-cache",
     "test": "npm run tsc -- --noEmit && jest --no-cache",
     "tsc": "npx tsc"

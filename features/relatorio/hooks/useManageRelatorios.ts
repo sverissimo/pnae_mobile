@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
-import { RelatorioService } from "@services/RelatorioService";
-import { AtendimentoService } from "@services/AtendimentoService";
+import { RelatorioService } from "@services/relatorio/RelatorioService";
+import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useAuth } from "@auth/hooks/useAuth";
@@ -10,6 +10,7 @@ import { useLocation, useManageConnection } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, truncateString } from "@shared/utils";
+import createRelatorioInput from "_mockData/createRelatorioInput.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
@@ -70,11 +71,13 @@ export const useManageRelatorio = (produtorId?: string) => {
 
       const connected = !!(isConnected && connectionType !== "unknown");
 
+      Object.assign(relatorioInput, createRelatorioInput); // Testing ONLY!!!
+
       const relatorioId = await new RelatorioService(connected).createRelatorio(
         relatorioInput
       );
 
-      //Cria o atendimento se conectado na internet
+      // *** Cria o atendimento se conectado na internet
       if (connected) {
         const propriedade = produtor?.propriedades![0];
         const atendimento = {
@@ -131,12 +134,10 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const updateRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      const coordenadas = getLocation();
       const relatorioUpdate = {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
-        coordenadas,
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");

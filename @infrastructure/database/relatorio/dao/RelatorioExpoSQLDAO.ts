@@ -1,7 +1,7 @@
 import { SQLResultSet, SQLiteDatabase, SQLTransaction } from "expo-sqlite";
-import { SQL_DAO } from "@infrastructure/database/SQL_DAO";
+import { SQL_DAO } from "@infrastructure/database/dao/SQL_DAO";
 import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
-import { db as expoSQLiteDB } from "@infrastructure/database/config";
+import { db as expoSQLiteDB } from "@infrastructure/database/config/expoSQLite";
 
 export class RelatorioExpoSQLDAO extends SQL_DAO<RelatorioLocalDTO> {
   constructor(db: SQLiteDatabase = expoSQLiteDB) {

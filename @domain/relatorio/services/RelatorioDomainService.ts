@@ -31,21 +31,21 @@ export class RelatorioDomainService {
   }
 
   getOutrosExtensionistasNames = (relatorio: RelatorioModel) => {
-    const { outroExtensionista } = relatorio ?? {};
-    const nomes = outroExtensionista?.map((e) => e.nome_usuario);
+    const outroExtensionista = relatorio.outroExtensionista || [];
+    const nomes = outroExtensionista.map((e) => e.nome_usuario);
     return nomes?.join(", ");
   };
 
   getOutrosExtensionistasMatriculas = (relatorio: RelatorioModel) => {
-    const { outroExtensionista } = relatorio ?? {};
-    const matriculas = outroExtensionista?.map((e) => e.matricula_usuario);
+    const outroExtensionista = relatorio.outroExtensionista || [];
+    const matriculas = outroExtensionista.map((e) => e.matricula_usuario);
     return matriculas?.join(", ");
   };
 
   static getOutrosExtensionistasIds = (relatorio: Partial<RelatorioModel>) => {
-    const { outroExtensionista } = relatorio ?? {};
-    const ids = outroExtensionista?.map((e) => e.id_usuario);
-    return ids?.join(",");
+    const outroExtensionista = relatorio.outroExtensionista || [];
+    const ids = outroExtensionista?.map((e) => e.id_usuario).join(",") || "";
+    return ids;
   };
 
   static addTecnicos = (tecnicos: Usuario[], relatorio: RelatorioModel) => {

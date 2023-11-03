@@ -1,23 +1,22 @@
-import sqlite3 from "sqlite3";
-import * as sqlite from "sqlite";
-import { RelatorioModel } from "@features/relatorio/types";
+import { dbInit } from "@infrastructure/database/config/sqlite";
 import { createRelatorioTableQuery } from "@infrastructure/database/queries/createTableQueries";
-import { RelatorioService } from "./RelatorioService";
 import { RelatorioSQLiteDAO } from "@infrastructure/database/relatorio/dao/RelatorioSQLiteDAO";
-import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
+import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
+import { RelatorioService } from "./RelatorioService";
+import { RelatorioModel } from "@features/relatorio/types";
 
 jest.mock("@shared/utils/fileSystemUtils", () => ({
   deleteFile: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock("@infrastructure/api/FileAPI", () =>
+jest.mock("@infrastructure/api/files/FileAPI", () =>
   jest.fn().mockImplementation(() => ({
     getMissingFilesFromServer: async () => jest.fn(),
   }))
 );
 
-jest.mock("@infrastructure/database/config", () => ({
+jest.mock("@infrastructure/database/config/expoSQLite", () => ({
   db: {
     exec: async () => jest.fn(),
     open: async () => jest.fn(),
@@ -42,22 +41,16 @@ const relatorioInput: RelatorioModel = {
   createdAt: undefined,
 };
 
-describe("RelatorioService e2e tests", () => {
-  let db: any;
-  let relatorioService: RelatorioService;
-  // let repository: RelatorioSQLiteRepository;
-  let repository: RelatorioRepository;
-  let relatorioDAO: RelatorioSQLiteDAO;
+let db: any;
+let relatorioService: RelatorioService;
+let repository: RelatorioRepository;
+let relatorioDAO: RelatorioSQLiteDAO;
 
+describe("RelatorioService e2e tests", () => {
   beforeEach(async () => {
-    db = await sqlite.open({
-      filename: ":memory:",
-      driver: sqlite3.Database,
-    });
-    await db.exec(createRelatorioTableQuery);
-    // repository = new RelatorioSQLiteRepository("relatorio", "id", db);
+    db = await dbInit(createRelatorioTableQuery);
     relatorioDAO = new RelatorioSQLiteDAO(db);
-    repository = new RelatorioRepositoryImpl(relatorioDAO);
+    repository = new RelatorioSQLRepository(relatorioDAO);
     relatorioService = new RelatorioService(false, repository);
   });
 
@@ -73,15 +66,13 @@ describe("RelatorioService e2e tests", () => {
     const relatorio = (await relatorioService.getRelatorios(
       "1"
     )) as RelatorioModel[];
-    console.log(
-      "🚀 ~ file: RelatorioService.spec.ts:76 ~ it.only ~ relatorio:",
-      relatorio
-    );
+    console.log("🚀 - it.only - relatorio:", relatorio);
 
     expect(relatorio[0].id).toHaveLength(36);
     expect(relatorio[0].produtorId).toBe("1");
     expect(relatorio[0].assunto).toBe("Teste");
     expect(relatorio[0].numeroRelatorio).toBe(30);
+    expect(relatorio[0].outroExtensionista).toEqual([]);
     expect(relatorio[0].readOnly).toBe(false);
     expect(relatorio[0].createdAt).not.toBeNull();
     expect(Date.parse(relatorio[0].createdAt)).toBeTruthy();
@@ -92,6 +83,7 @@ describe("RelatorioService e2e tests", () => {
 
   it("should update relatorio", async () => {
     const relatorioId = await relatorioService.createRelatorio(relatorioInput);
+
     const relatorios = (await relatorioService.getRelatorios(
       "1"
     )) as RelatorioModel[];

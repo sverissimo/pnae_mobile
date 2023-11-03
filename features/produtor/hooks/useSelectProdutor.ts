@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
-import { ProdutorService } from "@services/ProdutorService";
+import { ProdutorService } from "@services/produtor/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useSnackBar } from "@shared/hooks";
@@ -28,7 +28,7 @@ export const useSelectProdutor = () => {
     }
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "");
-    const produtor = await ProdutorService.getProdutor(cpf);
+    const produtor = await new ProdutorService().getProdutor(cpf);
     if (!produtor) {
       setSnackBarOptions({
         message: "Produtor não encontrado",

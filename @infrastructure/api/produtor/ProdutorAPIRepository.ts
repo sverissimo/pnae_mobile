@@ -1,14 +1,17 @@
-import { env } from "../../config/env";
-import { Produtor } from "../../features/produtor/types/Produtor";
+import { env } from "../../../config/env";
+import { Produtor } from "../../../features/produtor/types/Produtor";
+import { API } from "../API";
 
-export const ProdutorAPI = {
-  createProdutor: async (produtor: Produtor) => {
+export class ProdutorAPIRepository extends API<Produtor> {
+  url = `${env.SERVER_URL}/produtor`;
+
+  createProdutor = async (produtor: Produtor) => {
     try {
       const tst = produtor || {
         idShit: 12n,
         otherShoit: "123",
       };
-      const result = await fetch(`${env.BASE_URL}/produtor`, {
+      const result = await fetch(this.url, {
         body: JSON.stringify(tst),
         method: "POST",
       });
@@ -19,9 +22,9 @@ export const ProdutorAPI = {
         error
       );
     }
-  },
+  };
 
-  getProdutor: async (cpf: string) => {
+  getProdutor = async (cpf: string) => {
     // cpf = cpf || "06627559609"; // dev/test purposes only
     cpf = cpf || "15609048605"; // dev/test purposes only
     // cpf = cpf || "04548773665"; // dev/test purposes only
@@ -31,16 +34,7 @@ export const ProdutorAPI = {
     // cpf = cpf || "81756364672"; // dev/test purposes only
     // cpf = cpf || "05241895604"; // dev/test purposes only
     try {
-      const url = `${env.SERVER_URL}/produtor/${cpf}`;
-      const response = await fetch(url);
-
-      const data = await response.json();
-      if (
-        data?.response?.errors.length > 0 &&
-        data?.response?.data?.produtor === null
-      ) {
-        return null;
-      }
+      const data = await this.get(`${this.url}/${cpf}`);
       return data;
     } catch (error) {
       console.log(
@@ -48,5 +42,5 @@ export const ProdutorAPI = {
         error
       );
     }
-  },
-};
+  };
+}

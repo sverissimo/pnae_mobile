@@ -1,4 +1,4 @@
-import { db } from "../config";
+import { db } from "../config/expoSQLite";
 
 export function checkDBSchema() {
   db.transaction((tx) => {

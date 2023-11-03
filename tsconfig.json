@@ -14,6 +14,7 @@
       "@navigation/*": ["./navigation/*"],
       "@services/*": ["./@services/*"],
       "@shared/*": ["./@shared/*"],
+      "_mockData/*": ["./_mockData/*"],
       "_types/*": ["./types/*"]
     }
   }

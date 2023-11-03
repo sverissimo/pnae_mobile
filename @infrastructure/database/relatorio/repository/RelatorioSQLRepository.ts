@@ -1,43 +1,30 @@
-import { SQLResultSet } from "expo-sqlite";
-
-import { RelatorioModel } from "@features/relatorio/types";
 import humps from "humps";
-
-import { SQLiteRepository } from "@infrastructure/database/SQLiteRepository";
-import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
+import { SQL_DAO } from "@infrastructure/database/dao/SQL_DAO";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
+import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
+import { RelatorioDomainService } from "@domain/relatorio/services";
 
-export class RelatorioSQLiteRepository
-  extends SQLiteRepository<RelatorioLocalDTO>
-  implements RelatorioRepository
-{
+export class RelatorioSQLRepository implements RelatorioRepository {
+  constructor(private relatorioDAO: SQL_DAO<RelatorioLocalDTO>) {}
   async create(relatorio: RelatorioModel): Promise<void> {
     const relatorioLocalDTO = this.toLocalDTO(relatorio);
-    const { queryString, values } = this.createSQLQuery(relatorioLocalDTO);
-    await this.executeSqlCommand(queryString, values);
+    await this.relatorioDAO.create(relatorioLocalDTO);
   }
 
   async findByProdutorID(produtorId: string): Promise<RelatorioModel[]> {
-    const { queryString, values } = this.findSQLQuery(
+    const result = (await this.relatorioDAO.find(
       produtorId,
       "produtor_id"
-    );
-    const result = (await this.executeSqlQuery(
-      queryString,
-      values
     )) as RelatorioLocalDTO[];
 
     const relatorios = result.map(this.camelizeRelatorio);
     relatorios.forEach((r) => (r.readOnly = Boolean(r.readOnly)));
-
     return relatorios;
   }
+
   async findById(id: string): Promise<RelatorioModel | null> {
-    const { queryString, values } = this.findSQLQuery(id);
-    const result = (await this.executeSqlQuery(
-      queryString,
-      values
-    )) as RelatorioLocalDTO[];
+    const result = (await this.relatorioDAO.find(id)) as RelatorioLocalDTO[];
     if (result.length === 0) {
       return null;
     }
@@ -47,33 +34,23 @@ export class RelatorioSQLiteRepository
   }
 
   async findAll(): Promise<RelatorioModel[]> {
-    const relatorioDTOs = (await this.db.find()) as RelatorioLocalDTO[];
+    const relatorioDTOs =
+      (await this.relatorioDAO.find()) as RelatorioLocalDTO[];
     const relatorios = relatorioDTOs.map(this.camelizeRelatorio);
     return relatorios;
   }
 
   async update(relatorio: Partial<RelatorioModel>): Promise<void> {
     const updates = this.toLocalDTO(relatorio);
-    const { queryString, values } = this.updateSQLQuery(updates);
-    await this.executeSqlCommand(queryString, values);
+    const response = await this.relatorioDAO.update(updates);
+    console.log("🚀 - RelatorioSQLRepository - update - response:", response);
+
     return;
   }
 
   async delete(relatorioId: string) {
-    const { queryString, values } = this.deleteSQLQuery(relatorioId);
-    await this.executeSqlCommand(queryString, values);
+    await this.relatorioDAO.delete(relatorioId);
   }
-
-  executeSqlQuery = (
-    query: string,
-    values: any[]
-  ): Promise<RelatorioLocalDTO[]> => {
-    return this.db.all(query, values);
-  };
-
-  executeSqlCommand = (query: string, values: any[]): Promise<SQLResultSet> => {
-    return this.db.run(query, values);
-  };
 
   private toLocalDTO(relatorio: Partial<RelatorioModel>): RelatorioLocalDTO {
     const {
@@ -93,9 +70,10 @@ export class RelatorioSQLiteRepository
       relatorioLocalDTO.numero_relatorio = +numeroRelatorio;
     }
 
-    relatorioLocalDTO.outro_extensionista =
-      outroExtensionista?.map((e) => e.id_usuario).join(",") || "";
-
+    if (outroExtensionista !== undefined) {
+      relatorioLocalDTO.outro_extensionista =
+        RelatorioDomainService.getOutrosExtensionistasIds(relatorio);
+    }
     return relatorioLocalDTO;
   }
 

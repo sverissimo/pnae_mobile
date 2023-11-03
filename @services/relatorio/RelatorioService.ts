@@ -1,31 +1,28 @@
-import { db } from "@infrastructure/database/config";
+import { db } from "@infrastructure/database/config/expoSQLite";
 import { generateUUID } from "@shared/utils/generateUUID";
-import { RelatorioAPI } from "@infrastructure/api/relatorio/repository/RelatorioAPI";
+import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
-import { UsuarioService } from "./UsuarioService";
+import { UsuarioService } from "../usuario/UsuarioService";
 import { Relatorio } from "@features/relatorio/entity";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { RelatorioDomainService } from "@domain/relatorio/services";
 import { toDateMsec } from "@shared/utils/formatDate";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
-import { RelatorioRepositoryImpl } from "@infrastructure/database/relatorio/repository/RelatorioRepositoryImpl";
+import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
 import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
-import { FileService } from "./FileService";
-import { getURIFromID } from "@shared/utils";
-import createRelatorioInput from "../_mockData/createRelatorioInput.json";
 
-const relatorioAPI: RelatorioRepository = new RelatorioAPI();
+const relatorioAPI: RelatorioRepository = new RelatorioAPIRepository();
 const relatorioDAO = new RelatorioExpoSQLDAO(db);
-const relatorioExpoSQLRepository = new RelatorioRepositoryImpl(relatorioDAO);
+const relatorioExpoSQLRepository = new RelatorioSQLRepository(relatorioDAO);
+const userService = new UsuarioService();
 
 export class RelatorioService {
   constructor(
     private isConnected: boolean,
-    private repository: RelatorioRepository = relatorioExpoSQLRepository
-  ) {
-    this.isConnected = isConnected;
-    this.repository = repository;
-  }
+    private repository: RelatorioRepository = relatorioExpoSQLRepository,
+    private apiRepository: RelatorioRepository = relatorioAPI,
+    private usuarioService: UsuarioService = userService
+  ) {}
 
   createRelatorio = async (input: RelatorioModel): Promise<string> => {
     try {
@@ -42,7 +39,7 @@ export class RelatorioService {
       console.log("### Saved resultLocal ok.");
 
       if (this.isConnected) {
-        const remoteResult = await new RelatorioAPI().create(relatorioModel);
+        const remoteResult = await this.apiRepository.create(relatorioModel);
         console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
       }
 
@@ -61,7 +58,9 @@ export class RelatorioService {
       let relatoriosFromServer: RelatorioModel[] = [];
 
       if (this.isConnected) {
-        relatoriosFromServer = await relatorioAPI.findByProdutorID(produtorId);
+        relatoriosFromServer = await this.apiRepository.findByProdutorID(
+          produtorId
+        );
       }
 
       const updatedRelatorios = RelatorioDomainService.mergeRelatorios(
@@ -69,7 +68,7 @@ export class RelatorioService {
         relatoriosFromServer
       );
 
-      const tecnicos = await UsuarioService.fetchTecnicosByRelatorios(
+      const tecnicos = await this.usuarioService.fetchTecnicosByRelatorios(
         updatedRelatorios
       );
 
@@ -101,13 +100,12 @@ export class RelatorioService {
         );
       }
       // Adicona updatedAt, remove unmodified props
-      const relatorioUpdate = new Relatorio(relatorio).getUpdate({
-        ...originalRelatorio,
-        pictureURI: getURIFromID(originalRelatorio.pictureURI),
-        assinaturaURI: getURIFromID(originalRelatorio.assinaturaURI),
-      });
+      const relatorioUpdate = new Relatorio(relatorio).getUpdatedProps(
+        originalRelatorio
+      );
+
       console.log(
-        "🚀 - RelatorioService - originalRelatorio:",
+        "🚀 RelatorioService, 109:",
         JSON.stringify({ originalRelatorio, relatorioUpdate }, null, 2)
       );
 
@@ -115,7 +113,7 @@ export class RelatorioService {
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
-        await relatorioAPI.update(relatorioUpdate);
+        await this.apiRepository.update(relatorioUpdate);
         console.log("### Relatorio updated on server!!");
       }
 
@@ -147,7 +145,7 @@ export class RelatorioService {
     }
     try {
       if (this.isConnected) {
-        const result = await relatorioAPI.delete(relatorioId);
+        const result = await this.apiRepository.delete(relatorioId);
         return result;
       }
       return;

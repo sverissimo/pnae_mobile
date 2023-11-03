@@ -3,9 +3,9 @@ import {
   Atendimento,
   AtendimentoModel,
 } from "@domain/atendimento/entity/Atendimento";
-import { AtendimentoAPI } from "@infrastructure/api/atendimento/AtendimentoAPI";
+import { AtendimentoAPIRepository } from "@infrastructure/api";
 
-const atendimentoAPI: AtendimentoRepository = new AtendimentoAPI();
+const atendimentoAPI: AtendimentoRepository = new AtendimentoAPIRepository();
 
 export class AtendimentoService {
   constructor(private repository: AtendimentoRepository = atendimentoAPI) {}

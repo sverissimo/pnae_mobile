@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { RichEditor } from "react-native-pell-rich-editor";
 
@@ -15,8 +15,8 @@ export const ViewRelatorioScreen = ({ route }: any) => {
   const { relatorio, setRelatorio, relatorios } = useManageRelatorio();
   const {
     pictureURI,
-    setPicture,
     assinaturaURI,
+    setPicture,
     setAssinatura,
     downloadPictureAndSignature,
   } = useManagePictures();
@@ -46,6 +46,15 @@ export const ViewRelatorioScreen = ({ route }: any) => {
       setAssinatura("");
     };
   }, []);
+
+  const imageKey = useMemo(() => {
+    if (pictureURI && assinaturaURI) {
+      return `${pictureURI}-${assinaturaURI}`;
+    }
+    return `picture-${pictureURI || "loading"}-signature-${
+      assinaturaURI || "loading"
+    }`;
+  }, [pictureURI, assinaturaURI]);
 
   const date = formatDate(relatorio?.createdAt);
   return (
@@ -88,8 +97,11 @@ export const ViewRelatorioScreen = ({ route }: any) => {
         <>
           <ListTitle title="Assinatura do Proprietário" />
           <View style={styles.assinaturaContainer}>
-            <Image source={{ uri: assinaturaURI }} style={styles.assinatura} />
-
+            <Image
+              source={{ uri: assinaturaURI }}
+              style={styles.assinatura}
+              key={imageKey}
+            />
             <Text style={styles.assinaturaLabel}>{nomeProdutor}</Text>
           </View>
         </>
@@ -98,7 +110,11 @@ export const ViewRelatorioScreen = ({ route }: any) => {
         <>
           <ListTitle title="Foto da Visita" />
           <View style={styles.pictureContainer}>
-            <Image source={{ uri: pictureURI }} style={styles.picture} />
+            <Image
+              source={{ uri: pictureURI }}
+              style={styles.picture}
+              key={imageKey}
+            />
           </View>
         </>
       )}

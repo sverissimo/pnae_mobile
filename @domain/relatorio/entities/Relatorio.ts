@@ -1,6 +1,7 @@
 import { Usuario } from "@shared/types/Usuario";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
+import { parseURI } from "@shared/utils/parseURI";
 
 export class Relatorio {
   constructor(private readonly relatorio: RelatorioModel) {
@@ -41,18 +42,29 @@ export class Relatorio {
     return numeroRelatorio;
   }
 
-  getUpdate = (originalRelatorio: RelatorioModel): Partial<RelatorioModel> => {
+  getUpdatedProps = (
+    originalRelatorio: RelatorioModel
+  ): Partial<RelatorioModel> => {
     const { createdAt, ...rest } = this.relatorio;
-    const update = getUpdatedProps(originalRelatorio, rest);
+
+    const specialComparators = {
+      numeroRelatorio: (a: string, b: string) => +a === +b,
+      pictureURI: (a: string, b: string) => parseURI(a) === parseURI(b),
+      assinaturaURI: (a: string, b: string) => parseURI(a) === parseURI(b),
+      outroExtensionista: (a: Usuario[], b: Usuario[]) =>
+        a.every((obj) => b.some((o) => o.id_usuario === obj.id_usuario)) &&
+        b.every((obj) => a.some((o) => o.id_usuario === obj.id_usuario)),
+    };
+
+    const update = getUpdatedProps(originalRelatorio, rest, specialComparators);
 
     const id = update.id || originalRelatorio.id || "";
     const updatedAt = new Date().toISOString();
 
-    return { ...update, id, updatedAt };
-  };
+    if (Object.keys(update).length === 1 && !!update.id)
+      throw new Error("Nenhum dado foi alterado");
 
-  AddOutrosExtensionistas = (outroExtensionista: Usuario[]) => {
-    this.relatorio.outroExtensionista = outroExtensionista;
+    return { ...update, id, updatedAt };
   };
 
   toModel() {

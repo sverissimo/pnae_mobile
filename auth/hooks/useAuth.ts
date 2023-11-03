@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { Usuario } from "../../@shared/types/Usuario";
 import { env } from "../../config/env";
-import { UsuarioAPI } from "@infrastructure/api/UsuarioAPI";
+import { UsuarioAPI } from "@infrastructure/api/usuario/UsuarioAPI";
 import { getData, removeValue, storeData } from "@shared/utils";
 import { Alert } from "react-native";
 import { perfisAutorizados } from "@auth/constants";

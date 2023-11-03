@@ -1,5 +1,7 @@
+import { env } from "@config/env";
 import { Relatorio } from "./Relatorio";
 
+const filesFolder = env.FILES_FOLDER;
 const relatorio = {
   id: "1",
   produtorId: "123",
@@ -17,9 +19,20 @@ const relatorio = {
       matricula_usuario: "matriculaOutroExtensionista",
       password: "password",
       perfis: ["admin", "user"],
+      id_und_empresa: "H0806",
+    },
+    {
+      id_usuario: "0123456",
+      nome_usuario: "nomeOutroExtensionista2",
+      matricula_usuario: "matriculaOutroExtensionista2",
+      password: "password2",
+      perfis: ["admin2", "user2"],
+      id_und_empresa: "H0806",
     },
   ],
-  nomeOutroExtensionista: "nomeOutroExtensionista",
+  nomeOutroExtensionista: "nomeOutroExtensionista,nomeOutroExtensionista2",
+  matriculaOutroExtensionista:
+    "matriculaOutroExtensionista,matriculaOutroExtensionista2",
   createdAt: "createdAt",
 };
 
@@ -47,100 +60,69 @@ describe("Relatorio domain class", () => {
     });
   });
 
-  describe("getUpdate", () => {
-    it("should return a new RelatorioModel object with the updatedAt property added", () => {
-      const newRelatorio = new Relatorio(relatorio).getUpdate(relatorio);
+  describe("getUpdatedProps", () => {
+    it("should throw an error if an object with same keys/values has been passed to getUpdatedProps", () => {
+      const relatorioModel = new Relatorio(relatorio);
+      expect(() => relatorioModel.getUpdatedProps(relatorio)).toThrow(
+        "Nenhum dado foi alterado"
+      );
+    });
+
+    it("should return a new RelatorioModel object with changed properties plus id and updatedAt", () => {
+      const updatedRelatorio = {
+        ...relatorio,
+        orientacao: "orientacao2",
+      };
+      const relatorioModel = new Relatorio(updatedRelatorio);
+      const newRelatorio = relatorioModel.getUpdatedProps(relatorio);
+      expect(Object.keys(newRelatorio)).toHaveLength(3);
+      expect(newRelatorio.id).toBe(relatorioModel.toModel().id);
+      expect(newRelatorio).toHaveProperty("orientacao");
       expect(newRelatorio).toHaveProperty("updatedAt");
+      expect(newRelatorio).not.toHaveProperty("numeroRelatorio");
+      expect(newRelatorio).not.toHaveProperty("assunto");
+      expect(newRelatorio).not.toHaveProperty("pictureURI");
+      expect(newRelatorio).not.toHaveProperty("assinaturaURI");
+      expect(newRelatorio).not.toHaveProperty("outroExtensionista");
+      expect(newRelatorio).not.toHaveProperty("nomeOutroExtensionista");
+      expect(newRelatorio).not.toHaveProperty("nomeTecnico");
+      expect(newRelatorio).not.toHaveProperty("createdAt");
+    });
+
+    it("should compare objects regardless of pictureURI and assinaturaURI filePaths, and return only updated ones", () => {
+      const updatedRelatorio = {
+        ...relatorio,
+        pictureURI: filesFolder + "/differentPictureURI",
+        assinaturaURI: filesFolder + "/assinaturaURI",
+        numeroRelatorio: "1",
+        assunto: "assunto2",
+      };
+
+      const relatorioModel = new Relatorio(updatedRelatorio as any);
+      const updates = relatorioModel.getUpdatedProps(relatorio);
+      console.log("🚀 - it - updates:", updates);
+
+      expect(updates).toHaveProperty("assunto");
+      expect(updates).toHaveProperty("pictureURI");
+      expect(updates).toHaveProperty("updatedAt");
+      expect(updates).not.toHaveProperty("numeroRelatorio");
+      expect(updates).not.toHaveProperty("assinaturaURI");
+      expect(updates).not.toHaveProperty("outroExtensionista");
+    });
+
+    it("should throw an error if no properties were updated, even if in different formats", () => {
+      const updatedRelatorio = {
+        ...relatorio,
+        pictureURI: filesFolder + "/pictureURI",
+        assinaturaURI: filesFolder + "/assinaturaURI",
+        numeroRelatorio: "1",
+        outroExtensionista: [...relatorio.outroExtensionista],
+      };
+
+      const relatorioModel = new Relatorio(updatedRelatorio as any);
+      expect(() => relatorioModel.getUpdatedProps(relatorio)).toThrow(
+        expect.objectContaining({ message: "Nenhum dado foi alterado" })
+      );
     });
   });
-
-  //   describe("toLocalDTO", () => {
-  //     it("should return a decamelized RelatorioLocalDTO object", () => {
-  //       const localDTO = new Relatorio(relatorio).toLocalDTO();
-  //       expect(localDTO).toEqual({
-  //         id: "1",
-  //         produtor_id: "123",
-  //         tecnico_id: "456",
-  //         numero_relatorio: 1,
-  //         assunto: "assunto",
-  //         orientacao: "orientacao",
-  //         picture_uri: "pictureURI",
-  //         assinatura_uri: "assinaturaURI",
-  //         outro_extensionista: "789",
-  //         created_at: "createdAt",
-  //       });
-  //     });
-  //   });
-
-  // //   describe("toDTO", () => {
-  // //     it("should return a camelized RelatorioBackendDTO object", () => {
-  // //       const dto = new Relatorio(relatorio).toDTO();
-  // //       expect(dto.numeroRelatorio).toBe(1);
-  // //       expect(typeof dto.outroExtensionista === "string").toBeTruthy;
-  // //     });
-  // //   });
-
-  //   describe("addTecnicos", () => {
-  //     const tecnicos: Usuario[] = [
-  //       {
-  //         id_usuario: "1",
-  //         matricula_usuario: "12345",
-  //         nome_usuario: "John Doe",
-  //         password: "password123",
-  //         perfis: ["admin", "user"],
-  //       },
-  //       {
-  //         id_usuario: "2",
-  //         matricula_usuario: "67890",
-  //         nome_usuario: "Jane Smith",
-  //         password: "password456",
-  //         perfis: ["user"],
-  //       },
-  //     ];
-
-  //     it("should return a new RelatorioModel object with the nomeTecnico and outrosExtensionistasInfo properties added", () => {
-  //       const newRelatorio = new Relatorio(relatorio).addTecnicos(tecnicos);
-  //       expect(newRelatorio).toHaveProperty("nomeTecnico");
-  //       expect(newRelatorio).toHaveProperty("matriculaOutroExtensionista");
-  //       expect(newRelatorio).toHaveProperty("nomeOutroExtensionista");
-  //       // expect(newRelatorio.matriculaOutroExtensionista).toBe(
-  //       //   "matriculaOutroExtensionista"
-  //       // );
-  //       // expect(newRelatorio.nomeOutroExtensionista).toBe(
-  //       //   "nomeOutroExtensionista"
-  //       // );
-  //     });
-  //   });
-
-  //   describe("static toModel", () => {
-  //     it("should return a camelized RelatorioModel object", () => {
-  //       const localDTO: RelatorioLocalDTO = {
-  //         id: "1",
-  //         produtor_id: "123",
-  //         tecnico_id: "456",
-  //         numero_relatorio: 1,
-  //         assunto: "Assunto do relatório",
-  //         orientacao: "Orientação do relatório",
-  //         picture_uri: "https://example.com/picture.jpg",
-  //         assinatura_uri: "https://example.com/assinatura.jpg",
-  //         outro_extensionista: "Nome do outro extensionista",
-  //         read_only: true,
-  //         coordenadas: "123.456,789.012",
-  //         created_at: new Date(),
-  //         updated_at: new Date(),
-  //       };
-  //       const model = Relatorio.toModel(localDTO);
-  //       expect(model).toHaveProperty("produtorId");
-  //       expect(model).toHaveProperty("tecnicoId");
-  //       expect(model).toHaveProperty("numeroRelatorio");
-  //       expect(model).toHaveProperty("assunto");
-  //       expect(model).toHaveProperty("orientacao");
-  //       expect(model).toHaveProperty("pictureURI");
-  //       expect(model).toHaveProperty("assinaturaURI");
-  //       expect(model).toHaveProperty("outroExtensionista");
-  //       expect(model).toHaveProperty("readOnly");
-  //       expect(model).toHaveProperty("coordenadas");
-  //       expect(model).toHaveProperty("createdAt");
-  //     });
-  //   });
 });

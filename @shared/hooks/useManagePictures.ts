@@ -1,7 +1,7 @@
 import { useEffect, useContext, useMemo } from "react";
 import { deleteFile, getSignatureFileURI, takePicture } from "@shared/utils";
 import { ImageContext } from "@contexts/ImageContext";
-import { FileService } from "@services/FileService";
+import { FileService } from "@services/files/FileService";
 import { RelatorioModel } from "@features/relatorio/types";
 
 export function useManagePictures() {
@@ -54,12 +54,9 @@ export function useManagePictures() {
       const updatedURIs = await new FileService().getMissingFilesFromServer(
         relatorio
       );
-      const { pictureURI: picURI, assinaturaURI: assURI } = updatedURIs || {};
-      const pictureURI = picURI || relatorio.pictureURI;
-      const assinaturaURI = assURI || relatorio.assinaturaURI;
-
-      setPicture(pictureURI);
-      setAssinatura(assinaturaURI);
+      const { pictureURI, assinaturaURI } = updatedURIs || {};
+      setPicture(pictureURI || relatorio.pictureURI);
+      setAssinatura(assinaturaURI || relatorio.assinaturaURI);
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:234 ~ error:", error);
       throw new Error("Erro ao baixar as imagens do servidor.");

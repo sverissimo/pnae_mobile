@@ -8,6 +8,8 @@ import { CustomDialog, List, Loading } from "@shared/components/organisms";
 import { RelatorioModel } from "../types";
 import { globalColors } from "@shared/constants/themes";
 import { RELATORIO_COLUMNS } from "../constants";
+import { useEffect } from "react";
+import { deleteFile } from "@shared/utils";
 
 export const RelatorioScreen = () => {
   const { produtor, isLoading: isLoadingProdutor } = useSelectProdutor();
@@ -28,7 +30,6 @@ export const RelatorioScreen = () => {
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
   };
-
   const handleViewRelatorio = (relatorioId: string | number) => {
     navigation.navigate("ViewRelatorioScreen", { relatorioId });
   };
@@ -51,7 +52,7 @@ export const RelatorioScreen = () => {
         <ProdutorInfo />
         <ListTitle
           title={
-            "Para castrar um relatório, é necessário cadastrar um perfil antes."
+            "Para castrar um relatório, selecione um produtor com um perfil de entrada cadastrado."
           }
         />
       </View>

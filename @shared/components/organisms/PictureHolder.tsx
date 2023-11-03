@@ -2,6 +2,7 @@ import { ButtonInputComponent } from "./ButtonInputComponent";
 import { FormFieldContainer, PictureTextListItem } from "../molecules";
 import { FormElement } from "@shared/types";
 import { useManagePictures } from "@shared/hooks/useManagePictures";
+import { useMemo } from "react";
 
 type PictureHolderProps<T> = {
   item: FormElement;
@@ -17,6 +18,15 @@ export const PictureHolder = <T extends Object>({
 }: PictureHolderProps<T>) => {
   const { assinaturaURI, pictureURI, handleTakePicture } = useManagePictures();
   const { type } = item;
+
+  const imageKey = useMemo(() => {
+    if (pictureURI && assinaturaURI) {
+      return `${pictureURI}-${assinaturaURI}`;
+    }
+    return `picture-${pictureURI || "loading"}-signature-${
+      assinaturaURI || "loading"
+    }`;
+  }, [pictureURI, assinaturaURI]);
 
   const handlePress = async () => {
     if (type === "image") {
@@ -58,6 +68,7 @@ export const PictureHolder = <T extends Object>({
         text={item.buttonLabelAlt || ""}
         icon={item.iconAlt || ""}
         onPress={handlePress}
+        key={imageKey}
       />
     </FormFieldContainer>
   );

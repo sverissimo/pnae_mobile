@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { SQL_DAO } from "@infrastructure/database/SQL_DAO";
+import { SQL_DAO } from "@infrastructure/database/dao/SQL_DAO";
 import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
 
 export class RelatorioSQLiteDAO extends SQL_DAO<RelatorioLocalDTO> {

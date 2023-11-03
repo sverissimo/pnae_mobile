@@ -6,7 +6,7 @@ import { RelatorioDomainService } from "@domain/relatorio/services/RelatorioDoma
 import { RelatorioBackendDTO } from "../dto";
 import { RelatorioModel } from "@features/relatorio/types";
 
-export class RelatorioAPI implements RelatorioRepository {
+export class RelatorioAPIRepository implements RelatorioRepository {
   private api = new API<RelatorioModel>();
   private url = `${env.SERVER_URL}/relatorios`;
 
@@ -14,10 +14,8 @@ export class RelatorioAPI implements RelatorioRepository {
     if (!relatorio) throw new Error("Relatorio não pode ser vazio");
     try {
       const relatorioDTO = this.toDTO(relatorio);
-      console.log(
-        "🚀 ~ file: RelatorioAPI.ts:17 ~ RelatorioAPI ~ create ~ relatorioDTO:",
-        relatorioDTO
-      );
+      console.log("🚀 ~ file: RelatorioAPI.ts:17 relatorioDTO:", relatorioDTO);
+
       const formData = await this.createFormData(relatorioDTO);
       const response = await this.api.postFormData(this.url, formData);
       console.log("Form data submitted successfully:", response);
@@ -92,10 +90,10 @@ export class RelatorioAPI implements RelatorioRepository {
 
     const relatorioDTO = rest as RelatorioBackendDTO;
 
-    relatorioDTO.outroExtensionista =
-      RelatorioDomainService.getOutrosExtensionistasIds(
-        relatorio as Partial<RelatorioModel>
-      );
+    if (outroExtensionista !== undefined) {
+      relatorioDTO.outroExtensionista =
+        RelatorioDomainService.getOutrosExtensionistasIds(relatorio);
+    }
 
     return relatorioDTO;
   }

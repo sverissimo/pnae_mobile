@@ -4,6 +4,9 @@ import { useCustomNavigation } from "@navigation/hooks";
 import { RootStackParamList } from "@navigation/types";
 import { Card } from "@shared/components/organisms/HomeCard";
 import { globalColors } from "@shared/constants/themes";
+import { useEffect } from "react";
+import { FileService } from "@services/files/FileService";
+import { RelatorioService } from "@services/index";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
@@ -14,6 +17,11 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate(screen);
   };
 
+  useEffect(() => {
+    new RelatorioService(true).getAllRelatorios().then((r) => {
+      new FileService().removeDanglingFiles(r);
+    });
+  });
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Olá, {user?.nome_usuario}! </Text>

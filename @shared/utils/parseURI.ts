@@ -5,7 +5,8 @@ export function parseURI(uri: string | undefined) {
     return uri;
   }
 
-  const parsedURI = uri.split("/").pop();
+  const parsedURIWithExtension = uri.split("/").pop();
+  const parsedURI = parsedURIWithExtension?.split(".").shift();
   return parsedURI;
 }
 

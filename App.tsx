@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LogBox, StatusBar } from "react-native";
 import Authentication from "./Authentication";
-import { init_db } from "./@infrastructure/database/config";
+import { init_db } from "./@infrastructure/database/config/expoSQLite";
 import {
   ImageContextProvider,
   LocationContextProvider,
@@ -9,12 +9,10 @@ import {
   RelatorioContextProvider,
   UserContextProvider,
 } from "./contexts";
-import { RelatorioService } from "@services/RelatorioService";
 import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./@shared/constants/themes";
-import { checkDBSchema } from "./@infrastructure/database/queries/checkDBSchema";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
-import { deleteFile, fileExists } from "@shared/utils";
+import { checkFiles } from "@shared/utils";
 import { SnackBarProvider } from "@contexts/SnackbarContext";
 import { ConnectionContextProvider } from "@contexts/ConnectionContext";
 
@@ -28,10 +26,7 @@ export default function App() {
       .then(() => {
         setDbInitialized(true);
         console.log("------------------------------------------\n");
-        // checkDBSchema();
-        new RelatorioService(true)
-          .getAllRelatorios()
-          .then((r) => console.log("\nrelatorios", JSON.stringify(r, null, 2)));
+        // checkFiles();
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
