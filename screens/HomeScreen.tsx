@@ -6,7 +6,8 @@ import { Card } from "@shared/components/organisms/HomeCard";
 import { globalColors } from "@shared/constants/themes";
 import { useEffect } from "react";
 import { FileService } from "@services/files/FileService";
-import { RelatorioService } from "@services/index";
+import { ProdutorService, RelatorioService } from "@services/index";
+import { log } from "@shared/utils/log";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
@@ -18,9 +19,11 @@ export const HomeScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    new RelatorioService(true).getAllRelatorios().then((r) => {
-      new FileService().removeDanglingFiles(r);
-    });
+    // new ProdutorService().getProdutor("15609048605").then((r) => log(r));
+    // new RelatorioService(true).getAllRelatorios().then((r) => {
+    //   log(r);
+    //   // new FileService().removeDanglingFiles(r);
+    // });
   });
   return (
     <View style={styles.container}>

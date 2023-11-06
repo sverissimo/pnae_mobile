@@ -5,6 +5,7 @@ import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepos
 import { RelatorioDomainService } from "@domain/relatorio/services/RelatorioDomainService";
 import { RelatorioBackendDTO } from "../dto";
 import { RelatorioModel } from "@features/relatorio/types";
+import { CheckForUpdatesResult } from "@domain/Repository";
 
 export class RelatorioAPIRepository implements RelatorioRepository {
   private api = new API<RelatorioModel>();
@@ -54,6 +55,17 @@ export class RelatorioAPIRepository implements RelatorioRepository {
     });
     const responseData = await result.text();
     console.log("🚀 ~ file: RelatorioAPI.ts:118 ~ responseData:", responseData);
+  }
+
+  async checkForUpdates(
+    input: { id: string; updatedAt: string }[]
+  ): Promise<CheckForUpdatesResult<RelatorioModel>> {
+    const result = (await this.api.post(
+      `${this.url}/checkForUpdates`,
+      input
+    )) as CheckForUpdatesResult<RelatorioModel>;
+    console.log("🚀 ~ file: RelatorioAPI.ts:118 ~ result:", result);
+    return result;
   }
 
   private async createFormData(

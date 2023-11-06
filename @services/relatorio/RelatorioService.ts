@@ -67,7 +67,10 @@ export class RelatorioService {
         relatoriosFromLocalDB,
         relatoriosFromServer
       );
-
+      await this.saveUpdatedRelatorios(
+        relatoriosFromLocalDB,
+        updatedRelatorios
+      );
       const tecnicos = await this.usuarioService.fetchTecnicosByRelatorios(
         updatedRelatorios
       );
@@ -99,20 +102,20 @@ export class RelatorioService {
           `Erro ao atualizar o relatorio número: ${relatorio.numeroRelatorio} - relatorio não encontrado.`
         );
       }
-      // Adicona updatedAt, remove unmodified props
+      // *** Adicona updatedAt, remove unmodified props
       const relatorioUpdate = new Relatorio(relatorio).getUpdatedProps(
         originalRelatorio
-      );
-
-      console.log(
-        "🚀 RelatorioService, 109:",
-        JSON.stringify({ originalRelatorio, relatorioUpdate }, null, 2)
-      );
+      ) as Partial<RelatorioModel> & { id: string };
 
       await this.repository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
+        // *********** O REMOTE PRECISA DO UPDATE TODO, pq pode estar offline quando atualizou pela última vez
+
+        // LIKE THIS:
+        // await this.apiRepository.update(new Relatorio(relatorio).toModel());
+
         await this.apiRepository.update(relatorioUpdate);
         console.log("### Relatorio updated on server!!");
       }
@@ -153,6 +156,34 @@ export class RelatorioService {
       const error = e instanceof Error ? new Error(e.message) : e;
       throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
     }
+  };
+
+  saveUpdatedRelatorios = async (
+    existingRelatorios: RelatorioModel[],
+    updatedRelatorios: RelatorioModel[]
+  ) => {
+    const relatoriosToCreate = updatedRelatorios.filter((r) => {
+      const existing = existingRelatorios.find((er) => er.id === r.id);
+      return !existing;
+    });
+    const relatoriosToUpdate = updatedRelatorios.filter((r) => {
+      const existing = existingRelatorios.find((er) => er.id === r.id);
+      return existing && existing.updatedAt !== r.updatedAt;
+    });
+
+    for (const relatorio of relatoriosToCreate) {
+      await this.repository.create(relatorio);
+    }
+    console.log(
+      `### Saved ${relatoriosToCreate.length} new relatorios from server.`
+    );
+
+    for (const relatorio of relatoriosToUpdate) {
+      await this.repository.update(relatorio);
+    }
+    console.log(
+      `### Updated ${relatoriosToUpdate.length} relatorios from server.`
+    );
   };
 
   getAllRelatorios = async () => await this.repository.findAll();

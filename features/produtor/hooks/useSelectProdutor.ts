@@ -5,6 +5,7 @@ import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useSelectProdutor = () => {
   const {
@@ -27,8 +28,17 @@ export const useSelectProdutor = () => {
       return;
     }
     setIsLoading(true);
-    const cpf = CPFProdutor.replace(/\D/g, "");
+    const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
+
+    // const allData = await AsyncStorage.getItem("produtores");
+    // const p = JSON.parse(allData!);
+    // console.log("🚀 - fetchProdutoraaaaaaaaaaaaaaaaaaaaa - p:", Object.keys(p));
+    // console.log("🚀 - fetchProdutor - allDataZzzzXxxxxxxxx:", allData);
+
     const produtor = await new ProdutorService().getProdutor(cpf);
+    const ids = await new ProdutorService().getAllLocalProdutoresIds();
+    console.log("🚀 - ALL --------- right:", { ids });
+
     if (!produtor) {
       setSnackBarOptions({
         message: "Produtor não encontrado",
