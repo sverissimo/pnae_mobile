@@ -1,10 +1,4 @@
-export type CheckForUpdatesResult<T> = {
-  upToDateIds: string[];
-  outdatedIdsOnServer: string[];
-  missingIdsOnServer: string[];
-  outdatedOnClient: T[];
-  missingOnClient: T[];
-};
+import { CheckForUpdatesResult } from "@services/system/types/CheckForUpdatesResult";
 
 export interface Repository<T> {
   create(entity: T): Promise<void>;

@@ -25,8 +25,8 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("---------------------------------------\n");
-        // checkFiles();
+        console.log("--------------------------------------\n");
+        checkFiles();
       })
       .catch((err: unknown) => {
         console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);

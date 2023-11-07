@@ -19,7 +19,7 @@ const userService = new UsuarioService();
 export class RelatorioService {
   constructor(
     private isConnected: boolean,
-    private repository: RelatorioRepository = relatorioExpoSQLRepository,
+    private localRepository: RelatorioRepository = relatorioExpoSQLRepository,
     private apiRepository: RelatorioRepository = relatorioAPI,
     private usuarioService: UsuarioService = userService
   ) {}
@@ -35,7 +35,7 @@ export class RelatorioService {
 
       const relatorioModel = new Relatorio(relatorio).toModel();
 
-      await this.repository.create(relatorioModel);
+      await this.localRepository.create(relatorioModel);
       console.log("### Saved resultLocal ok.");
 
       if (this.isConnected) {
@@ -50,9 +50,35 @@ export class RelatorioService {
     }
   };
 
+  async createMany({
+    missingOnClient,
+    missingOnServer,
+  }: {
+    missingOnClient: RelatorioModel[];
+    missingOnServer: RelatorioModel[];
+  }) {
+    if (missingOnClient?.length) {
+      try {
+        await this.localRepository.createMany(missingOnClient);
+      } catch (error) {
+        console.error("Error creating local reports:", error);
+        throw error;
+      }
+    }
+
+    if (this.isConnected && missingOnServer?.length) {
+      try {
+        await this.apiRepository.createMany(missingOnServer);
+      } catch (error) {
+        console.error("Error creating API reports:", error);
+        throw error;
+      }
+    }
+  }
+
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
     try {
-      const relatoriosFromLocalDB = await this.repository.findByProdutorID(
+      const relatoriosFromLocalDB = await this.localRepository.findByProdutorID(
         produtorId
       );
       let relatoriosFromServer: RelatorioModel[] = [];
@@ -107,19 +133,13 @@ export class RelatorioService {
         originalRelatorio
       ) as Partial<RelatorioModel> & { id: string };
 
-      await this.repository.update(relatorioUpdate);
+      await this.localRepository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
-        // *********** O REMOTE PRECISA DO UPDATE TODO, pq pode estar offline quando atualizou pela última vez
-
-        // LIKE THIS:
-        // await this.apiRepository.update(new Relatorio(relatorio).toModel());
-
         await this.apiRepository.update(relatorioUpdate);
         console.log("### Relatorio updated on server!!");
       }
-
       return;
     } catch (error) {
       if (error instanceof Error) {
@@ -130,14 +150,31 @@ export class RelatorioService {
     }
   };
 
+  async updateMany({
+    outdatedOnClient,
+    outdatedOnServer,
+  }: {
+    outdatedOnClient: RelatorioModel[];
+    outdatedOnServer: RelatorioModel[];
+  }) {
+    if (outdatedOnClient?.length) {
+      await this.localRepository.updateMany!(outdatedOnClient);
+    }
+    if (this.isConnected && outdatedOnServer?.length) {
+      await this.apiRepository.updateMany!(outdatedOnServer);
+    }
+  }
+
   deleteRelatorio = async (relatorioId: string) => {
     try {
-      const relatorioToDelete = await this.repository.findById!(relatorioId);
+      const relatorioToDelete = await this.localRepository.findById!(
+        relatorioId
+      );
       if (!relatorioToDelete) {
         throw new Error(`Relatório não encontrado.`);
       }
 
-      await this.repository.delete(relatorioId);
+      await this.localRepository.delete(relatorioId);
 
       const { assinaturaURI, pictureURI } = relatorioToDelete;
       for (const file of [assinaturaURI, pictureURI]) {
@@ -172,19 +209,19 @@ export class RelatorioService {
     });
 
     for (const relatorio of relatoriosToCreate) {
-      await this.repository.create(relatorio);
+      await this.localRepository.create(relatorio);
     }
     console.log(
       `### Saved ${relatoriosToCreate.length} new relatorios from server.`
     );
 
     for (const relatorio of relatoriosToUpdate) {
-      await this.repository.update(relatorio);
+      await this.localRepository.update(relatorio);
     }
     console.log(
       `### Updated ${relatoriosToUpdate.length} relatorios from server.`
     );
   };
 
-  getAllRelatorios = async () => await this.repository.findAll();
+  getLocalRelatorios = async () => await this.localRepository.findAll();
 }

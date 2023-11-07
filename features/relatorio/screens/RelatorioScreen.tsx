@@ -8,8 +8,6 @@ import { CustomDialog, List, Loading } from "@shared/components/organisms";
 import { RelatorioModel } from "../types";
 import { globalColors } from "@shared/constants/themes";
 import { RELATORIO_COLUMNS } from "../constants";
-import { useEffect } from "react";
-import { deleteFile } from "@shared/utils";
 
 export const RelatorioScreen = () => {
   const { produtor, isLoading: isLoadingProdutor } = useSelectProdutor();
@@ -46,7 +44,7 @@ export const RelatorioScreen = () => {
       </View>
     );
   }
-  if (!produtor.perfis?.length) {
+  if (!produtor?.perfis?.length) {
     return (
       <View style={styles.container}>
         <ProdutorInfo />
@@ -83,13 +81,13 @@ export const RelatorioScreen = () => {
             />
           </>
         ) : (
+          relatorios?.length === 0 &&
           !isLoading &&
-          !isLoadingProdutor &&
-          relatorios?.length === 0 && (
+          !isLoadingProdutor && (
             <ListTitle title={"Nenhum relatório cadastrado"} />
           )
         )}
-
+        {(isLoading || isLoadingProdutor) && <Loading />}
         {!isLoading && !isLoadingProdutor && (
           <AddButton
             label="Criar Novo Relatório"

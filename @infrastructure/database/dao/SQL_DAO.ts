@@ -26,6 +26,36 @@ export abstract class SQL_DAO<T extends Entity> {
     await this.executeSqlCommand(queryString, values);
   }
 
+  async createMany(entities: T[]): Promise<void> {
+    const keys: (keyof T)[] = Object.keys(entities[0]).filter(
+      (key) =>
+        entities[0][key as keyof T] !== null &&
+        entities[0][key as keyof T] !== undefined
+    ) as (keyof T)[];
+
+    const values = entities.map((entity) =>
+      keys.map((key) => entity[key as keyof T])
+    );
+
+    // const placeholders = keys.map(() => "?").join(", ");
+    const placeholders = entities
+      .map(() => `(${keys.map(() => "?").join(", ")})`)
+      .join(", ");
+
+    const columns = keys.join(", ");
+
+    const queryString = `
+        INSERT INTO ${this.tableName} (${columns})
+        VALUES (${placeholders})
+        `;
+
+    console.log("🚀 - SQL_DAO<T - createMany - queryString, values.flat():", {
+      queryString,
+      values: values.flat(),
+    });
+    await this.executeSqlCommand(queryString, values.flat());
+  }
+
   async find(values?: unknown, columnName?: string): Promise<T[]> {
     let queryString = `SELECT * FROM ${this.tableName} `;
     const column = columnName || this.primaryKey;
@@ -54,6 +84,12 @@ export abstract class SQL_DAO<T extends Entity> {
     const valuesWithId = [...values, id];
 
     await this.executeSqlCommand(queryString, valuesWithId);
+  }
+
+  async updateMany(entities: T[]): Promise<void> {
+    for (const entity of entities) {
+      await this.update(entity);
+    }
   }
 
   async delete(id: string): Promise<void> {

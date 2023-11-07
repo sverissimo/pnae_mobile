@@ -6,22 +6,7 @@ export class ProdutorAPIRepository extends API<Produtor> {
   url = `${env.SERVER_URL}/produtor`;
 
   createProdutor = async (produtor: Produtor) => {
-    try {
-      const tst = produtor || {
-        idShit: 12n,
-        otherShoit: "123",
-      };
-      const result = await fetch(this.url, {
-        body: JSON.stringify(tst),
-        method: "POST",
-      });
-      return result;
-    } catch (error) {
-      console.log(
-        "🚀 ~ file: ProdutorAPI.ts:17 ~ createProdutor: ~ error:",
-        error
-      );
-    }
+    return "This method needs to be implemented";
   };
 
   getProdutor = async (cpf: string) => {
@@ -34,7 +19,7 @@ export class ProdutorAPIRepository extends API<Produtor> {
     // cpf = cpf || "81756364672"; // dev/test purposes only
     // cpf = cpf || "05241895604"; // dev/test purposes only
     try {
-      const data = await this.get(`${this.url}/${cpf}`);
+      const data = await this.get(`${this.url}?cpfProdutor=${cpf}`);
       return data;
     } catch (error) {
       console.log(

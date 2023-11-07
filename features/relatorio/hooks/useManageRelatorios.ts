@@ -70,7 +70,6 @@ export const useManageRelatorio = (produtorId?: string) => {
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");
-
       Object.assign(relatorioInput, createRelatorioInput); // Testing ONLY!!!
 
       const relatorioId = await new RelatorioService(connected).createRelatorio(

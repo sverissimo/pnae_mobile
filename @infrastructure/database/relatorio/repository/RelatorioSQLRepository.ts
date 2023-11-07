@@ -12,6 +12,11 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     await this.relatorioDAO.create(relatorioLocalDTO);
   }
 
+  async createMany(relatorios: RelatorioModel[]): Promise<void> {
+    const relatoriosLocalDTO = relatorios.map(this.toLocalDTO);
+    await this.relatorioDAO.createMany(relatoriosLocalDTO);
+  }
+
   async findByProdutorID(produtorId: string): Promise<RelatorioModel[]> {
     const result = (await this.relatorioDAO.find(
       produtorId,
@@ -46,6 +51,11 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     console.log("🚀 - RelatorioSQLRepository - update - response:", response);
 
     return;
+  }
+
+  async updateMany(relatorios: RelatorioModel[]): Promise<void> {
+    const relatoriosLocalDTO = relatorios.map(this.toLocalDTO);
+    await this.relatorioDAO.updateMany(relatoriosLocalDTO);
   }
 
   async delete(relatorioId: string) {
