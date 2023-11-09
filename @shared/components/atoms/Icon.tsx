@@ -1,4 +1,4 @@
-import { Ionicons, FontAwesome } from "@expo/vector-icons/";
+import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons/";
 
 type IconProps = {
   iconName: string;
@@ -37,6 +37,13 @@ export const Icon = (props: IconProps) => {
     iconName === "microphone" ||
     iconName === "pencil-square-o" ? (
     <FontAwesome
+      name={iconName}
+      size={defaultSize}
+      color={defaultColor}
+      {...props}
+    />
+  ) : iconName === "wifi" || iconName === "wifi-off" ? (
+    <MaterialIcons
       name={iconName}
       size={defaultSize}
       color={defaultColor}

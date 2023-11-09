@@ -6,9 +6,9 @@ import { PropriedadeScreen } from "../features/propriedade/screens/PropriedadeSc
 import { PerfilScreen } from "../features/perfil/screens/PerfilScreen";
 import { RelatorioScreen } from "../features/relatorio/screens/RelatorioScreen";
 import { RootStackParamList } from "./types";
-import { LogoutComponent } from "../@shared/components/molecules/Logout";
 
 import { globalColors } from "../@shared/constants/themes";
+import { HeaderButtons } from "@shared/components/organisms/HeaderButtons";
 import { Icon } from "@shared/components/atoms";
 
 const { primary, grayscale } = globalColors;
@@ -33,7 +33,7 @@ export function TabNavigator() {
         tabBarStyle: {
           backgroundColor: backgroundHeaderColor,
         },
-        headerRight: () => <LogoutComponent onLogout={confirmLogout} />,
+        headerRight: () => <HeaderButtons onLogout={confirmLogout} />,
       }}
     >
       <BottomTabs.Screen
