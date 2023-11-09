@@ -14,7 +14,8 @@ export class SyncService {
     private systemAPI = new SystemAPI()
   ) {}
 
-  async syncRelatorios() {
+  async syncRelatorios(isConnected: boolean) {
+    if (!isConnected) return;
     const syncData = await this.getRelatoriosSyncInfo();
     log(syncData);
 

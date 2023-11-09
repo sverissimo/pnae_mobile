@@ -19,16 +19,15 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate(screen);
   };
 
-  useEffect(() => {
-    // new SyncService().syncRelatorios().catch((e) => console.log(e));
-    // new ProdutorService().getProdutor("15609048605").then((r) => log(r));
-    //   // new FileService().removeDanglingFiles(r);
-    // new RelatorioService(true).getLocalRelatorios().then((r) => {
-    //   // log(r.find((r) => r.numeroRelatorio === 99));
-    //   log(r.map((r) => r.updatedAt));
-    //   console.log("***********************");
-    // });
-  });
+  // useEffect(() => {
+  // new ProdutorService().getProdutor("15609048605").then((r) => log(r));
+  //   //   // new FileService().removeDanglingFiles(r);
+  //   // new RelatorioService(true).getLocalRelatorios().then((r) => {
+  //   //   // log(r.find((r) => r.numeroRelatorio === 99));
+  //   //   log(r.map((r) => r.updatedAt));
+  //   //   console.log("***********************");
+  //   // });
+  // }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Olá, {user?.nome_usuario}! </Text>

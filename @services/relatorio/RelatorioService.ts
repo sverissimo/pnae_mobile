@@ -135,10 +135,10 @@ export class RelatorioService {
       await this.localRepository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
-      // if (this.isConnected) {
-      //   await this.apiRepository.update(relatorioUpdate);
-      //   console.log("### Relatorio updated on server!!");
-      // }
+      if (this.isConnected) {
+        await this.apiRepository.update(relatorioUpdate);
+        console.log("### Relatorio updated on server!!");
+      }
       return;
     } catch (error) {
       if (error instanceof Error) {
