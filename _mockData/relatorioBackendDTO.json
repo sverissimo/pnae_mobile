@@ -1,0 +1,14 @@
+{
+  "id": "123",
+  "produtorId": "123",
+  "tecnicoId": "123",
+  "numeroRelatorio": 1,
+  "assunto": "Assunto",
+  "orientacao": "Orientação",
+  "pictureURI": "pictureURI",
+  "assinaturaURI": "assinaturaURI",
+  "outroExtensionista": "456",
+  "readOnly": true,
+  "coordenadas": "",
+  "createdAt": "2021-10-01T00:00:00.000Z"
+}

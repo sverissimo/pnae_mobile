@@ -1,0 +1,24 @@
+{
+  "id": "123",
+  "produtorId": "123",
+  "tecnicoId": "123",
+  "numeroRelatorio": 1,
+  "nomeTecnico": "John Doe",
+  "assunto": "Assunto",
+  "orientacao": "Orientação",
+  "pictureURI": "pictureURI",
+  "assinaturaURI": "assinaturaURI",
+  "outroExtensionista": [
+    {
+      "id_usuario": "456",
+      "matricula_usuario": "456",
+      "nome_usuario": "Jane Doe",
+      "id_und_empresa": "H0806"
+    }
+  ],
+  "nomeOutroExtensionista": "Jane Doe",
+  "matriculaOutroExtensionista": "456",
+  "coordenadas": "",
+  "readOnly": true,
+  "createdAt": "2021-10-01T00:00:00.000Z"
+}

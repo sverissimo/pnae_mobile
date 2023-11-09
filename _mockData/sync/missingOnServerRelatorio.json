@@ -1,0 +1,22 @@
+{
+  "missingOnClient": [],
+  "missingOnServer": [
+    {
+      "assinaturaURI": "1698872797122",
+      "assunto": "H47",
+      "coordenadas": "-43.9505751,-19.8643334",
+      "createdAt": "2023-10-30T23:56:54.211Z",
+      "id": "439927a9-96df-43d9-b284-f09f0f326e43",
+      "numeroRelatorio": 55,
+      "orientacao": "<div>lllll</div><div><br></div>Adicionei mais coisa aqui também. <div><br></div><div>*****____</div><div><br></div><div><b><i>4400</i></b></div><div><br></div><div>more info</div>Conclusão. ",
+      "outroExtensionista": "",
+      "pictureURI": "3ccb59e4-8db8-4069-b1d7-f1e27a81cc67",
+      "produtorId": "63536",
+      "readOnly": 0,
+      "tecnicoId": "3201",
+      "updatedAt": "2023-11-01T21:24:56.183Z"
+    }
+  ],
+  "outdatedOnClient": [],
+  "outdatedOnServer": []
+}
