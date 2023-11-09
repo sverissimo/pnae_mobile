@@ -1,9 +1,11 @@
 import { SystemAPI } from "@infrastructure/api/@system/SystemAPI";
 import { ProdutorService, RelatorioService } from "..";
-
 import { RelatorioModel } from "@features/relatorio/types";
-import { CheckForUpdatesResult } from "./types/CheckForUpdatesResult";
-import { CheckForUpdatesData } from "./types/CheckForUpdatesData";
+import { CheckForUpdatesResponse } from "./types/CheckForUpdatesResponse";
+import { log } from "@shared/utils/log";
+import { SyncData } from "./types/SyncData";
+import { parseURI } from "@shared/utils";
+import { RelatorioDomainService } from "@domain/relatorio/services";
 
 export class SyncService {
   constructor(
@@ -13,60 +15,80 @@ export class SyncService {
   ) {}
 
   async syncRelatorios() {
+    const syncData = await this.getRelatoriosSyncInfo();
+    log(syncData);
+
     const {
       missingOnServer,
       outdatedOnServer,
       missingOnClient,
       outdatedOnClient,
-    } = await this.getRelatoriosSyncInfo();
+      upToDateIds,
+    } = syncData;
 
-    console.info({
-      missingOnServer,
-      outdatedOnServer,
+    console.log("--------------Initiating sync service------------------");
+
+    await this.relatorioService.createMany({
       missingOnClient,
+      missingOnServer,
+    });
+
+    await this.relatorioService.updateMany({
       outdatedOnClient,
-    });
-    const createResult = await this.relatorioService.createMany({
-      missingOnClient,
-      missingOnServer,
+      outdatedOnServer,
     });
 
-    // const updateResult = await this.relatorioService.updateMany({
-    //   outdatedOnClient,
-    //   outdatedOnServer,
-    // });
+    console.log("--------------Sync service concluded------------------");
   }
 
-  async getRelatoriosSyncInfo(): Promise<CheckForUpdatesData<RelatorioModel>> {
-    const produtorIds = await this.produtorService.getAllLocalProdutoresIds();
+  async getRelatoriosSyncInfo(): Promise<SyncData<RelatorioModel>> {
+    const [produtorIds, relatoriosLocal] = await Promise.all([
+      this.produtorService.getAllLocalProdutoresIds(),
+      this.relatorioService.getLocalRelatorios(),
+    ]);
 
-    const relatoriosLocal = await this.relatorioService.getLocalRelatorios();
-
-    const relatoriosSyncInfo = relatoriosLocal.map((relatorio) => ({
+    const relatoriosSyncRequest = relatoriosLocal.map((relatorio) => ({
       id: relatorio.id,
+      assinaturaURI: parseURI(relatorio.assinaturaURI),
+      pictureURI: parseURI(relatorio.pictureURI),
       updatedAt: relatorio.updatedAt,
     }));
 
-    const syncInfo = (await this.systemAPI.checkForUpdates({
+    const syncInfo = await this.getCheckForUpdatesResponse(
+      produtorIds,
+      relatoriosSyncRequest
+    );
+
+    const { missingIdsOnServer, outdatedOnServer, ...rest } = syncInfo;
+
+    const toCreateOnServer = relatoriosLocal.filter((r) =>
+      missingIdsOnServer.includes(r.id)
+    );
+
+    const toUpdateOnServer = RelatorioDomainService.getDataToUpdateOnServer(
+      relatoriosLocal,
+      outdatedOnServer
+    );
+
+    return {
+      ...rest,
+      missingOnServer: toCreateOnServer,
+      outdatedOnServer: toUpdateOnServer,
+    };
+  }
+
+  private async getCheckForUpdatesResponse(
+    produtorIds: string[],
+    relatoriosSyncInfo: any
+  ): Promise<CheckForUpdatesResponse<RelatorioModel>> {
+    const response = await this.systemAPI.checkForUpdates({
       produtorIds,
       relatoriosSyncInfo,
-    })) as CheckForUpdatesResult<RelatorioModel>;
-    const { missingIdsOnServer, outdatedIdsOnServer, ...rest } = syncInfo;
-    console.log("🚀 - SyncService - getRelatoriosSyncInfo - rest:", rest);
-
-    const missingOnServer = relatoriosLocal.filter((r) =>
-      missingIdsOnServer?.includes(r.id)
-    );
-    const outdatedOnServer = relatoriosLocal.filter((r) =>
-      outdatedIdsOnServer?.includes(r.id)
-    );
-
-    const syncData = {
-      ...rest,
-      missingOnServer,
-      outdatedOnServer,
-    };
-
-    return syncData;
+    });
+    if (!response) {
+      console.log("🚀 - SyncService - response:", response);
+      throw new Error("*** Failed to get check for updates response");
+    }
+    return response as CheckForUpdatesResponse<RelatorioModel>;
   }
 }

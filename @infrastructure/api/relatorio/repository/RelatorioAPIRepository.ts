@@ -1,10 +1,12 @@
 import { API } from "@infrastructure/api/API";
 import { env } from "@config/env";
-import { parseURI } from "@shared/utils/parseURI";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { RelatorioDomainService } from "@domain/relatorio/services/RelatorioDomainService";
 import { RelatorioBackendDTO } from "../dto";
 import { RelatorioModel } from "@features/relatorio/types";
+import { parseURI } from "@shared/utils/parseURI";
+import { log } from "@shared/utils/log";
+import { checkFiles, fileExists } from "@shared/utils/fileSystemUtils";
 
 export class RelatorioAPIRepository implements RelatorioRepository {
   private api = new API<RelatorioModel>();
@@ -14,10 +16,13 @@ export class RelatorioAPIRepository implements RelatorioRepository {
     if (!relatorio) throw new Error("Relatorio não pode ser vazio");
     try {
       const relatorioDTO = this.toDTO(relatorio);
-      console.log("🚀 ~ file: RelatorioAPI.ts:17 relatorioDTO:", relatorioDTO);
+      const relatorioWithFileChecks = await this.getUpdatedDTOWithFileChecks(
+        relatorioDTO
+      );
 
-      const formData = await this.createFormData(relatorioDTO);
+      const formData = await this.createFormData(relatorioWithFileChecks);
       const response = await this.api.postFormData(this.url, formData);
+
       console.log("Form data submitted successfully:", response);
     } catch (error) {
       console.error("RelatorioAPI.ts:49 - error submitting form data: ", error);
@@ -26,9 +31,11 @@ export class RelatorioAPIRepository implements RelatorioRepository {
   }
 
   async createMany(relatorios: RelatorioModel[]): Promise<void> {
-    for (const relatorio of relatorios) {
-      await this.create(relatorio);
-    }
+    const syncResult = await Promise.allSettled(
+      relatorios.map((r) => this.create(r))
+    );
+
+    console.log("🚀 RelAPIRepository - createMany 54 syncResult:", syncResult);
   }
 
   async findByProdutorID(produtorId: string) {
@@ -43,8 +50,11 @@ export class RelatorioAPIRepository implements RelatorioRepository {
 
   async update(relatorioInput: Partial<RelatorioModel>): Promise<void> {
     const relatorio = this.toDTO(relatorioInput);
-    const { id, ...relatorioDTO } = relatorio;
-    console.log("🚀 RelatorioAPI.ts:40 - update ~ relatorioDTO:", relatorioDTO);
+    const relatorioWithFileChecks = await this.getUpdatedDTOWithFileChecks(
+      relatorio
+    );
+    const { id, ...relatorioDTO } = relatorioWithFileChecks;
+
     const formData = await this.createFormData(relatorioDTO);
 
     const response = await this.api.patchFormData(
@@ -73,7 +83,10 @@ export class RelatorioAPIRepository implements RelatorioRepository {
   ): Promise<FormData> {
     const formData: any = new FormData();
     Object.entries(relatorio).forEach(([key, value]) => {
+      if (value === undefined) return;
       const isURI = key === "pictureURI" || key === "assinaturaURI";
+      if (isURI && !value) return;
+
       formData.append(key, isURI ? parseURI(value)?.split(".")[0] : value);
     });
     const { pictureURI, assinaturaURI } = relatorio;
@@ -84,7 +97,7 @@ export class RelatorioAPIRepository implements RelatorioRepository {
         formData.append(URIKey[i], {
           uri,
           name: parseURI(uri),
-          type: "image/png",
+          type: URIKey[i] === "foto" ? "image/jpeg" : "image/png",
         });
       }
     });
@@ -108,6 +121,25 @@ export class RelatorioAPIRepository implements RelatorioRepository {
         RelatorioDomainService.getOutrosExtensionistasIds(relatorio);
     }
 
-    return { ...relatorioDTO, readOnly: !!readOnly };
+    return {
+      ...relatorioDTO,
+      readOnly: !!readOnly,
+    };
+  }
+
+  private async getUpdatedDTOWithFileChecks(
+    relatorioDTO: RelatorioBackendDTO
+  ): Promise<RelatorioBackendDTO> {
+    const [{ exists: assinaturaExists }, { exists: pictureExists }] =
+      await Promise.all([
+        fileExists(relatorioDTO.assinaturaURI),
+        fileExists(relatorioDTO.pictureURI),
+      ]);
+    console.log({ assinaturaExists, pictureExists });
+    return {
+      ...relatorioDTO,
+      assinaturaURI: assinaturaExists ? relatorioDTO.assinaturaURI : "",
+      pictureURI: pictureExists ? relatorioDTO.pictureURI : "",
+    };
   }
 }

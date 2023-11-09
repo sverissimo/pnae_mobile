@@ -7,6 +7,10 @@ import relatorioDTO from "_mockData/relatorioBackendDTO.json";
 const relatorio = relatorioModel as RelatorioModel;
 const expectedDTO = relatorioDTO as RelatorioBackendDTO;
 
+jest.mock("@shared/utils/fileSystemUtils", () => ({
+  FileSystem: {},
+}));
+
 const api = new RelatorioAPIRepository() as any;
 describe("Test RelatorioAPI methods", () => {
   describe("toDTO", () => {

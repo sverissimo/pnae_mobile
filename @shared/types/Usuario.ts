@@ -3,4 +3,5 @@ export type Usuario = {
   nome_usuario: string;
   matricula_usuario: string;
   password?: string;
+  perfis?: string[];
 };

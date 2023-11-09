@@ -27,33 +27,10 @@ export abstract class SQL_DAO<T extends Entity> {
   }
 
   async createMany(entities: T[]): Promise<void> {
-    const keys: (keyof T)[] = Object.keys(entities[0]).filter(
-      (key) =>
-        entities[0][key as keyof T] !== null &&
-        entities[0][key as keyof T] !== undefined
-    ) as (keyof T)[];
-
-    const values = entities.map((entity) =>
-      keys.map((key) => entity[key as keyof T])
+    const syncResult = await Promise.allSettled(
+      entities.map((e) => this.create(e))
     );
-
-    // const placeholders = keys.map(() => "?").join(", ");
-    const placeholders = entities
-      .map(() => `(${keys.map(() => "?").join(", ")})`)
-      .join(", ");
-
-    const columns = keys.join(", ");
-
-    const queryString = `
-        INSERT INTO ${this.tableName} (${columns})
-        VALUES (${placeholders})
-        `;
-
-    console.log("🚀 - SQL_DAO<T - createMany - queryString, values.flat():", {
-      queryString,
-      values: values.flat(),
-    });
-    await this.executeSqlCommand(queryString, values.flat());
+    console.log("🚀 RelatorioSQLRepo - CreateMany 34 syncResult:", syncResult);
   }
 
   async find(values?: unknown, columnName?: string): Promise<T[]> {
@@ -87,9 +64,10 @@ export abstract class SQL_DAO<T extends Entity> {
   }
 
   async updateMany(entities: T[]): Promise<void> {
-    for (const entity of entities) {
-      await this.update(entity);
-    }
+    const syncResult = await Promise.allSettled(
+      entities.map((e) => this.update(e))
+    );
+    console.log("🚀 RelatorioSQLRepo - UpdateMany 94 syncResult:", syncResult);
   }
 
   async delete(id: string): Promise<void> {

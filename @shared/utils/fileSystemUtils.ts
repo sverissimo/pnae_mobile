@@ -1,6 +1,7 @@
 import * as FileSystem from "expo-file-system";
 import { log } from "./log";
 import { parseURI } from "./parseURI";
+import { env } from "@config/env";
 
 /**Returns the URI of the saved (or existing) file or throws an error */
 export const saveFile = async (
@@ -50,6 +51,7 @@ export const deleteFile = async (fileURI: string) => {
 export const fileExists = async (fileURI?: string) => {
   if (!fileURI) return { exists: false, uri: "" };
   const fileInfo = await FileSystem.getInfoAsync(fileURI);
+  console.log("🚀 - fileExists - fileInfo:", fileInfo);
   return fileInfo;
 };
 
@@ -63,8 +65,9 @@ export const listFiles = async (folder: string) => {
 
 export const checkFiles = () => {
   listFiles(
-    "file:///data/user/0/br.gov.mg.emater.pnae_mobile/cache/ImagePicker"
-    //  "file:///data/user/0/br.gov.mg.emater.pnae_mobile/files"
+    // "file:///data/user/0/br.gov.mg.emater.pnae_mobile/cache/ImagePicker"
+    env.PICTURE_FOLDER
+    // env.ASSINATURA_FOLDER
   ).then((files) => console.log("files", log(files)));
   // checkDBSchema();
   // new RelatorioService(true).getAllRelatorios().then((r) => {

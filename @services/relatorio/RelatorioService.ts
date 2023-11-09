@@ -1,15 +1,15 @@
 import { db } from "@infrastructure/database/config/expoSQLite";
-import { generateUUID } from "@shared/utils/generateUUID";
+import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
+import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
 import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { UsuarioService } from "../usuario/UsuarioService";
+import { RelatorioDomainService } from "@domain/relatorio/services";
 import { Relatorio } from "@features/relatorio/entity";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
-import { RelatorioDomainService } from "@domain/relatorio/services";
+import { generateUUID } from "@shared/utils/generateUUID";
 import { toDateMsec } from "@shared/utils/formatDate";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
-import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
-import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
 
 const relatorioAPI: RelatorioRepository = new RelatorioAPIRepository();
 const relatorioDAO = new RelatorioExpoSQLDAO(db);
@@ -30,8 +30,6 @@ export class RelatorioService {
       const createdAt = new Date().toISOString();
       const readOnly = false;
       const relatorio = { ...input, id, readOnly, createdAt };
-
-      // Object.assign(relatorio, createRelatorioInput); // Testing ONLY!!!
 
       const relatorioModel = new Relatorio(relatorio).toModel();
 
@@ -61,7 +59,7 @@ export class RelatorioService {
       try {
         await this.localRepository.createMany(missingOnClient);
       } catch (error) {
-        console.error("Error creating local reports:", error);
+        console.error("RelatorioService -Error creating local reports:", error);
         throw error;
       }
     }
@@ -70,7 +68,7 @@ export class RelatorioService {
       try {
         await this.apiRepository.createMany(missingOnServer);
       } catch (error) {
-        console.error("Error creating API reports:", error);
+        console.error("RelatorioService - Error creating API reports:", error);
         throw error;
       }
     }
@@ -97,6 +95,7 @@ export class RelatorioService {
         relatoriosFromLocalDB,
         updatedRelatorios
       );
+
       const tecnicos = await this.usuarioService.fetchTecnicosByRelatorios(
         updatedRelatorios
       );
@@ -136,10 +135,10 @@ export class RelatorioService {
       await this.localRepository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
-      if (this.isConnected) {
-        await this.apiRepository.update(relatorioUpdate);
-        console.log("### Relatorio updated on server!!");
-      }
+      // if (this.isConnected) {
+      //   await this.apiRepository.update(relatorioUpdate);
+      //   console.log("### Relatorio updated on server!!");
+      // }
       return;
     } catch (error) {
       if (error instanceof Error) {
@@ -154,8 +153,8 @@ export class RelatorioService {
     outdatedOnClient,
     outdatedOnServer,
   }: {
-    outdatedOnClient: RelatorioModel[];
-    outdatedOnServer: RelatorioModel[];
+    outdatedOnClient: Partial<RelatorioModel>[];
+    outdatedOnServer: Partial<RelatorioModel>[];
   }) {
     if (outdatedOnClient?.length) {
       await this.localRepository.updateMany!(outdatedOnClient);
@@ -186,6 +185,8 @@ export class RelatorioService {
     try {
       if (this.isConnected) {
         const result = await this.apiRepository.delete(relatorioId);
+        console.log("🚀 - RelatorioService deleted from server. ", result);
+
         return result;
       }
       return;

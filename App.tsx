@@ -25,7 +25,7 @@ export default function App() {
     init_db()
       .then(() => {
         setDbInitialized(true);
-        console.log("--------------------------------------\n");
+        console.log("---------------------------------------\n");
         checkFiles();
       })
       .catch((err: unknown) => {

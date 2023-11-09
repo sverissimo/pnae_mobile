@@ -53,7 +53,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     return;
   }
 
-  async updateMany(relatorios: RelatorioModel[]): Promise<void> {
+  async updateMany(relatorios: Partial<RelatorioModel>[]): Promise<void> {
     const relatoriosLocalDTO = relatorios.map(this.toLocalDTO);
     await this.relatorioDAO.updateMany(relatoriosLocalDTO);
   }
@@ -62,7 +62,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     await this.relatorioDAO.delete(relatorioId);
   }
 
-  private toLocalDTO(relatorio: Partial<RelatorioModel>): RelatorioLocalDTO {
+  private toLocalDTO = (
+    relatorio: Partial<RelatorioModel>
+  ): RelatorioLocalDTO => {
     const {
       numeroRelatorio,
       nomeTecnico,
@@ -85,9 +87,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
         RelatorioDomainService.getOutrosExtensionistasIds(relatorio);
     }
     return relatorioLocalDTO;
-  }
+  };
 
-  private camelizeRelatorio(relatorioLocalDTO: RelatorioLocalDTO) {
+  private camelizeRelatorio = (relatorioLocalDTO: RelatorioLocalDTO) => {
     const relatorio = humps.camelizeKeys(relatorioLocalDTO, {
       process: (key, convert, options) => {
         if (key === "picture_uri") {
@@ -100,7 +102,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       },
     }) as RelatorioModel;
     return relatorio;
-  }
+  };
 
   private decamelizeRelatorio(relatorio: Partial<RelatorioModel>) {
     const relatorioDTO = humps.decamelizeKeys(relatorio, {

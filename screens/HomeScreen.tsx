@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { FileService } from "@services/files/FileService";
 import { ProdutorService, RelatorioService } from "@services/index";
 import { log } from "@shared/utils/log";
+import { SyncService } from "@services/system/SyncService";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
@@ -19,10 +20,13 @@ export const HomeScreen: React.FC = () => {
   };
 
   useEffect(() => {
+    // new SyncService().syncRelatorios().catch((e) => console.log(e));
     // new ProdutorService().getProdutor("15609048605").then((r) => log(r));
-    // new RelatorioService(true).getAllRelatorios().then((r) => {
-    //   log(r);
     //   // new FileService().removeDanglingFiles(r);
+    // new RelatorioService(true).getLocalRelatorios().then((r) => {
+    //   // log(r.find((r) => r.numeroRelatorio === 99));
+    //   log(r.map((r) => r.updatedAt));
+    //   console.log("***********************");
     // });
   });
   return (

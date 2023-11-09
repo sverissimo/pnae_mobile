@@ -41,6 +41,9 @@ export const takePicture = async () => {
     }
   } catch (error) {
     console.log("🚀 ~ file: cameraUtils.ts:41 ~ error:", error);
+    throw new Error(
+      "Erro ao utilizar a câmera. Verifique as permissões, limpe o cache do app e tente de novo."
+    );
   }
 };
 

@@ -30,20 +30,12 @@ export class RelatorioDomainService {
     return updatedRelatorios;
   }
 
-  getOutrosExtensionistasNames = (relatorio: RelatorioModel) => {
-    const outroExtensionista = relatorio.outroExtensionista || [];
-    const nomes = outroExtensionista.map((e) => e.nome_usuario);
-    return nomes?.join(", ");
-  };
-
-  getOutrosExtensionistasMatriculas = (relatorio: RelatorioModel) => {
-    const outroExtensionista = relatorio.outroExtensionista || [];
-    const matriculas = outroExtensionista.map((e) => e.matricula_usuario);
-    return matriculas?.join(", ");
-  };
-
   static getOutrosExtensionistasIds = (relatorio: Partial<RelatorioModel>) => {
     const outroExtensionista = relatorio.outroExtensionista || [];
+    if (outroExtensionista && typeof outroExtensionista === "string") {
+      return outroExtensionista;
+    }
+
     const ids = outroExtensionista?.map((e) => e.id_usuario).join(",") || "";
     return ids;
   };
@@ -109,5 +101,28 @@ export class RelatorioDomainService {
       matriculaOutroExtensionista,
       outroExtensionista,
     };
+  }
+
+  static getDataToUpdateOnServer(
+    relatoriosLocal: Partial<RelatorioModel>[],
+    outdatedOnServer: Partial<RelatorioModel>[]
+  ): Partial<RelatorioModel>[] {
+    const toUpdateOnServer = relatoriosLocal
+      .filter((r) => outdatedOnServer.some((outdated) => outdated.id === r.id))
+      .map((r) => {
+        const outdatedRecord = outdatedOnServer.find(
+          (outdated) => outdated.id === r.id
+        );
+
+        return {
+          ...r,
+          pictureURI: outdatedRecord?.pictureURI ? r.pictureURI : undefined,
+          assinaturaURI: outdatedRecord?.assinaturaURI
+            ? r.assinaturaURI
+            : undefined,
+        };
+      });
+
+    return toUpdateOnServer;
   }
 }

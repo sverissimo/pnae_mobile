@@ -70,24 +70,25 @@ export const useManageRelatorio = (produtorId?: string) => {
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");
-      Object.assign(relatorioInput, createRelatorioInput); // Testing ONLY!!!
+      const { pictureURI, assinaturaURI, ...input } = createRelatorioInput;
+      Object.assign(relatorioInput, input); // Testing ONLY!!!
 
       const relatorioId = await new RelatorioService(connected).createRelatorio(
         relatorioInput
       );
 
       // *** Cria o atendimento se conectado na internet
-      if (connected) {
-        const propriedade = produtor?.propriedades![0];
-        const atendimento = {
-          id_usuario: user!.id_usuario,
-          id_pessoa_demeter: produtor!.id_pessoa_demeter,
-          id_pl_propriedade: propriedade.id_pl_propriedade,
-          id_und_empresa: propriedade.id_und_empresa,
-          id_relatorio: relatorioId,
-        };
-        await new AtendimentoService().create(atendimento);
-      }
+      // if (connected) {
+      //   const propriedade = produtor?.propriedades![0];
+      //   const atendimento = {
+      //     id_usuario: user!.id_usuario,
+      //     id_pessoa_demeter: produtor!.id_pessoa_demeter,
+      //     id_pl_propriedade: propriedade.id_pl_propriedade,
+      //     id_und_empresa: propriedade.id_und_empresa,
+      //     id_relatorio: relatorioId,
+      //   };
+      //   await new AtendimentoService().create(atendimento);
+      // }
 
       setRelatorios([
         ...relatorios,

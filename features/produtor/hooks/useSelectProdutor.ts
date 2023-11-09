@@ -35,7 +35,7 @@ export const useSelectProdutor = () => {
 
     const ids = await new SyncService()
       .syncRelatorios()
-      .catch((e) => console.log(e));
+      .catch((e) => console.log("Callee error --------", e));
     console.log("🚀 ------------ fetchProdutor - dataFromServer:", ids);
 
     if (!produtor) {
