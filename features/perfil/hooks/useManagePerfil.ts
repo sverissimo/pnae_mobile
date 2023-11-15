@@ -3,7 +3,7 @@ import { Produtor } from "@features/produtor/types/Produtor";
 import { Perfil } from "../types";
 import { formatDate } from "@shared/utils";
 
-export const useManagePerfil = (produtor: Produtor) => {
+export const useManagePerfil = (produtor: Produtor | null) => {
   const [perfis, setPerfis] = useState<Perfil[]>([]);
   const [perfil, setPerfil] = useState<Perfil>({} as Perfil);
 

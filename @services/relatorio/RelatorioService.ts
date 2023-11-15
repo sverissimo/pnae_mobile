@@ -80,22 +80,24 @@ export class RelatorioService {
         produtorId
       );
       let relatoriosFromServer: RelatorioModel[] = [];
+      let updatedRelatorios: RelatorioModel[] = relatoriosFromLocalDB;
 
       if (this.isConnected) {
         relatoriosFromServer = await this.apiRepository.findByProdutorID(
           produtorId
         );
+        updatedRelatorios = RelatorioDomainService.mergeRelatorios(
+          relatoriosFromLocalDB,
+          relatoriosFromServer
+        );
+        await this.saveUpdatedRelatorios(
+          relatoriosFromLocalDB,
+          updatedRelatorios
+        );
       }
 
-      const updatedRelatorios = RelatorioDomainService.mergeRelatorios(
-        relatoriosFromLocalDB,
-        relatoriosFromServer
-      );
-      await this.saveUpdatedRelatorios(
-        relatoriosFromLocalDB,
-        updatedRelatorios
-      );
-
+      //REFACTOR: usuarioService salva in localStorage e só faz fetch se não tiver no localStorage
+      //Idea: see notion
       const tecnicos = await this.usuarioService.fetchTecnicosByRelatorios(
         updatedRelatorios
       );
@@ -131,6 +133,11 @@ export class RelatorioService {
       const relatorioUpdate = new Relatorio(relatorio).getUpdatedProps(
         originalRelatorio
       ) as Partial<RelatorioModel> & { id: string };
+
+      console.log(
+        "🚀 - RelatorioService - updateRelatorio= - relatorio:",
+        relatorio
+      );
 
       await this.localRepository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
@@ -196,6 +203,7 @@ export class RelatorioService {
     }
   };
 
+  // REFACTOR!!!!!!!!!!
   saveUpdatedRelatorios = async (
     existingRelatorios: RelatorioModel[],
     updatedRelatorios: RelatorioModel[]

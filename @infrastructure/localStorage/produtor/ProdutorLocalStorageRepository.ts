@@ -18,7 +18,7 @@ export class ProdutorLocalStorageRepository
     console.log("@@@@ ProdutorLocalStorageRepository created produtor.");
   }
 
-  async findByCPF(cpf: string): Promise<ProdutorModel | null> {
+  async findByCPF(cpf: string): Promise<ProdutorModel | undefined> {
     const produtor = await this.findOne(cpf);
     return produtor;
   }

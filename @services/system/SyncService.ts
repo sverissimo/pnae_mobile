@@ -9,7 +9,7 @@ import { RelatorioDomainService } from "@domain/relatorio/services";
 
 export class SyncService {
   constructor(
-    private produtorService: ProdutorService = new ProdutorService(),
+    private produtorService: ProdutorService = new ProdutorService(true),
     private relatorioService: RelatorioService = new RelatorioService(true),
     private systemAPI = new SystemAPI()
   ) {}

@@ -1,15 +1,15 @@
+import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
 import { env } from "../../../config/env";
 import { Produtor } from "../../../features/produtor/types/Produtor";
 import { API } from "../API";
 
-export class ProdutorAPIRepository extends API<Produtor> {
+export class ProdutorAPIRepository
+  extends API<Produtor>
+  implements ProdutorRepository
+{
   url = `${env.SERVER_URL}/produtor`;
 
-  createProdutor = async (produtor: Produtor) => {
-    return "This method needs to be implemented";
-  };
-
-  getProdutor = async (cpf: string) => {
+  findByCPF = async (cpf: string) => {
     cpf = cpf || "06627559609"; // dev/test purposes only
     // cpf = cpf || "15609048605"; // dev/test purposes only
     // cpf = cpf || "04548773665"; // dev/test purposes only
@@ -20,7 +20,9 @@ export class ProdutorAPIRepository extends API<Produtor> {
     // cpf = cpf || "05241895604"; // dev/test purposes only
     try {
       const data = await this.get(`${this.url}?cpfProdutor=${cpf}`);
-      return data;
+      if (data) {
+        return data as Produtor;
+      }
     } catch (error) {
       console.log(
         "🚀 ~ file: produtorAPI.ts:10 ~ getProdutorData ~ error:",
@@ -28,4 +30,7 @@ export class ProdutorAPIRepository extends API<Produtor> {
       );
     }
   };
+
+  create = async (produtor: Produtor) => console.log("To be implemented...");
+  update = async (produtor: Produtor) => console.log("To be implemented...");
 }

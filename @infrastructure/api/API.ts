@@ -39,7 +39,7 @@ export class API<T> {
     }
   }
 
-  async get(url: string): Promise<T[]> {
+  async get(url: string): Promise<T[] | T> {
     return this.fetchResource({ url, method: HttpMethod.GET });
   }
 

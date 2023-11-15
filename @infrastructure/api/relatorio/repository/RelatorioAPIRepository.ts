@@ -40,12 +40,12 @@ export class RelatorioAPIRepository implements RelatorioRepository {
 
   async findByProdutorID(produtorId: string) {
     const result = await this.api.get(`${this.url}?produtorId=${produtorId}`);
-    return result;
+    return result as RelatorioModel[];
   }
 
   async findAll() {
     const result = await this.api.get(`${this.url}/all`);
-    return result;
+    return result as RelatorioModel[];
   }
 
   async update(relatorioInput: Partial<RelatorioModel>): Promise<void> {

@@ -2,19 +2,20 @@ import { ProdutorLocalStorageRepository } from "@infrastructure/localStorage/pro
 import { ProdutorAPIRepository } from "../../@infrastructure/api/produtor/ProdutorAPIRepository";
 import { log } from "@shared/utils/log";
 import { ProdutorModel } from "@domain/produtor/ProdutorModel";
+import { Produtor } from "@features/produtor/types/Produtor";
+import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
 
 const produtorAPIRepository = new ProdutorAPIRepository();
 
 export class ProdutorService {
   constructor(
-    private apiRepository: any = produtorAPIRepository,
-    private localStorageRepository: any = new ProdutorLocalStorageRepository()
-  ) {
-    this.apiRepository = apiRepository;
-  }
+    private isConnected: boolean,
+    private localStorageRepository: ProdutorRepository = new ProdutorLocalStorageRepository(),
+    private apiRepository: ProdutorRepository = produtorAPIRepository
+  ) {}
 
-  getProdutor = async (CPFProdutor: string) => {
-    const produtorLocal = await new ProdutorLocalStorageRepository()
+  getProdutor = async (CPFProdutor: string): Promise<Produtor | undefined> => {
+    const produtorLocal = await this.localStorageRepository
       .findByCPF(CPFProdutor)
       .catch((e: any) => console.log(e));
 
@@ -25,9 +26,12 @@ export class ProdutorService {
       );
       return produtorLocal;
     }
-    const produtor = await this.apiRepository.getProdutor(CPFProdutor);
-    await this.localStorageRepository.create(produtor);
-    return produtor;
+
+    if (this.isConnected) {
+      const produtor = await this.apiRepository.findByCPF(CPFProdutor);
+      produtor && (await this.localStorageRepository.create(produtor));
+      return produtor;
+    }
   };
 
   getAllLocalProdutoresIds = async () => {

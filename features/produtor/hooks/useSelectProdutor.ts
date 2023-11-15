@@ -3,7 +3,7 @@ import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/produtor/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
-import { useSnackBar } from "@shared/hooks";
+import { useManageConnection, useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
 
 import { SyncService } from "@services/system/SyncService";
@@ -16,6 +16,7 @@ export const useSelectProdutor = () => {
     setIsLoading,
   } = useContext(ProdutorContext);
   const { setRelatorios } = useContext(RelatorioContext);
+  const { isConnected } = useManageConnection();
   const { setSnackBarOptions } = useSnackBar();
 
   const fetchProdutor = async (CPFProdutor: string) => {
@@ -31,10 +32,11 @@ export const useSelectProdutor = () => {
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
 
-    const produtor = await new ProdutorService().getProdutor(cpf);
+    const produtor = await new ProdutorService(!!isConnected).getProdutor(cpf);
 
+    // ********** TESTING ONLY
     const ids = await new SyncService()
-      .syncRelatorios()
+      .syncRelatorios(true)
       .catch((e) => console.log("Callee error --------", e));
     console.log("🚀 ------------ fetchProdutor - dataFromServer:", ids);
 
@@ -50,7 +52,7 @@ export const useSelectProdutor = () => {
     setProdutor(produtor);
   };
 
-  const setProdutor = async (produtorDTO: Produtor) => {
+  const setProdutor = async (produtorDTO: Produtor | null) => {
     if (!produtorDTO) {
       setProdutorContext(null);
       return;

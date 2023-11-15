@@ -4,15 +4,33 @@ export type AtendimentoModel = {
   id_pessoa_demeter: string;
   id_pl_propriedade: string;
   id_relatorio: string;
+  link_pdf: string;
 };
 
 export class Atendimento {
-  constructor(private atendimento: AtendimentoModel) {
+  private atendimento: AtendimentoModel;
+
+  constructor(atendimento: Omit<AtendimentoModel, "link_pdf">) {
+    this.atendimento = {
+      ...atendimento,
+      link_pdf: "",
+    };
     this.validate();
   }
 
   toModel() {
     return this.atendimento;
+  }
+
+  toDTO() {
+    const { id_relatorio, ...atendimento } = this.atendimento;
+    return atendimento;
+  }
+
+  addPDFLink(serverURL: string) {
+    const { id_relatorio } = this.atendimento;
+    const link_pdf = `${serverURL}/relatorios/pdf/${id_relatorio}`;
+    this.atendimento.link_pdf = link_pdf;
   }
 
   validate() {
