@@ -1,52 +1,58 @@
 [
   {
-    "id": "68e68fb1-528f-45af-a680-055f466f1114",
-    "produtorId": "1707715",
-    "tecnicoId": "2696",
+    "id": "123",
+    "produtorId": "123",
+    "tecnicoId": "123",
     "numeroRelatorio": 1,
-    "assunto": "Apresentação PNAE",
-    "orientacao": "<div><br></div><div>1. orientação escrita</div><div><b>negrito</b></div><div><b><i>itálico</i></b></div><div><b><i><u>sublinhado</u></i></b></div><div><ul><li><b><i><u>tópico</u></i></b></li></ul><ol style=\"\"><li style=\"font-weight: bold;\"><b><i><u>número</u></i></b></li><ol style=\"font-weight: bold;\"><li><b><i><u>com recuo</u></i></b></li></ol><li style=\"\"><b><i><u>sem recuo</u></i></b></li></ol><div><b><i><u><br></u></i></b></div></div>Teste de áudio do relatório pnae. <div><br></div>Teste realizado com sucesso. ",
-    "pictureURI": "508a5f8c-1607-4fdd-89c2-9341dc7d0a35",
-    "assinaturaURI": "1697057380646",
-    "outroExtensionista": "1403",
-    "readOnly": false,
-    "coordenadas": "-48.749006,-17.7757235",
-    "createdAt": "2023-10-11T20:46:41.396Z",
-    "updatedAt": "2023-10-11T20:50:03.996Z",
-    "files": [
+    "nomeTecnico": "John Doe",
+    "assunto": "Assunto",
+    "orientacao": "Orientação",
+    "pictureURI": "pictureURI",
+    "assinaturaURI": "assinaturaURI",
+    "outroExtensionista": [
       {
-        "id": "508a5f8c-1607-4fdd-89c2-9341dc7d0a35",
-        "fileName": "508a5f8c-1607-4fdd-89c2-9341dc7d0a35.jpeg",
-        "size": 746253,
-        "mimeType": "image/png",
-        "description": "FOTO_RELATORIO",
-        "relatorioId": "68e68fb1-528f-45af-a680-055f466f1114",
-        "uploadDate": {}
-      },
-      {
-        "id": "1697057380646",
-        "fileName": "1697057380646.png",
-        "size": 52422,
-        "mimeType": "image/png",
-        "description": "ASSINATURA_PRODUTOR",
-        "relatorioId": "68e68fb1-528f-45af-a680-055f466f1114",
-        "uploadDate": {}
+        "id_usuario": "456",
+        "matricula_usuario": "456",
+        "nome_usuario": "Jane Doe",
+        "id_und_empresa": "H0806"
       }
-    ]
+    ],
+    "nomeOutroExtensionista": "Jane Doe",
+    "matriculaOutroExtensionista": "456",
+    "coordenadas": "",
+    "readOnly": true,
+    "createdAt": "2021-10-01T00:00:00.000Z"
   },
   {
-    "id": "8cf3bcec-bfb7-450b-95f5-dc667b80be45",
-    "produtorId": "91025",
-    "tecnicoId": "2681",
-    "numeroRelatorio": 99,
-    "assunto": "Ass99",
-    "orientacao": "<div>ndndkw djjd. en</div>",
-    "pictureURI": "3fda0351-af84-44c4-9c44-f646c6f95028",
-    "assinaturaURI": "1697836053683",
-    "outroExtensionista": "237,2309",
-    "readOnly": false,
-    "coordenadas": "-43.9505977,-19.8643355",
-    "createdAt": "2023-10-20T21:08:41.841Z",
-    "files": []
+    "id": "1",
+    "produtorId": "123",
+    "tecnicoId": "456",
+    "numeroRelatorio": 1,
+    "assunto": "assunto",
+    "orientacao": "orientacao",
+    "nomeTecnico": "nomeTecnico",
+    "pictureURI": "pictureURI",
+    "assinaturaURI": "assinaturaURI",
+    "outroExtensionista": [
+      {
+        "id_usuario": "789",
+        "nome_usuario": "nomeOutroExtensionista",
+        "matricula_usuario": "matriculaOutroExtensionista",
+        "password": "password",
+        "perfis": ["admin", "user"],
+        "id_und_empresa": "H0806"
+      },
+      {
+        "id_usuario": "0123456",
+        "nome_usuario": "nomeOutroExtensionista2",
+        "matricula_usuario": "matriculaOutroExtensionista2",
+        "password": "password2",
+        "perfis": ["admin2", "user2"],
+        "id_und_empresa": "H0806"
+      }
+    ],
+    "nomeOutroExtensionista": "nomeOutroExtensionista,nomeOutroExtensionista2",
+    "matriculaOutroExtensionista": "matriculaOutroExtensionista,matriculaOutroExtensionista2",
+    "createdAt": "2021-10-01T00:00:00.000Z"
   }
 ]

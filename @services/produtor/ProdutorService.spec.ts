@@ -1,7 +1,7 @@
-import { ProdutorLocalStorageRepository } from "@infrastructure/localStorage/produtor/ProdutorLocalStorageRepository";
 import { ProdutorService } from "./ProdutorService";
 import { ProdutorAPIRepository } from "@infrastructure/api";
 import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
+import { ProdutorLocalStorageRepository } from "@infrastructure/localStorage/produtor/ProdutorLocalStorageRepository";
 
 const mockedProdutor = {
   id_pessoa_demeter: "1",
@@ -25,9 +25,7 @@ jest.mock(
         create: jest.fn(),
         findByCPF: jest
           .fn()
-          .mockImplementation(async (cpfProdutor: string) =>
-            Promise.resolve(undefined)
-          ),
+          .mockImplementation(() => Promise.resolve(undefined)),
       })),
     };
   }
@@ -41,19 +39,25 @@ jest.mock("@infrastructure/api/produtor/ProdutorAPIRepository", () => {
   };
 });
 
-jest.mock("@shared/utils/fileSystemUtils", () => ({
-  FileSystem: {},
+jest.mock("@shared/utils/fileSystemUtils");
+jest.mock("@infrastructure/database/config/expoSQLite");
+jest.mock("@services/system/systemUtils", () => ({
+  shouldSync: jest.fn().mockResolvedValue(false),
 }));
 
-let apiRepository: ProdutorRepository;
-let localStorage: ProdutorRepository;
+let remoteRepository: ProdutorRepository;
+let localRepository: ProdutorRepository;
 let produtorService: ProdutorService;
 
 describe("ProdutorService integration tests", () => {
   beforeEach(() => {
-    apiRepository = new ProdutorAPIRepository();
-    localStorage = new ProdutorLocalStorageRepository();
-    produtorService = new ProdutorService(true, localStorage, apiRepository);
+    remoteRepository = new ProdutorAPIRepository();
+    localRepository = new ProdutorLocalStorageRepository();
+    produtorService = new ProdutorService({
+      isConnected: true,
+      localRepository,
+      remoteRepository,
+    });
   });
 
   afterEach(() => {
@@ -61,27 +65,27 @@ describe("ProdutorService integration tests", () => {
   });
 
   it("should fetch an existing produtor locally and and not call remoteAPI if savedLocally", async () => {
-    jest.spyOn(localStorage, "findByCPF").mockResolvedValue(mockedProdutor);
+    jest.spyOn(localRepository, "findByCPF").mockResolvedValue(mockedProdutor);
     const produtor = await produtorService.getProdutor("01234567890");
-    expect(localStorage.findByCPF).toHaveBeenCalledWith("01234567890");
-    expect(apiRepository.findByCPF).not.toHaveBeenCalled();
-    expect(localStorage.create).not.toHaveBeenCalled();
+    expect(localRepository.findByCPF).toHaveBeenCalledWith("01234567890");
+    expect(remoteRepository.findByCPF).not.toHaveBeenCalled();
+    expect(localRepository.create).not.toHaveBeenCalled();
     expect(produtor).toEqual(mockedProdutor);
   });
 
-  it("should fetch an existing produtor remotely and save into localStorage when online if not saved locally", async () => {
-    jest.spyOn(apiRepository, "findByCPF").mockResolvedValue(mockedProdutor);
+  it("should fetch an existing produtor remotely and save into localRepository when online if not saved locally", async () => {
+    jest.spyOn(remoteRepository, "findByCPF").mockResolvedValue(mockedProdutor);
     const produtor = await produtorService.getProdutor("01234567890");
-    expect(localStorage.findByCPF).toHaveBeenCalledWith("01234567890");
-    expect(apiRepository.findByCPF).toHaveBeenCalledWith("01234567890");
-    expect(localStorage.create).toHaveBeenCalledWith(mockedProdutor);
+    expect(localRepository.findByCPF).toHaveBeenCalledWith("01234567890");
+    expect(remoteRepository.findByCPF).toHaveBeenCalledWith("01234567890");
+    expect(localRepository.create).toHaveBeenCalledWith(mockedProdutor);
     expect(produtor).toEqual(mockedProdutor);
   });
   it("should return undefined when a produtor is not found", async () => {
     const produtor = await produtorService.getProdutor("321");
-    expect(localStorage.findByCPF).toHaveBeenCalledWith("321");
-    expect(apiRepository.findByCPF).toHaveBeenCalledWith("321");
-    expect(localStorage.create).not.toHaveBeenCalled();
+    expect(localRepository.findByCPF).toHaveBeenCalledWith("321");
+    expect(remoteRepository.findByCPF).toHaveBeenCalledWith("321");
+    expect(localRepository.create).not.toHaveBeenCalled();
     expect(produtor).toBeUndefined();
   });
 });

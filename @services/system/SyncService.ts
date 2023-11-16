@@ -1,23 +1,38 @@
+import { SystemLocalStorageRepository } from "@infrastructure/localStorage/system/SystemLocalStorageRepository";
 import { SystemAPI } from "@infrastructure/api/@system/SystemAPI";
-import { ProdutorService, RelatorioService } from "..";
-import { RelatorioModel } from "@features/relatorio/types";
-import { CheckForUpdatesResponse } from "./types/CheckForUpdatesResponse";
-import { log } from "@shared/utils/log";
+
 import { SyncData } from "./types/SyncData";
-import { parseURI } from "@shared/utils";
+import { CheckForUpdatesResponse } from "./types/CheckForUpdatesResponse";
+import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioDomainService } from "@domain/relatorio/services";
+import { log } from "@shared/utils/log";
+import { parseURI } from "@shared/utils/parseURI";
+import { ProdutorService } from "@services/produtor/ProdutorService";
+import { RelatorioService } from "@services/relatorio/RelatorioService";
+import { getLastSyncDate, shouldSync } from "./systemUtils";
 
 export class SyncService {
   constructor(
-    private produtorService: ProdutorService = new ProdutorService(true),
-    private relatorioService: RelatorioService = new RelatorioService(true),
-    private systemAPI = new SystemAPI()
+    private systemLocalStorage = new SystemLocalStorageRepository(),
+    private systemAPI = new SystemAPI(),
+    private produtorService: ProdutorService = new ProdutorService({
+      isConnected: true,
+    }),
+    private relatorioService: RelatorioService = new RelatorioService({
+      isConnected: true,
+    })
   ) {}
 
   async syncRelatorios(isConnected: boolean) {
     if (!isConnected) return;
+    // await this.saveLastSyncDate();
+    const lastSycDate = await getLastSyncDate();
+    const shouldSyncronize = await shouldSync(1000 * 60 * 60);
+    // console.log("🚀 - SyncService - syncRelatorios - date:", shouldSync);
+    // return;
+
     const syncData = await this.getRelatoriosSyncInfo();
-    log(syncData);
+    // log(syncData);
 
     const {
       missingOnServer,
@@ -28,7 +43,6 @@ export class SyncService {
     } = syncData;
 
     console.log("--------------Initiating sync service------------------");
-
     await this.relatorioService.createMany({
       missingOnClient,
       missingOnServer,
@@ -38,7 +52,6 @@ export class SyncService {
       outdatedOnClient,
       outdatedOnServer,
     });
-
     console.log("--------------Sync service concluded------------------");
   }
 
@@ -59,7 +72,6 @@ export class SyncService {
       produtorIds,
       relatoriosSyncRequest
     );
-
     const { missingIdsOnServer, outdatedOnServer, ...rest } = syncInfo;
 
     const toCreateOnServer = relatoriosLocal.filter((r) =>

@@ -1,28 +1,33 @@
-import { db } from "@infrastructure/database/config/expoSQLite";
-import { RelatorioExpoSQLDAO } from "@infrastructure/database/relatorio/dao/RelatorioExpoSQLDAO";
-import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
-import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
-import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
-import { UsuarioService } from "../usuario/UsuarioService";
-import { RelatorioDomainService } from "@domain/relatorio/services";
 import { Relatorio } from "@features/relatorio/entity";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
-import { generateUUID } from "@shared/utils/generateUUID";
+import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
+import { RelatorioDomainService } from "@domain/relatorio/services";
+import { UsuarioService } from "../usuario/UsuarioService";
 import { toDateMsec } from "@shared/utils/formatDate";
+import { generateUUID } from "@shared/utils/generateUUID";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
-
-const relatorioAPI: RelatorioRepository = new RelatorioAPIRepository();
-const relatorioDAO = new RelatorioExpoSQLDAO(db);
-const relatorioExpoSQLRepository = new RelatorioSQLRepository(relatorioDAO);
-const userService = new UsuarioService();
+import {
+  RelatorioServiceConfig,
+  defaultConfig,
+} from "./RelatorioServiceConfig";
 
 export class RelatorioService {
+  private isConnected: boolean;
+  private usuarioService: UsuarioService;
+  private localRepository: RelatorioRepository;
+  private remoteRepository: RelatorioRepository;
+
   constructor(
-    private isConnected: boolean,
-    private localRepository: RelatorioRepository = relatorioExpoSQLRepository,
-    private apiRepository: RelatorioRepository = relatorioAPI,
-    private usuarioService: UsuarioService = userService
-  ) {}
+    relatorioServiceConfig: Partial<RelatorioServiceConfig> = defaultConfig
+  ) {
+    const config = { ...defaultConfig, ...relatorioServiceConfig };
+    this.isConnected = config.isConnected;
+    this.usuarioService = config.usuarioService;
+    this.localRepository = config.localRepository;
+    this.remoteRepository = config.remoteRepository;
+
+    this.usuarioService.setConnectionStatus(this.isConnected);
+  }
 
   createRelatorio = async (input: RelatorioModel): Promise<string> => {
     try {
@@ -37,7 +42,7 @@ export class RelatorioService {
       console.log("### Saved resultLocal ok.");
 
       if (this.isConnected) {
-        const remoteResult = await this.apiRepository.create(relatorioModel);
+        const remoteResult = await this.remoteRepository.create(relatorioModel);
         console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
       }
 
@@ -66,7 +71,7 @@ export class RelatorioService {
 
     if (this.isConnected && missingOnServer?.length) {
       try {
-        await this.apiRepository.createMany(missingOnServer);
+        await this.remoteRepository.createMany(missingOnServer);
       } catch (error) {
         console.error("RelatorioService - Error creating API reports:", error);
         throw error;
@@ -83,7 +88,7 @@ export class RelatorioService {
       let updatedRelatorios: RelatorioModel[] = relatoriosFromLocalDB;
 
       if (this.isConnected) {
-        relatoriosFromServer = await this.apiRepository.findByProdutorID(
+        relatoriosFromServer = await this.remoteRepository.findByProdutorID(
           produtorId
         );
         updatedRelatorios = RelatorioDomainService.mergeRelatorios(
@@ -96,14 +101,15 @@ export class RelatorioService {
         );
       }
 
-      //REFACTOR: usuarioService salva in localStorage e só faz fetch se não tiver no localStorage
-      //Idea: see notion
-      const tecnicos = await this.usuarioService.fetchTecnicosByRelatorios(
-        updatedRelatorios
-      );
+      const tecnicoIds =
+        RelatorioDomainService.getTecnicosIdsFromRelatoriosList(
+          updatedRelatorios
+        );
+
+      const tecnicos = await this.usuarioService!.getUsuariosByIds(tecnicoIds);
 
       const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
-        RelatorioDomainService.addTecnicos(tecnicos, relatorio)
+        RelatorioDomainService.addTecnicos(tecnicos!, relatorio)
       ) as RelatorioModel[];
 
       relatoriosWithTecnicos.sort((a, b) => {
@@ -123,6 +129,7 @@ export class RelatorioService {
     try {
       const { id, produtorId } = relatorio;
       const relatoriosList = await this.getRelatorios(produtorId);
+
       const originalRelatorio = relatoriosList.find((r) => r.id === id);
       if (!originalRelatorio) {
         throw new Error(
@@ -134,16 +141,11 @@ export class RelatorioService {
         originalRelatorio
       ) as Partial<RelatorioModel> & { id: string };
 
-      console.log(
-        "🚀 - RelatorioService - updateRelatorio= - relatorio:",
-        relatorio
-      );
-
       await this.localRepository.update(relatorioUpdate);
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
-        await this.apiRepository.update(relatorioUpdate);
+        await this.remoteRepository.update(relatorioUpdate);
         console.log("### Relatorio updated on server!!");
       }
       return;
@@ -167,7 +169,7 @@ export class RelatorioService {
       await this.localRepository.updateMany!(outdatedOnClient);
     }
     if (this.isConnected && outdatedOnServer?.length) {
-      await this.apiRepository.updateMany!(outdatedOnServer);
+      await this.remoteRepository.updateMany!(outdatedOnServer);
     }
   }
 
@@ -191,7 +193,7 @@ export class RelatorioService {
     }
     try {
       if (this.isConnected) {
-        const result = await this.apiRepository.delete(relatorioId);
+        const result = await this.remoteRepository.delete(relatorioId);
         console.log("🚀 - RelatorioService deleted from server. ", result);
 
         return result;
@@ -203,30 +205,32 @@ export class RelatorioService {
     }
   };
 
-  // REFACTOR!!!!!!!!!!
   saveUpdatedRelatorios = async (
     existingRelatorios: RelatorioModel[],
     updatedRelatorios: RelatorioModel[]
   ) => {
-    const relatoriosToCreate = updatedRelatorios.filter((r) => {
-      const existing = existingRelatorios.find((er) => er.id === r.id);
-      return !existing;
-    });
-    const relatoriosToUpdate = updatedRelatorios.filter((r) => {
-      const existing = existingRelatorios.find((er) => er.id === r.id);
-      return existing && existing.updatedAt !== r.updatedAt;
-    });
+    const existingRelatoriosMap = new Map(
+      existingRelatorios.map((er) => [er.id, er])
+    );
 
-    for (const relatorio of relatoriosToCreate) {
-      await this.localRepository.create(relatorio);
+    const relatoriosToCreate = [];
+    const relatoriosToUpdate = [];
+
+    for (const updatedRelatorio of updatedRelatorios) {
+      const existing = existingRelatoriosMap.get(updatedRelatorio.id);
+      if (!existing) {
+        relatoriosToCreate.push(updatedRelatorio);
+      } else if (existing.updatedAt !== updatedRelatorio.updatedAt) {
+        relatoriosToUpdate.push(updatedRelatorio);
+      }
     }
+
+    await this.localRepository.createMany(relatoriosToCreate);
     console.log(
       `### Saved ${relatoriosToCreate.length} new relatorios from server.`
     );
 
-    for (const relatorio of relatoriosToUpdate) {
-      await this.localRepository.update(relatorio);
-    }
+    await this.localRepository.updateMany(relatoriosToUpdate);
     console.log(
       `### Updated ${relatoriosToUpdate.length} relatorios from server.`
     );

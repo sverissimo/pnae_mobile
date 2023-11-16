@@ -73,9 +73,9 @@ export const useManageRelatorio = (produtorId?: string) => {
       const { pictureURI, assinaturaURI, ...input } = createRelatorioInput;
       Object.assign(relatorioInput, input); // Testing ONLY!!!
 
-      const relatorioId = await new RelatorioService(connected).createRelatorio(
-        relatorioInput
-      );
+      const relatorioId = await new RelatorioService({
+        isConnected: !!connected,
+      }).createRelatorio(relatorioInput);
 
       // *** Cria o atendimento se conectado na internet
       if (connected) {
@@ -115,9 +115,9 @@ export const useManageRelatorio = (produtorId?: string) => {
     try {
       setIsLoading(true);
       const connected = !!(isConnected && connectionType !== "unknown");
-      const relatorios = await new RelatorioService(connected).getRelatorios(
-        produtorId
-      );
+      const relatorios = await new RelatorioService({
+        isConnected: connected,
+      }).getRelatorios(produtorId);
       if (!relatorios.length) {
         setIsLoading(false);
         return [];
@@ -141,7 +141,9 @@ export const useManageRelatorio = (produtorId?: string) => {
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");
-      await new RelatorioService(connected).updateRelatorio(relatorioUpdate);
+      await new RelatorioService({ isConnected: connected }).updateRelatorio(
+        relatorioUpdate
+      );
       updateRelatoriosList(relatorioUpdate);
     } catch (error) {
       console.log("🚀 ~ file: useManageRelatorios.ts:118:", error);
@@ -176,7 +178,9 @@ export const useManageRelatorio = (produtorId?: string) => {
   const onConfirmDelete = async () => {
     try {
       const connected = !!(isConnected && connectionType !== "unknown");
-      await new RelatorioService(connected).deleteRelatorio(relatorio.id!);
+      await new RelatorioService({ isConnected: connected }).deleteRelatorio(
+        relatorio.id!
+      );
 
       const updatedList = relatorios.filter((r) => r.id !== relatorio.id);
       setRelatorios(updatedList);

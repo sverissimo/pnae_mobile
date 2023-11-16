@@ -1,40 +1,9 @@
 import { env } from "@config/env";
 import { Relatorio } from "./Relatorio";
+import relatorios from "_mockData/relatorios.json";
 
 const filesFolder = env.FILES_FOLDER;
-const relatorio = {
-  id: "1",
-  produtorId: "123",
-  tecnicoId: "456",
-  numeroRelatorio: 1,
-  assunto: "assunto",
-  orientacao: "orientacao",
-  nomeTecnico: "nomeTecnico",
-  pictureURI: "pictureURI",
-  assinaturaURI: "assinaturaURI",
-  outroExtensionista: [
-    {
-      id_usuario: "789",
-      nome_usuario: "nomeOutroExtensionista",
-      matricula_usuario: "matriculaOutroExtensionista",
-      password: "password",
-      perfis: ["admin", "user"],
-      id_und_empresa: "H0806",
-    },
-    {
-      id_usuario: "0123456",
-      nome_usuario: "nomeOutroExtensionista2",
-      matricula_usuario: "matriculaOutroExtensionista2",
-      password: "password2",
-      perfis: ["admin2", "user2"],
-      id_und_empresa: "H0806",
-    },
-  ],
-  nomeOutroExtensionista: "nomeOutroExtensionista,nomeOutroExtensionista2",
-  matriculaOutroExtensionista:
-    "matriculaOutroExtensionista,matriculaOutroExtensionista2",
-  createdAt: "createdAt",
-};
+const relatorio = relatorios[1];
 
 describe("Relatorio domain class", () => {
   describe("Testing data validation", () => {

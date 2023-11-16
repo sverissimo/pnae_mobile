@@ -5,9 +5,7 @@ import { AtendimentoRepository } from "@domain/atendimento";
 import { env } from "@config/env";
 import { AtendimentoLocalStorageRepository } from "@infrastructure/localStorage/atendimento/AtendimentoLocalStorageRepository";
 
-jest.mock("@shared/utils/fileSystemUtils", () => ({
-  FileSystem: {},
-}));
+jest.mock("@shared/utils/fileSystemUtils");
 
 jest.mock(
   "@infrastructure/api/atendimento/repository/AtendimentoAPIRepository",
@@ -69,7 +67,7 @@ describe("AtendimentoService tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("create method tests", () => {
+  describe("create atendimento method tests", () => {
     it("should create a atendimento remotely if online", async () => {
       await atendimentoService.create(atendimentoInput);
       expect(remoteRepository.create).toHaveBeenCalledWith(atendimentoDTO);

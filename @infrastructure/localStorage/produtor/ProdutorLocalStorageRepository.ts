@@ -1,10 +1,6 @@
 import { Repository } from "@domain/Repository";
 import { ProdutorModel } from "@domain/produtor/ProdutorModel";
-import { Produtor } from "@features/produtor/types/Produtor";
 import { LocalStorageRepository } from "../LocalStorageRepository";
-import { ProdutorLocalStorageDTO } from "./ProdutorLocalStorageDTO";
-import { log } from "@shared/utils/log";
-
 export class ProdutorLocalStorageRepository
   extends LocalStorageRepository
   implements Repository<ProdutorModel>

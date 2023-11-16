@@ -35,7 +35,7 @@ yarn-error.*
 *.sh
 
 # tests mock data
-# _mockData
+_mockData/old
 
 # typescript
 *.tsbuildinfo

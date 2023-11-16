@@ -1,2 +1,3 @@
-export * from "./produtor/ProdutorService";
-export * from "./relatorio/RelatorioService";
+export { ProdutorService } from "./produtor/ProdutorService";
+export { SyncService } from "./system/SyncService";
+export { RelatorioService } from "./relatorio/RelatorioService";

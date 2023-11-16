@@ -32,13 +32,15 @@ export const useSelectProdutor = () => {
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
 
-    const produtor = await new ProdutorService(!!isConnected).getProdutor(cpf);
+    const produtor = await new ProdutorService({
+      isConnected: !!isConnected,
+    }).getProdutor(cpf);
 
     // ********** TESTING ONLY
     const ids = await new SyncService()
       .syncRelatorios(true)
       .catch((e) => console.log("Callee error --------", e));
-    console.log("🚀 ------------ fetchProdutor - dataFromServer:", ids);
+    console.log("🚀 ------------- fetchProdutor - dataFromServer:", ids);
 
     if (!produtor) {
       setSnackBarOptions({

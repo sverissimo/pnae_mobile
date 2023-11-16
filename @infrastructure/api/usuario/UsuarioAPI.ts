@@ -24,6 +24,8 @@ export const UsuarioAPI = {
       if (ids) url += `/${ids}`;
       if (matricula) url += `?matricula=${matricula}`;
 
+      console.log("🚀------------------------------------- - url:", url);
+
       const result = await fetch(url);
       const usuarios = await result.json();
       if (result.status === 404) {
