@@ -1,21 +1,25 @@
+import { env } from "@config/env";
 import { AtendimentoRepository } from "@domain/atendimento/repository/AtendimentoRepository";
 import {
   Atendimento,
   AtendimentoModel,
 } from "@domain/atendimento/entity/Atendimento";
-import { AtendimentoAPIRepository } from "@infrastructure/api";
-import { AtendimentoLocalStorageRepository } from "@infrastructure/localStorage/atendimento/AtendimentoLocalStorageRepository";
-import { env } from "@config/env";
-
-const atendimentoAPI: AtendimentoRepository = new AtendimentoAPIRepository();
-const atendimentoLocalRepo = new AtendimentoLocalStorageRepository();
+import {
+  AtendimentoServiceConfig,
+  atendimentoDefaultConfig,
+} from "./AtendimentoServiceConfig";
 
 export class AtendimentoService {
-  constructor(
-    private isConnected: boolean,
-    private remoteRepository: AtendimentoRepository = atendimentoAPI,
-    private localRepository: AtendimentoLocalStorageRepository = atendimentoLocalRepo
-  ) {}
+  private isConnected: boolean;
+  private localRepository: AtendimentoRepository;
+  private remoteRepository: Partial<AtendimentoRepository>;
+
+  constructor(atendimentoServiceConfig: Partial<AtendimentoServiceConfig>) {
+    const config = { ...atendimentoDefaultConfig, ...atendimentoServiceConfig };
+    this.isConnected = config.isConnected;
+    this.localRepository = config.localRepository;
+    this.remoteRepository = config.remoteRepository;
+  }
 
   create = async (
     atendimentoInput: Omit<AtendimentoModel, "link_pdf">
@@ -32,7 +36,7 @@ export class AtendimentoService {
         );
         return true;
       }
-      await this.remoteRepository.create(atendimento.toDTO());
+      await this.remoteRepository.create!(atendimento.toDTO());
 
       return true;
     } catch (error: any) {
@@ -48,7 +52,7 @@ export class AtendimentoService {
     if (!atendimento) {
       return;
     }
-    await this.remoteRepository.create(atendimento);
+    await this.remoteRepository.create!(atendimento);
     console.log("🚀 AtendimentoService ~ created atendimento remotely");
     await this.localRepository.delete(relatorioId);
   };

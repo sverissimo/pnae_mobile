@@ -3,7 +3,9 @@ import { env } from "@config/env";
 import { AtendimentoModel, AtendimentoRepository } from "@domain/atendimento";
 import { AtendimentoDTO } from "../dto/AtendimentoDTO";
 
-export class AtendimentoAPIRepository implements AtendimentoRepository {
+export class AtendimentoAPIRepository
+  implements Partial<AtendimentoRepository>
+{
   private api = new API<AtendimentoModel>();
   private url = `${env.SERVER_URL}/atendimento`;
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Produtor } from "@features/produtor/types/Produtor";
 import { Perfil } from "../types";
 import { formatDate } from "@shared/utils";
+import { ProdutorModel } from "@domain/produtor/ProdutorModel";
 
-export const useManagePerfil = (produtor: Produtor | null) => {
+export const useManagePerfil = (produtor: ProdutorModel | null) => {
   const [perfis, setPerfis] = useState<Perfil[]>([]);
   const [perfil, setPerfil] = useState<Perfil>({} as Perfil);
 

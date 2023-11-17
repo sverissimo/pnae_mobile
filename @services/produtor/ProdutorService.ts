@@ -55,8 +55,7 @@ export class ProdutorService {
   };
 
   getAllLocalProdutoresIds = async () => {
-    const allProdutores =
-      await new ProdutorLocalStorageRepository().getAllCollectionData();
+    const allProdutores = await this.localRepository.findAll!();
     const allProdutoresIds = allProdutores.map(
       (produtor: ProdutorModel) => produtor.id_pessoa_demeter
     );

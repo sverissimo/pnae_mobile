@@ -1,16 +1,15 @@
-import { LocalStorageDAO } from "../LocalStorageDAO";
+import { LocalStorageRepository } from "../LocalStorageRepository";
 
-export class SystemLocalStorageRepository {
-  constructor(
-    private systemDAO = new LocalStorageDAO("system", "lastSyncOn")
-  ) {}
+export class SystemLocalStorageRepository extends LocalStorageRepository {
+  protected collection = "system";
+  protected key = "lastSyncOn";
 
   async getLastSyncDate() {
-    const lastSyncOn = await this.systemDAO.findOne("lastSyncOn");
+    const lastSyncOn = await this.findOne("lastSyncOn");
     return lastSyncOn;
   }
 
   async saveLastSyncDate(date: string) {
-    await this.systemDAO.saveData("lastSyncOn", date);
+    await this.saveData("lastSyncOn", date);
   }
 }

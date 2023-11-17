@@ -1,5 +1,5 @@
 export type PropriedadeModel = {
-  id_pl_propriedade: number;
+  id_pl_propriedade: string;
   nome_propriedade: string;
   area_total?: string;
   municipio: string;

@@ -106,7 +106,7 @@ export class RelatorioService {
           updatedRelatorios
         );
 
-      const tecnicos = await this.usuarioService!.getUsuariosByIds(tecnicoIds);
+      const tecnicos = await this.usuarioService.getUsuariosByIds(tecnicoIds);
 
       const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
         RelatorioDomainService.addTecnicos(tecnicos!, relatorio)
@@ -226,14 +226,10 @@ export class RelatorioService {
     }
 
     await this.localRepository.createMany(relatoriosToCreate);
-    console.log(
-      `### Saved ${relatoriosToCreate.length} new relatorios from server.`
-    );
+    console.log(`### Saved ${relatoriosToCreate.length} new rel. from server`);
 
     await this.localRepository.updateMany(relatoriosToUpdate);
-    console.log(
-      `### Updated ${relatoriosToUpdate.length} relatorios from server.`
-    );
+    console.log(`### Updated ${relatoriosToUpdate.length} rel. from server`);
   };
 
   getLocalRelatorios = async () => await this.localRepository.findAll();

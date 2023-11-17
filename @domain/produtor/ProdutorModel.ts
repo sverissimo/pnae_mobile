@@ -10,6 +10,7 @@ export type ProdutorModel = {
   sn_ativo?: string;
   dap?: string;
   caf?: string;
+  dt_update_record?: Date;
   propriedades: PropriedadeModel[];
   perfis: PerfilModel[];
 };

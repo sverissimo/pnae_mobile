@@ -1,31 +1,54 @@
 import { Repository } from "@domain/Repository";
-import { UsuarioAPI } from "@infrastructure/api/usuario/UsuarioAPI";
-import { UsuarioLocalStorageRepository } from "@infrastructure/localStorage/usuario/UsuarioLocalStorageRepository";
+import { UsuarioAPIRepository } from "@infrastructure/api/usuario/UsuarioAPIRepository";
+import { shouldSync } from "@services/system/systemUtils";
 import { Usuario } from "@shared/types/Usuario";
+import {
+  UsuarioServiceConfig,
+  usuarioDefaultConfig,
+} from "./UsuarioServiceConfig";
 
 export class UsuarioService {
+  isConnected: boolean;
+  localRepository: Repository<Usuario>;
+  remoteRepository: UsuarioAPIRepository;
+
   constructor(
-    private isConnected: boolean,
-    private localRepository: Repository<Usuario> = new UsuarioLocalStorageRepository()
-  ) {}
+    usuarioServiceConfig: Partial<UsuarioServiceConfig> = usuarioDefaultConfig
+  ) {
+    const config = { ...usuarioDefaultConfig, ...usuarioServiceConfig };
+    this.isConnected = config.isConnected;
+    this.localRepository = config.localRepository;
+    this.remoteRepository = config.remoteRepository;
+  }
 
   setConnectionStatus(value: boolean) {
     this.isConnected = value;
   }
 
   async getUsuariosByIds(ids: string[]) {
+    const localUsuarios = await this.localRepository.findMany!(ids);
     if (!this.isConnected) {
-      const localUsuarios = await this.localRepository.findMany!(ids);
       return localUsuarios;
     }
 
-    const remoteUsuarios = await UsuarioAPI.getUsuarios({
+    const shouldSyncronize = await shouldSync(1000 * 60 * 60 * 24 * 5);
+
+    const shouldNotFetchFromServer =
+      (localUsuarios.length === ids.length &&
+        localUsuarios.every((u) => !!u)) ||
+      !shouldSyncronize;
+
+    if (shouldNotFetchFromServer) {
+      return localUsuarios;
+    }
+    const remoteUsuarios = await UsuarioAPIRepository.findMany({
       ids: ids.join(","),
     });
-    // REFACTOR TO MULTI SET IN LOCALSTORAGE PARENT CLASS!!!
+
     for (const remoteUsuario of remoteUsuarios) {
       await this.saveLocal(remoteUsuario);
     }
+    return remoteUsuarios;
   }
 
   private async saveLocal(usuario: Usuario) {

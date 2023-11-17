@@ -79,7 +79,7 @@ export const useManageRelatorio = (produtorId?: string) => {
 
       // *** Cria o atendimento se conectado na internet
       if (connected) {
-        const propriedade = produtor?.propriedades![0];
+        const propriedade = produtor!.propriedades![0];
         const atendimento = {
           id_usuario: user!.id_usuario,
           id_pessoa_demeter: produtor!.id_pessoa_demeter,
@@ -87,7 +87,9 @@ export const useManageRelatorio = (produtorId?: string) => {
           id_und_empresa: propriedade.id_und_empresa,
           id_relatorio: relatorioId,
         };
-        await new AtendimentoService(connected).create(atendimento);
+        await new AtendimentoService({ isConnected: connected }).create(
+          atendimento
+        );
       }
 
       setRelatorios([

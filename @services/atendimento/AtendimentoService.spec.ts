@@ -1,9 +1,15 @@
 import { AtendimentoAPIRepository } from "@infrastructure/api";
 import { AtendimentoService } from "./AtendimentoService";
-import { AtendimentoRepository } from "@domain/atendimento";
+import {
+  Atendimento,
+  AtendimentoModel,
+  AtendimentoRepository,
+} from "@domain/atendimento";
 
 import { env } from "@config/env";
 import { AtendimentoLocalStorageRepository } from "@infrastructure/localStorage/atendimento/AtendimentoLocalStorageRepository";
+import { Repository } from "@domain/Repository";
+import { AtendimentoServiceConfig } from "./AtendimentoServiceConfig";
 
 jest.mock("@shared/utils/fileSystemUtils");
 
@@ -49,18 +55,22 @@ const atendimentoDTO = {
 
 const isConnected = true;
 let atendimentoService: AtendimentoService;
-let remoteRepository: AtendimentoRepository;
-let localRepository: AtendimentoLocalStorageRepository;
+let localRepository: AtendimentoRepository;
+let remoteRepository: Partial<AtendimentoRepository>;
+let atendimentoServiceTestConfig: AtendimentoServiceConfig;
 
 describe("AtendimentoService tests", () => {
   beforeEach(() => {
-    remoteRepository = new AtendimentoAPIRepository();
     localRepository = new AtendimentoLocalStorageRepository();
-    atendimentoService = new AtendimentoService(
+    remoteRepository = new AtendimentoAPIRepository();
+
+    atendimentoServiceTestConfig = {
       isConnected,
+      localRepository,
       remoteRepository,
-      localRepository
-    );
+    };
+
+    atendimentoService = new AtendimentoService(atendimentoServiceTestConfig);
   });
 
   afterEach(() => {
@@ -73,11 +83,10 @@ describe("AtendimentoService tests", () => {
       expect(remoteRepository.create).toHaveBeenCalledWith(atendimentoDTO);
     });
     it("should create a atendimento locally if offline", async () => {
-      const offlineAtendimentoService = new AtendimentoService(
-        false,
-        remoteRepository,
-        localRepository
-      );
+      const offlineAtendimentoService = new AtendimentoService({
+        ...atendimentoServiceTestConfig,
+        isConnected: false,
+      });
       const { id_relatorio } = atendimentoInput;
       const atendimentoModel = { ...atendimentoDTO, id_relatorio };
       await offlineAtendimentoService.create(atendimentoInput);

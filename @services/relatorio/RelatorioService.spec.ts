@@ -39,7 +39,7 @@ describe("RelatorioService local e2e tests", () => {
     db = await dbInit(createRelatorioTableQuery);
     relatorioDAO = new RelatorioSQLiteDAO(db);
     localRepository = new RelatorioSQLRepository(relatorioDAO);
-    usuarioService = new UsuarioService(false);
+    usuarioService = new UsuarioService();
     relatorioService = new RelatorioService({
       isConnected: false,
       localRepository,

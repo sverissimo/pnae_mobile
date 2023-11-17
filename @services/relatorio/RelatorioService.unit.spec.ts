@@ -24,7 +24,7 @@ let relatorioService: RelatorioService;
 let mockLocalRepository: RelatorioRepository;
 let mockRemoteRepository: RelatorioRepository;
 let relatorioServiceConfig: RelatorioServiceConfig;
-const mockUsuarioService = new UsuarioService(false);
+const mockUsuarioService = new UsuarioService();
 
 const produtorId = "produtor-123";
 const mockRelatoriosLocal: RelatorioModel[] = [];

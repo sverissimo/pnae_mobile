@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { Usuario } from "../../@shared/types/Usuario";
 import { env } from "../../config/env";
-import { UsuarioAPI } from "@infrastructure/api/usuario/UsuarioAPI";
+import { UsuarioAPIRepository } from "@infrastructure/api/usuario/UsuarioAPIRepository";
 import { getData, removeValue, storeData } from "@shared/utils";
 import { Alert } from "react-native";
 import { perfisAutorizados } from "@auth/constants";
@@ -41,7 +41,7 @@ export const useAuth = () => {
       // setIsLoading(false);
       return;
     }
-    const queryResult: any = await UsuarioAPI.getUsuarios({
+    const queryResult: any = await UsuarioAPIRepository.findMany({
       matricula: userInput.matricula_usuario,
     });
 

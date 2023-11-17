@@ -15,7 +15,7 @@ export interface RelatorioServiceConfig {
 const relatorioAPI: RelatorioRepository = new RelatorioAPIRepository();
 const relatorioDAO = new RelatorioExpoSQLDAO(db);
 const relatorioExpoSQLRepository = new RelatorioSQLRepository(relatorioDAO);
-const usuarioService = new UsuarioService(false);
+const usuarioService = new UsuarioService();
 
 export const defaultConfig = {
   isConnected: false,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { RelatorioModel } from "@features/relatorio/types";
-import { UsuarioAPI } from "@infrastructure/api";
+import { UsuarioAPIRepository } from "@infrastructure/api";
 import { Usuario } from "@shared/types";
 import { debounce } from "@shared/utils";
 
@@ -38,7 +38,7 @@ export function useManageTecnico(relatorio: RelatorioModel) {
         return;
       //   prevValidMatriculasRef.current = matriculas;
       try {
-        const newExtensionistas = await UsuarioAPI.getUsuarios({
+        const newExtensionistas = await UsuarioAPIRepository.findMany({
           matricula: matriculas.join(","),
         });
         const sortedExtensionistas = matriculas

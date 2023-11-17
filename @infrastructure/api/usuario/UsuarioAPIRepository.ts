@@ -1,11 +1,16 @@
 import { Usuario } from "@shared/types/Usuario";
 import { env } from "../../../config/env";
+import { API } from "../API";
+import { Repository } from "@domain/Repository";
 
-export const UsuarioAPI = {
-  getUsuarios: async (params: {
+export class UsuarioAPIRepository implements Partial<Repository<Usuario>> {
+  private static readonly api = new API<Usuario>();
+  private static readonly baseUrl: string = `${env.SERVER_URL}/usuario`;
+
+  static async findMany(params: {
     ids?: string;
     matricula?: string;
-  }): Promise<Usuario[]> => {
+  }): Promise<Usuario[]> {
     try {
       let { ids } = params;
       const { matricula } = params;
@@ -20,22 +25,16 @@ export const UsuarioAPI = {
         // throw new Error("You must provide either ids or matricula");
       }
 
-      let url = `${env.SERVER_URL}/usuario`;
+      let url = this.baseUrl;
       if (ids) url += `/${ids}`;
       if (matricula) url += `?matricula=${matricula}`;
 
-      console.log("🚀------------------------------------- - url:", url);
-
-      const result = await fetch(url);
-      const usuarios = await result.json();
-      if (result.status === 404) {
-        return [];
-      }
+      const usuarios = await this.api.get(url);
 
       return Array.isArray(usuarios) ? usuarios : [usuarios];
     } catch (error) {
-      console.error("🚀 ~ file: UsuarioAPI.ts:39:", error);
+      console.error("Error fetching Usuarios:", error);
       throw error;
     }
-  },
-};
+  }
+}

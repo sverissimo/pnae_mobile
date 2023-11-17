@@ -4,19 +4,6 @@ import { saveLastSyncDate, getLastSyncDate, shouldSync } from "./systemUtils";
 
 jest.mock("@shared/utils/fileSystemUtils");
 jest.mock("@infrastructure/database/config/expoSQLite");
-// jest.mock(
-//   "@infrastructure/localStorage/system/SystemLocalStorageRepository",
-//   () => {
-//     return {
-//       SystemLocalStorageRepository: jest.fn().mockImplementation(() => ({
-//         saveLastSyncDate: jest.fn(),
-//         // other methods
-//       })),
-//     };
-//   }
-// )
-
-const mockSystemLocalStorageRepository = new SystemLocalStorageRepository();
 
 describe("systemUtils Tests", () => {
   beforeEach(() => {
@@ -39,7 +26,7 @@ describe("systemUtils Tests", () => {
   describe("getLastSyncDate", () => {
     it("should return the last sync date", async () => {
       const lastSyncDate = "2021-10-03T00:00:00.000Z";
-      const mockedMethod = jest
+      jest
         .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
         .mockResolvedValue(lastSyncDate);
 

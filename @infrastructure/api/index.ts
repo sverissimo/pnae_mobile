@@ -5,4 +5,4 @@ export * from "./files/FileAPI";
 export * from "./perfil/PerfilAPI";
 export * from "./produtor/ProdutorAPIRepository";
 export * from "./relatorio/repository/RelatorioAPIRepository";
-export * from "./usuario/UsuarioAPI";
+export * from "./usuario/UsuarioAPIRepository";

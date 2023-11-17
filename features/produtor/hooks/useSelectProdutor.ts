@@ -70,7 +70,6 @@ export const useSelectProdutor = () => {
       dap: produtorDTO?.dap,
       caf: produtorDTO?.caf,
       perfis: produtorDTO?.perfis,
-      relatorios: produtorDTO?.relatorios,
       propriedades: produtorDTO?.propriedades,
     });
   };

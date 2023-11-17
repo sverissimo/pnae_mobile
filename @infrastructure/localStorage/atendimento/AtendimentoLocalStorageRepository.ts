@@ -1,10 +1,10 @@
-import { Repository } from "@domain/Repository";
 import { LocalStorageRepository } from "../LocalStorageRepository";
 import { AtendimentoModel } from "@domain/atendimento/entity/Atendimento";
+import { AtendimentoRepository } from "@domain/atendimento";
 
 export class AtendimentoLocalStorageRepository
   extends LocalStorageRepository
-  implements Repository<AtendimentoModel>
+  implements AtendimentoRepository
 {
   protected collection = "atendimentos";
   protected key = "id_relatorio";

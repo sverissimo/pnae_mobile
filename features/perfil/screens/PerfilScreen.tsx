@@ -18,8 +18,12 @@ export const PerfilScreen = () => {
   };
 
   const handleViewPerfil = (perfilId: string) => {
-    const perfil = produtor?.perfis!.find((p) => p.id === perfilId);
-    const { municipio } = produtor?.propriedades![0];
+    if (!produtor) return console.log("produtor não encontrado");
+
+    const { municipio } = produtor.propriedades![0];
+    const perfil = produtor.perfis!.find((p) => p.id === perfilId);
+
+    if (!perfil) return console.log("perfil não encontrado");
     navigation.navigate("ViewPerfilScreen", { perfil, municipio });
   };
 

@@ -6,6 +6,7 @@ export type PerfilModel = {
   agroindustria_precisa_adaptacao_reforma: boolean;
   at_prf_see_propriedade: {
     atividade: string;
+    producao_dedicada_pnae: boolean;
   };
   atividades_com_regularizacao_ambiental: string;
   atividades_usam_recursos_hidricos: string;
