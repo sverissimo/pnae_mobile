@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { LogBox, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import Authentication from "./Authentication";
-import { init_db } from "./@infrastructure/database/config/expoSQLite";
 import {
   ImageContextProvider,
   LocationContextProvider,
@@ -12,29 +10,17 @@ import {
 import { Loading } from "./@shared/components/organisms/Loading";
 import { globalColors } from "./@shared/constants/themes";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
-import { checkFiles } from "@shared/utils";
 import { SnackBarProvider } from "@contexts/SnackbarContext";
 import { ConnectionContextProvider } from "@contexts/ConnectionContext";
-
-LogBox.ignoreLogs(["new NativeEventEmitter()"]);
+import { useDatabaseInitialization } from "@config/useDatabaseInitialization";
 
 export default function App() {
-  const [dbInitialized, setDbInitialized] = useState(false);
+  const dbInitialized = useDatabaseInitialization();
 
-  useEffect(() => {
-    init_db()
-      .then(() => {
-        setDbInitialized(true);
-        console.log("---------------------------------------\n");
-        // checkFiles();
-      })
-      .catch((err: unknown) => {
-        console.log("🚀 ~ file: App.tsx:16 ~ useEffect ~ err:", err);
-      });
-  }, []);
   if (!dbInitialized) {
     return <Loading />;
   }
+
   const { primary, background } = globalColors;
 
   const theme = {

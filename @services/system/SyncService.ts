@@ -32,7 +32,7 @@ export class SyncService {
     // return;
 
     const syncData = await this.getRelatoriosSyncInfo();
-    // log(syncData);
+    log(syncData);
 
     const {
       missingOnServer,

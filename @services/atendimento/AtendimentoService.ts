@@ -34,13 +34,11 @@ export class AtendimentoService {
           "### App offline - saved atendimento locally.",
           atendimento.toModel()
         );
-        return true;
+        return;
       }
       await this.remoteRepository.create!(atendimento.toDTO());
-
-      return true;
     } catch (error: any) {
-      console.log("🚀 RelatorioService.ts:31: ", error);
+      console.log("🚀 RelatorioService.ts:43: ", error);
       throw new Error(error.message);
     }
   };

@@ -7,7 +7,6 @@ import { useManageConnection, useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
 
 import { SyncService } from "@services/system/SyncService";
-
 export const useSelectProdutor = () => {
   const {
     produtor,
@@ -36,11 +35,19 @@ export const useSelectProdutor = () => {
       isConnected: !!isConnected,
     }).getProdutor(cpf);
 
+    // const prods = await new ProdutorService({
+    //   isConnected: isConnected,
+    // }).getAllLocalProdutoresIds();
+    // console.log(
+    //   "🚀 - file: useSelectProdutor.ts:39 - fetchProdutor - prods:",
+    //   prods
+    // );
+
     // ********** TESTING ONLY
-    const ids = await new SyncService()
-      .syncRelatorios(true)
-      .catch((e) => console.log("Callee error --------", e));
-    console.log("🚀 ------------- fetchProdutor - dataFromServer:", ids);
+    // const ids = await new SyncService()
+    //   .syncRelatorios(true)
+    //   .catch((e) => console.log("Callee error --------", e));
+    // console.log("🚀 ------------- fetchProdutor - dataFromServer:", ids);
 
     if (!produtor) {
       setSnackBarOptions({

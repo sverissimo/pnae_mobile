@@ -77,20 +77,19 @@ export const useManageRelatorio = (produtorId?: string) => {
         isConnected: !!connected,
       }).createRelatorio(relatorioInput);
 
-      // *** Cria o atendimento se conectado na internet
-      if (connected) {
-        const propriedade = produtor!.propriedades![0];
-        const atendimento = {
-          id_usuario: user!.id_usuario,
-          id_pessoa_demeter: produtor!.id_pessoa_demeter,
-          id_pl_propriedade: propriedade.id_pl_propriedade,
-          id_und_empresa: propriedade.id_und_empresa,
-          id_relatorio: relatorioId,
-        };
-        await new AtendimentoService({ isConnected: connected }).create(
-          atendimento
-        );
-      }
+      // *** Cria o atendimento offline ou remoto (caso online)
+      const propriedade = produtor!.propriedades![0];
+      const atendimento = {
+        id_usuario: user!.id_usuario,
+        id_pessoa_demeter: produtor!.id_pessoa_demeter,
+        id_pl_propriedade: propriedade.id_pl_propriedade,
+        id_und_empresa: propriedade.id_und_empresa,
+        id_relatorio: relatorioId,
+      };
+
+      await new AtendimentoService({ isConnected: connected }).create(
+        atendimento
+      );
 
       setRelatorios([
         ...relatorios,

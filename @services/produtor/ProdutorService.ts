@@ -29,16 +29,10 @@ export class ProdutorService {
       .catch((e: any) => console.log(e));
 
     const shouldSyncronize = await shouldSync(1000 * 60 * 60 * 24);
+    console.log("🚀 - ProdService shouldSync:", shouldSyncronize);
 
-    console.log(
-      "🚀 - *************************************************** shouldSync:",
-      shouldSyncronize
-    );
-    if (produtorLocal && !shouldSyncronize) {
-      console.log(
-        "@@@ ProdutorService fetched from produtorLocal:",
-        produtorLocal.nm_pessoa
-      );
+    if (produtorLocal && (!shouldSyncronize || !this.isConnected)) {
+      console.log("@@@ ProdService from local:", produtorLocal.nm_pessoa);
       return produtorLocal;
     }
 
