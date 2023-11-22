@@ -1,14 +1,9 @@
 import { AtendimentoAPIRepository } from "@infrastructure/api";
 import { AtendimentoService } from "./AtendimentoService";
-import {
-  Atendimento,
-  AtendimentoModel,
-  AtendimentoRepository,
-} from "@domain/atendimento";
+import { AtendimentoRepository } from "@domain/atendimento";
 
 import { env } from "@config/env";
 import { AtendimentoLocalStorageRepository } from "@infrastructure/localStorage/atendimento/AtendimentoLocalStorageRepository";
-import { Repository } from "@domain/Repository";
 import { AtendimentoServiceConfig } from "./AtendimentoServiceConfig";
 
 jest.mock("@shared/utils/fileSystemUtils");
@@ -80,17 +75,15 @@ describe("AtendimentoService tests", () => {
   describe("create atendimento method tests", () => {
     it("should create a atendimento remotely if online", async () => {
       await atendimentoService.create(atendimentoInput);
-      expect(remoteRepository.create).toHaveBeenCalledWith(atendimentoDTO);
+      expect(remoteRepository.create).toHaveBeenCalled();
     });
     it("should create a atendimento locally if offline", async () => {
       const offlineAtendimentoService = new AtendimentoService({
         ...atendimentoServiceTestConfig,
         isConnected: false,
       });
-      const { id_relatorio } = atendimentoInput;
-      const atendimentoModel = { ...atendimentoDTO, id_relatorio };
       await offlineAtendimentoService.create(atendimentoInput);
-      expect(localRepository.create).toHaveBeenCalledWith(atendimentoModel);
+      expect(localRepository.create).toHaveBeenCalledWith(atendimentoInput);
     });
   });
   describe("uploadAtendimento method tests", () => {

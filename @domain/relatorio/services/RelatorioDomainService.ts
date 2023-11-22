@@ -1,4 +1,5 @@
-import { RelatorioModel } from "@features/relatorio/types";
+import { RelatorioDTO, RelatorioModel } from "@features/relatorio/types";
+import { RelatorioBackendDTO } from "@infrastructure/api/relatorio/dto";
 import { Usuario } from "@shared/types";
 
 export class RelatorioDomainService {
@@ -63,9 +64,21 @@ export class RelatorioDomainService {
       ...new Set(
         relatoriosList
           // .map((r: Relatorio) => r?.tecnicoId?.toString())
-          .reduce((acc: any, r: RelatorioModel) => {
+          .reduce((acc: any, r: RelatorioModel | RelatorioBackendDTO) => {
             acc.push(r?.tecnicoId?.toString());
-            acc.push(r?.outroExtensionista?.toString());
+
+            const outrosTecnicos = r.outroExtensionista;
+
+            if (
+              typeof outrosTecnicos === "string" &&
+              outrosTecnicos.match(",")
+            ) {
+              const ids = outrosTecnicos.split(",");
+              acc.push(...ids);
+              return acc;
+            }
+
+            acc.push(outrosTecnicos?.toString());
             return acc;
           }, [])
           .filter((id: string) => !!id)

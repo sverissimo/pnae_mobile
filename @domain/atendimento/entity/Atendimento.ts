@@ -1,10 +1,11 @@
+import { AtendimentoDTO } from "@infrastructure/api/atendimento/dto/AtendimentoDTO";
+
 export type AtendimentoModel = {
   id_usuario: string;
   id_und_empresa: string;
   id_pessoa_demeter: string;
   id_pl_propriedade: string;
   id_relatorio: string;
-  link_pdf: string;
 };
 
 export class Atendimento {
@@ -13,7 +14,6 @@ export class Atendimento {
   constructor(atendimento: Omit<AtendimentoModel, "link_pdf">) {
     this.atendimento = {
       ...atendimento,
-      link_pdf: "",
     };
     this.validate();
   }
@@ -22,15 +22,17 @@ export class Atendimento {
     return this.atendimento;
   }
 
-  toDTO() {
+  toDTO(serverURL: string): AtendimentoDTO {
     const { id_relatorio, ...atendimento } = this.atendimento;
-    return atendimento;
+    const link_pdf = this.getPDFLink(serverURL);
+
+    return { ...atendimento, link_pdf };
   }
 
-  addPDFLink(serverURL: string) {
+  private getPDFLink(serverURL: string) {
     const { id_relatorio } = this.atendimento;
     const link_pdf = `${serverURL}/relatorios/pdf/${id_relatorio}`;
-    this.atendimento.link_pdf = link_pdf;
+    return link_pdf;
   }
 
   validate() {

@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import Authentication from "./Authentication";
 import {
   ImageContextProvider,
@@ -14,6 +14,7 @@ import { SnackBarProvider } from "@contexts/SnackbarContext";
 import { ConnectionContextProvider } from "@contexts/ConnectionContext";
 import { useDatabaseInitialization } from "@config/useDatabaseInitialization";
 
+LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 export default function App() {
   const dbInitialized = useDatabaseInitialization();
 

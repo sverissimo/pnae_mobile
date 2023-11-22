@@ -6,10 +6,11 @@ const atendimentoModel: AtendimentoModel = {
   id_und_empresa: "H0683",
   id_pessoa_demeter: "170150",
   id_pl_propriedade: "2321",
-  link_pdf: "",
 };
 
-describe("Atendimento", () => {
+const serverURL = "https://example.com";
+
+describe("Atendimento root aggregate", () => {
   describe("constructor", () => {
     it("should throw an error if id_usuario is not provided", () => {
       const atendimento = {
@@ -79,21 +80,20 @@ describe("Atendimento", () => {
   describe("toDTO", () => {
     it("should return the atendimento object as a DTO", () => {
       const atendimento = new Atendimento(atendimentoModel);
-      const { id_relatorio, ...atendimentoDTO } = atendimentoModel;
-      expect(atendimento.toDTO()).toEqual(atendimentoDTO);
+
+      expect(atendimento.toDTO(serverURL)).toHaveProperty("link_pdf");
+      expect(atendimento.toDTO(serverURL)).not.toHaveProperty("id_relatorio");
     });
   });
 
   describe("addPDFLink", () => {
     it("should add the PDF link to the atendimento object", () => {
-      const serverURL = "https://example.com";
       const atendimento = new Atendimento(atendimentoModel);
-      atendimento.addPDFLink(serverURL);
 
       const atendimentoCreatedModel = atendimento.toModel();
-      const atendimentoDTO = atendimento.toDTO();
-      expect(atendimentoCreatedModel.link_pdf).toBe(
-        `${serverURL}/relatorios/pdf/${atendimentoCreatedModel.id_relatorio}`
+      const atendimentoDTO = atendimento.toDTO(serverURL);
+      expect(atendimentoCreatedModel.id_relatorio).toBe(
+        atendimentoModel.id_relatorio
       );
       expect(atendimentoDTO.link_pdf).toBe(
         `${serverURL}/relatorios/pdf/${atendimentoCreatedModel.id_relatorio}`

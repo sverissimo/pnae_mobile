@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { SyncService } from "@services/system/SyncService";
-import { useDebounce } from "./useDebounce";
-import { useManageConnection } from "./useManageConnection";
+import { useDebounce, useManageConnection } from "@shared/hooks";
+import { RelatorioSyncService } from "@services/@sync/relatorio/RelatorioSyncService";
 
 export const useSyncRelatorios = () => {
   const { isConnected } = useManageConnection();
@@ -9,7 +8,7 @@ export const useSyncRelatorios = () => {
 
   useEffect(() => {
     if (!debouncedIsConnected) return;
-    new SyncService()
+    new RelatorioSyncService()
       .syncRelatorios(!!debouncedIsConnected)
       .catch((e) => console.log("Sync error:", e));
   }, [debouncedIsConnected]);

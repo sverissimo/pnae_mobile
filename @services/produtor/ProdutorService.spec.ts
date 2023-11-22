@@ -41,9 +41,6 @@ jest.mock("@infrastructure/api/produtor/ProdutorAPIRepository", () => {
 
 jest.mock("@shared/utils/fileSystemUtils");
 jest.mock("@infrastructure/database/config/expoSQLite");
-jest.mock("@services/system/systemUtils", () => ({
-  shouldSync: jest.fn().mockResolvedValue(false),
-}));
 
 let remoteRepository: ProdutorRepository;
 let localRepository: ProdutorRepository;

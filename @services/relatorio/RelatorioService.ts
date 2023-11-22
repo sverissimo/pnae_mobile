@@ -105,6 +105,10 @@ export class RelatorioService {
         RelatorioDomainService.getTecnicosIdsFromRelatoriosList(
           updatedRelatorios
         );
+      console.log(
+        "🚀 - file: RelatorioService.ts:105 - RelatorioService - getRelatorios= - tecnicoIds:",
+        tecnicoIds
+      );
 
       const tecnicos = await this.usuarioService.getUsuariosByIds(tecnicoIds);
 

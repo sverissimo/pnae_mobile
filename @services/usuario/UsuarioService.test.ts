@@ -2,12 +2,10 @@ import { Repository } from "@domain/Repository";
 import { UsuarioService } from "./UsuarioService";
 import { UsuarioAPIRepository } from "@infrastructure/api/usuario/UsuarioAPIRepository";
 import { UsuarioLocalStorageRepository } from "@infrastructure/localStorage/usuario/UsuarioLocalStorageRepository";
-import { shouldSync } from "@services/system/systemUtils";
 import { Usuario } from "@shared/types/Usuario";
 
 jest.mock("@infrastructure/api/usuario/UsuarioAPIRepository");
 jest.mock("@infrastructure/localStorage/usuario/UsuarioLocalStorageRepository");
-jest.mock("@services/system/systemUtils");
 jest.mock("@shared/utils/fileSystemUtils");
 
 const mockUsuarioAPI = UsuarioAPIRepository as jest.Mocked<
@@ -15,7 +13,6 @@ const mockUsuarioAPI = UsuarioAPIRepository as jest.Mocked<
 >;
 const mockLocalRepository =
   new UsuarioLocalStorageRepository() as jest.Mocked<UsuarioLocalStorageRepository>;
-const mockShouldSync = shouldSync as jest.MockedFunction<typeof shouldSync>;
 
 const localUsuarios: Usuario[] = [
   { id_usuario: "1", nome_usuario: "User 1", matricula_usuario: "123" },
@@ -44,7 +41,6 @@ describe("UsuarioService", () => {
   describe("getUsuariosByIds", () => {
     it("should return local usuarios when not connected", async () => {
       const ids = ["1", "2", "3"];
-
       mockLocalRepository.findMany.mockResolvedValue(localUsuarios);
 
       const result = await usuarioService.getUsuariosByIds(ids);
@@ -52,15 +48,11 @@ describe("UsuarioService", () => {
       expect(result).toEqual(localUsuarios);
       expect(mockLocalRepository.findMany).toHaveBeenCalledWith(ids);
       expect(mockUsuarioAPI.findMany).not.toHaveBeenCalled();
-      expect(mockShouldSync).not.toHaveBeenCalled();
     });
 
     it("should return local usuarios when online, but should not fetch from server", async () => {
       const ids = ["1", "2", "3"];
-
       mockLocalRepository.findMany.mockResolvedValue(localUsuarios);
-      mockShouldSync.mockResolvedValue(false);
-
       const usuarioService = new UsuarioService({
         ...usuarioServiceTestConfig,
         isConnected: true,
@@ -71,28 +63,23 @@ describe("UsuarioService", () => {
       expect(result).toEqual(localUsuarios);
       expect(mockLocalRepository.findMany).toHaveBeenCalledWith(ids);
       expect(mockUsuarioAPI.findMany).not.toHaveBeenCalled();
-      expect(mockShouldSync).toHaveBeenCalled();
     });
 
     it("should fetch remote usuarios and save locally when should fetch from server", async () => {
       const ids = ["1", "2", "3"];
-
       mockLocalRepository.findMany.mockResolvedValue([]);
       mockUsuarioAPI.findMany.mockResolvedValue(remoteUsuarios);
-      mockShouldSync.mockResolvedValue(true);
       mockLocalRepository.create.mockResolvedValue(undefined);
 
       const usuarioService = new UsuarioService({
         ...usuarioServiceTestConfig,
         isConnected: true,
       });
-
       const result = await usuarioService.getUsuariosByIds(ids);
 
       expect(result).toEqual(remoteUsuarios);
       expect(mockLocalRepository.findMany).toHaveBeenCalledWith(ids);
       expect(mockUsuarioAPI.findMany).toHaveBeenCalledWith({ ids: "1,2,3" });
-      expect(mockShouldSync).toHaveBeenCalled();
       for (const usuario of remoteUsuarios) {
         expect(mockLocalRepository.create).toHaveBeenCalledWith(usuario);
       }

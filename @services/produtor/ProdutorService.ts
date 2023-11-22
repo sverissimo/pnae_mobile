@@ -7,7 +7,7 @@ import {
   ProdutorServiceConfigInterface,
   produtorDefaultConfig,
 } from "./ProdutorServiceConfig";
-import { shouldSync } from "@services/system/systemUtils";
+import { SyncHelpers } from "@services/@sync/SyncHelpers";
 
 export class ProdutorService {
   private isConnected: boolean;
@@ -28,19 +28,19 @@ export class ProdutorService {
       .findByCPF(CPFProdutor)
       .catch((e: any) => console.log(e));
 
-    const shouldSyncronize = await shouldSync(1000 * 60 * 60 * 24);
-    console.log("🚀 - ProdService shouldSync:", shouldSyncronize);
+    // const shouldSyncronize = await new SyncHelpers().shouldSync(
+    //   1000 * 60 * 60 * 24
+    // );
 
-    if (produtorLocal && (!shouldSyncronize || !this.isConnected)) {
+    // if (produtorLocal && (!shouldSyncronize || !this.isConnected)) {
+    if (produtorLocal) {
       console.log("@@@ ProdService from local:", produtorLocal.nm_pessoa);
       return produtorLocal;
     }
 
-    if (this.isConnected) {
-      const produtor = await this.remoteRepository.findByCPF(CPFProdutor);
-      produtor && (await this.saveProdutorLocal(produtor));
-      return produtor;
-    }
+    const produtor = await this.remoteRepository.findByCPF(CPFProdutor);
+    produtor && (await this.saveProdutorLocal(produtor));
+    return produtor;
   };
 
   saveProdutorLocal = async (produtor: Produtor) => {

@@ -1,6 +1,10 @@
 import { LocalStorageRepository } from "../LocalStorageRepository";
-import { AtendimentoModel } from "@domain/atendimento/entity/Atendimento";
+import {
+  Atendimento,
+  AtendimentoModel,
+} from "@domain/atendimento/entity/Atendimento";
 import { AtendimentoRepository } from "@domain/atendimento";
+import { AtendimentoDTO } from "@infrastructure/api/atendimento/dto/AtendimentoDTO";
 
 export class AtendimentoLocalStorageRepository
   extends LocalStorageRepository
@@ -9,8 +13,8 @@ export class AtendimentoLocalStorageRepository
   protected collection = "atendimentos";
   protected key = "id_relatorio";
 
-  async create(atendimentoInput: AtendimentoModel): Promise<void> {
-    const { id_relatorio, ...atendimento } = atendimentoInput;
+  async create(atendimento: AtendimentoModel): Promise<void> {
+    const { id_relatorio } = atendimento;
 
     await this.saveData(id_relatorio, atendimento);
     console.log("@@@@ AtendimentoLocalStorageRepository created atendimento.");
@@ -24,7 +28,7 @@ export class AtendimentoLocalStorageRepository
   }
 
   async findAll(): Promise<AtendimentoModel[]> {
-    const atendimentoes = await this.getAllCollectionData();
+    const atendimentoes = await this.getAllEntities();
     return atendimentoes;
   }
 

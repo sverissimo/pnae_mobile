@@ -11,6 +11,7 @@ export class UsuarioLocalStorageRepository
 
   async create(usuario: Usuario): Promise<void> {
     const { id_usuario } = usuario;
+
     await this.saveData(id_usuario, usuario);
     console.log("@@@@ UsuarioLocalStorageRepository created usuario.");
   }

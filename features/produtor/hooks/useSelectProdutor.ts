@@ -6,7 +6,6 @@ import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useManageConnection, useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
 
-import { SyncService } from "@services/system/SyncService";
 export const useSelectProdutor = () => {
   const {
     produtor,
@@ -14,6 +13,7 @@ export const useSelectProdutor = () => {
     isLoading,
     setIsLoading,
   } = useContext(ProdutorContext);
+
   const { setRelatorios } = useContext(RelatorioContext);
   const { isConnected } = useManageConnection();
   const { setSnackBarOptions } = useSnackBar();

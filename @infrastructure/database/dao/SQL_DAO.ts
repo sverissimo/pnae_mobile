@@ -30,7 +30,7 @@ export abstract class SQL_DAO<T extends Entity> {
     const syncResult = await Promise.allSettled(
       entities.map((e) => this.create(e))
     );
-    console.log("🚀 RelatorioSQLRepo - CreateMany 34 syncResult:", syncResult);
+    console.log("🚀 SQL_DAO - CreateMany 34 syncResult:", syncResult);
   }
 
   async find(values?: unknown, columnName?: string): Promise<T[]> {
@@ -67,7 +67,7 @@ export abstract class SQL_DAO<T extends Entity> {
     const syncResult = await Promise.allSettled(
       entities.map((e) => this.update(e))
     );
-    console.log("🚀 RelatorioSQLRepo - UpdateMany 94 syncResult:", syncResult);
+    console.log("🚀 SQL_DAO - UpdateMany 94 syncResult:", syncResult);
   }
 
   async delete(id: string): Promise<void> {

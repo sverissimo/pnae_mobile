@@ -20,7 +20,7 @@ export class ProdutorLocalStorageRepository
   }
 
   async findAll(): Promise<ProdutorModel[]> {
-    const produtores = await this.getAllCollectionData();
+    const produtores = await this.getAllEntities();
     return produtores;
   }
 

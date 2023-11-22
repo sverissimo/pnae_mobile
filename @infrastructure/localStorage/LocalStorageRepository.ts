@@ -7,12 +7,12 @@ export abstract class LocalStorageRepository {
   async saveData(key: string, value: {}) {
     try {
       const entity = JSON.stringify(value);
+
       const collection = await this.getCollection();
       const updatedCollection = {
         ...collection,
         [key]: entity,
       };
-
       await AsyncStorage.setItem(
         this.collection,
         JSON.stringify(updatedCollection)
@@ -29,7 +29,6 @@ export abstract class LocalStorageRepository {
     try {
       const collection = await this.getCollection();
       const entity = collection[key];
-
       if (entity) {
         return JSON.parse(entity);
       }
@@ -39,11 +38,8 @@ export abstract class LocalStorageRepository {
   }
 
   async findMany(keys: string[]) {
-    const result = await AsyncStorage.multiGet(keys);
-    const collection = result
-      .map((entity) => (entity[1] ? JSON.parse(entity[1]) : null))
-      .filter((entity) => entity !== null);
-
+    const result = await this.getCollection();
+    const collection = keys.map((key) => JSON.parse(result[key]));
     return collection;
   }
 
@@ -57,7 +53,7 @@ export abstract class LocalStorageRepository {
     }
   }
 
-  async getAllCollectionData() {
+  async getAllEntities() {
     const result = await AsyncStorage.getItem(this.collection);
     if (!result) {
       return [];

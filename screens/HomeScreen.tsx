@@ -8,10 +8,12 @@ import { useEffect } from "react";
 import { FileService } from "@services/files/FileService";
 import { ProdutorService, RelatorioService } from "@services/index";
 import { log } from "@shared/utils/log";
-import { SyncService } from "@services/system/SyncService";
+import { useSync } from "sync/hooks/useSync";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
+  const { lastSync } = useSync();
+
   const { user } = useAuth();
   const pressHandler = (screenName: keyof RootStackParamList) => {
     const screen =
@@ -54,6 +56,7 @@ export const HomeScreen: React.FC = () => {
           onPress={() => pressHandler("RelatorioScreen")}
         />
       </View>
+      <Text style={styles.syncInfo}>{lastSync}</Text>
     </View>
   );
 };
@@ -82,5 +85,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     top: "20%",
+  },
+  syncInfo: {
+    fontSize: 12,
+    color: globalColors.grayscale[800],
+    marginBottom: 12,
+    marginLeft: "auto",
+    marginRight: 7,
+    fontStyle: "italic",
   },
 });

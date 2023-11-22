@@ -1,24 +1,26 @@
 jest.mock("@infrastructure/localStorage/system/SystemLocalStorageRepository");
 import { SystemLocalStorageRepository } from "@infrastructure/localStorage/system/SystemLocalStorageRepository";
-import { saveLastSyncDate, getLastSyncDate, shouldSync } from "./systemUtils";
+import { SyncHelpers } from "./SyncHelpers";
 
 jest.mock("@shared/utils/fileSystemUtils");
 jest.mock("@infrastructure/database/config/expoSQLite");
 
-describe("systemUtils Tests", () => {
+let syncHelpers: SyncHelpers;
+let systemStorageMock: SystemLocalStorageRepository;
+
+describe("SyncHelpers Tests", () => {
   beforeEach(() => {
+    systemStorageMock = new SystemLocalStorageRepository();
+    syncHelpers = new SyncHelpers(systemStorageMock);
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
   describe("saveLastSyncDate", () => {
     it("should call localStorage save method", async () => {
-      const mockedMethod = jest.spyOn(
-        SystemLocalStorageRepository.prototype,
-        "saveLastSyncDate"
-      );
+      const mockedMethod = jest.spyOn(systemStorageMock, "saveLastSyncDate");
 
-      await saveLastSyncDate();
+      await syncHelpers.saveLastSyncDate();
       expect(mockedMethod).toHaveBeenCalled();
     });
   });
@@ -27,21 +29,19 @@ describe("systemUtils Tests", () => {
     it("should return the last sync date", async () => {
       const lastSyncDate = "2021-10-03T00:00:00.000Z";
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValue(lastSyncDate);
 
-      const result = await getLastSyncDate();
+      const result = await systemStorageMock.getLastSyncDate();
 
       expect(result).toBe(lastSyncDate);
     });
 
     it("should throw an error if the get operation fails", async () => {
       const error = new Error("Test error");
-      jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
-        .mockRejectedValue(error);
+      jest.spyOn(systemStorageMock, "getLastSyncDate").mockRejectedValue(error);
 
-      await expect(getLastSyncDate()).rejects.toThrow(error);
+      await expect(syncHelpers.getLastSyncDate()).rejects.toThrow(error);
     });
   });
 
@@ -52,28 +52,28 @@ describe("systemUtils Tests", () => {
     });
     it("should return true if there is no last sync date", async () => {
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValue(new Date("invalid"));
 
-      const result = await shouldSync();
+      const result = await syncHelpers.shouldSync();
       expect(result).toBe(true);
     });
 
     it("should return true if there is no last sync date is invalid date", async () => {
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValue(new Date("invalid"));
 
-      const result = await shouldSync();
+      const result = await syncHelpers.shouldSync();
       expect(result).toBe(true);
     });
 
     it("should return true if the last sync date is more than one day ago", async () => {
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValue("2023-11-13T00:00:00.000Z");
 
-      const result = await shouldSync();
+      const result = await syncHelpers.shouldSync();
       expect(result).toBe(true);
     });
 
@@ -81,10 +81,10 @@ describe("systemUtils Tests", () => {
       const dateTwoHoursAgo = new Date();
       dateTwoHoursAgo.setHours(dateTwoHoursAgo.getHours() - 23);
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValue(dateTwoHoursAgo.toISOString());
 
-      const result = await shouldSync();
+      const result = await syncHelpers.shouldSync();
 
       expect(result).toBe(false);
     });
@@ -94,10 +94,10 @@ describe("systemUtils Tests", () => {
       date30SecondsAgo.setMilliseconds(-1000 * 30);
 
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValueOnce(date30SecondsAgo.toISOString());
 
-      const result = await shouldSync(1000 * 5);
+      const result = await syncHelpers.shouldSync(1000 * 5);
 
       expect(result).toBe(true);
     });
@@ -107,10 +107,10 @@ describe("systemUtils Tests", () => {
       dateFiveSecondsAgo.setMilliseconds(-1000 * 5);
 
       jest
-        .spyOn(SystemLocalStorageRepository.prototype, "getLastSyncDate")
+        .spyOn(systemStorageMock, "getLastSyncDate")
         .mockResolvedValueOnce(dateFiveSecondsAgo.toISOString());
 
-      const result = await shouldSync(1000 * 30);
+      const result = await syncHelpers.shouldSync(1000 * 30);
 
       expect(result).toBe(false);
     });
