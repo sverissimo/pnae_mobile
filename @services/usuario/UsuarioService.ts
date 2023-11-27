@@ -45,6 +45,10 @@ export class UsuarioService {
     return remoteUsuarios;
   }
 
+  async getAllLocalUsuarios() {
+    return await this.localRepository.findAll!();
+  }
+
   private async saveLocal(usuario: Usuario) {
     await this.localRepository.create(usuario);
   }

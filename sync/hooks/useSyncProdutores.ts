@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useDebounce, useManageConnection } from "@shared/hooks";
 
-export const useSyncRelatorios = () => {
+export const useSyncProdutores = () => {
   const { isConnected } = useManageConnection();
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 

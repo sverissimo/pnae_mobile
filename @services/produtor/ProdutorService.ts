@@ -1,18 +1,16 @@
-import { ProdutorLocalStorageRepository } from "@infrastructure/localStorage/produtor/ProdutorLocalStorageRepository";
 import { ProdutorModel } from "@domain/produtor/ProdutorModel";
-import { Produtor } from "@features/produtor/types/Produtor";
 import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
-// import { log } from "@shared/utils/log";
+import { ProdutorSyncService } from "@sync/produtor/ProdutorSyncService";
 import {
   ProdutorServiceConfigInterface,
   produtorDefaultConfig,
 } from "./ProdutorServiceConfig";
-import { SyncHelpers } from "@services/@sync/SyncHelpers";
 
 export class ProdutorService {
   private isConnected: boolean;
   private localRepository: ProdutorRepository;
   private remoteRepository: ProdutorRepository;
+  private syncService: ProdutorSyncService;
 
   constructor(
     produtorServiceConfig: Partial<ProdutorServiceConfigInterface> = produtorDefaultConfig
@@ -21,31 +19,33 @@ export class ProdutorService {
     this.isConnected = config.isConnected;
     this.localRepository = config.localRepository;
     this.remoteRepository = config.remoteRepository;
+    this.syncService = config.syncService;
   }
 
-  getProdutor = async (CPFProdutor: string): Promise<Produtor | undefined> => {
-    const produtorLocal = await this.localRepository
-      .findByCPF(CPFProdutor)
-      .catch((e: any) => console.log(e));
-
-    // const shouldSyncronize = await new SyncHelpers().shouldSync(
-    //   1000 * 60 * 60 * 24
-    // );
-
-    // if (produtorLocal && (!shouldSyncronize || !this.isConnected)) {
-    if (produtorLocal) {
-      console.log("@@@ ProdService from local:", produtorLocal.nm_pessoa);
+  getProdutor = async (
+    CPFProdutor: string
+  ): Promise<ProdutorModel | undefined> => {
+    const produtorLocal = await this.localRepository.findByCPF!(CPFProdutor);
+    // const ids = await this.getAllLocalProdutoresIds();
+    // console.log("🚀 - file: ProdutorService.ts:31 -  ids:", ids);
+    if (!this.isConnected) {
       return produtorLocal;
     }
 
-    const produtor = await this.remoteRepository.findByCPF(CPFProdutor);
-    produtor && (await this.saveProdutorLocal(produtor));
-    return produtor;
-  };
+    if (!produtorLocal) {
+      console.log("### Fetching produtor from server ###");
+      const produtor = await this.remoteRepository.findByCPF!(CPFProdutor);
+      produtor && (await this.localRepository.create(produtor));
+      return produtor;
+    }
 
-  saveProdutorLocal = async (produtor: Produtor) => {
-    if (!produtor?.id_pessoa_demeter) return;
-    await this.localRepository.create(produtor);
+    const updatedProdutor = await this.syncService.syncProdutorAndPerfis(
+      produtorLocal
+    );
+    updatedProdutor && console.log("### Updating produtor ###");
+    !updatedProdutor && console.log("### produtor uptoDate ###");
+
+    return updatedProdutor ?? produtorLocal;
   };
 
   getAllLocalProdutoresIds = async () => {

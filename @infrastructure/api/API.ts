@@ -1,3 +1,5 @@
+import { CheckForUpdatesResponse } from "@sync/types/CheckForUpdatesResponse";
+
 enum HttpMethod {
   GET = "GET",
   POST = "POST",
@@ -67,5 +69,18 @@ export class API<T> {
       body,
       isFormData: true,
     });
+  }
+
+  async getSyncInfo<T>(
+    url: string,
+    body: any
+  ): Promise<CheckForUpdatesResponse<T>> {
+    // console.log("🚀 - file: API.ts:79", {
+    //   url,
+    //   body: body?.relatoriosSyncInfo,
+    // });
+    const updateResponse = await this.post(url, body);
+
+    return JSON.parse(updateResponse as string);
   }
 }

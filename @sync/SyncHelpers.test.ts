@@ -17,11 +17,14 @@ describe("SyncHelpers Tests", () => {
   });
 
   describe("saveLastSyncDate", () => {
-    it("should call localStorage save method", async () => {
-      const mockedMethod = jest.spyOn(systemStorageMock, "saveLastSyncDate");
+    it("should call localStorage save method and return ISODate", async () => {
+      jest.spyOn(systemStorageMock, "saveLastSyncDate");
 
-      await syncHelpers.saveLastSyncDate();
-      expect(mockedMethod).toHaveBeenCalled();
+      const ISOStringDate = await syncHelpers.saveLastSyncDate();
+      expect(systemStorageMock.saveLastSyncDate).toHaveBeenCalled();
+      expect(ISOStringDate).toBeDefined();
+      expect(typeof ISOStringDate === "string").toBeTruthy();
+      expect(ISOStringDate).toHaveLength(24);
     });
   });
 

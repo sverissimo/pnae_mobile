@@ -26,6 +26,7 @@ jest.mock(
       AtendimentoLocalStorageRepository: jest.fn().mockImplementation(() => ({
         create: jest.fn(),
         findByRelatorioId: jest.fn(),
+        findAll: jest.fn(),
         delete: jest.fn(),
       })),
     };
@@ -56,6 +57,7 @@ let atendimentoServiceTestConfig: AtendimentoServiceConfig;
 
 describe("AtendimentoService tests", () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     localRepository = new AtendimentoLocalStorageRepository();
     remoteRepository = new AtendimentoAPIRepository();
 
@@ -67,57 +69,127 @@ describe("AtendimentoService tests", () => {
 
     atendimentoService = new AtendimentoService(atendimentoServiceTestConfig);
   });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe("create atendimento method tests", () => {
-    it("should create a atendimento remotely if online", async () => {
-      await atendimentoService.create(atendimentoInput);
-      expect(remoteRepository.create).toHaveBeenCalled();
-    });
-    it("should create a atendimento locally if offline", async () => {
-      const offlineAtendimentoService = new AtendimentoService({
-        ...atendimentoServiceTestConfig,
-        isConnected: false,
+  describe("AtendimentoService 1st run", () => {
+    describe("create atendimento method tests", () => {
+      it("should create a atendimento remotely if online", async () => {
+        await atendimentoService.create(atendimentoInput);
+        expect(remoteRepository.create).toHaveBeenCalled();
       });
-      await offlineAtendimentoService.create(atendimentoInput);
-      expect(localRepository.create).toHaveBeenCalledWith(atendimentoInput);
+      it("should create a atendimento locally if offline", async () => {
+        const offlineAtendimentoService = new AtendimentoService({
+          ...atendimentoServiceTestConfig,
+          isConnected: false,
+        });
+        await offlineAtendimentoService.create(atendimentoInput);
+        expect(localRepository.create).toHaveBeenCalledWith(atendimentoInput);
+      });
+    });
+    describe("uploadAtendimento method tests", () => {
+      const relatorioId = "123";
+      const atendimento = { ...atendimentoDTO, id_relatorio: relatorioId };
+
+      it("should upload atendimento remotely and delete it locally", async () => {
+        jest
+          .spyOn(localRepository, "findByRelatorioId")
+          .mockResolvedValue(atendimento);
+        jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
+        jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
+
+        await atendimentoService.uploadAtendimento(relatorioId);
+
+        expect(localRepository.findByRelatorioId).toHaveBeenCalledWith(
+          relatorioId
+        );
+        expect(remoteRepository.create).toHaveBeenCalledWith(atendimento);
+        expect(localRepository.delete).toHaveBeenCalledWith(relatorioId);
+      });
+
+      it("should not upload atendimento if it does not exist locally", async () => {
+        jest
+          .spyOn(localRepository, "findByRelatorioId")
+          .mockResolvedValue(null);
+        jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
+        jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
+
+        await atendimentoService.uploadAtendimento(relatorioId);
+
+        expect(localRepository.findByRelatorioId).toHaveBeenCalledWith(
+          relatorioId
+        );
+        expect(remoteRepository.create).not.toHaveBeenCalled();
+        expect(localRepository.delete).not.toHaveBeenCalled();
+      });
     });
   });
-  describe("uploadAtendimento method tests", () => {
-    const relatorioId = "123";
-    const atendimento = { ...atendimentoDTO, id_relatorio: relatorioId };
 
-    it("should upload atendimento remotely and delete it locally", async () => {
-      jest
-        .spyOn(localRepository, "findByRelatorioId")
-        .mockResolvedValue(atendimento);
-      jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
-      jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
+  describe("AtendimentoService 2nd run", () => {
+    describe("create method tests", () => {
+      it("should create an atendimento remotely when online", async () => {
+        const result = await atendimentoService.create(atendimentoInput);
 
-      await atendimentoService.uploadAtendimento(relatorioId);
+        expect(localRepository.create).not.toHaveBeenCalled();
+        expect(remoteRepository.create).toHaveBeenCalledWith(atendimentoInput);
+        expect(result).toBeUndefined();
+      });
 
-      expect(localRepository.findByRelatorioId).toHaveBeenCalledWith(
-        relatorioId
-      );
-      expect(remoteRepository.create).toHaveBeenCalledWith(atendimento);
-      expect(localRepository.delete).toHaveBeenCalledWith(relatorioId);
+      it("should store an atendimento locally when offline", async () => {
+        atendimentoService = new AtendimentoService({
+          isConnected: false,
+          localRepository: localRepository,
+          remoteRepository: remoteRepository,
+        });
+
+        await atendimentoService.create(atendimentoInput);
+
+        expect(localRepository.create).toHaveBeenCalledWith(atendimentoInput);
+        expect(remoteRepository.create).not.toHaveBeenCalled();
+      });
     });
 
-    it("should not upload atendimento if it does not exist locally", async () => {
-      jest.spyOn(localRepository, "findByRelatorioId").mockResolvedValue(null);
-      jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
-      jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
+    describe("sync method tests", () => {
+      it("should retrieve all atendimentos from local repository", async () => {
+        localRepository.findAll = jest
+          .fn()
+          .mockResolvedValue([atendimentoInput]);
 
-      await atendimentoService.uploadAtendimento(relatorioId);
+        const result = await atendimentoService.getAtendimentos();
 
-      expect(localRepository.findByRelatorioId).toHaveBeenCalledWith(
-        relatorioId
-      );
-      expect(remoteRepository.create).not.toHaveBeenCalled();
-      expect(localRepository.delete).not.toHaveBeenCalled();
+        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(result).toEqual([atendimentoInput]);
+      });
+
+      it("should sync all atendimentos", async () => {
+        const atendimentoInput2 = { ...atendimentoInput, id_relatorio: "456" };
+
+        localRepository.findAll = jest
+          .fn()
+          .mockResolvedValue([atendimentoInput, atendimentoInput2]);
+        remoteRepository.create = jest.fn().mockResolvedValue(true);
+        localRepository.delete = jest.fn().mockResolvedValue(undefined);
+
+        await atendimentoService.sync();
+
+        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(remoteRepository.create).toHaveBeenCalledTimes(2);
+        expect(localRepository.delete).toHaveBeenCalledTimes(2);
+
+        for (const atendimento of [atendimentoInput]) {
+          expect(remoteRepository.create).toHaveBeenCalledWith(atendimento);
+          expect(localRepository.delete).toHaveBeenCalledWith(
+            atendimento.id_relatorio
+          );
+        }
+      });
+
+      it("should NOT sync atendimentos if there aint any saved locally", async () => {
+        localRepository.findAll = jest.fn().mockResolvedValue([]);
+
+        await atendimentoService.sync();
+
+        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(remoteRepository.create).not.toHaveBeenCalled();
+        expect(localRepository.delete).not.toHaveBeenCalled();
+      });
     });
   });
 });

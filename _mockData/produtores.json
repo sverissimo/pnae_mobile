@@ -1,0 +1,63 @@
+[
+  {
+    "caf": null,
+    "dap": null,
+    "dt_nascimento": "1997-05-02T03:00:00.000Z",
+    "dt_update_record": "2023-05-17T13:17:56.363Z",
+    "id_pessoa_demeter": "63536",
+    "nm_pessoa": "Raniele Gonçalves Adão",
+    "nr_cpf_cnpj": "15609048605",
+    "sn_ativo": "1",
+    "tp_sexo": "F"
+  },
+
+  {
+    "caf": null,
+    "dap": null,
+    "dt_nascimento": "1997-05-02T03:00:00.000Z",
+    "id_pessoa_demeter": "63536",
+    "nm_pessoa": "Raniele Gonçalves Adão",
+    "nr_cpf_cnpj": "15609048605",
+    "perfis": [
+      {
+        "at_prf_see_propriedade": "[Object]",
+        "condicao_posse": "Proprietário",
+        "credito_rural": "Sim",
+        "dados_producao_agro_industria": "[Object]",
+        "dados_producao_in_natura": "[Object]",
+        "dap_caf_vigente": "Sim",
+        "data_atualizacao": "2023-05-17T00:00:00.000Z",
+        "data_preenchimento": "2023-05-17T00:00:00.000Z",
+        "fonte_captacao_agua": "Concessionária (Copasa, SAAE ou sistema comunitário)",
+        "forma_esgotamento_sanitario": "Outros",
+        "grau_interesse_pnae": "Alto",
+        "id": "194",
+        "id_cliente": "63536",
+        "nivel_tecnologico_cultivo": "Adubação orgânica",
+        "participa_organizacao": "Não",
+        "possui_cadastro_car": "Não",
+        "procedimento_pos_colheita": "Embalagem, Limpeza",
+        "realiza_escalonamento_producao": "Não",
+        "sistema_producao": "Convencional",
+        "tipo_perfil": "Entrada",
+        "usuario": "[Object]"
+      }
+    ],
+    "propriedades": [
+      {
+        "area_total": 0.67,
+        "atividade": "ATIVIDADE_PRIMARIA",
+        "atividade_principal": null,
+        "geo_ponto_texto": "SRID=4326;POINT (-42.80139303166905 -20.792683379434223)",
+        "id_municipio": "112",
+        "id_pl_propriedade": "66423",
+        "id_und_empresa": "H0102",
+        "municipio": "Cajuri",
+        "nome_propriedade": "Sítio Turvo",
+        "producao_dedicada_pnae": null
+      }
+    ],
+    "sn_ativo": "1",
+    "tp_sexo": "F"
+  }
+]

@@ -7,6 +7,7 @@ export class SyncHelpers {
     try {
       const lastSyncDate = new Date().toISOString();
       await this.systemStorage.saveLastSyncDate(lastSyncDate);
+      return lastSyncDate;
     } catch (error) {
       console.log("🚀 - SyncService - saveLastSyncDate - error:", error);
       throw error;

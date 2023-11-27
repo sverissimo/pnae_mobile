@@ -8,9 +8,9 @@ export type ProdutorModel = {
   tp_sexo: string;
   dt_nascimento: string;
   sn_ativo?: string;
-  dap?: string;
-  caf?: string;
-  dt_update_record?: Date;
+  dap: string | null;
+  caf?: string | null;
+  dt_update_record?: string;
   propriedades: PropriedadeModel[];
   perfis: PerfilModel[];
 };

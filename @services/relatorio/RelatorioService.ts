@@ -53,32 +53,6 @@ export class RelatorioService {
     }
   };
 
-  async createMany({
-    missingOnClient,
-    missingOnServer,
-  }: {
-    missingOnClient: RelatorioModel[];
-    missingOnServer: RelatorioModel[];
-  }) {
-    if (missingOnClient?.length) {
-      try {
-        await this.localRepository.createMany(missingOnClient);
-      } catch (error) {
-        console.error("RelatorioService -Error creating local reports:", error);
-        throw error;
-      }
-    }
-
-    if (this.isConnected && missingOnServer?.length) {
-      try {
-        await this.remoteRepository.createMany(missingOnServer);
-      } catch (error) {
-        console.error("RelatorioService - Error creating API reports:", error);
-        throw error;
-      }
-    }
-  }
-
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
     try {
       const relatoriosFromLocalDB = await this.localRepository.findByProdutorID(
@@ -105,11 +79,8 @@ export class RelatorioService {
         RelatorioDomainService.getTecnicosIdsFromRelatoriosList(
           updatedRelatorios
         );
-      console.log(
-        "🚀 - file: RelatorioService.ts:105 - RelatorioService - getRelatorios= - tecnicoIds:",
-        tecnicoIds
-      );
 
+      console.log("🚀 RelatorioService.ts:105 - tecnicoIds:", tecnicoIds);
       const tecnicos = await this.usuarioService.getUsuariosByIds(tecnicoIds);
 
       const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
@@ -161,21 +132,6 @@ export class RelatorioService {
       }
     }
   };
-
-  async updateMany({
-    outdatedOnClient,
-    outdatedOnServer,
-  }: {
-    outdatedOnClient: Partial<RelatorioModel>[];
-    outdatedOnServer: Partial<RelatorioModel>[];
-  }) {
-    if (outdatedOnClient?.length) {
-      await this.localRepository.updateMany!(outdatedOnClient);
-    }
-    if (this.isConnected && outdatedOnServer?.length) {
-      await this.remoteRepository.updateMany!(outdatedOnServer);
-    }
-  }
 
   deleteRelatorio = async (relatorioId: string) => {
     try {

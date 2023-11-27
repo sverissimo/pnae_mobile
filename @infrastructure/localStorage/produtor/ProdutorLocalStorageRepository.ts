@@ -24,8 +24,13 @@ export class ProdutorLocalStorageRepository
     return produtores;
   }
 
-  async update(entity: Partial<ProdutorModel>): Promise<void> {
-    throw new Error("Method not implemented.");
+  async getAllProdutoresIds(): Promise<string[]> {
+    const allProdutores = await this.findAll();
+    return allProdutores.map((produtor) => produtor.id_pessoa_demeter);
+  }
+
+  async update(produtor: ProdutorModel): Promise<void> {
+    this.saveData(produtor.nr_cpf_cnpj, produtor);
   }
 
   async delete(cpfProdutor: string): Promise<void> {

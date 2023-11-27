@@ -16,6 +16,10 @@ export class UsuarioLocalStorageRepository
     console.log("@@@@ UsuarioLocalStorageRepository created usuario.");
   }
 
+  async createMany(usuarios: Usuario[]): Promise<void> {
+    await Promise.allSettled(usuarios.map((usuario) => this.create(usuario)));
+  }
+
   async findMany(ids: string[]): Promise<Usuario[]> {
     const usuarios = await super.findMany(ids);
     return usuarios as Usuario[];

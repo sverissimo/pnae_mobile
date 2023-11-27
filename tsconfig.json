@@ -13,6 +13,7 @@
       "@infrastructure/*": ["./@infrastructure/*"],
       "@navigation/*": ["./navigation/*"],
       "@services/*": ["./@services/*"],
+      "@sync/*": ["./@sync/*"],
       "@shared/*": ["./@shared/*"],
       "_mockData/*": ["./_mockData/*"],
       "_types/*": ["./types/*"]

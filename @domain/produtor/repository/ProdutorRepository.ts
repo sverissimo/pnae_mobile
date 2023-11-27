@@ -1,6 +1,7 @@
 import { Repository } from "@domain/Repository";
-import { Produtor } from "@features/produtor/types/Produtor";
+import { ProdutorModel } from "../ProdutorModel";
 
-export interface ProdutorRepository extends Repository<Produtor> {
-  findByCPF: (cpf: string) => Promise<Produtor | undefined>;
+export interface ProdutorRepository extends Repository<ProdutorModel> {
+  findByCPF?: (cpf: string) => Promise<ProdutorModel | undefined>;
+  getAllProdutoresIds?: () => Promise<string[]>;
 }

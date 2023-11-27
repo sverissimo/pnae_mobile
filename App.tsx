@@ -13,6 +13,7 @@ import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { SnackBarProvider } from "@contexts/SnackbarContext";
 import { ConnectionContextProvider } from "@contexts/ConnectionContext";
 import { useDatabaseInitialization } from "@config/useDatabaseInitialization";
+import { SyncContextProvider } from "@contexts/SyncContext";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 export default function App() {
@@ -51,9 +52,11 @@ export default function App() {
               <RelatorioContextProvider>
                 <ImageContextProvider>
                   <PaperProvider theme={theme}>
-                    <SnackBarProvider>
-                      <Authentication />
-                    </SnackBarProvider>
+                    <SyncContextProvider>
+                      <SnackBarProvider>
+                        <Authentication />
+                      </SnackBarProvider>
+                    </SyncContextProvider>
                   </PaperProvider>
                 </ImageContextProvider>
               </RelatorioContextProvider>

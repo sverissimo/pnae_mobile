@@ -6,7 +6,8 @@ import { RelatorioBackendDTO } from "../dto";
 import { RelatorioModel } from "@features/relatorio/types";
 import { parseURI } from "@shared/utils/parseURI";
 import { log } from "@shared/utils/log";
-import { checkFiles, fileExists } from "@shared/utils/fileSystemUtils";
+import { fileExists } from "@shared/utils/fileSystemUtils";
+import { CheckForUpdatesResponse } from "@sync/types/CheckForUpdatesResponse";
 
 export class RelatorioAPIRepository implements RelatorioRepository {
   private api = new API<RelatorioModel>();
@@ -76,6 +77,11 @@ export class RelatorioAPIRepository implements RelatorioRepository {
     });
     const responseData = await result.text();
     console.log("🚀 ~ file: RelatorioAPI.ts:118 ~ responseData:", responseData);
+  }
+
+  async getSyncInfo(url: string, body: any) {
+    const result = await this.api.getSyncInfo(url, body);
+    return result as CheckForUpdatesResponse<RelatorioModel>;
   }
 
   private async createFormData(

@@ -3,16 +3,12 @@ import { useAuth } from "@auth/hooks/useAuth";
 import { useCustomNavigation } from "@navigation/hooks";
 import { RootStackParamList } from "@navigation/types";
 import { Card } from "@shared/components/organisms/HomeCard";
+import { useLastSyncDate } from "sync/hooks/useSync";
 import { globalColors } from "@shared/constants/themes";
-import { useEffect } from "react";
-import { FileService } from "@services/files/FileService";
-import { ProdutorService, RelatorioService } from "@services/index";
-import { log } from "@shared/utils/log";
-import { useSync } from "sync/hooks/useSync";
 
 export const HomeScreen: React.FC = () => {
   const { navigation } = useCustomNavigation();
-  const { lastSync } = useSync();
+  const { lastSync } = useLastSyncDate();
 
   const { user } = useAuth();
   const pressHandler = (screenName: keyof RootStackParamList) => {
