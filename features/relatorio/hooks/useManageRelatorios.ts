@@ -70,8 +70,16 @@ export const useManageRelatorio = (produtorId?: string) => {
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");
-      const { pictureURI, assinaturaURI, ...input } = createRelatorioInput;
-      Object.assign(relatorioInput, input); // Testing ONLY!!!
+
+      //********************FAKE INPUT FOR TESTING !!!!!!!!!!!!!!!!! */
+      // const { pictureURI, assinaturaURI, ...input } = createRelatorioInput;
+      // Object.assign(relatorioInput, input); // Testing ONLY!!!
+      //************************ */
+
+      console.log(
+        "🚀 - file: useManageRelatorios.ts:82 - saveRelatorio - relatorioInput:",
+        relatorioInput
+      );
 
       const relatorioId = await new RelatorioService({
         isConnected: !!connected,
@@ -193,6 +201,9 @@ export const useManageRelatorio = (produtorId?: string) => {
   };
 
   const formatRelatorioRows = (relatorios: RelatorioModel[]) => {
+    const preventDelete = (r: RelatorioModel) =>
+      !isConnected || r.nomeTecnico !== user?.nome_usuario;
+
     const relatorioTableData = relatorios.map((r: RelatorioModel) => ({
       id: r?.id,
       numeroRelatorio: r?.numeroRelatorio,
@@ -200,6 +211,7 @@ export const useManageRelatorio = (produtorId?: string) => {
       nomeTecnico: r?.nomeTecnico,
       createdAt: formatDate(r?.createdAt),
       readOnly: r?.readOnly,
+      preventDelete: preventDelete(r),
     }));
     return relatorioTableData;
   };

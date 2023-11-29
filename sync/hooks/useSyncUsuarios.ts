@@ -9,8 +9,8 @@ export const useSyncUsuarios = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
+    if (!debouncedIsConnected) return;
     const performSync = async () => {
-      if (!debouncedIsConnected) return;
       await usuarioSyncService.sync();
     };
 

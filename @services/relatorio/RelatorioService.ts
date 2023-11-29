@@ -10,12 +10,14 @@ import {
   RelatorioServiceConfig,
   defaultConfig,
 } from "./RelatorioServiceConfig";
+import { RelatorioSyncService } from "@sync/relatorio/RelatorioSyncService";
 
 export class RelatorioService {
   private isConnected: boolean;
   private usuarioService: UsuarioService;
   private localRepository: RelatorioRepository;
   private remoteRepository: RelatorioRepository;
+  private syncService: RelatorioSyncService;
 
   constructor(
     relatorioServiceConfig: Partial<RelatorioServiceConfig> = defaultConfig
@@ -25,6 +27,7 @@ export class RelatorioService {
     this.usuarioService = config.usuarioService;
     this.localRepository = config.localRepository;
     this.remoteRepository = config.remoteRepository;
+    this.syncService = config.syncService;
 
     this.usuarioService.setConnectionStatus(this.isConnected);
   }
@@ -37,67 +40,45 @@ export class RelatorioService {
       const relatorio = { ...input, id, readOnly, createdAt };
 
       const relatorioModel = new Relatorio(relatorio).toModel();
-
       await this.localRepository.create(relatorioModel);
       console.log("### Saved resultLocal ok.");
 
       if (this.isConnected) {
-        const remoteResult = await this.remoteRepository.create(relatorioModel);
-        console.log("🚀 RelatorioService.ts:28 ~ remoteResult:", remoteResult);
+        await this.remoteRepository.create(relatorioModel);
       }
 
       return id;
     } catch (error: any) {
-      console.log("🚀 RelatorioService.ts:60: ", error);
       throw new Error(error.message);
     }
   };
 
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
-    try {
-      const relatoriosFromLocalDB = await this.localRepository.findByProdutorID(
-        produtorId
+    let relatorios = await this.localRepository.findByProdutorId(produtorId);
+
+    if (!this.isConnected) {
+      console.log(
+        "@@@ not Connected, returning relatorios from local storage."
       );
-      let relatoriosFromServer: RelatorioModel[] = [];
-      let updatedRelatorios: RelatorioModel[] = relatoriosFromLocalDB;
-
-      if (this.isConnected) {
-        relatoriosFromServer = await this.remoteRepository.findByProdutorID(
-          produtorId
-        );
-        updatedRelatorios = RelatorioDomainService.mergeRelatorios(
-          relatoriosFromLocalDB,
-          relatoriosFromServer
-        );
-        await this.saveUpdatedRelatorios(
-          relatoriosFromLocalDB,
-          updatedRelatorios
-        );
-      }
-
-      const tecnicoIds =
-        RelatorioDomainService.getTecnicosIdsFromRelatoriosList(
-          updatedRelatorios
-        );
-
-      console.log("🚀 RelatorioService.ts:105 - tecnicoIds:", tecnicoIds);
-      const tecnicos = await this.usuarioService.getUsuariosByIds(tecnicoIds);
-
-      const relatoriosWithTecnicos = updatedRelatorios.map((relatorio) =>
-        RelatorioDomainService.addTecnicos(tecnicos!, relatorio)
-      ) as RelatorioModel[];
-
-      relatoriosWithTecnicos.sort((a, b) => {
-        const aDate = toDateMsec(a.createdAt);
-        const bDate = toDateMsec(b.createdAt);
-        return aDate - bDate;
-      });
+      const relatoriosWithTecnicos = this.addTecnicosToRelatorio(relatorios);
 
       return relatoriosWithTecnicos;
-    } catch (error) {
-      console.log("🚀 ~ file: RelatorioService.ts:92 ~ getRelatorios:", error);
-      throw error;
     }
+
+    if (!relatorios.length) {
+      relatorios = await this.fetchFromServer(produtorId);
+      console.log("### Fetching relatorios from server.");
+    } else {
+      console.log("### Syncing relatorios with server.");
+      await this.syncService.syncRelatorios(produtorId);
+      relatorios = await this.localRepository.findByProdutorId(produtorId);
+    }
+
+    const relatoriosWithTecnicos = await this.addTecnicosToRelatorio(
+      relatorios
+    );
+
+    return relatoriosWithTecnicos;
   };
 
   updateRelatorio = async (relatorio: RelatorioModel) => {
@@ -134,6 +115,12 @@ export class RelatorioService {
   };
 
   deleteRelatorio = async (relatorioId: string) => {
+    if (!this.isConnected) {
+      throw new Error(
+        "Não é possível apagar o relatório sem conexão com a internet."
+      );
+    }
+
     try {
       const relatorioToDelete = await this.localRepository.findById!(
         relatorioId
@@ -148,48 +135,44 @@ export class RelatorioService {
       for (const file of [assinaturaURI, pictureURI]) {
         await deleteFile(file);
       }
-    } catch (e) {
-      console.log("🚀 RelatorioService.ts:126: Not deleted locally!!", e);
-    }
-    try {
-      if (this.isConnected) {
-        const result = await this.remoteRepository.delete(relatorioId);
-        console.log("🚀 - RelatorioService deleted from server. ", result);
 
-        return result;
-      }
-      return;
+      console.log("@@@  deleted relatorio locally");
+      await this.remoteRepository.delete(relatorioId);
     } catch (e) {
       const error = e instanceof Error ? new Error(e.message) : e;
       throw new Error(`Erro ao apagar o relatório: ${JSON.stringify(error)}`);
     }
   };
 
-  saveUpdatedRelatorios = async (
-    existingRelatorios: RelatorioModel[],
-    updatedRelatorios: RelatorioModel[]
-  ) => {
-    const existingRelatoriosMap = new Map(
-      existingRelatorios.map((er) => [er.id, er])
+  private fetchFromServer = async (
+    produtorId: string
+  ): Promise<RelatorioModel[]> => {
+    const relatoriosFromServer = await this.remoteRepository.findByProdutorId(
+      produtorId
     );
-
-    const relatoriosToCreate = [];
-    const relatoriosToUpdate = [];
-
-    for (const updatedRelatorio of updatedRelatorios) {
-      const existing = existingRelatoriosMap.get(updatedRelatorio.id);
-      if (!existing) {
-        relatoriosToCreate.push(updatedRelatorio);
-      } else if (existing.updatedAt !== updatedRelatorio.updatedAt) {
-        relatoriosToUpdate.push(updatedRelatorio);
-      }
+    if (relatoriosFromServer?.length) {
+      await this.localRepository.createMany(relatoriosFromServer);
     }
+    return relatoriosFromServer;
+  };
 
-    await this.localRepository.createMany(relatoriosToCreate);
-    console.log(`### Saved ${relatoriosToCreate.length} new rel. from server`);
+  private addTecnicosToRelatorio = async (
+    relatorios: RelatorioModel[]
+  ): Promise<RelatorioModel[]> => {
+    if (!relatorios?.length) return relatorios;
 
-    await this.localRepository.updateMany(relatoriosToUpdate);
-    console.log(`### Updated ${relatoriosToUpdate.length} rel. from server`);
+    const tecnicoIds =
+      RelatorioDomainService.getTecnicosIdsFromRelatoriosList(relatorios);
+
+    const tecnicos = await this.usuarioService.getUsuariosByIds(tecnicoIds);
+
+    const relatoriosWithTecnicos = relatorios
+      .map((relatorio) =>
+        RelatorioDomainService.addTecnicos(tecnicos, relatorio)
+      )
+      .sort((a, b) => toDateMsec(a.createdAt) - toDateMsec(b.createdAt));
+
+    return relatoriosWithTecnicos;
   };
 
   getLocalRelatorios = async () => await this.localRepository.findAll();

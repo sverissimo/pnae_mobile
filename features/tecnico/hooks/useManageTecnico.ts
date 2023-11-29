@@ -3,8 +3,11 @@ import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioAPIRepository } from "@infrastructure/api";
 import { Usuario } from "@shared/types";
 import { debounce } from "@shared/utils";
+import { useManageConnection } from "@shared/hooks";
+import { UsuarioService } from "@services/usuario/UsuarioService";
 
 export function useManageTecnico(relatorio: RelatorioModel) {
+  const { isConnected } = useManageConnection();
   const [extensionistas, setExtensionistas] = useState<Usuario[]>([]);
   const { matriculaOutroExtensionista } = relatorio || {};
 
@@ -34,16 +37,20 @@ export function useManageTecnico(relatorio: RelatorioModel) {
       if (
         last[last.length - 1]?.length !== 5 &&
         last[last.length - 1]?.length !== 4
-      )
+      ) {
         return;
+      }
       //   prevValidMatriculasRef.current = matriculas;
       try {
-        const newExtensionistas = await UsuarioAPIRepository.findMany({
-          matricula: matriculas.join(","),
-        });
+        const extensionistas = await new UsuarioService({
+          isConnected: !!isConnected,
+        }).findMany({ matriculas });
+        // await UsuarioAPIRepository.findMany({
+        //   matricula: matriculas.join(","),
+        // });
         const sortedExtensionistas = matriculas
           .map((matricula) =>
-            newExtensionistas.find((ext) => ext.matricula_usuario === matricula)
+            extensionistas.find((ext) => ext.matricula_usuario === matricula)
           )
           .filter((ext): ext is Usuario => Boolean(ext));
 

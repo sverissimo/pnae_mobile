@@ -39,7 +39,15 @@ export abstract class LocalStorageRepository {
 
   async findMany(keys: string[]) {
     const result = await this.getCollection();
-    const collection = keys.map((key) => JSON.parse(result[key]));
+
+    if (!Object.keys(result).length) {
+      return [];
+    }
+
+    const collection = keys
+      .map((key) => (result[key] ? JSON.parse(result[key]) : null))
+      .filter((item) => item !== null);
+
     return collection;
   }
 
@@ -53,7 +61,7 @@ export abstract class LocalStorageRepository {
     }
   }
 
-  async getAllEntities() {
+  async findAll() {
     const result = await AsyncStorage.getItem(this.collection);
     if (!result) {
       return [];

@@ -28,6 +28,7 @@ export const RelatorioScreen = () => {
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
   };
+
   const handleViewRelatorio = (relatorioId: string | number) => {
     navigation.navigate("ViewRelatorioScreen", { relatorioId });
   };

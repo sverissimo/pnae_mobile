@@ -11,6 +11,7 @@ class TestLocalStorageRepository extends LocalStorageRepository {
 }
 
 const mockGetItem = AsyncStorage.getItem as jest.Mock;
+
 const testKey = "1";
 const testData = { foo: "bar" };
 let testRepo: LocalStorageRepository;
@@ -67,6 +68,15 @@ describe("TestLocalStorageRepository", () => {
     ]);
   });
 
+  it("should return empty array when no entity is found", async () => {
+    const keys = ["1", "2"];
+
+    mockGetItem.mockResolvedValueOnce(null);
+    const result = await testRepo.findMany(keys);
+
+    expect(result).toEqual([]);
+  });
+
   it("should get all entities in the collection", async () => {
     const entities = {
       "1": JSON.stringify({ foo: "bar" }),
@@ -74,7 +84,7 @@ describe("TestLocalStorageRepository", () => {
     };
 
     mockGetItem.mockResolvedValueOnce(JSON.stringify(entities));
-    const result = await testRepo.getAllEntities();
+    const result = await testRepo.findAll();
     expect(result).toEqual(Object.values(entities).map((e) => JSON.parse(e)));
   });
 

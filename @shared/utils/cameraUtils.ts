@@ -32,7 +32,7 @@ export const takePicture = async () => {
     }
 
     const image: PickerResult = await launchCameraAsync({
-      //allowsEditing: true,
+      allowsEditing: true,
       quality: 0.5,
     });
     delete image.cancelled;

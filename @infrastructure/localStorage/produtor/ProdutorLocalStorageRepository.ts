@@ -19,11 +19,6 @@ export class ProdutorLocalStorageRepository
     return produtor;
   }
 
-  async findAll(): Promise<ProdutorModel[]> {
-    const produtores = await this.getAllEntities();
-    return produtores;
-  }
-
   async getAllProdutoresIds(): Promise<string[]> {
     const allProdutores = await this.findAll();
     return allProdutores.map((produtor) => produtor.id_pessoa_demeter);

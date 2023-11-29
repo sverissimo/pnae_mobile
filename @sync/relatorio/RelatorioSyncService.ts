@@ -51,15 +51,6 @@ export class RelatorioSyncService {
     if (outdatedOnServer?.length > 0) {
       await this.relatorioRemoteRepository.updateMany(outdatedOnServer);
     }
-    // await this.relatorioService.createMany({
-    //   missingOnClient,
-    //   missingOnServer,
-    // });
-
-    // await this.relatorioService.updateMany({
-    //   outdatedOnClient,
-    //   outdatedOnServer,
-    // });
   }
 
   /**Se não for passado o produtorId, atualiza todos os produtores */

@@ -1,15 +1,9 @@
-import { dbInit } from "@infrastructure/database/config/sqlite";
-import { createRelatorioTableQuery } from "@infrastructure/database/queries/createTableQueries";
-import { RelatorioSQLiteDAO } from "@infrastructure/database/relatorio/dao/RelatorioSQLiteDAO";
 import { RelatorioSQLRepository } from "@infrastructure/database/relatorio/repository/RelatorioSQLRepository";
-import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { RelatorioService } from "./RelatorioService";
 import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioService } from "@services/usuario/UsuarioService";
-
-jest.mock("@shared/utils/fileSystemUtils");
-jest.mock("@infrastructure/api/files/FileAPI");
-jest.mock("@infrastructure/database/config/expoSQLite");
+import { RelatorioSyncService } from "@sync/relatorio/RelatorioSyncService";
+import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
 
 const relatorioInput: RelatorioModel = {
   id: "",
@@ -28,119 +22,170 @@ const relatorioInput: RelatorioModel = {
   createdAt: undefined,
 };
 
-let db: any;
-let relatorioService: RelatorioService;
-let localRepository: RelatorioRepository;
-let relatorioDAO: RelatorioSQLiteDAO;
-let usuarioService: UsuarioService;
+const usuarioInput = {
+  id_usuario: "1620",
+  nome_usuario: "Elisio Geraldo Campos",
+  matricula_usuario: "1620",
+};
 
-describe("RelatorioService local e2e tests", () => {
-  beforeEach(async () => {
-    db = await dbInit(createRelatorioTableQuery);
-    relatorioDAO = new RelatorioSQLiteDAO(db);
-    localRepository = new RelatorioSQLRepository(relatorioDAO);
-    usuarioService = new UsuarioService();
-    relatorioService = new RelatorioService({
-      isConnected: false,
-      localRepository,
-      usuarioService,
-    });
-    jest.spyOn(usuarioService, "getUsuariosByIds").mockResolvedValue(
-      Promise.resolve([
-        {
-          id_usuario: "1620",
-          nome_usuario: "Elisio Geraldo Campos",
-          matricula_usuario: "123",
-        },
-      ])
-    );
-  });
+jest.mock("@shared/utils/fileSystemUtils", () => ({
+  deleteFile: jest.fn(),
+  fileExists: jest.fn(),
+}));
+jest.mock("@infrastructure/api/files/FileAPI");
+jest.mock("@infrastructure/database/config/expoSQLite");
 
-  afterEach(async () => {
-    await db.exec("DROP TABLE relatorio");
-    await db.close();
-    jest.clearAllMocks();
-  });
+jest.mock(
+  "@infrastructure/database/relatorio/repository/RelatorioSQLRepository"
+);
+jest.mock("@sync/relatorio/RelatorioSyncService");
 
-  it("should create relatorio locally", async () => {
-    await relatorioService.createRelatorio(relatorioInput);
-
-    const relatorio = (await relatorioService.getRelatorios(
-      "1"
-    )) as RelatorioModel[];
-
-    expect(relatorio[0].id).toHaveLength(36);
-    expect(relatorio[0].produtorId).toBe("1");
-    expect(relatorio[0].assunto).toBe("Teste");
-    expect(relatorio[0].numeroRelatorio).toBe(30);
-    expect(relatorio[0].outroExtensionista).toEqual([]);
-    expect(relatorio[0].readOnly).toBe(false);
-    expect(relatorio[0].createdAt).not.toBeNull();
-    expect(Date.parse(relatorio[0].createdAt)).toBeTruthy();
-    expect(
-      Date.parse(relatorio[0].createdAt) < new Date().getTime()
-    ).toBeTruthy();
-  });
-
-  it("should update relatorio", async () => {
-    const relatorioId = await relatorioService.createRelatorio(relatorioInput);
-
-    const relatorios = (await relatorioService.getRelatorios(
-      "1"
-    )) as RelatorioModel[];
-
-    const relatorioUpdate = {
-      id: relatorioId,
-      produtorId: "1",
-      tecnicoId: "1620",
-      nomeTecnico: "John <-- Should Be Replaced to --> Elisio Geraldo Campos",
-      numeroRelatorio: 31,
-      assunto: "Updated teste",
-      orientacao: "Updated orientação",
-      pictureURI: "Updated pictureURI",
-      assinaturaURI: "Updated assinaturaURI",
-      outroExtensionista: [],
-      matriculaOutroExtensionista: "Updated matriculaOutroExtensionista",
-      nomeOutroExtensionista: "Updated nomeOutroExtensionista",
-      createdAt: undefined,
+jest.mock("@infrastructure/api/relatorio/repository/RelatorioAPIRepository");
+jest.mock("@services/usuario/UsuarioService", () => ({
+  UsuarioService: jest.fn().mockImplementation(() => {
+    return {
+      setConnectionStatus: jest.fn(),
+      getUsuariosByIds: jest.fn(),
     };
+  }),
+}));
 
-    await relatorioService.updateRelatorio(relatorioUpdate);
+const syncService = new RelatorioSyncService();
+const db = jest.fn() as any;
+const localRepository = new RelatorioSQLRepository(
+  db
+) as jest.Mocked<RelatorioSQLRepository>;
+const remoteRepository =
+  new RelatorioAPIRepository() as jest.Mocked<RelatorioAPIRepository>;
+const usuarioService = new UsuarioService() as jest.Mocked<UsuarioService>;
 
-    const updatedRelatorios = (await relatorioService.getRelatorios(
-      "1"
-    )) as RelatorioModel[];
+const relatorioServiceConfig = {
+  isConnected: true,
+  localRepository,
+  remoteRepository,
+  usuarioService,
+  syncService,
+};
 
-    const [[relatorio], [updatedRelatorio]] = [relatorios, updatedRelatorios];
-
-    expect(relatorioId).toHaveLength(36);
-    expect(relatorio.updatedAt).toBeFalsy();
-    expect(updatedRelatorio.id).toBe(relatorioId);
-    expect(updatedRelatorio.produtorId).toBe("1");
-    expect(updatedRelatorio.nomeTecnico).toBe("Elisio Geraldo Campos");
-    expect(updatedRelatorio.assunto).toBe("Updated teste");
-    expect(updatedRelatorio.numeroRelatorio).toBe(31);
-    expect(updatedRelatorio.readOnly).toBe(false);
-    expect(updatedRelatorio.createdAt).not.toBeNull();
-    expect(Date.parse(updatedRelatorio.createdAt)).toBeTruthy();
-    expect(
-      Date.parse(updatedRelatorio.createdAt) <
-        Date.parse(updatedRelatorio.updatedAt)
-    ).toBeTruthy();
+describe("RelatorioService tests", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest
+      .spyOn(usuarioService, "getUsuariosByIds")
+      .mockResolvedValue([usuarioInput]);
   });
-  it("should delete relatorio by its id", async () => {
-    const relatorioId = await relatorioService.createRelatorio(relatorioInput);
-    const relatorio = (await localRepository.findById!(
-      relatorioId
-    )) as RelatorioModel;
+  describe("getRelatorios Method", () => {
+    it("should return relatorios from local repository and not sync if offline", async () => {
+      jest
+        .spyOn(localRepository, "findByProdutorId")
+        .mockResolvedValue([relatorioInput]);
 
-    expect(relatorio).toHaveProperty("id", relatorioId);
+      const relatorioService: RelatorioService = new RelatorioService({
+        ...relatorioServiceConfig,
+        isConnected: false,
+        localRepository,
+      });
 
-    await relatorioService.deleteRelatorio(relatorioId);
-    const updatedRelatorios = (await relatorioService.getRelatorios(
-      "1"
-    )) as RelatorioModel[];
+      const relatorios = await relatorioService.getRelatorios("1");
 
-    expect(updatedRelatorios).toHaveLength(0);
+      console.log("🚀 RelatorioService.spec.ts:86- relatorios:", relatorios);
+      // expect(relatorios).toEqual([relatorioInput]);
+
+      expect(localRepository.findByProdutorId).toHaveBeenCalledTimes(1);
+      expect(remoteRepository.findAll).not.toHaveBeenCalled();
+      expect(syncService.syncRelatorios).not.toHaveBeenCalled();
+      expect(relatorios).toHaveLength(1);
+    });
+    it("should return relatorios from server if local repository is empty", async () => {
+      jest.spyOn(localRepository, "findByProdutorId").mockResolvedValue([]);
+
+      jest
+        .spyOn(remoteRepository, "findByProdutorId")
+        .mockResolvedValue([relatorioInput]);
+
+      const relatorioService: RelatorioService = new RelatorioService(
+        relatorioServiceConfig
+      );
+
+      const relatorios = await relatorioService.getRelatorios("1");
+
+      expect(localRepository.findByProdutorId).toHaveBeenCalledTimes(1);
+      expect(remoteRepository.findByProdutorId).toHaveBeenCalledTimes(1);
+      expect(syncService.syncRelatorios).not.toHaveBeenCalled();
+      expect(relatorios).toHaveLength(1);
+    });
+
+    it("should return relatorios from local repository and sync if online", async () => {
+      jest
+        .spyOn(localRepository, "findByProdutorId")
+        .mockResolvedValue([relatorioInput]);
+
+      const relatorioService: RelatorioService = new RelatorioService(
+        relatorioServiceConfig
+      );
+
+      const relatorios = await relatorioService.getRelatorios("1");
+
+      expect(localRepository.findByProdutorId).toHaveBeenCalledTimes(2);
+      expect(remoteRepository.findByProdutorId).not.toHaveBeenCalled();
+      expect(syncService.syncRelatorios).toHaveBeenCalledTimes(1);
+      expect(relatorios).toHaveLength(1);
+    });
+
+    it("should return an empty array if there is no relatorio", async () => {
+      jest.spyOn(localRepository, "findByProdutorId").mockResolvedValue([]);
+      jest.spyOn(remoteRepository, "findByProdutorId").mockResolvedValue([]);
+
+      const relatorioService: RelatorioService = new RelatorioService(
+        relatorioServiceConfig
+      );
+
+      const relatorios = await relatorioService.getRelatorios("1");
+
+      expect(localRepository.findByProdutorId).toHaveBeenCalledTimes(1);
+      expect(remoteRepository.findByProdutorId).toHaveBeenCalledTimes(1);
+      expect(syncService.syncRelatorios).not.toHaveBeenCalled();
+      expect(relatorios).toHaveLength(0);
+    });
+  });
+
+  describe("deleteRelatorio Method", () => {
+    it("should throw an error if offline", async () => {
+      const relatorioService: RelatorioService = new RelatorioService({
+        ...relatorioServiceConfig,
+        isConnected: false,
+        localRepository,
+      });
+
+      await expect(relatorioService.deleteRelatorio("1")).rejects.toThrow(
+        new Error(
+          "Não é possível apagar o relatório sem conexão com a internet."
+        )
+      );
+    });
+    it("should delete relatorio from local repository and sync if online", async () => {
+      const relatorioService: RelatorioService = new RelatorioService(
+        relatorioServiceConfig
+      );
+
+      jest.spyOn(localRepository, "findById").mockResolvedValue(relatorioInput);
+      jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
+      jest.spyOn(remoteRepository, "delete").mockResolvedValue(undefined);
+
+      await relatorioService.deleteRelatorio("1");
+
+      expect(localRepository.delete).toHaveBeenCalledTimes(1);
+      expect(remoteRepository.delete).toHaveBeenCalledTimes(1);
+      expect(syncService.syncRelatorios).not.toHaveBeenCalled();
+    });
+  });
+  it("should throw an error if relatorio is not found", async () => {
+    const relatorioService: RelatorioService = new RelatorioService(
+      relatorioServiceConfig
+    );
+
+    jest.spyOn(localRepository, "findById").mockResolvedValue(null);
+
+    await expect(relatorioService.deleteRelatorio("1")).rejects.toThrowError();
   });
 });

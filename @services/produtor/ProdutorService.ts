@@ -29,6 +29,7 @@ export class ProdutorService {
     // const ids = await this.getAllLocalProdutoresIds();
     // console.log("🚀 - file: ProdutorService.ts:31 -  ids:", ids);
     if (!this.isConnected) {
+      console.log("@@@ No connection, returning produtorLocal");
       return produtorLocal;
     }
 

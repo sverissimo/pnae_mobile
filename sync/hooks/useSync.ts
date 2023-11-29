@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { SyncContext } from "@contexts/SyncContext";
 import { formatDate } from "@shared/utils";
 import { SyncHelpers } from "@sync/SyncHelpers";
@@ -7,6 +7,14 @@ const syncHelpers = new SyncHelpers();
 
 export const useLastSyncDate = () => {
   const { lastSync, setLastSync } = useContext(SyncContext);
+
+  useEffect(() => {
+    if (!lastSync) {
+      syncHelpers.getLastSyncDate().then((lastSync) => {
+        setLastSync(lastSync);
+      });
+    }
+  }, [lastSync]);
 
   const dateToSyncInfo = () => {
     if (!lastSync) {

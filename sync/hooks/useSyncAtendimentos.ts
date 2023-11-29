@@ -10,13 +10,14 @@ export const useSyncAtendimentos = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
+    // if (!debouncedIsConnected) return;
+    if (!isConnected) return;
     const performSync = async () => {
-      if (!debouncedIsConnected) return;
       await atendimentoService.sync();
-      await syncHelpers.saveLastSyncDate();
+      // await syncHelpers.saveLastSyncDate();
       console.log("Saved last atendimentos sync date");
     };
 
     performSync();
-  }, [debouncedIsConnected]);
+  }, [isConnected]);
 };

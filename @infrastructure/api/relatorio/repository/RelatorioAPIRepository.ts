@@ -39,7 +39,7 @@ export class RelatorioAPIRepository implements RelatorioRepository {
     console.log("🚀 RelAPIRepository - createMany 54 syncResult:", syncResult);
   }
 
-  async findByProdutorID(produtorId: string) {
+  async findByProdutorId(produtorId: string) {
     const result = await this.api.get(`${this.url}?produtorId=${produtorId}`);
     return result as RelatorioModel[];
   }
@@ -130,6 +130,7 @@ export class RelatorioAPIRepository implements RelatorioRepository {
     return {
       ...relatorioDTO,
       readOnly: !!readOnly,
+      updatedAt: relatorio?.updatedAt || undefined,
     };
   }
 

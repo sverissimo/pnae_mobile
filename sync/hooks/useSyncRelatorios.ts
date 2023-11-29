@@ -11,9 +11,9 @@ export const useSyncRelatorios = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    const performSync = async () => {
-      if (!debouncedIsConnected) return;
+    if (!debouncedIsConnected) return;
 
+    const performSync = async () => {
       try {
         await relatorioSyncService.syncRelatorios();
         saveLastSyncDate();

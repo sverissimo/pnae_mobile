@@ -17,7 +17,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     await this.relatorioDAO.createMany(relatoriosLocalDTO);
   }
 
-  async findByProdutorID(produtorId: string): Promise<RelatorioModel[]> {
+  async findByProdutorId(produtorId: string): Promise<RelatorioModel[]> {
     const result = (await this.relatorioDAO.find(
       produtorId,
       "produtor_id"

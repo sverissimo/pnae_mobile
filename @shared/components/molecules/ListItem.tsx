@@ -6,6 +6,7 @@ type RowProps<T> = {
   data?: T;
   isHeader?: boolean;
   columns: any;
+  preventDelete?: boolean;
   onView?: () => void;
   onEdit?: (data: any) => void;
   getPDFLink?: (data: T) => void;
@@ -54,11 +55,18 @@ export const ListItem = <T extends { [key: string]: any }>({
             {column.icons.map(({ iconName, action, color }: any) => (
               <Icon
                 key={iconName}
-                disabled={checkReadOnly(action)}
+                // disabled={checkReadOnly(action)}
+                disabled={
+                  checkReadOnly(action) ||
+                  (data?.preventDelete && action === "delete")
+                }
                 iconName={iconName}
                 size={16}
                 color={
-                  checkReadOnly(action) ? grayscale[300] : color || primary[600]
+                  checkReadOnly(action) ||
+                  (data?.preventDelete && action === "delete")
+                    ? grayscale[300]
+                    : color || primary[600]
                 }
                 onPress={
                   action === "view" && onView

@@ -28,7 +28,7 @@ const usuarioServiceTestConfig = {
 };
 
 describe("UsuarioService", () => {
-  let usuarioService: UsuarioService;
+  let usuarioService: UsuarioService & any;
 
   beforeEach(() => {
     usuarioService = new UsuarioService(usuarioServiceTestConfig);
@@ -83,6 +83,99 @@ describe("UsuarioService", () => {
       for (const usuario of remoteUsuarios) {
         expect(mockLocalRepository.create).toHaveBeenCalledWith(usuario);
       }
+    });
+  });
+
+  describe("getUsuariosByMatriculas", () => {
+    it("should return local usuarios when not connected", async () => {
+      const matriculas = ["123", "456", "789"];
+      mockLocalRepository.findAll.mockResolvedValue(localUsuarios);
+      const saveLocalMock = jest.spyOn(usuarioService, "saveManyLocal");
+
+      const result = await usuarioService.findMany({ matriculas });
+
+      expect(result).toEqual(localUsuarios);
+      expect(mockLocalRepository.findAll).toHaveBeenCalled();
+      expect(mockUsuarioAPI.findMany).not.toHaveBeenCalled();
+      expect(saveLocalMock).not.toHaveBeenCalled();
+    });
+
+    it("should return local usuarios when online but found all usuarios in localStorage", async () => {
+      const matriculas = ["123", "456", "789"];
+      mockLocalRepository.findAll.mockResolvedValue(localUsuarios);
+      const usuarioService = new UsuarioService({
+        ...usuarioServiceTestConfig,
+        isConnected: true,
+      }) as any;
+
+      const saveLocalMock = jest.spyOn(usuarioService, "saveManyLocal");
+
+      const result = await usuarioService.findMany({ matriculas });
+
+      expect(result).toEqual(localUsuarios);
+      expect(mockLocalRepository.findAll).toHaveBeenCalled();
+      expect(mockUsuarioAPI.findMany).not.toHaveBeenCalled();
+      expect(saveLocalMock).not.toHaveBeenCalled();
+    });
+
+    it("should fetch remote usuarios and save locally when should fetch from server", async () => {
+      const matriculas = ["123", "456", "789"];
+      mockLocalRepository.findAll.mockResolvedValue([]);
+      mockUsuarioAPI.findMany.mockResolvedValue(remoteUsuarios);
+      mockLocalRepository.create.mockResolvedValue(undefined);
+
+      const usuarioService = new UsuarioService({
+        ...usuarioServiceTestConfig,
+        isConnected: true,
+      });
+      const result = await usuarioService.findMany({ matriculas });
+
+      expect(result).toEqual(remoteUsuarios);
+      expect(mockLocalRepository.findAll).toHaveBeenCalled();
+      expect(mockUsuarioAPI.findMany).toHaveBeenCalledWith({
+        matricula: "123,456,789",
+      });
+      for (const usuario of remoteUsuarios) {
+        expect(mockLocalRepository.create).toHaveBeenCalledWith(usuario);
+      }
+    });
+
+    it('should return empty array when "matriculas" is empty', async () => {
+      const matriculas = [] as string[];
+      mockLocalRepository.findAll.mockResolvedValue([]);
+      mockUsuarioAPI.findMany.mockResolvedValue(remoteUsuarios);
+      mockLocalRepository.create.mockResolvedValue(undefined);
+
+      const usuarioService = new UsuarioService({
+        ...usuarioServiceTestConfig,
+        isConnected: true,
+      });
+      const result = await usuarioService.findMany({ matriculas });
+
+      expect(result).toEqual([]);
+      expect(mockLocalRepository.findAll).not.toHaveBeenCalled();
+      expect(mockUsuarioAPI.findMany).not.toHaveBeenCalled();
+      expect(mockLocalRepository.create).not.toHaveBeenCalled();
+    });
+
+    it("should return empty array when not found in local nor remote repositories", async () => {
+      const matriculas = ["123", "456", "789"];
+      mockLocalRepository.findAll.mockResolvedValue([]);
+      mockUsuarioAPI.findMany.mockResolvedValue([]);
+      mockLocalRepository.create.mockResolvedValue(undefined);
+
+      const usuarioService = new UsuarioService({
+        ...usuarioServiceTestConfig,
+        isConnected: true,
+      });
+      const result = await usuarioService.findMany({ matriculas });
+
+      expect(result).toEqual([]);
+      expect(mockLocalRepository.findAll).toHaveBeenCalled();
+      expect(mockUsuarioAPI.findMany).toHaveBeenCalledWith({
+        matricula: "123,456,789",
+      });
+      expect(mockLocalRepository.create).not.toHaveBeenCalled();
     });
   });
 });

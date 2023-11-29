@@ -27,11 +27,6 @@ export class AtendimentoLocalStorageRepository
     return atendimento;
   }
 
-  async findAll(): Promise<AtendimentoModel[]> {
-    const atendimentoes = await this.getAllEntities();
-    return atendimentoes;
-  }
-
   async update(entity: Partial<AtendimentoModel>): Promise<void> {
     throw new Error("Method not implemented.");
   }

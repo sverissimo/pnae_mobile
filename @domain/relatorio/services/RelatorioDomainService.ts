@@ -44,6 +44,7 @@ export class RelatorioDomainService {
   static addTecnicos = (tecnicos: Usuario[], relatorio: RelatorioModel) => {
     const { tecnicoId } = relatorio;
     const usuario = tecnicos.find((t) => t?.id_usuario == tecnicoId);
+
     const outrosExtensionistasInfo =
       RelatorioDomainService.aggregateOutroExtensionistaInfo(
         tecnicos,
