@@ -34,6 +34,10 @@ export const useSelectProdutor = () => {
     const produtor = await new ProdutorService({
       isConnected: !!isConnected,
     }).getProdutor(cpf);
+    console.log(
+      "🚀 - file: useSelectProdutor.ts:37 - fetchProdutor - produtor:",
+      produtor
+    );
 
     // const prods = await new ProdutorService({
     //   isConnected: isConnected,

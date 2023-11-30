@@ -29,7 +29,7 @@ export class RelatorioSyncService {
 
   async syncRelatorios(produtorId?: string) {
     const syncData = await this.getRelatoriosSyncInfo(produtorId);
-    log(syncData);
+    // log(syncData);
 
     const {
       missingOnServer,

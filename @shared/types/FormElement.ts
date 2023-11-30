@@ -3,6 +3,7 @@ export type FormElement = {
   label: string;
   type:
     | "select"
+    | "selectMultiple"
     | "radio"
     | "input"
     | "image"
@@ -10,6 +11,7 @@ export type FormElement = {
     | "signature"
     | "toggle-input";
   options?: string[] | number[];
+  items?: Record<string, string>[];
   value?: string | boolean;
   key?: string;
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";

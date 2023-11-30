@@ -8,6 +8,7 @@ import {
   SelectDropdown,
   TextInputComponent,
 } from "../organisms";
+import { MultiSelectComp } from "../organisms/MultiSelect";
 
 type FormTemplateProps = {
   form: FormElement[];
@@ -32,6 +33,16 @@ export function FormTemplate({
                 key={item.key || item.field}
                 label={item.label}
                 options={item.options}
+                onSelect={(value: any) => onValueChange(item.field, value)}
+                value={data[item.field]}
+              />
+            );
+          case "selectMultiple":
+            return (
+              <MultiSelectComp
+                key={item.key || item.field}
+                label={item.label}
+                items={item.items}
                 onSelect={(value: any) => onValueChange(item.field, value)}
                 value={data[item.field]}
               />

@@ -8,6 +8,13 @@ export const producaoNaturaForm: FormElement[] = [
     options: ["OPÇÃO1", "OPÇÃO2"],
   }, */
   {
+    field: "atividades_usam_recursos_hidricos",
+    label: "Atividades que Usam Recursos Hídricos",
+    type: "select",
+    // type: "selectMultiple",
+    options: [],
+  },
+  {
     field: "nivel_tecnologico_cultivo",
     label: "Nível Tecnológico de Cultivo",
     type: "select",
@@ -53,12 +60,7 @@ export const producaoNaturaForm: FormElement[] = [
     type: "select",
     options: ["OPÇÃO1", "OPÇÃO2"],
   },
-  {
-    field: "atividades_usam_recursos_hidricos",
-    label: "Atividades que Usam Recursos Hídricos",
-    type: "select",
-    options: ["OPÇÃO1", "OPÇÃO2"],
-  },
+
   {
     field: "tipo_regularizacao_ambiental",
     label: "Tipo de Regularização Ambiental",
