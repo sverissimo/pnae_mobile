@@ -1,0 +1,109 @@
+{
+  "id": "142",
+  "id_cliente": "1707715",
+  "data_preenchimento": "2023-05-05T00:00:00.000Z",
+  "data_atualizacao": "2023-05-05T00:00:00.000Z",
+  "tipo_perfil": "Entrada",
+  "participa_organizacao": "Não",
+  "at_prf_see_propriedade": {
+    "atividade": "Ambas"
+  },
+  "usuario": {
+    "id_usuario": "2883",
+    "nome_usuario": "Tiago Siqueira Costa",
+    "matricula_usuario": "11247",
+    "digito_matricula": "8",
+    "login_usuario": "11247"
+  },
+  "nivel_tecnologico_cultivo": "Rotação de culturas",
+  "sistema_producao": "Convencional",
+  "condicao_posse": "Proprietário",
+  "dap_caf_vigente": "Sim",
+  "credito_rural": "Não",
+  "fonte_captacao_agua": "Cisterna",
+  "forma_esgotamento_sanitario": "Lançamento a céu aberto ou direto no córrego",
+  "possui_cadastro_car": "Sim",
+  "aderiu_pra": "Não",
+  "ciente_iniciativas_regularizacao_pra": "Não",
+  "realiza_escalonamento_producao": "Não",
+  "procedimento_pos_colheita": "Desinfecção",
+  "possui_agroindustria_propria": "Sim",
+  "tipo_gestao_unidade": "Familiar",
+  "pessoas_processamento_alimentos": 2,
+  "tipo_estabelecimento": "Pessoa Física",
+  "agroindustria_precisa_adaptacao_reforma": "Sim",
+  "possui_registro_orgao_fiscalizacao_sanitaria": "Sim",
+  "orgao_fiscalizacao_sanitaria": "IMA",
+  "dados_producao_in_natura": {
+    "tipo_regularizacao_uso_recursos_hidricos": "Não possui",
+    "tipo_regularizacao_ambiental": "Não possui",
+    "controla_custos_producao": "Sim",
+    "local_comercializacao": "PNAE Estadual ",
+    "valor_total_obtido_pnae": "1000",
+    "valor_total_obtido_outros": "300",
+    "forma_entrega_produtos": "Veículo próprio",
+    "dificuldade_fornecimento": "Logística",
+    "informacoes_adicionais": "Nenhuma.",
+    "at_prf_see_grupos_produtos": [
+      {
+        "id": "135",
+        "area_utilizada": null,
+        "producao_aproximada_ultimo_ano_pnae": null,
+        "producao_aproximada_ultimo_ano_total": null,
+        "at_prf_grupo_produto": {
+          "nm_grupo": "FRUTICULTURA"
+        },
+        "at_prf_see_produto": [
+          {
+            "id_produto": "1091",
+            "area_utilizada": 0.5,
+            "producao_aproximada_ultimo_ano_pnae": "300",
+            "producao_aproximada_ultimo_ano_total": "300",
+            "at_prf_produto": {
+              "nm_produto": "BANANA",
+              "sg_und_medida": "KG"
+            },
+            "nm_produto": "BANANA",
+            "sg_und_medida": "KG"
+          }
+        ],
+        "nm_grupo": "FRUTICULTURA"
+      }
+    ]
+  },
+  "dados_producao_agro_industria": {
+    "tipo_regularizacao_uso_recursos_hidricos": "Certidão de Uso Insignificante",
+    "tipo_regularizacao_ambiental": "Certidão de Dispensa de Licenciamento",
+    "controla_custos_producao": "Não",
+    "local_comercializacao": "Na propriedade",
+    "valor_total_obtido_pnae": "0",
+    "valor_total_obtido_outros": "0",
+    "forma_entrega_produtos": "Veículo próprio",
+    "dificuldade_fornecimento": "Impossibilidade de apresentação da documentação prevista no edital",
+    "informacoes_adicionais": "Nenhuma.",
+    "at_prf_see_grupos_produtos": [
+      {
+        "id": "134",
+        "producao_aproximada_ultimo_ano_pnae": null,
+        "producao_aproximada_ultimo_ano_total": null,
+        "at_prf_grupo_produto": {
+          "nm_grupo": "Ovos"
+        },
+        "at_prf_see_produto": [
+          {
+            "id_produto": "1004",
+            "producao_aproximada_ultimo_ano_pnae": "0",
+            "producao_aproximada_ultimo_ano_total": "0",
+            "at_prf_produto": {
+              "nm_produto": "Galinha",
+              "sg_und_medida": "dz"
+            },
+            "nm_produto": "Galinha",
+            "sg_und_medida": "dz"
+          }
+        ],
+        "nm_grupo": "Ovos"
+      }
+    ]
+  }
+}
