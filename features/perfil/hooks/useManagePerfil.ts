@@ -87,12 +87,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
         .replace("TipoEstabelecimento", "TipoOrganizacaoEstabelecimento");
       const options = perfilOptions[camelizedField as keyof PerfilOptions];
       if (options) {
-        if (field.type === "selectMultiple") {
-          field.items = options.map((option) => ({
-            id: option,
-            name: option,
-          }));
-        }
         field.options = options;
       }
     });

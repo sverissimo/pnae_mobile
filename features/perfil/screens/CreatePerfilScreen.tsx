@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { FormTemplate } from "@shared/components/templates";
@@ -6,9 +6,18 @@ import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
 import { useManagePerfil } from "../hooks/useManagePerfil";
 
-export const CreatePerfilScreen: React.FC = () => {
-  const [state, setState] = useState<any>({});
+export const CreatePerfilScreen: React.FC = ({ route }: any) => {
+  const { key, selectedItems } = route?.params || {};
+
   const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
+  const [state, setState] = useState<any>({});
+  console.log("🚀 - file: CreatePerfilScreen.tsx:14 - state:", state);
+
+  useEffect(() => {
+    if (key && selectedItems) {
+      setState((state: any) => ({ ...state, [key]: selectedItems }));
+    }
+  }, [key, selectedItems]);
 
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
@@ -17,9 +26,6 @@ export const CreatePerfilScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.obs}>
-        * Funcionalidade em desenvolvimento, aguarde a próxima versão do app.
-      </Text>
       <ListTitle title="Preencha as informações abaixo" />
 
       <FormTemplate
@@ -28,17 +34,18 @@ export const CreatePerfilScreen: React.FC = () => {
         onValueChange={handleChange}
       />
 
-      {(state.atividade === "Atividade Primária" ||
-        state.atividade === "Ambas") && (
-        <View style={styles.formContainer}>
-          <Text style={styles.subTitle}>Dados de produção em natura</Text>
-          <FormTemplate
-            form={producaoNaturaForm}
-            data={state}
-            onValueChange={handleChange}
-          />
-        </View>
-      )}
+      {state.atividade === "Atividade Primária" ||
+        state.atividade === "Ambas" ||
+        (true && (
+          <View style={styles.formContainer}>
+            <Text style={styles.subTitle}>Dados de produção em natura</Text>
+            <FormTemplate
+              form={producaoNaturaForm}
+              data={state}
+              onValueChange={handleChange}
+            />
+          </View>
+        ))}
 
       {(state.atividade === "Atividade Secundária" ||
         state.atividade === "Ambas") && (

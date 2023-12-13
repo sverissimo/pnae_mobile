@@ -1,14 +1,12 @@
 import { View } from "react-native";
-
 import { FormElement } from "@shared/types/FormElement";
-
 import {
   PictureHolder,
   RadioComponent,
   SelectDropdown,
   TextInputComponent,
 } from "../organisms";
-import { MultiSelectComp } from "../organisms/MultiSelect";
+import { MultiSelectRow } from "../organisms/MultiSelectRow";
 
 type FormTemplateProps = {
   form: FormElement[];
@@ -39,12 +37,11 @@ export function FormTemplate({
             );
           case "selectMultiple":
             return (
-              <MultiSelectComp
+              <MultiSelectRow
                 key={item.key || item.field}
-                label={item.label}
-                items={item.items}
-                onSelect={(value: any) => onValueChange(item.field, value)}
-                value={data[item.field]}
+                item={item}
+                selectedItems={data[item.field]}
+                navigateTo={navigateTo}
               />
             );
           case "radio":

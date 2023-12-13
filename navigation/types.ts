@@ -24,7 +24,7 @@ export type RootStackParamList = ParamListBase & {
   PropriedadeScreen: undefined;
   CreateRelatorioScreen: { relatorios: RelatorioModel[] | undefined };
   EditRelatorioScreen: { relatorioId: string | number };
-  CreatePerfilScreen: undefined;
+  CreatePerfilScreen: { key: string; selectedOptions: string[] } | undefined;
   EditPerfilScreen: { perfil: any };
   ViewPerfilScreen: { perfil: Perfil; municipio: string };
   tabs: undefined;

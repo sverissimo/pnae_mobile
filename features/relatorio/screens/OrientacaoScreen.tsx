@@ -36,7 +36,6 @@ export function OrientacaoScreen({ route }: any) {
   }, [navigation, HTMLText]);
 
   const handleBackPress = () => {
-    console.log("first");
     navigation.navigate(parentRoute, { HTMLText });
   };
 

@@ -14,6 +14,7 @@ import {
 } from "@features/relatorio/screens";
 import { ViewPerfilScreen } from "@features/perfil/screens/ViewPerfilScreen";
 import { globalColors } from "@constants/themes";
+import { SelectMultipleScreen } from "@features/perfil/screens/SelectMultipleScreen";
 
 const { primary, grayscale } = globalColors;
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -82,6 +83,13 @@ export function StackNavigator() {
       <Stack.Screen
         name="CreatePerfilScreen"
         component={CreatePerfilScreen}
+        options={{
+          title: "Criar Novo Perfil",
+        }}
+      />
+      <Stack.Screen
+        name="SelectMultipleScreen"
+        component={SelectMultipleScreen}
         options={{
           title: "Criar Novo Perfil",
         }}

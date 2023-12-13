@@ -10,8 +10,8 @@ export const producaoNaturaForm: FormElement[] = [
   {
     field: "atividades_usam_recursos_hidricos",
     label: "Atividades que Usam Recursos Hídricos",
-    // type: "select",
-    type: "selectMultiple",
+    type: "select",
+    // type: "selectMultiple",
     options: [],
   },
   {
@@ -29,7 +29,7 @@ export const producaoNaturaForm: FormElement[] = [
   {
     field: "condicao_posse",
     label: "Condição de Posse",
-    type: "select",
+    type: "selectMultiple",
     options: ["OPÇÃO1", "OPÇÃO2"],
   },
   {
