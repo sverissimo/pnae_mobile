@@ -1,51 +1,68 @@
+import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import {
   PerfilServiceConfig,
-  defaultPerfilConfig,
-} from "./PerfilServiceConfig";
-import { PerfilAPIRepository } from "@infrastructure/api/perfil/PerfilAPIRepository";
+  perfilDefaultConfig,
+} from "./PerfilConfigService";
 import { PerfilModel } from "@domain/perfil/PerfilModel";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 
-//create class PerfilService, just like RelatorioService
 export class PerfilService {
   private isConnected: boolean;
-  private remoteRepository: PerfilAPIRepository;
-  // private localRepository: PerfilRepository;
-  // private syncService: PerfilSyncService;
+  private localRepository: PerfilRepository;
+  private remoteRepository: PerfilRepository;
 
   constructor(
-    perfilServiceConfig: Partial<PerfilServiceConfig> = defaultPerfilConfig
+    perfilServiceConfig: Partial<PerfilServiceConfig> = perfilDefaultConfig
   ) {
-    const config = { ...defaultPerfilConfig, ...perfilServiceConfig };
+    const config = { ...perfilDefaultConfig, ...perfilServiceConfig };
     this.isConnected = config.isConnected;
+    this.localRepository = config.localRepository;
     this.remoteRepository = config.remoteRepository;
-    // this.localRepository = config.localRepository;
-    // this.syncService = config.syncService;
   }
 
-  createPerfil = async (input: PerfilModel): Promise<string> => {
+  create = async (perfil: PerfilModel) => {
     try {
-      // const createdAt = new Date().toISOString();
-
-      // const perfilModel = new Perfil(perfil).toModel();
-      // await this.localRepository.create(perfilModel);
-      console.log("### Saved resultLocal ok.");
-
-      if (this.isConnected) {
-        // await this.remoteRepository.create(perfilModel);
+      if (!this.isConnected) {
+        await this.localRepository.create(perfil);
+        return;
       }
-      // return id;
-      return "To be implemented...";
-    } catch (error: any) {
-      throw new Error(error.message);
+
+      await this.remoteRepository.create(perfil);
+    } catch (error) {
+      console.log("🚀 PerfilService.ts:33 - createPerfil - error:", error);
+      throw error;
     }
   };
 
-  getPerfilOptions = async (): Promise<PerfilOptions> => {
-    const perfilOptions = await this.remoteRepository.getPerfilOptions();
-    return perfilOptions as PerfilOptions;
+  getAllLocalPerfils = async () => {
+    const allPerfils = await this.localRepository.findAll!();
+    return allPerfils;
   };
 
-  //   getPerfil = async (id: string): Promise<PerfilModel> => {};
-  //   getPerfils = async (produtorId: string): Promise<PerfilModel[]> => {};
+  getPerfilOptions = async (): Promise<PerfilOptions> => {
+    try {
+      const perfilOptions = await this.remoteRepository.getPerfilOptions!();
+      return perfilOptions;
+    } catch (error) {
+      console.log("🚀 PerfilService.ts:51 - getPerfilOptions - error:", error);
+      throw error;
+    }
+  };
+
+  sync = async () => {
+    const allPerfils = await this.localRepository.findAll!();
+    if (allPerfils.length === 0) {
+      return;
+    }
+
+    for (const perfil of allPerfils) {
+      try {
+        await this.remoteRepository.create(perfil);
+        await this.localRepository.delete!(perfil.id);
+      } catch (error) {
+        console.log("🚀 PerfilService.ts:60 - sync - error:", error);
+        throw error;
+      }
+    }
+  };
 }

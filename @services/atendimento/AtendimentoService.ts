@@ -56,10 +56,6 @@ export class AtendimentoService {
 
   sync = async () => {
     const atendimentos = await this.localRepository.findAll!();
-    console.log(
-      "🚀 - file: AtendimentoService.ts:59 - AtendimentoService - sync= - atendimentos:",
-      atendimentos
-    );
 
     if (atendimentos.length === 0) {
       console.log("@@@ No atendimentos to sync");
