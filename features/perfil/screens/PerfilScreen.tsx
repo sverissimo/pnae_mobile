@@ -1,4 +1,5 @@
-import { View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { globalColors } from "../../../@shared/constants/themes";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
@@ -10,8 +11,20 @@ import { useCustomNavigation } from "@navigation/hooks";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-  const { perfis } = useManagePerfil(produtor);
+  const { perfis, producaoNaturaForm, producaoIndustrialForm } =
+    useManagePerfil(produtor);
   const { navigation } = useCustomNavigation();
+  const [enableCreatePerfil, setEnableCreatePerfil] = useState<boolean>(false);
+
+  useEffect(() => {
+    const perfilOptionsLoaded = !!(
+      producaoIndustrialForm.length && producaoNaturaForm.length
+    );
+
+    if (!enableCreatePerfil && perfilOptionsLoaded) {
+      setEnableCreatePerfil(true);
+    }
+  }, [producaoIndustrialForm, producaoNaturaForm]);
 
   const handleCreatePerfil = () => {
     navigation.navigate("CreatePerfilScreen");
@@ -56,7 +69,13 @@ export const PerfilScreen = () => {
         <ListTitle title={"Nenhum perfil cadastrado"} />
       )}
 
-      <AddButton label="Criar Novo Perfil" onPress={handleCreatePerfil} />
+      {enableCreatePerfil ? (
+        <AddButton label="Criar Novo Perfil" onPress={handleCreatePerfil} />
+      ) : (
+        <Text style={styles.text}>
+          Conecte-se á internet para opções de criação de perfil
+        </Text>
+      )}
     </View>
   );
 };
@@ -66,5 +85,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
     alignItems: "center",
+  },
+  text: {
+    color: globalColors.grayscale[500],
+    fontSize: 11,
+    marginTop: 10,
+    fontStyle: "italic",
   },
 });

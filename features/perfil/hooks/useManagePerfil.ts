@@ -35,7 +35,8 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
         isConnected: !!isConnected,
       }).getPerfilOptions();
 
-      if (!perfilOptions) return;
+      if (!perfilOptions || !Object.keys(perfilOptions).length) return;
+
       const pNaturaForm = getDadosProducaoOptions(
         prodNaturaForm,
         perfilOptions

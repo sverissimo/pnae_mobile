@@ -12,6 +12,7 @@ export const CreatePerfilScreen: React.FC = () => {
 
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
+    console.log(state);
   };
 
   return (

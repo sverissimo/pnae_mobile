@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export abstract class LocalStorageRepository {
   protected abstract collection: string;
   protected abstract key: string;
+  protected storage = AsyncStorage;
 
   async saveData(key: string, value: {}) {
     try {

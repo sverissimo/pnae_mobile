@@ -11,6 +11,7 @@ jest.mock("@infrastructure/api/perfil/PerfilAPIRepository", () => {
   return {
     PerfilAPIRepository: jest.fn().mockImplementation(() => ({
       create: jest.fn(),
+      getPerfilOptions: jest.fn(),
     })),
   };
 });
@@ -24,6 +25,8 @@ jest.mock(
         findByRelatorioId: jest.fn(),
         findAll: jest.fn(),
         delete: jest.fn(),
+        getPerfilOptions: jest.fn(),
+        savePerfilOptions: jest.fn(),
       })),
     };
   }
@@ -98,6 +101,37 @@ describe("PerfilService tests", () => {
   });
 
   describe("PerfilService 2nd run", () => {
+    describe("getPerfilOptions method", () => {
+      it("should get perfil options from local repository if offline", async () => {
+        perfilService = new PerfilService({
+          ...perfilServiceTestConfig,
+          isConnected: false,
+        });
+
+        jest
+          .spyOn(localRepository, "getPerfilOptions")
+          .mockResolvedValue(perfilInput);
+
+        const perfilOptions = await perfilService.getPerfilOptions();
+        expect(localRepository.getPerfilOptions).toHaveBeenCalled();
+        expect(remoteRepository.getPerfilOptions).not.toHaveBeenCalled();
+        expect(perfilOptions).toEqual(perfilInput);
+      });
+      it("should get perfil options from remote repository and save in localRepo if online", async () => {
+        jest
+          .spyOn(remoteRepository, "getPerfilOptions")
+          .mockResolvedValueOnce(perfilInput);
+
+        const perfilOptions = await perfilService.getPerfilOptions();
+
+        expect(remoteRepository.getPerfilOptions).toHaveBeenCalled();
+        expect(localRepository.getPerfilOptions).not.toHaveBeenCalled();
+        expect(localRepository.savePerfilOptions).toHaveBeenCalledWith(
+          perfilInput
+        );
+        expect(perfilOptions).toEqual(perfilInput);
+      });
+    });
     describe("create method tests", () => {
       it("should create an perfil remotely when online", async () => {
         const result = await perfilService.create(perfilInput);

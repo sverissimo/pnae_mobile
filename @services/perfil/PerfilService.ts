@@ -39,9 +39,21 @@ export class PerfilService {
     return allPerfils;
   };
 
-  getPerfilOptions = async (): Promise<PerfilOptions> => {
+  getPerfilOptions = async (): Promise<PerfilOptions | null> => {
     try {
-      const perfilOptions = await this.remoteRepository.getPerfilOptions!();
+      if (!this.isConnected) {
+        const localPerfilOptions =
+          await this.localRepository.getPerfilOptions();
+        console.log("@@@ Getting perfilOptions from localRepository");
+
+        return localPerfilOptions;
+      }
+
+      const perfilOptions = await this.remoteRepository.getPerfilOptions();
+      perfilOptions &&
+        (await this.localRepository.savePerfilOptions!(perfilOptions));
+
+      console.log("### Fetching perfilOptions from remoteRepository");
       return perfilOptions;
     } catch (error) {
       console.log("🚀 PerfilService.ts:51 - getPerfilOptions - error:", error);

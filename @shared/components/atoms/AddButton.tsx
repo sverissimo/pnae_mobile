@@ -9,6 +9,7 @@ type AddButonProps = {
   icon?: string;
   buttonColor?: string;
   textColor?: string;
+  disabled?: boolean;
 };
 
 export const AddButton = (props: AddButonProps) => {

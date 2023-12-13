@@ -1,6 +1,7 @@
 import { PerfilModel } from "@domain/perfil";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { LocalStorageRepository } from "../LocalStorageRepository";
+import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 
 export class PerfilLocalStorageRepository
   extends LocalStorageRepository
@@ -22,9 +23,13 @@ export class PerfilLocalStorageRepository
     await this.removeData(id);
   }
 
-  async getPerfilOptions(): Promise<any> {
-    throw new Error("Method not implemented.");
-    const perfilOptions = await this.getPerfilOptions();
+  async getPerfilOptions(): Promise<PerfilOptions> {
+    const perfilOptionsString = await this.storage.getItem("perfilOptions");
+    const perfilOptions = JSON.parse(perfilOptionsString || "{}");
     return perfilOptions;
+  }
+
+  async savePerfilOptions(perfilOptions: PerfilOptions): Promise<void> {
+    await this.storage.setItem("perfilOptions", JSON.stringify(perfilOptions));
   }
 }

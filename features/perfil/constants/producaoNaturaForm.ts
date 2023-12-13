@@ -10,8 +10,8 @@ export const producaoNaturaForm: FormElement[] = [
   {
     field: "atividades_usam_recursos_hidricos",
     label: "Atividades que Usam Recursos Hídricos",
-    type: "select",
-    // type: "selectMultiple",
+    // type: "select",
+    type: "selectMultiple",
     options: [],
   },
   {
