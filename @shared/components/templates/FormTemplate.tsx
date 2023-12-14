@@ -24,6 +24,10 @@ export function FormTemplate({
   return (
     <View>
       {form.map((item) => {
+        if (!shouldRender(item, data)) {
+          return null;
+        }
+
         switch (item.type) {
           case "select":
             return (
@@ -99,4 +103,10 @@ export function FormTemplate({
       })}
     </View>
   );
+
+  function shouldRender(item: FormElement, state: any) {
+    if (!item.dependsOn) return true;
+    const shouldRender = item?.dependsOnValues?.includes(state[item.dependsOn]);
+    return shouldRender;
+  }
 }

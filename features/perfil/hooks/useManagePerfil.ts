@@ -67,11 +67,11 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   ) => {
     const dadosProducaoForm = [...dadosProducaoFormInput];
 
-    dadosProducaoForm.sort((a, b) => {
-      if (a.label < b.label) return -1;
-      if (a.label > b.label) return 1;
-      return 0;
-    });
+    // dadosProducaoForm.sort((a, b) => {
+    //   if (a.label < b.label) return -1;
+    //   if (a.label > b.label) return 1;
+    //   return 0;
+    // });
 
     dadosProducaoForm.forEach((field) => {
       if (!field.options) return;

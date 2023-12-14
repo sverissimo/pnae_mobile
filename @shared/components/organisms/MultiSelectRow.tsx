@@ -43,7 +43,9 @@ export const MultiSelectRow = <T extends Object>({
           fieldName={item.field}
           buttonLabel={!selectedItems?.length ? "Selecionar" : "change"}
           icon={
-            !selectedItems?.length ? "file-edit-outline" : "file-document-edit"
+            !selectedItems?.length
+              ? "format-list-checkbox"
+              : "file-document-edit"
           }
           onPress={handlePress}
         />

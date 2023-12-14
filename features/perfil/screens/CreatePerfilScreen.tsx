@@ -11,7 +11,6 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
 
   const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
   const [state, setState] = useState<any>({});
-  console.log("🚀 - file: CreatePerfilScreen.tsx:14 - state:", state);
 
   useEffect(() => {
     if (key && selectedItems) {
@@ -21,7 +20,6 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
 
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
-    console.log(state);
   };
 
   return (

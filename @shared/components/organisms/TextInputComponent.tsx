@@ -3,7 +3,6 @@ import { HelperText, TextInput } from "react-native-paper";
 import { FormFieldContainer } from "../molecules";
 import { FormElement } from "@shared/types";
 
-//create type for this component props
 type TextInputComponentProps = {
   label: string;
   item: FormElement;
@@ -29,11 +28,20 @@ export const TextInputComponent = ({
             key={item.field}
             onChangeText={onChangeText}
             value={value}
-            style={styles.input}
+            style={{
+              ...styles.input,
+              maxHeight: item.numberOfLines
+                ? item.numberOfLines * 45
+                : undefined,
+              height: !item.numberOfLines ? 30 : undefined,
+              ...(item.multiline ? { textAlignVertical: "top" } : {}),
+            }}
             keyboardType={keyboardType || "default"}
             placeholder={item.placeholder || ""}
             placeholderTextColor="#999"
             maxLength={item.maxLength || 100}
+            multiline={item.multiline || false}
+            numberOfLines={item.numberOfLines || 1}
           />
         </View>
       </FormFieldContainer>
@@ -53,21 +61,9 @@ export const TextInputComponent = ({
 const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
-    height: 30,
     fontSize: 12,
   },
   helperText: {
     marginLeft: "32%",
   },
 });
-
-{
-  /**** TODO: Implement this? Maybe a different component?
-  const [enableInput, setEnableInput] = useState(false);
-  {item.type === "toggle-input" && !enableInput ? (
-        <PictureHolder
-          item={item}
-          data={value}
-          navigateTo={() => setEnableInput(true)}
-        /> */
-}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { useCustomNavigation } from "@navigation/hooks";
-import { Icon } from "@shared/components/atoms";
 import { CustomCheckbox } from "@shared/components/molecules/CustomCheckBox";
-import { View } from "react-native";
+import { Icon } from "@shared/components/atoms";
 
 export const SelectMultipleScreen = ({ route }: any) => {
   const { parentRoute, item, selectedItems: data } = route.params;
@@ -35,7 +35,7 @@ export const SelectMultipleScreen = ({ route }: any) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       {options.map((option: string) => (
         <CustomCheckbox
           key={option}
@@ -47,3 +47,9 @@ export const SelectMultipleScreen = ({ route }: any) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 11,
+  },
+});
