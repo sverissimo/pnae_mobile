@@ -34,8 +34,6 @@
   "tipo_regularizacao_uso_recursos_hidricos": "Outorga",
   "valor_total_obtido_outros": "22",
   "valor_total_obtido_pnae": "23",
-  "id_dados_producao_agro_industria": "string",
-  "id_dados_producao_in_natura": "string",
   "id_tecnico": "string",
   "dados_producao_in_natura": {
     "tipo_regularizacao_uso_recursos_hidricos": "Não possui",

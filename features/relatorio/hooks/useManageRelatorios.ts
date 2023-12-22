@@ -10,7 +10,6 @@ import { useLocation, useManageConnection } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, truncateString } from "@shared/utils";
-import createRelatorioInput from "_mockData/createRelatorioInput.json";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);

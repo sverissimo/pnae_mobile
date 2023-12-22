@@ -61,6 +61,28 @@ export class PerfilService {
     }
   };
 
+  getGruposProdutos = async () => {
+    try {
+      if (!this.isConnected) {
+        const localGruposProdutos =
+          await this.localRepository.getGruposProdutos();
+        console.log("@@@ Getting gruposProdutos from localRepository");
+
+        return localGruposProdutos;
+      }
+      const gruposProdutos = await this.remoteRepository.getGruposProdutos();
+
+      gruposProdutos &&
+        (await this.localRepository.saveGruposProdutos!(gruposProdutos));
+
+      console.log("### Fetching gruposProdutos from remoteRepository");
+      return gruposProdutos;
+    } catch (error) {
+      console.log("🚀 PerfilService.ts:51 - getPerfilOptions - error:", error);
+      throw error;
+    }
+  };
+
   sync = async () => {
     const allPerfils = await this.localRepository.findAll!();
     if (allPerfils.length === 0) {

@@ -32,4 +32,17 @@ export class PerfilLocalStorageRepository
   async savePerfilOptions(perfilOptions: PerfilOptions): Promise<void> {
     await this.storage.setItem("perfilOptions", JSON.stringify(perfilOptions));
   }
+
+  async getGruposProdutos() {
+    const gruposProdutosString = await this.storage.getItem("gruposProdutos");
+    const gruposProdutos = JSON.parse(gruposProdutosString || "{}");
+    return gruposProdutos;
+  }
+
+  async saveGruposProdutos(gruposProdutos: any) {
+    await this.storage.setItem(
+      "gruposProdutos",
+      JSON.stringify(gruposProdutos)
+    );
+  }
 }

@@ -2,7 +2,12 @@ import { env } from "@config/env";
 import { API } from "../API";
 // import { Perfil } from "@features/perfil/types";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
-import { DadosProducao, PerfilDTO, PerfilModel } from "@domain/perfil";
+import {
+  DadosProducao,
+  GrupoProdutos,
+  PerfilDTO,
+  PerfilModel,
+} from "@domain/perfil";
 // import { PerfilModel } from "@domain/perfil/PerfilModel";
 import {
   producaoIndustrialForm,
@@ -24,8 +29,13 @@ export class PerfilAPIRepository
   }
 
   async getPerfilOptions() {
-    const perfilOptions = await this.get(`${this.url}/options`);
-    return perfilOptions as any;
+    const perfilOptions = (await this.get(`${this.url}/options`)) as unknown;
+    return perfilOptions as PerfilOptions;
+  }
+
+  async getGruposProdutos() {
+    const gruposProdutos = (await this.get(`${this.url}/produtos`)) as unknown;
+    return gruposProdutos as GrupoProdutos[];
   }
 
   toPerfilDTO = (perfil: PerfilModel, perfilOptions: PerfilOptions) => {

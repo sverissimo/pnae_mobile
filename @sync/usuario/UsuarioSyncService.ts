@@ -32,10 +32,6 @@ export class UsuarioSyncService {
       return;
     }
 
-    console.log(
-      "🚀 - file: UsuarioSyncService.ts:36 - UsuarioSyncService - sync= - usuarioLocalRepository:",
-      this.usuarioLocalRepository
-    );
     const ids = (await this.usuarioLocalRepository.findAll!()).map(
       (usuario) => usuario.id_usuario
     );

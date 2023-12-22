@@ -23,8 +23,6 @@ export type PerfilModel = {
   grau_interesse_pnae: string;
   id: string;
   id_cliente: string;
-  id_dados_producao_agro_industria: string;
-  id_dados_producao_in_natura: string;
   id_tecnico: string;
   nivel_tecnologico_cultivo: string[];
   orgao_fiscalizacao_sanitaria: string;

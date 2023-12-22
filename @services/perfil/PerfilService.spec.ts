@@ -12,6 +12,7 @@ jest.mock("@infrastructure/api/perfil/PerfilAPIRepository", () => {
     PerfilAPIRepository: jest.fn().mockImplementation(() => ({
       create: jest.fn(),
       getPerfilOptions: jest.fn(),
+      getGruposProdutos: jest.fn(),
     })),
   };
 });
@@ -27,6 +28,8 @@ jest.mock(
         delete: jest.fn(),
         getPerfilOptions: jest.fn(),
         savePerfilOptions: jest.fn(),
+        getGruposProdutos: jest.fn(),
+        saveGruposProdutos: jest.fn(),
       })),
     };
   }
@@ -54,6 +57,7 @@ describe("PerfilService tests", () => {
 
     perfilService = new PerfilService(perfilServiceTestConfig);
   });
+
   describe("PerfilService 1st run", () => {
     describe("create perfil method tests", () => {
       it("should create a perfil remotely if online", async () => {
@@ -130,6 +134,38 @@ describe("PerfilService tests", () => {
           perfilInput
         );
         expect(perfilOptions).toEqual(perfilInput);
+      });
+    });
+
+    describe("getGruposProdutos method", () => {
+      it("should get gruposProdutos from local repository if offline", async () => {
+        perfilService = new PerfilService({
+          ...perfilServiceTestConfig,
+          isConnected: false,
+        });
+
+        jest
+          .spyOn(localRepository, "getGruposProdutos")
+          .mockResolvedValue(perfilInput);
+
+        const gruposProdutos = await perfilService.getGruposProdutos();
+        expect(localRepository.getGruposProdutos).toHaveBeenCalled();
+        expect(remoteRepository.getGruposProdutos).not.toHaveBeenCalled();
+        expect(gruposProdutos).toEqual(perfilInput);
+      });
+      it("should get gruposProdutos from remote repository and save in localRepo if online", async () => {
+        jest
+          .spyOn(remoteRepository, "getGruposProdutos")
+          .mockResolvedValueOnce(perfilInput);
+
+        const gruposProdutos = await perfilService.getGruposProdutos();
+
+        expect(remoteRepository.getGruposProdutos).toHaveBeenCalled();
+        expect(localRepository.getGruposProdutos).not.toHaveBeenCalled();
+        expect(localRepository.saveGruposProdutos).toHaveBeenCalledWith(
+          perfilInput
+        );
+        expect(gruposProdutos).toEqual(perfilInput);
       });
     });
     describe("create method tests", () => {
