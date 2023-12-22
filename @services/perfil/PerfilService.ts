@@ -3,7 +3,7 @@ import {
   PerfilServiceConfig,
   perfilDefaultConfig,
 } from "./PerfilConfigService";
-import { PerfilModel } from "@domain/perfil/PerfilModel";
+import { PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 
 export class PerfilService {

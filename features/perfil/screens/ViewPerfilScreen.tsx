@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View, Text } from "react-native";
-import { Perfil } from "../types";
+
 import { GruposProdutosTable } from "../components";
 import { FormFieldContainer } from "@shared/components/molecules";
 import { formatDate, parseValue } from "@shared/utils";
@@ -8,6 +8,7 @@ import {
   producaoIndustrialForm,
   producaoNaturaForm,
 } from "../constants";
+import { PerfilModel } from "@domain/perfil";
 
 export const ViewPerfilScreen = ({ route }: any) => {
   const { perfil, municipio } = route.params;
@@ -35,7 +36,7 @@ export const ViewPerfilScreen = ({ route }: any) => {
         <FormFieldContainer label={label} key={field}>
           <View>
             <Text style={styles.text}>
-              {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
+              {parseValue(updatedPerfil[field as keyof Partial<PerfilModel>])}
             </Text>
           </View>
         </FormFieldContainer>
@@ -71,7 +72,7 @@ export const ViewPerfilScreen = ({ route }: any) => {
           <FormFieldContainer label={label} key={field}>
             <View>
               <Text style={styles.text}>
-                {parseValue(updatedPerfil[field as keyof Partial<Perfil>])}
+                {parseValue(updatedPerfil[field as keyof Partial<PerfilModel>])}
               </Text>
             </View>
           </FormFieldContainer>

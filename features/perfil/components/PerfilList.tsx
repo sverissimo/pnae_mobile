@@ -1,7 +1,7 @@
 import { useManagePerfil } from "../hooks/useManagePerfil";
 import { List } from "../../../@shared/components/organisms/List";
 import { PERFIL_COLUMNS } from "../constants";
-import { Perfil } from "../types";
+import { PerfilModel } from "@domain/perfil";
 
 const PerfilList = ({ data, handleViewPerfil, handleEditPerfil }: any) => {
   const columnsWithoutOpts = PERFIL_COLUMNS.filter(
@@ -10,7 +10,7 @@ const PerfilList = ({ data, handleViewPerfil, handleEditPerfil }: any) => {
 
   const { getPerfilListData } = useManagePerfil(data);
   return (
-    <List<Perfil>
+    <List<PerfilModel>
       data={getPerfilListData(data)}
       columns={!!handleViewPerfil ? PERFIL_COLUMNS : columnsWithoutOpts}
       onView={handleViewPerfil}

@@ -1,16 +1,12 @@
 import { Usuario } from "@shared/types";
 import { DadosProducao } from ".";
 
-export type Perfil = {
+export type PerfilDTO = {
   aderiu_pra: boolean;
   agroindustria_precisa_adaptacao_reforma: boolean;
-  at_prf_see_propriedade: {
-    atividade: string;
-    producao_dedicada_pnae: boolean;
-  };
   atividades_com_regularizacao_ambiental: string;
   atividades_usam_recursos_hidricos: string;
-  cient_iniciativas_regularizacao_pra: boolean;
+  ciente_iniciativas_regularizacao_pra: boolean;
   condicao_posse: string;
   credito_rural: boolean;
   dados_producao_agro_industria: DadosProducao;
@@ -30,7 +26,7 @@ export type Perfil = {
   orgao_fiscalizacao_sanitaria: null;
   participa_organizacao: boolean;
   pessoas_processamento_alimentos: number;
-  possui_agroindustria_propria: null;
+  possui_agroindustria_propria: boolean;
   possui_cadastro_car: boolean;
   possui_registro_orgao_fiscalizacao_sanitaria: boolean;
   procedimento_pos_colheita: string;

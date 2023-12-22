@@ -1,10 +1,17 @@
 import { env } from "@config/env";
 import { API } from "../API";
-import { Perfil } from "@features/perfil/types";
+// import { Perfil } from "@features/perfil/types";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
+import { DadosProducao, PerfilDTO, PerfilModel } from "@domain/perfil";
+// import { PerfilModel } from "@domain/perfil/PerfilModel";
+import {
+  producaoIndustrialForm,
+  producaoNaturaForm,
+} from "@features/perfil/constants";
 import { PerfilOptions } from "./PerfilOptions";
-import { PerfilOptionsDTO } from "./PerfilOptionsDTO";
-import { PerfilModel } from "@domain/perfil";
+import { primeNumbersArray } from "./constants/primeNumbersArray";
+import { Perfil } from "@domain/perfil/Perfil";
+import { stringsPropsToBoolean } from "@domain/stringPropsToBoolean";
 
 export class PerfilAPIRepository
   extends API<Perfil>
@@ -12,8 +19,8 @@ export class PerfilAPIRepository
 {
   private url = `${env.SERVER_URL}/perfil`;
 
-  async create(perfil: Perfil) {
-    await this.post<Perfil>(`${this.url}/`, perfil);
+  async create(perfil: PerfilModel) {
+    await this.post<PerfilModel>(`${this.url}/`, perfil);
   }
 
   async getPerfilOptions() {
@@ -21,19 +28,92 @@ export class PerfilAPIRepository
     return perfilOptions as any;
   }
 
-  private toPerfilDTO = (
-    perfilOptionsDTO: PerfilOptionsDTO,
-    perfil: PerfilModel
+  toPerfilDTO = (perfil: PerfilModel, perfilOptions: PerfilOptions) => {
+    const p = stringsPropsToBoolean(perfil) as PerfilModel;
+    const p2 = this.getPrimeNumbersProps(p, perfilOptions);
+    return p2;
+  };
+
+  getPrimeNumbersProps = (
+    perfil: PerfilModel,
+    perfilOptions: PerfilOptions
   ) => {
-    const perfilOptions = perfilOptionsDTO.reduce((prev, curr) => {
-      const { tipo, descricao, id } = curr;
-      if (!prev[tipo]) {
-        prev[tipo] = [descricao];
-      } else {
-        prev[tipo].push(descricao);
-      }
-      return prev;
-    }, {} as any);
-    return perfilOptions;
+    const primeNumberFields = producaoNaturaForm
+      .concat(producaoIndustrialForm)
+      .filter((f) => f.type === "selectMultiple")
+      .map((f) => f.field as keyof PerfilDTO);
+    console.log("🚀 - file: PerfilAPIRepository.ts:45s", primeNumberFields);
+
+    const { dados_producao_agro_industria, dados_producao_in_natura } = perfil;
+    const result = this.createPrimePropsObj({
+      obj: perfil,
+      primeNumberFields,
+      perfilOptions,
+    });
+    const dadosNatura =
+      this.createPrimePropsObj({
+        obj: dados_producao_in_natura,
+        primeNumberFields,
+        perfilOptions,
+      }) || {};
+    const dadosIndustria =
+      this.createPrimePropsObj({
+        obj: dados_producao_agro_industria,
+        primeNumberFields,
+        perfilOptions,
+      }) || {};
+    Object.assign(dados_producao_in_natura, dadosNatura);
+    Object.assign(dados_producao_agro_industria, dadosIndustria);
+    Object.assign(result, {
+      dados_producao_in_natura,
+      dados_producao_agro_industria,
+    });
+    const PerfilDTO = { ...perfil, ...result };
+    console.log(
+      "🚀 - file: PerfilAPIRepository.ts:68 - PerfilDTO :",
+      PerfilDTO
+    );
+
+    return PerfilDTO;
+  };
+
+  private createPrimePropsObj = ({
+    obj,
+    primeNumberFields,
+    perfilOptions,
+  }: {
+    obj: Record<string, any>;
+    primeNumberFields: string[];
+    perfilOptions: PerfilOptions;
+  }) => {
+    if (!obj || typeof obj !== "object") return obj;
+
+    const result = {} as any;
+    for (const field of primeNumberFields) {
+      const selectedOptions = obj[field] as string[];
+      if (!selectedOptions) continue;
+
+      const availableOptions = perfilOptions[Perfil.toPefilOptionsProp(field)];
+
+      result[field] = String(
+        this.selectedOptionstoPrimeNumbers(selectedOptions, availableOptions)
+      );
+    }
+
+    return result;
+  };
+
+  private selectedOptionstoPrimeNumbers = (
+    selectedOptions: string[],
+    availableOptions: string[]
+  ) => {
+    const indexes = selectedOptions.map((option) =>
+      availableOptions.indexOf(option)
+    );
+    let result = 1;
+    indexes.forEach((index) => {
+      result *= primeNumbersArray[index];
+    });
+    return result;
   };
 }

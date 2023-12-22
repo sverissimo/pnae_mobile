@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Perfil } from "../types";
-import { formatDate } from "@shared/utils";
-import { ProdutorModel } from "@domain/produtor/ProdutorModel";
-import { PerfilService } from "@services/perfil/PerfilService";
-import { useManageConnection } from "@shared/hooks";
-import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
-import { FormElement } from "@shared/types";
 import { pascalize } from "humps";
+import { ProdutorModel } from "@domain/produtor/ProdutorModel";
+import { PerfilModel } from "@domain/perfil";
+import { PerfilService } from "@services/perfil/PerfilService";
+import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
+import { useManageConnection } from "@shared/hooks";
+import { formatDate } from "@shared/utils";
+import { FormElement } from "@shared/types";
 import {
   producaoNaturaForm as prodNaturaForm,
   producaoIndustrialForm as prodIndustrialForm,
 } from "../constants";
 
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
-  const [perfis, setPerfis] = useState<Perfil[]>([]);
-  const [perfil, setPerfil] = useState<Perfil>({} as Perfil);
+  const [perfis, setPerfis] = useState<PerfilModel[]>([]);
+  const [perfil, setPerfil] = useState<PerfilModel>({} as PerfilModel);
   const [producaoNaturaForm, setProducaoNaturaForm] = useState<FormElement[]>(
     []
   );
@@ -52,7 +52,7 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     getPerfilOptions();
   }, []);
 
-  const getPerfilListData = (perfis: Perfil[]) =>
+  const getPerfilListData = (perfis: PerfilModel[]) =>
     perfis.map((p: any) => ({
       id: p.id,
       tipo_perfil: p.tipo_perfil,
@@ -66,12 +66,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     perfilOptions: PerfilOptions
   ) => {
     const dadosProducaoForm = [...dadosProducaoFormInput];
-
-    // dadosProducaoForm.sort((a, b) => {
-    //   if (a.label < b.label) return -1;
-    //   if (a.label > b.label) return 1;
-    //   return 0;
-    // });
 
     dadosProducaoForm.forEach((field) => {
       if (!field.options) return;

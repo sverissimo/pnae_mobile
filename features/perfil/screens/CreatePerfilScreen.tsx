@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
+import { useManagePerfil } from "../hooks/useManagePerfil";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
-import { useManagePerfil } from "../hooks/useManagePerfil";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
@@ -60,8 +60,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
       <Button
         mode="contained"
         style={styles.button}
-        onPress={() => console.log("Submitted")}
-        disabled
+        onPress={() => console.log(state)}
       >
         Salvar
       </Button>

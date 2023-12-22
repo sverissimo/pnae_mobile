@@ -1,0 +1,141 @@
+{
+  "AtividadesComRegularizacaoAmbiental": [
+    "Agroextrativismo (palmito, pequi, pinhão, araticum, etc.)",
+    "Cereais e Grãos",
+    "Fruticultura",
+    "Plantas condimentares (in natura)",
+    "Olericultura",
+    "Implantação, manutenção e/ou renovação de pastagens e/ou de culturas anuais e/ou perenes",
+    "Outros"
+  ],
+  "AtividadesUsamRecursosHidricos": [
+    "Abastecimento doméstico",
+    "Criação de animais",
+    "Irrigação de culturas",
+    "Lavagem dos alimentos pós-colheita",
+    "Outros"
+  ],
+  "CondicaoPosse": [
+    "Aluguel",
+    "Arrendatário",
+    "Assentado de Reforma Agrária",
+    "Parceiro/Meeiro",
+    "Posseiro",
+    "Proprietário",
+    "Comodatário"
+  ],
+  "DificuldadeFornecimento": [
+    "Acesso aos editais",
+    "Elaboração de projetos de venda",
+    "Falta de organização no planejamento de entrega",
+    "Falta de qualidade dos produtos",
+    "Impossibilidade de apresentação da documentação prevista no edital",
+    "Incapacidade de produção",
+    "Logística",
+    "Preço de aquisição abaixo do valor de mercado",
+    "Quantidade demandada pequena",
+    "Não apresenta dificuldade(s)",
+    "Não se aplica (Não comercializou)"
+  ],
+  "FonteCaptacaoAgua": [
+    "Cisterna",
+    "Concessionária (Copasa, SAAE ou sistema comunitário)",
+    "Nascente (córrego, represa, etc)",
+    "Poço tubular",
+    "Outros"
+  ],
+  "FormaEntregaProdutos": [
+    "Correios",
+    "Transportadora",
+    "Veículo próprio",
+    "Veículo terceirizado",
+    "Via cooperativa",
+    "Via associação",
+    "Retirada na propriedade pelo cliente",
+    "Outros"
+  ],
+  "FormaEsgotamentoSanitario": [
+    "Lançamento a céu aberto ou direto no córrego",
+    "Fossa biodigestora modelo Embrapa",
+    "Fossa rudimentar(buraco direto no solo)",
+    "Fossa séptica (alvenaria ou pré fabricada)",
+    "Fossa TEVAP",
+    "Outros"
+  ],
+  "GrauInteresse": ["Baixo", "Moderado", "Alto"],
+  "LocalComercializacao": [
+    "Ceasa",
+    "Feira Livre",
+    "Mercado Local",
+    "PAA Familiar",
+    "PAB",
+    "PNAE Estadual ",
+    "PNAE Municipal",
+    "Na propriedade",
+    "Não comercializa",
+    "Outros"
+  ],
+  "NivelTecnologicoCultivo": [
+    "Adubação orgânica",
+    "Adubação mineral",
+    "Análise de solo",
+    "Calagem",
+    "Compostagem ",
+    "Conservação do solo - terraço, plantio em nível, etc.",
+    "Fertirrigação",
+    "Irrigação aspersão convencional",
+    "Irrigação localizada (gotejamento, microaspersão)",
+    "Práticas agroecólogicas",
+    "Rotação de culturas",
+    "Uso de mudas de produção própria",
+    "Outros"
+  ],
+  "OrgaoFiscalizacaoSanitaria": [
+    "IMA (Instituto Mineiro de Agropecuária)",
+    "MAPA (Ministério da Agricultura, Pecuária e Abastecimento)",
+    "SIM (Serviço de Inspeção Municipal - Consórcio)",
+    "Vigilância Sanitária",
+    "Não se aplica"
+  ],
+  "PerfilSeeAtividade": [
+    "Atividade Primária (Produtos in natura)",
+    "Atividade Secundária (Agroindústria)",
+    "Ambas"
+  ],
+  "ProcedimentosPosColheita": [
+    "Armazenamento refrigerado",
+    "Classificação",
+    "Desinfecção",
+    "Embalagem",
+    "Limpeza",
+    "Sanitização",
+    "Seleção",
+    "Nenhuma dessas opções"
+  ],
+  "SistemaProducao": [
+    "Agrofloresta",
+    "Convencional",
+    "Cultivo protegido (plasticultura)",
+    "Hidropônico",
+    "Orgânico",
+    "Plantio direto"
+  ],
+  "TipoGestaoUnidade": ["Coletiva", "Familiar"],
+  "TipoOrganizacaoEstabelecimento": ["Pessoa Física", "Pessoa Jurídica"],
+  "TipoPerfil": ["Entrada", "Saída"],
+  "TipoPessoaJuridica": ["Associação", "Cooperativa", "MEI", "Outras"],
+  "TipoProducao": [
+    "Atividade Secundária (Agroindústria)",
+    "Atividade Primária (Produtos in natura)"
+  ],
+  "TipoRegularizacaoAmbiental": [
+    "Certidão de dispensa de licenciamento",
+    "Licença ambiental",
+    "Não possui"
+  ],
+  "TipoRegularizacaoUsoRecursosHidricos": [
+    "Certidão de uso insignificante",
+    "Outorga",
+    "Não possui"
+  ]
+}

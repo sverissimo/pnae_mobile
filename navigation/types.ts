@@ -1,4 +1,4 @@
-import { Perfil } from "@features/perfil/types";
+import { PerfilModel } from "@domain/perfil";
 import { RelatorioModel } from "@features/relatorio/types";
 
 type ParamListBase = {
@@ -26,7 +26,7 @@ export type RootStackParamList = ParamListBase & {
   EditRelatorioScreen: { relatorioId: string | number };
   CreatePerfilScreen: { key: string; selectedOptions: string[] } | undefined;
   EditPerfilScreen: { perfil: any };
-  ViewPerfilScreen: { perfil: Perfil; municipio: string };
+  ViewPerfilScreen: { perfil: PerfilModel; municipio: string };
   tabs: undefined;
   GetSignature: RouteParamsList;
   OrientacaoScreen: undefined;

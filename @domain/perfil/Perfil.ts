@@ -1,4 +1,4 @@
-import { PerfilOptionsDTO } from "@infrastructure/api/perfil/PerfilOptionsDTO";
+import { pascalize } from "humps";
 import { PerfilModel } from "./PerfilModel";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 
@@ -13,19 +13,18 @@ export class Perfil {
     return this.perfil;
   };
 
-  static toPefilOptionsModel = (
-    perfilOptionsDTO: PerfilOptionsDTO
-  ): PerfilOptions => {
-    const perfilOptions = perfilOptionsDTO.reduce((prev, curr) => {
-      const { tipo, descricao } = curr;
-      if (!prev[tipo]) {
-        prev[tipo] = [descricao];
-      } else {
-        prev[tipo].push(descricao);
-      }
-      return prev;
-    }, {} as any);
-    return perfilOptions;
+  static toPefilOptionsProp = (fieldLabel: string) => {
+    const camelizedField = pascalize(fieldLabel)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/De/g, "")
+      .replace(/Da/g, "")
+      .replace(/Dos/g, "")
+      .replace(/Do/g, "")
+      .replace(/Que/g, "")
+      .replace("ProcedimentoPosColheita", "ProcedimentosPosColheita")
+      .replace("TipoEstabelecimento", "TipoOrganizacaoEstabelecimento");
+    return camelizedField as keyof PerfilOptions;
   };
 
   //   createProducaoNaturaForm(perfilOptions: PerfilOptions) {}

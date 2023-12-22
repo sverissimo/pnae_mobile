@@ -1,4 +1,4 @@
-import { PerfilModel } from "@domain/perfil";
+import { PerfilModel } from "@domain/perfil/PerfilModel";
 import { PropriedadeModel } from "@domain/propriedade/PropriedadeModel";
 
 export type ProdutorModel = {
