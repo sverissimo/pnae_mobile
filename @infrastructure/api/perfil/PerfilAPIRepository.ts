@@ -5,6 +5,7 @@ import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import {
   DadosProducao,
   GrupoProdutos,
+  GruposProdutosOptions,
   PerfilDTO,
   PerfilModel,
 } from "@domain/perfil";
@@ -35,7 +36,7 @@ export class PerfilAPIRepository
 
   async getGruposProdutos() {
     const gruposProdutos = (await this.get(`${this.url}/produtos`)) as unknown;
-    return gruposProdutos as GrupoProdutos[];
+    return gruposProdutos as GruposProdutosOptions;
   }
 
   toPerfilDTO = (perfil: PerfilModel, perfilOptions: PerfilOptions) => {

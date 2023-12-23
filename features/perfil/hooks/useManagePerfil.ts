@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { pascalize } from "humps";
 import { ProdutorModel } from "@domain/produtor/ProdutorModel";
-import { PerfilModel } from "@domain/perfil";
+import {
+  GrupoDetails,
+  GruposProdutosOptions,
+  PerfilModel,
+  Produto,
+  ProdutoDetails,
+} from "@domain/perfil";
 import { PerfilService } from "@services/perfil/PerfilService";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import { useManageConnection } from "@shared/hooks";
@@ -21,6 +27,16 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const [producaoIndustrialForm, setProducaoIndustrialForm] = useState<
     FormElement[]
   >([]);
+
+  const [gruposOptions, setGruposOptions] = useState([] as GrupoDetails[]);
+  const [produtosOptions, setProdutosOptions] = useState(
+    {} as ProdutoDetails[]
+  );
+  const [selectedGrupos, setSelectedGrupos] = useState({} as GrupoDetails);
+  const [filteredProdutosOptions, setFilteredProdutosOptions] = useState(
+    [] as ProdutoDetails[]
+  );
+
   const { isConnected } = useManageConnection();
 
   useEffect(() => {
@@ -30,10 +46,39 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   }, [produtor]);
 
   useEffect(() => {
+    // if (selectedGrupos.length && produtosOptions.length) {
+    if (selectedGrupos && produtosOptions.length) {
+      console.log(
+        "🚀 - file: useManagePerfil.ts:51 - useEffect - selectedGrupos:",
+        selectedGrupos
+      );
+
+      /*   const filteredProdutos = produtosOptions.filter((p: ProdutoDetails) =>
+        selectedGrupos.find(
+          (g: GrupoDetails) => g.id_grupo_legado === p.id_grupo_legado
+        )
+      );
+     */ const filteredProdutos = produtosOptions.filter(
+        (p: ProdutoDetails) =>
+          selectedGrupos.id_grupo_legado === p.id_grupo_legado
+      );
+      setFilteredProdutosOptions(filteredProdutos);
+      console.log(
+        "🚀 - file: useManagePerfil.ts:56 - useEffect - filteredProdutos:",
+        filteredProdutos
+      );
+    }
+  }, [selectedGrupos, produtosOptions]);
+
+  useEffect(() => {
     const getPerfilOptions = async () => {
-      const perfilOptions = await new PerfilService({
+      const perfilService = new PerfilService({
         isConnected: !!isConnected,
-      }).getPerfilOptions();
+      });
+      const [perfilOptions, gruposProdutosOptions] = await Promise.all([
+        perfilService.getPerfilOptions(),
+        perfilService.getGruposProdutos(),
+      ]);
 
       if (!perfilOptions || !Object.keys(perfilOptions).length) return;
 
@@ -45,6 +90,13 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
         prodIndustrialForm,
         perfilOptions
       );
+      if (gruposProdutosOptions?.grupos && gruposProdutosOptions?.produtos) {
+        const { grupos, produtos } = gruposProdutosOptions;
+        setGruposOptions(grupos);
+        setProdutosOptions(produtos);
+        addGruposProdutos(pNaturaForm, gruposProdutosOptions);
+      }
+
       setProducaoNaturaForm(pNaturaForm);
       setProducaoIndustrialForm(pIndustrialForm);
     };
@@ -87,11 +139,38 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     return dadosProducaoForm;
   };
 
+  const addGruposProdutos = (
+    dadosProducaoForm: FormElement[],
+    gruposProdutosOptions: GruposProdutosOptions
+  ) => {
+    const { grupos, produtos } = gruposProdutosOptions;
+    const gruposOptions = grupos
+      .filter((g) => g.tipo === 1)
+      .map((g) => g.nm_grupo);
+    console.log(
+      "🚀 - file: useManagePerfil.ts:120 - useManagePerfil - gruposOptions:",
+      gruposOptions
+    );
+
+    const produtosOptions = produtos.map((p) => p.nm_produto);
+
+    const gruposOptionsField = dadosProducaoForm.find(
+      (f) => f.field === "gruposOptions"
+    );
+    gruposOptionsField!.options = gruposOptions;
+    // const produtosOptionsField = dadosProducaoForm.find((f) => f.field === "produtosOptions")
+    // produtosOptionsField!.options = produtosOptions
+    return dadosProducaoForm;
+  };
+
   return {
     perfis,
     perfil,
     producaoNaturaForm,
     producaoIndustrialForm,
+    gruposOptions,
+    produtosOptions,
+    setSelectedGrupos,
     setPerfis,
     setPerfil,
     getPerfilListData,

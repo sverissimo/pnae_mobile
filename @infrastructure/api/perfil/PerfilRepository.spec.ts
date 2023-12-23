@@ -1,9 +1,9 @@
 import { PerfilAPIRepository } from "./PerfilAPIRepository"; // Replace with the actual import path
 // import { producaoNaturaForm, producaoIndustrialForm } from './forms'; // Replace with the actual import path
 import { primeNumbersArray } from "./constants/primeNumbersArray";
-import perfilOptions from "_mockData/perfilOptions.json";
-import perfilInputDTO from "_mockData/perfilInput.json";
-import perfilInput from "_mockData/perfil.json";
+import perfilOptions from "_mockData/perfil/perfilOptions.json";
+import perfilInputDTO from "_mockData/perfil/perfilInput.json";
+import perfilInput from "_mockData/perfil/perfil.json";
 
 describe("PerfilAPIRepository", () => {
   let perfilAPIRepository: PerfilAPIRepository;

@@ -1,5 +1,9 @@
 export type ProdutoDetails = {
+  id_produto: string;
+  id_legado: number;
+  tipo: number;
   nm_produto: string;
+  id_grupo_legado: number;
   sg_und_medida: string;
 };
 
@@ -14,6 +18,9 @@ export type Produto = {
 };
 
 export type GrupoDetails = {
+  id_grupo: string;
+  id_grupo_legado: number;
+  tipo: number;
   nm_grupo: string;
 };
 
@@ -25,4 +32,9 @@ export type GrupoProdutos = {
   at_prf_grupo_produto: GrupoDetails;
   at_prf_see_produto: Produto[];
   nm_grupo: string;
+};
+
+export type GruposProdutosOptions = {
+  grupos: GrupoDetails[];
+  produtos: ProdutoDetails[];
 };

@@ -9,7 +9,14 @@ import { perfilForm } from "../constants";
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
 
-  const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
+  const {
+    producaoNaturaForm,
+    producaoIndustrialForm,
+    gruposOptions,
+    produtosOptions,
+    setSelectedGrupos,
+  } = useManagePerfil();
+
   const [state, setState] = useState<any>({});
 
   useEffect(() => {
@@ -19,6 +26,17 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   }, [key, selectedItems]);
 
   const handleChange = (name: string, value: any) => {
+    if (name === "gruposOptions") {
+      console.log(
+        "🚀 - file: CreatePerfilScreen.tsx:29 - handleChange - value:",
+        value
+      );
+      const selectedGrupo = gruposOptions.find(
+        (grupo) => grupo.nm_grupo === value
+      );
+      setSelectedGrupos(selectedGrupo!);
+      return;
+    }
     setState((state: any) => ({ ...state, [name]: value }));
   };
 

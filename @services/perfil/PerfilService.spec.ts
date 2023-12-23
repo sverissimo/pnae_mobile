@@ -3,7 +3,10 @@ import { PerfilService } from "./PerfilService";
 import { PerfilLocalStorageRepository } from "@infrastructure/localStorage/perfil/PerfilLocalStorageRepository";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { PerfilServiceConfig } from "./PerfilConfigService";
-import perfil from "_mockData/perfil.json";
+import { SyncHelpers } from "@sync/SyncHelpers";
+import perfil from "_mockData//perfil/perfil.json";
+import gruposProdutosOptions from "_mockData/perfil/gruposProdutosOptions.json";
+import { GruposProdutosOptions } from "@domain/perfil";
 
 jest.mock("@shared/utils/fileSystemUtils");
 
@@ -13,6 +16,14 @@ jest.mock("@infrastructure/api/perfil/PerfilAPIRepository", () => {
       create: jest.fn(),
       getPerfilOptions: jest.fn(),
       getGruposProdutos: jest.fn(),
+    })),
+  };
+});
+
+jest.mock("@sync/SyncHelpers", () => {
+  return {
+    SyncHelpers: jest.fn().mockImplementation(() => ({
+      shouldSync: jest.fn(),
     })),
   };
 });
@@ -41,6 +52,7 @@ const isConnected = true;
 let perfilService: PerfilService;
 let localRepository: PerfilRepository;
 let remoteRepository: PerfilRepository;
+let syncHelpers: SyncHelpers;
 let perfilServiceTestConfig: PerfilServiceConfig;
 
 describe("PerfilService tests", () => {
@@ -48,11 +60,13 @@ describe("PerfilService tests", () => {
     jest.clearAllMocks();
     localRepository = new PerfilLocalStorageRepository();
     remoteRepository = new PerfilAPIRepository();
+    syncHelpers = new SyncHelpers();
 
     perfilServiceTestConfig = {
       isConnected,
       localRepository,
       remoteRepository,
+      syncHelpers,
     };
 
     perfilService = new PerfilService(perfilServiceTestConfig);
@@ -105,6 +119,30 @@ describe("PerfilService tests", () => {
   });
 
   describe("PerfilService 2nd run", () => {
+    describe("create method tests", () => {
+      it("should create an perfil remotely when online", async () => {
+        const result = await perfilService.create(perfilInput);
+
+        expect(localRepository.create).not.toHaveBeenCalled();
+        expect(remoteRepository.create).toHaveBeenCalledWith(perfilInput);
+        expect(result).toBeUndefined();
+      });
+
+      it("should store an perfil locally when offline", async () => {
+        perfilService = new PerfilService({
+          isConnected: false,
+          localRepository: localRepository,
+          remoteRepository: remoteRepository,
+        });
+
+        await perfilService.create(perfilInput);
+
+        expect(localRepository.create).toHaveBeenCalledWith(perfilInput);
+        expect(remoteRepository.create).not.toHaveBeenCalled();
+        expect(localRepository.delete).not.toHaveBeenCalled();
+      });
+    });
+
     describe("getPerfilOptions method", () => {
       it("should get perfil options from local repository if offline", async () => {
         perfilService = new PerfilService({
@@ -155,43 +193,26 @@ describe("PerfilService tests", () => {
       });
       it("should get gruposProdutos from remote repository and save in localRepo if online", async () => {
         jest
+          .spyOn(localRepository, "getGruposProdutos")
+          .mockResolvedValue({} as GruposProdutosOptions);
+
+        jest
           .spyOn(remoteRepository, "getGruposProdutos")
           .mockResolvedValueOnce(perfilInput);
 
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(true);
+
         const gruposProdutos = await perfilService.getGruposProdutos();
 
+        expect(localRepository.getGruposProdutos).toHaveBeenCalled();
+        expect(syncHelpers.shouldSync).toHaveBeenCalled();
         expect(remoteRepository.getGruposProdutos).toHaveBeenCalled();
-        expect(localRepository.getGruposProdutos).not.toHaveBeenCalled();
         expect(localRepository.saveGruposProdutos).toHaveBeenCalledWith(
           perfilInput
         );
         expect(gruposProdutos).toEqual(perfilInput);
       });
     });
-    describe("create method tests", () => {
-      it("should create an perfil remotely when online", async () => {
-        const result = await perfilService.create(perfilInput);
-
-        expect(localRepository.create).not.toHaveBeenCalled();
-        expect(remoteRepository.create).toHaveBeenCalledWith(perfilInput);
-        expect(result).toBeUndefined();
-      });
-
-      it("should store an perfil locally when offline", async () => {
-        perfilService = new PerfilService({
-          isConnected: false,
-          localRepository: localRepository,
-          remoteRepository: remoteRepository,
-        });
-
-        await perfilService.create(perfilInput);
-
-        expect(localRepository.create).toHaveBeenCalledWith(perfilInput);
-        expect(remoteRepository.create).not.toHaveBeenCalled();
-        expect(localRepository.delete).not.toHaveBeenCalled();
-      });
-    });
-
     describe("sync method tests", () => {
       it("should retrieve all perfils from local repository", async () => {
         localRepository.findAll = jest.fn().mockResolvedValue([perfilInput]);

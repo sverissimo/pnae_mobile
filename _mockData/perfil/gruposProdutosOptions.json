@@ -1,0 +1,2090 @@
+{
+  "grupos": [
+    {
+      "id_grupo": "78",
+      "id_grupo_legado": 1,
+      "tipo": 1,
+      "nm_grupo": "OLERICULTURA",
+      "dados_producao_estratificados_por_produto": false
+    },
+    {
+      "id_grupo": "80",
+      "id_grupo_legado": 5,
+      "tipo": 1,
+      "nm_grupo": "AGROEXTRATIVISMO",
+      "dados_producao_estratificados_por_produto": false
+    },
+    {
+      "id_grupo": "81",
+      "id_grupo_legado": 6,
+      "tipo": 1,
+      "nm_grupo": "PLANTAS CONDIMENTARES",
+      "dados_producao_estratificados_por_produto": false
+    },
+    {
+      "id_grupo": "110",
+      "id_grupo_legado": 9,
+      "tipo": 1,
+      "nm_grupo": "OUTROS",
+      "dados_producao_estratificados_por_produto": false
+    },
+    {
+      "id_grupo": "79",
+      "id_grupo_legado": 2,
+      "tipo": 1,
+      "nm_grupo": "FRUTICULTURA",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "82",
+      "id_grupo_legado": 8,
+      "tipo": 1,
+      "nm_grupo": "CEREAIS e GRÃOS",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "56",
+      "id_grupo_legado": 1,
+      "tipo": 0,
+      "nm_grupo": "Aves",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "57",
+      "id_grupo_legado": 2,
+      "tipo": 0,
+      "nm_grupo": "Peixe",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "58",
+      "id_grupo_legado": 3,
+      "tipo": 0,
+      "nm_grupo": "Bovino",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "59",
+      "id_grupo_legado": 4,
+      "tipo": 0,
+      "nm_grupo": "Bebida",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "60",
+      "id_grupo_legado": 6,
+      "tipo": 0,
+      "nm_grupo": "Mandioca",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "61",
+      "id_grupo_legado": 7,
+      "tipo": 0,
+      "nm_grupo": "Milho",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "62",
+      "id_grupo_legado": 8,
+      "tipo": 0,
+      "nm_grupo": "Mel",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "63",
+      "id_grupo_legado": 9,
+      "tipo": 0,
+      "nm_grupo": "Quitandas",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "64",
+      "id_grupo_legado": 10,
+      "tipo": 0,
+      "nm_grupo": "Hortaliças e Condimentos",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "65",
+      "id_grupo_legado": 11,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de vaca",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "66",
+      "id_grupo_legado": 12,
+      "tipo": 0,
+      "nm_grupo": "Café",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "67",
+      "id_grupo_legado": 14,
+      "tipo": 0,
+      "nm_grupo": "Ovino",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "68",
+      "id_grupo_legado": 15,
+      "tipo": 0,
+      "nm_grupo": "Caprino",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "69",
+      "id_grupo_legado": 16,
+      "tipo": 0,
+      "nm_grupo": "Suino",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "70",
+      "id_grupo_legado": 17,
+      "tipo": 0,
+      "nm_grupo": "Doce",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "71",
+      "id_grupo_legado": 25,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de búfala",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "72",
+      "id_grupo_legado": 26,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de cabra",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "73",
+      "id_grupo_legado": 27,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de ovelha",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "74",
+      "id_grupo_legado": 31,
+      "tipo": 0,
+      "nm_grupo": "Ovos",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "75",
+      "id_grupo_legado": 32,
+      "tipo": 0,
+      "nm_grupo": "Frutas - Outros",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "76",
+      "id_grupo_legado": 34,
+      "tipo": 0,
+      "nm_grupo": "Cana-de-açúcar",
+      "dados_producao_estratificados_por_produto": true
+    },
+    {
+      "id_grupo": "77",
+      "id_grupo_legado": 36,
+      "tipo": 0,
+      "nm_grupo": "Queijos artesanais",
+      "dados_producao_estratificados_por_produto": true
+    }
+  ],
+  "produtos": [
+    {
+      "id_produto": "929",
+      "id_legado": 3,
+      "nm_produto": "Frango e outras",
+      "tipo": 0,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "980",
+      "id_legado": 6,
+      "nm_produto": "Carne Suína",
+      "tipo": 0,
+      "id_grupo_legado": 16,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "981",
+      "id_legado": 103,
+      "nm_produto": "Embutidos (Frescos ou Defumados)",
+      "tipo": 0,
+      "id_grupo_legado": 16,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "982",
+      "id_legado": 7,
+      "nm_produto": "Geleia",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "983",
+      "id_legado": 8,
+      "nm_produto": "Doce Barra",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "984",
+      "id_legado": 9,
+      "nm_produto": "Compota",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "985",
+      "id_legado": 10,
+      "nm_produto": "Fruta Cristalizada",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "986",
+      "id_legado": 11,
+      "nm_produto": "Polpadas",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "987",
+      "id_legado": 102,
+      "nm_produto": "Geléia de Mocotó",
+      "tipo": 0,
+      "id_grupo_legado": 17,
+      "sg_und_medida": "Kg"
+    },
+    {
+      "id_produto": "988",
+      "id_legado": 62,
+      "nm_produto": "Queijo Muçarela",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "989",
+      "id_legado": 63,
+      "nm_produto": "Queijo Minas Padrão",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "990",
+      "id_legado": 64,
+      "nm_produto": "Ricota",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "991",
+      "id_legado": 65,
+      "nm_produto": "Burrata",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "992",
+      "id_legado": 67,
+      "nm_produto": "Requeijão",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "993",
+      "id_legado": 68,
+      "nm_produto": "Iogurte",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "994",
+      "id_legado": 69,
+      "nm_produto": "Manteiga",
+      "tipo": 0,
+      "id_grupo_legado": 25,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "995",
+      "id_legado": 70,
+      "nm_produto": "Queijo Minas Frescal",
+      "tipo": 0,
+      "id_grupo_legado": 26,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "996",
+      "id_legado": 71,
+      "nm_produto": "Boursin",
+      "tipo": 0,
+      "id_grupo_legado": 26,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "997",
+      "id_legado": 73,
+      "nm_produto": "Iogurte",
+      "tipo": 0,
+      "id_grupo_legado": 26,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "998",
+      "id_legado": 74,
+      "nm_produto": "Feta",
+      "tipo": 0,
+      "id_grupo_legado": 26,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "999",
+      "id_legado": 76,
+      "nm_produto": "Iogurte",
+      "tipo": 0,
+      "id_grupo_legado": 27,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "1000",
+      "id_legado": 77,
+      "nm_produto": "Feta",
+      "tipo": 0,
+      "id_grupo_legado": 27,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1001",
+      "id_legado": 78,
+      "nm_produto": "Pecorino Romano",
+      "tipo": 0,
+      "id_grupo_legado": 27,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1002",
+      "id_legado": 79,
+      "nm_produto": "Roquefort",
+      "tipo": 0,
+      "id_grupo_legado": 27,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1003",
+      "id_legado": 89,
+      "nm_produto": "Codorna",
+      "tipo": 0,
+      "id_grupo_legado": 31,
+      "sg_und_medida": "dz"
+    },
+    {
+      "id_produto": "1004",
+      "id_legado": 90,
+      "nm_produto": "Galinha",
+      "tipo": 0,
+      "id_grupo_legado": 31,
+      "sg_und_medida": "dz"
+    },
+    {
+      "id_produto": "1005",
+      "id_legado": 16,
+      "nm_produto": "Chips",
+      "tipo": 0,
+      "id_grupo_legado": 32,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1006",
+      "id_legado": 17,
+      "nm_produto": "Fruta Desidratada",
+      "tipo": 0,
+      "id_grupo_legado": 32,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1007",
+      "id_legado": 104,
+      "nm_produto": "Fruta congelada/Fruta minimamente processada",
+      "tipo": 0,
+      "id_grupo_legado": 32,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1008",
+      "id_legado": 19,
+      "nm_produto": "Açúcar Mascavo",
+      "tipo": 0,
+      "id_grupo_legado": 34,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1009",
+      "id_legado": 20,
+      "nm_produto": "Melado",
+      "tipo": 0,
+      "id_grupo_legado": 34,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1010",
+      "id_legado": 21,
+      "nm_produto": "Rapadura",
+      "tipo": 0,
+      "id_grupo_legado": 34,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1011",
+      "id_legado": 22,
+      "nm_produto": "Rapadurinha",
+      "tipo": 0,
+      "id_grupo_legado": 34,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1012",
+      "id_legado": 23,
+      "nm_produto": "Cachaça",
+      "tipo": 0,
+      "id_grupo_legado": 34,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "1013",
+      "id_legado": 81,
+      "nm_produto": "Queijo Cabacinha",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1014",
+      "id_legado": 82,
+      "nm_produto": "Queijo Artesanal não caracterizado",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1015",
+      "id_legado": 83,
+      "nm_produto": "Requeijão Moreno",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1016",
+      "id_legado": 84,
+      "nm_produto": "Queijo Artesanal de Alagoa",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1017",
+      "id_legado": 85,
+      "nm_produto": "Queijo Suaçui",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1018",
+      "id_legado": 98,
+      "nm_produto": "Queijo Minas Artesanal - QMA",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1019",
+      "id_legado": 99,
+      "nm_produto": "Queijo Artesanal Mantiqueira de Minas",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1020",
+      "id_legado": 100,
+      "nm_produto": "Queijo Serra Geral",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1021",
+      "id_legado": 101,
+      "nm_produto": "Queijo Ibitipoca",
+      "tipo": 0,
+      "id_grupo_legado": 36,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1022",
+      "id_legado": 1,
+      "nm_produto": "ABÓBORA JACAREZINHO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1023",
+      "id_legado": 2,
+      "nm_produto": "ABÓBORA JERIMUM",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1024",
+      "id_legado": 3,
+      "nm_produto": "ABÓBORA MOGANGO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1025",
+      "id_legado": 4,
+      "nm_produto": "ABÓBORA GOIANINHA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1026",
+      "id_legado": 5,
+      "nm_produto": "ABOBRINHA ITALIANA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1027",
+      "id_legado": 6,
+      "nm_produto": "ABOBRINHA MARIMBA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1028",
+      "id_legado": 7,
+      "nm_produto": "ABOBRINHA MENINA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1029",
+      "id_legado": 8,
+      "nm_produto": "ACELGA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1030",
+      "id_legado": 9,
+      "nm_produto": "AGRIÃO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1031",
+      "id_legado": 10,
+      "nm_produto": "ALFACE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1032",
+      "id_legado": 11,
+      "nm_produto": "ALHO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1033",
+      "id_legado": 12,
+      "nm_produto": "BATATA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1034",
+      "id_legado": 13,
+      "nm_produto": "BATATA DOCE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1035",
+      "id_legado": 14,
+      "nm_produto": "BERINJELA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1036",
+      "id_legado": 15,
+      "nm_produto": "BETERRABA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1037",
+      "id_legado": 16,
+      "nm_produto": "BRÓCOLIS",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1038",
+      "id_legado": 17,
+      "nm_produto": "CARÁ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1039",
+      "id_legado": 18,
+      "nm_produto": "CAXIXE / CAXI",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1040",
+      "id_legado": 19,
+      "nm_produto": "CEBOLA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1041",
+      "id_legado": 20,
+      "nm_produto": "CEBOLA ROXA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1042",
+      "id_legado": 21,
+      "nm_produto": "CEBOLINHA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1043",
+      "id_legado": 22,
+      "nm_produto": "CENOURA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1044",
+      "id_legado": 24,
+      "nm_produto": "CHICÓRIA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1045",
+      "id_legado": 25,
+      "nm_produto": "CHUCHU",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1046",
+      "id_legado": 27,
+      "nm_produto": "COUVE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1047",
+      "id_legado": 28,
+      "nm_produto": "COUVE -FLOR",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1048",
+      "id_legado": 29,
+      "nm_produto": "ERVILHA TORTA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1049",
+      "id_legado": 30,
+      "nm_produto": "ESPINAFRE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1050",
+      "id_legado": 31,
+      "nm_produto": "INHAME",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1051",
+      "id_legado": 32,
+      "nm_produto": "JILÓ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1052",
+      "id_legado": 33,
+      "nm_produto": "MANDIOCA DE MESA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1053",
+      "id_legado": 34,
+      "nm_produto": "MANDIOQUINHA SALSA / BAROA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1054",
+      "id_legado": 36,
+      "nm_produto": "MAXIXE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1055",
+      "id_legado": 37,
+      "nm_produto": "MILHO VERDE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1056",
+      "id_legado": 38,
+      "nm_produto": "MORANGA COMUM",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1057",
+      "id_legado": 39,
+      "nm_produto": "MORANGA HÍBRIDA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1058",
+      "id_legado": 40,
+      "nm_produto": "MOSTARDA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1059",
+      "id_legado": 41,
+      "nm_produto": "ORA-PRO-NÓBIS",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1060",
+      "id_legado": 43,
+      "nm_produto": "PEPINO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1061",
+      "id_legado": 45,
+      "nm_produto": "PIMENTÃO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1062",
+      "id_legado": 46,
+      "nm_produto": "QUIABO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1063",
+      "id_legado": 47,
+      "nm_produto": "RABANETE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1064",
+      "id_legado": 48,
+      "nm_produto": "REPOLHO ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1065",
+      "id_legado": 49,
+      "nm_produto": "REPOLHO ROXO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1066",
+      "id_legado": 50,
+      "nm_produto": "RÚCULA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1067",
+      "id_legado": 51,
+      "nm_produto": "SALSA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1068",
+      "id_legado": 52,
+      "nm_produto": "SERRALHA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1069",
+      "id_legado": 53,
+      "nm_produto": "TAIOBA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1070",
+      "id_legado": 54,
+      "nm_produto": "TOMATE CEREJA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1071",
+      "id_legado": 55,
+      "nm_produto": "TOMATE LONGA VIDA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1072",
+      "id_legado": 56,
+      "nm_produto": "TOMATE MAÇÃ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1073",
+      "id_legado": 57,
+      "nm_produto": "TOMATE SANTA CRUZ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1074",
+      "id_legado": 58,
+      "nm_produto": "VAGEM ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1075",
+      "id_legado": 172,
+      "nm_produto": "MORANGA HÍBRIDA/CABOTIÁ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1076",
+      "id_legado": 173,
+      "nm_produto": "ALMEIRÃO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1077",
+      "id_legado": 174,
+      "nm_produto": "BERTALHA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1078",
+      "id_legado": 175,
+      "nm_produto": "NABO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1079",
+      "id_legado": 176,
+      "nm_produto": "PORONGO",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1080",
+      "id_legado": 190,
+      "nm_produto": "ABÓBORA JAPONESA / CABOTIÁ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1081",
+      "id_legado": 192,
+      "nm_produto": "ALHO-PORRÓ",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1082",
+      "id_legado": 193,
+      "nm_produto": "PALMITO PUPUNHA IN NATURA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1083",
+      "id_legado": 194,
+      "nm_produto": "PALMITO JUÇARA IN NATURA",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1084",
+      "id_legado": 196,
+      "nm_produto": "TOMATE GRAPE",
+      "tipo": 1,
+      "id_grupo_legado": 1,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1085",
+      "id_legado": 59,
+      "nm_produto": "ABACAXI",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1086",
+      "id_legado": 60,
+      "nm_produto": "ABACATE",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1087",
+      "id_legado": 61,
+      "nm_produto": "ACEROLA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1088",
+      "id_legado": 62,
+      "nm_produto": "AMEIXA BRASILEIRA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1089",
+      "id_legado": 63,
+      "nm_produto": "AMORA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1090",
+      "id_legado": 64,
+      "nm_produto": "ATEMÓIA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "930",
+      "id_legado": 5,
+      "nm_produto": "Pescado",
+      "tipo": 0,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "931",
+      "id_legado": 1,
+      "nm_produto": "Carne Bovina",
+      "tipo": 0,
+      "id_grupo_legado": 3,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "932",
+      "id_legado": 12,
+      "nm_produto": "Licor",
+      "tipo": 0,
+      "id_grupo_legado": 4,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "933",
+      "id_legado": 91,
+      "nm_produto": "Polpa Congelada",
+      "tipo": 0,
+      "id_grupo_legado": 4,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "934",
+      "id_legado": 92,
+      "nm_produto": "Suco",
+      "tipo": 0,
+      "id_grupo_legado": 4,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "935",
+      "id_legado": 93,
+      "nm_produto": "Vinho",
+      "tipo": 0,
+      "id_grupo_legado": 4,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "936",
+      "id_legado": 24,
+      "nm_produto": "Farinha",
+      "tipo": 0,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "937",
+      "id_legado": 25,
+      "nm_produto": "Polvilho Azedo",
+      "tipo": 0,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "938",
+      "id_legado": 26,
+      "nm_produto": "Polvilho Doce",
+      "tipo": 0,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "939",
+      "id_legado": 94,
+      "nm_produto": "Beiju",
+      "tipo": 0,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "940",
+      "id_legado": 27,
+      "nm_produto": "Farinha",
+      "tipo": 0,
+      "id_grupo_legado": 7,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "941",
+      "id_legado": 28,
+      "nm_produto": "Canjiquinha",
+      "tipo": 0,
+      "id_grupo_legado": 7,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "942",
+      "id_legado": 29,
+      "nm_produto": "Canjica Branca",
+      "tipo": 0,
+      "id_grupo_legado": 7,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "943",
+      "id_legado": 30,
+      "nm_produto": "Fubá",
+      "tipo": 0,
+      "id_grupo_legado": 7,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "944",
+      "id_legado": 31,
+      "nm_produto": "Pamonha",
+      "tipo": 0,
+      "id_grupo_legado": 7,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "945",
+      "id_legado": 32,
+      "nm_produto": "Mel ",
+      "tipo": 0,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "946",
+      "id_legado": 33,
+      "nm_produto": "Extrato Própolis",
+      "tipo": 0,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "947",
+      "id_legado": 34,
+      "nm_produto": "Própolis",
+      "tipo": 0,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "948",
+      "id_legado": 35,
+      "nm_produto": "Composto De Mel",
+      "tipo": 0,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "949",
+      "id_legado": 36,
+      "nm_produto": "Biscoito",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "950",
+      "id_legado": 37,
+      "nm_produto": "Bolo",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "951",
+      "id_legado": 38,
+      "nm_produto": "Broa",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "952",
+      "id_legado": 39,
+      "nm_produto": "Pão",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "953",
+      "id_legado": 40,
+      "nm_produto": "Rosca",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "954",
+      "id_legado": 41,
+      "nm_produto": "Pão De Queijo",
+      "tipo": 0,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "955",
+      "id_legado": 42,
+      "nm_produto": "Corantes",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "956",
+      "id_legado": 43,
+      "nm_produto": "Conservas",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "957",
+      "id_legado": 44,
+      "nm_produto": "Desidratados",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "958",
+      "id_legado": 45,
+      "nm_produto": "Vegetais Minimamente Processados",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "959",
+      "id_legado": 46,
+      "nm_produto": "Chips",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "960",
+      "id_legado": 95,
+      "nm_produto": "Tempero",
+      "tipo": 0,
+      "id_grupo_legado": 10,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "961",
+      "id_legado": 47,
+      "nm_produto": "Leite Pasteurizado",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "962",
+      "id_legado": 48,
+      "nm_produto": "Queijo Minas Frescal",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "963",
+      "id_legado": 49,
+      "nm_produto": "Queijo Parmesão",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "964",
+      "id_legado": 50,
+      "nm_produto": "Queijo Muçarela",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "965",
+      "id_legado": 51,
+      "nm_produto": "Queijo Minas Padrão",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "966",
+      "id_legado": 52,
+      "nm_produto": "Queijo Prato",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "967",
+      "id_legado": 53,
+      "nm_produto": "Queijo Provolone",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "968",
+      "id_legado": 54,
+      "nm_produto": "Ricota",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "969",
+      "id_legado": 55,
+      "nm_produto": "Queijo Coalho",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "970",
+      "id_legado": 57,
+      "nm_produto": "Requeijão",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "971",
+      "id_legado": 58,
+      "nm_produto": "Iogurte",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "972",
+      "id_legado": 59,
+      "nm_produto": "Doce De Leite",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "973",
+      "id_legado": 60,
+      "nm_produto": "Manteiga",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "974",
+      "id_legado": 96,
+      "nm_produto": "Bebida Láctea",
+      "tipo": 0,
+      "id_grupo_legado": 11,
+      "sg_und_medida": "litros"
+    },
+    {
+      "id_produto": "975",
+      "id_legado": 86,
+      "nm_produto": "Café Torrado Grãos",
+      "tipo": 0,
+      "id_grupo_legado": 12,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "976",
+      "id_legado": 87,
+      "nm_produto": "Café Torrado Moído",
+      "tipo": 0,
+      "id_grupo_legado": 12,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "977",
+      "id_legado": 88,
+      "nm_produto": "Café Torrado Cápsulas",
+      "tipo": 0,
+      "id_grupo_legado": 12,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "978",
+      "id_legado": 4,
+      "nm_produto": "Carne Ovina",
+      "tipo": 0,
+      "id_grupo_legado": 14,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "979",
+      "id_legado": 2,
+      "nm_produto": "Carne Caprina",
+      "tipo": 0,
+      "id_grupo_legado": 15,
+      "sg_und_medida": "kg"
+    },
+    {
+      "id_produto": "1091",
+      "id_legado": 65,
+      "nm_produto": "BANANA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1092",
+      "id_legado": 66,
+      "nm_produto": "BANANA MAÇÃ",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1093",
+      "id_legado": 67,
+      "nm_produto": "BANANA NANICA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1094",
+      "id_legado": 68,
+      "nm_produto": "BANANA OURO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1095",
+      "id_legado": 69,
+      "nm_produto": "BANANA PRATA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1096",
+      "id_legado": 70,
+      "nm_produto": "CAQUI",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1097",
+      "id_legado": 71,
+      "nm_produto": "CARAMBOLA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1098",
+      "id_legado": 72,
+      "nm_produto": "COCO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1099",
+      "id_legado": 74,
+      "nm_produto": "GOIABA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1100",
+      "id_legado": 75,
+      "nm_produto": "GRAVIOLA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1101",
+      "id_legado": 76,
+      "nm_produto": "JABUTICABA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1102",
+      "id_legado": 77,
+      "nm_produto": "LARANJA SELETA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1103",
+      "id_legado": 78,
+      "nm_produto": "LARANJA BAIANINHA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1104",
+      "id_legado": 79,
+      "nm_produto": "LARANJA KINKAN",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1105",
+      "id_legado": 80,
+      "nm_produto": "LARANJA LIMA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1629",
+      "id_legado": 197,
+      "nm_produto": "LEITE RESFRIADO",
+      "tipo": 1,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "LT"
+    },
+    {
+      "id_produto": "1630",
+      "id_legado": 198,
+      "nm_produto": "CAFÉ VERDE",
+      "tipo": 1,
+      "id_grupo_legado": 9,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "2790",
+      "id_legado": 199,
+      "nm_produto": "FRAMBOESA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "2791",
+      "id_legado": 200,
+      "nm_produto": "MIRTILO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1106",
+      "id_legado": 81,
+      "nm_produto": "LARANJA NATAL",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1107",
+      "id_legado": 82,
+      "nm_produto": "LARANJA PERA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1108",
+      "id_legado": 83,
+      "nm_produto": "LARANJA VALÊNCIA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1109",
+      "id_legado": 84,
+      "nm_produto": "LARANJA -OUTRAS",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1110",
+      "id_legado": 85,
+      "nm_produto": "LIMÃO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1111",
+      "id_legado": 86,
+      "nm_produto": "LIMÃO CRAVO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1112",
+      "id_legado": 87,
+      "nm_produto": "LIMÃO TAHITI",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1113",
+      "id_legado": 88,
+      "nm_produto": "LIMÃO GALEGO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1114",
+      "id_legado": 89,
+      "nm_produto": "MAÇÃ",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1115",
+      "id_legado": 90,
+      "nm_produto": "MAMÃO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1116",
+      "id_legado": 91,
+      "nm_produto": "MAMÃO COMUM",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1117",
+      "id_legado": 92,
+      "nm_produto": "MAMÃO FORMOSA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1118",
+      "id_legado": 93,
+      "nm_produto": "MAMÃO HAWAY",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1119",
+      "id_legado": 94,
+      "nm_produto": "MANGA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1120",
+      "id_legado": 95,
+      "nm_produto": "MARACUJÁ",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1121",
+      "id_legado": 96,
+      "nm_produto": "MELANCIA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1122",
+      "id_legado": 97,
+      "nm_produto": "MELÃO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1123",
+      "id_legado": 98,
+      "nm_produto": "MEXERICA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1124",
+      "id_legado": 99,
+      "nm_produto": "MORANGO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1125",
+      "id_legado": 100,
+      "nm_produto": "NECTARINA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1126",
+      "id_legado": 101,
+      "nm_produto": "NESPERA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1127",
+      "id_legado": 102,
+      "nm_produto": "PERA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1128",
+      "id_legado": 103,
+      "nm_produto": "PÊSSEGO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1129",
+      "id_legado": 104,
+      "nm_produto": "PINHA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1130",
+      "id_legado": 105,
+      "nm_produto": "SERIGUELA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1131",
+      "id_legado": 106,
+      "nm_produto": "TAMARINDO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1132",
+      "id_legado": 107,
+      "nm_produto": "TANGERINA PONKAN",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1133",
+      "id_legado": 108,
+      "nm_produto": "TANGERINA MURCOTT",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1134",
+      "id_legado": 109,
+      "nm_produto": "TANGERINA RIO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1135",
+      "id_legado": 110,
+      "nm_produto": "UVA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1136",
+      "id_legado": 111,
+      "nm_produto": "UVA ITÁLIA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1137",
+      "id_legado": 112,
+      "nm_produto": "UVA NIÁGARA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1138",
+      "id_legado": 113,
+      "nm_produto": "UVA RUBI",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1139",
+      "id_legado": 169,
+      "nm_produto": "BANANA DA TERRA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1140",
+      "id_legado": 177,
+      "nm_produto": "LIMA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1142",
+      "id_legado": 179,
+      "nm_produto": "FIGO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1143",
+      "id_legado": 180,
+      "nm_produto": "FRUTA DO CONDE",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1144",
+      "id_legado": 181,
+      "nm_produto": "JACA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1145",
+      "id_legado": 182,
+      "nm_produto": "JAMBO",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1146",
+      "id_legado": 183,
+      "nm_produto": "PITANGA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1147",
+      "id_legado": 191,
+      "nm_produto": "PITAYA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1148",
+      "id_legado": 163,
+      "nm_produto": "PEQUI",
+      "tipo": 1,
+      "id_grupo_legado": 5,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1149",
+      "id_legado": 164,
+      "nm_produto": "PANÂ / MAROLO / ARATICUM",
+      "tipo": 1,
+      "id_grupo_legado": 5,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1150",
+      "id_legado": 165,
+      "nm_produto": "PINHÃO",
+      "tipo": 1,
+      "id_grupo_legado": 5,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1151",
+      "id_legado": 195,
+      "nm_produto": "FRUTO DA JUÇARA",
+      "tipo": 1,
+      "id_grupo_legado": 5,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1152",
+      "id_legado": 26,
+      "nm_produto": "COENTRO",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1153",
+      "id_legado": 35,
+      "nm_produto": "MANJERICÃO",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1154",
+      "id_legado": 166,
+      "nm_produto": "CANELA EM CASCA",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1155",
+      "id_legado": 167,
+      "nm_produto": "COMINHO",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1156",
+      "id_legado": 188,
+      "nm_produto": "AÇAFRÃO",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1157",
+      "id_legado": 184,
+      "nm_produto": "ORÉGANO",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1158",
+      "id_legado": 189,
+      "nm_produto": "HORTELÃ",
+      "tipo": 1,
+      "id_grupo_legado": 6,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1159",
+      "id_legado": 186,
+      "nm_produto": "FEIJÃO",
+      "tipo": 1,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1160",
+      "id_legado": 187,
+      "nm_produto": "ARROZ",
+      "tipo": 1,
+      "id_grupo_legado": 8,
+      "sg_und_medida": "KG"
+    },
+    {
+      "id_produto": "1141",
+      "id_legado": 178,
+      "nm_produto": "BANANA D'ÁGUA",
+      "tipo": 1,
+      "id_grupo_legado": 2,
+      "sg_und_medida": "KG"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { PerfilModel } from "@domain/perfil";
+import { GruposProdutosOptions, PerfilModel } from "@domain/perfil";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { LocalStorageRepository } from "../LocalStorageRepository";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
@@ -35,7 +35,10 @@ export class PerfilLocalStorageRepository
 
   async getGruposProdutos() {
     const gruposProdutosString = await this.storage.getItem("gruposProdutos");
-    const gruposProdutos = JSON.parse(gruposProdutosString || "{}");
+    const gruposProdutos = JSON.parse(
+      gruposProdutosString || "{}"
+    ) as GruposProdutosOptions;
+
     return gruposProdutos;
   }
 

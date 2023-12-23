@@ -5,11 +5,13 @@ import {
 } from "./PerfilConfigService";
 import { PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
+import { SyncHelpers } from "@sync/SyncHelpers";
 
 export class PerfilService {
   private isConnected: boolean;
   private localRepository: PerfilRepository;
   private remoteRepository: PerfilRepository;
+  private syncHelpers: SyncHelpers;
 
   constructor(
     perfilServiceConfig: Partial<PerfilServiceConfig> = perfilDefaultConfig
@@ -18,6 +20,7 @@ export class PerfilService {
     this.isConnected = config.isConnected;
     this.localRepository = config.localRepository;
     this.remoteRepository = config.remoteRepository;
+    this.syncHelpers = config.syncHelpers;
   }
 
   create = async (perfil: PerfilModel) => {
@@ -63,13 +66,22 @@ export class PerfilService {
 
   getGruposProdutos = async () => {
     try {
-      if (!this.isConnected) {
-        const localGruposProdutos =
-          await this.localRepository.getGruposProdutos();
-        console.log("@@@ Getting gruposProdutos from localRepository");
+      const localGruposProdutos =
+        await this.localRepository.getGruposProdutos();
 
+      if (!this.isConnected) {
         return localGruposProdutos;
       }
+
+      const shouldUpdate = await this.syncHelpers.shouldSync(
+        1000 * 60 * 60 * 24 * 5
+      );
+
+      if (shouldUpdate && localGruposProdutos.grupos) {
+        console.log("@@@ GruposProdutos stil valid, not running sync.");
+        return;
+      }
+
       const gruposProdutos = await this.remoteRepository.getGruposProdutos();
 
       gruposProdutos &&
