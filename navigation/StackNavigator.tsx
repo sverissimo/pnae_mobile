@@ -15,6 +15,7 @@ import {
 import { ViewPerfilScreen } from "@features/perfil/screens/ViewPerfilScreen";
 import { globalColors } from "@constants/themes";
 import { SelectMultipleScreen } from "@features/perfil/screens/SelectMultipleScreen";
+import { InsertGroupsScreen } from "@features/perfil/screens/InsertGroupsScreen";
 
 const { primary, grayscale } = globalColors;
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -92,6 +93,13 @@ export function StackNavigator() {
         component={SelectMultipleScreen}
         options={{
           title: "Criar Novo Perfil",
+        }}
+      />
+      <Stack.Screen
+        name="InsertGroupScreen"
+        component={InsertGroupsScreen}
+        options={{
+          title: "Grupos de Prudutos",
         }}
       />
       <Stack.Screen

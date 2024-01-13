@@ -10,6 +10,7 @@ type AddButonProps = {
   buttonColor?: string;
   textColor?: string;
   disabled?: boolean;
+  mode?: "text" | "outlined" | "contained";
 };
 
 export const AddButton = (props: AddButonProps) => {

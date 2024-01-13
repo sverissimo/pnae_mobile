@@ -77,9 +77,9 @@ export class PerfilService {
         1000 * 60 * 60 * 24 * 5
       );
 
-      if (shouldUpdate && localGruposProdutos.grupos) {
+      if (!shouldUpdate && localGruposProdutos.grupos) {
         console.log("@@@ GruposProdutos stil valid, not running sync.");
-        return;
+        return localGruposProdutos;
       }
 
       const gruposProdutos = await this.remoteRepository.getGruposProdutos();

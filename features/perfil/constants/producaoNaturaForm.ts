@@ -2,9 +2,9 @@ import { FormElement } from "../../../@shared/types/FormElement";
 
 export const producaoNaturaForm: FormElement[] = [
   {
-    field: "gruposOptions",
+    field: "gruposNaturaOptions",
     label: "Grupo",
-    type: "select",
+    type: "navigateToScreen",
     options: [],
   },
   {

@@ -3,14 +3,16 @@ import { StyleSheet, Text, View } from "react-native";
 type FormFieldContainerProps = {
   label: string;
   children: React.ReactNode;
+  customStyles?: Record<string, number | string>;
 };
 export const FormFieldContainer = ({
   label,
   children,
+  customStyles = {},
 }: FormFieldContainerProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={{ ...styles.label, ...customStyles }}>{label}</Text>
       <View style={styles.children}>{children}</View>
     </View>
   );

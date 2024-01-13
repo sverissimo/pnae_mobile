@@ -4,10 +4,11 @@ import { primeNumbersArray } from "./constants/primeNumbersArray";
 import perfilOptions from "_mockData/perfil/perfilOptions.json";
 import perfilInputDTO from "_mockData/perfil/perfilInput.json";
 import perfilInput from "_mockData/perfil/perfil.json";
+import { PerfilModel } from "@domain/perfil";
 
 describe("PerfilAPIRepository", () => {
   let perfilAPIRepository: PerfilAPIRepository;
-  const perfil = { ...perfilInput, ...perfilInputDTO };
+  const perfil = { ...perfilInput, ...perfilInputDTO } as PerfilModel;
 
   beforeEach(() => {
     perfilAPIRepository = new PerfilAPIRepository();

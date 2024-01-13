@@ -10,6 +10,7 @@ type TextInputComponentProps = {
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
   onChangeText: (value: string) => void;
   customHelper?: string;
+  customStyles?: Record<string, number | string>;
 };
 
 export const TextInputComponent = ({
@@ -19,10 +20,11 @@ export const TextInputComponent = ({
   keyboardType,
   customHelper,
   onChangeText,
+  customStyles = {},
 }: TextInputComponentProps) => {
   return (
     <>
-      <FormFieldContainer label={label}>
+      <FormFieldContainer label={label} customStyles={customStyles}>
         <View>
           <TextInput
             key={item.field}

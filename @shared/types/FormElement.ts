@@ -9,7 +9,8 @@ export type FormElement = {
     | "image"
     | "textEditor"
     | "signature"
-    | "toggle-input";
+    | "toggle-input"
+    | "navigateToScreen";
   options?: string[] | number[];
   dependsOn?: string;
   dependsOnValues?: string[];

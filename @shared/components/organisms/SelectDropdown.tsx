@@ -7,7 +7,6 @@ type SelectDropdownProps = {
   label: string;
   options: any;
   onSelect: any;
-  value: any;
 };
 export const SelectDropdown = ({
   label,

@@ -2,6 +2,12 @@ import { FormElement } from "../../../@shared/types/FormElement";
 
 export const producaoIndustrialForm: FormElement[] = [
   {
+    field: "gruposIndustrialOptions",
+    label: "Grupos de Produtos",
+    type: "navigateToScreen",
+    options: [],
+  },
+  {
     field: "possui_agroindustria_propria",
     label: "Possui Agroindústria Própria",
     type: "radio",

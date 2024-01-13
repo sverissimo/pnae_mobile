@@ -7,12 +7,14 @@ import {
   TextInputComponent,
 } from "../organisms";
 import { MultiSelectRow } from "../organisms/MultiSelectRow";
+import { InsertGroupRow } from "../organisms/InsertGroupRow";
 
 type FormTemplateProps = {
   form: FormElement[];
   data: any;
   onValueChange?: any;
   navigateTo?: any;
+  customStyles?: any;
 };
 
 export function FormTemplate({
@@ -20,6 +22,7 @@ export function FormTemplate({
   data,
   onValueChange,
   navigateTo,
+  customStyles,
 }: FormTemplateProps) {
   return (
     <View>
@@ -36,7 +39,7 @@ export function FormTemplate({
                 label={item.label}
                 options={item.options}
                 onSelect={(value: any) => onValueChange(item.field, value)}
-                value={data[item.field]}
+                // value={data[item.field]}
               />
             );
           case "selectMultiple":
@@ -46,6 +49,14 @@ export function FormTemplate({
                 item={item}
                 selectedItems={data[item.field]}
                 navigateTo={navigateTo}
+              />
+            );
+          case "navigateToScreen":
+            return (
+              <InsertGroupRow
+                key={item.key || item.field}
+                item={item}
+                selectedItems={data[item.field]}
               />
             );
           case "radio":
@@ -73,6 +84,7 @@ export function FormTemplate({
                   item.customHelperField ? data[item.customHelperField] : ""
                 }
                 keyboardType={item.keyboardType}
+                customStyles={customStyles}
               />
             );
           case "textEditor":
