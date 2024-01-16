@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { useManageGrupos } from "../hooks/useManageGrupos";
 import { useCustomNavigation } from "@navigation/hooks";
@@ -23,15 +23,28 @@ export const InsertGroupsScreen = ({ route }: any) => {
     removeProduto,
   } = useManageGrupos(field);
 
-  console.log(
-    "🚀 - InsertGroupsScreen - selectedGrupos:",
-    JSON.stringify(selectedGrupos)
-  );
+  // console.log(
+  //   "🚀 - InsertGroupsScreen - selectedGrupos:",
+  //   JSON.stringify(selectedGrupos)
+  // );
 
   const [activeProduto, setActiveProduto] = useState<ProdutoDetails>();
+  const [enableAddGrupo, setEnableAddGrupo] = useState<boolean>(false);
+
   const [state, setstate] = useState<GrupoProdutos[]>([]);
 
-  // console.log("🚀 - InsertGroupsScreen - state:", JSON.stringify(state));
+  useEffect(() => {
+    const shouldEnable = selectedGrupos.every(
+      (grupo) =>
+        Object.keys(grupo).length > 0 &&
+        grupo.at_prf_see_produto.some(
+          (produto) => Object.keys(produto).length > 0
+        ) &&
+        availableGrupos.length > 0
+    );
+
+    setEnableAddGrupo(shouldEnable);
+  }, [selectedGrupos]);
 
   const onValueChange = (field: string, value: number) => {
     if (!activeProduto?.nm_produto) return;
@@ -74,20 +87,20 @@ export const InsertGroupsScreen = ({ route }: any) => {
             <View key={groupIndex + 50} style={styles.titleContainer}>
               <Text style={styles.title}>{grupo.nm_grupo}</Text>
             </View>
-          ) : (
+          ) : availableGrupos.length ? (
             <SelectDropdown
               key={groupIndex + 100}
               label="Adicionar grupo"
               options={availableGrupos}
               onSelect={(group: string) => handleSelectGrupo(group)}
             />
-          )}
+          ) : null}
           {grupo?.nm_grupo &&
             grupo.at_prf_see_produto.map((produto, index) =>
               !produto.nm_produto &&
               filterAddProdutoOptions(grupo).length > 0 ? (
                 <SelectDropdown
-                  key={produto.id_produto}
+                  key={produto.id_produto || index + 741}
                   label="Adicionar produto"
                   options={filterAddProdutoOptions(grupo)}
                   onSelect={(product: string) => handleSelectProduto(product)}
@@ -95,7 +108,7 @@ export const InsertGroupsScreen = ({ route }: any) => {
               ) : (
                 produto.nm_produto && (
                   <ProdutosDetailsInput
-                    key={produto.id_produto + index}
+                    key={produto.nm_produto || index + 852}
                     setActiveProduto={setActiveProduto}
                     selectedProduto={produto}
                     onValueChange={onValueChange}
@@ -110,9 +123,14 @@ export const InsertGroupsScreen = ({ route }: any) => {
       <View style={styles.buttonsContainer}>
         <Button
           onPress={addGrupo}
-          textColor={globalColors.primary[900]}
+          textColor={
+            enableAddGrupo
+              ? globalColors.primary[900]
+              : globalColors.grayscale[400]
+          }
           buttonColor={globalColors.grayscale[200]}
           icon={"plus"}
+          disabled={!enableAddGrupo}
         >
           Adicionar Grupo
         </Button>

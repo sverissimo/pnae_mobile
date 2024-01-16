@@ -8,7 +8,7 @@ import {
   ProdutoDetails,
 } from "@domain/perfil/GrupoProdutos";
 
-export const useManageGrupos = (field: string) => {
+export const useManageGrupos = (field?: string) => {
   const { isConnected } = useManageConnection();
 
   const [gruposOptions, setGruposOptions] = useState([] as GrupoDetails[]);
@@ -25,52 +25,49 @@ export const useManageGrupos = (field: string) => {
   );
 
   useEffect(() => {
-    const getGruposProdutosOptions = async () => {
-      const perfilService = new PerfilService({
-        isConnected: !!isConnected,
-      });
-      const gruposProdutosOptions = await perfilService.getGruposProdutos();
-      if (gruposProdutosOptions?.grupos && gruposProdutosOptions?.produtos) {
-        const {
-          grupos,
-          produtos,
-        }: { grupos: GrupoDetails[]; produtos: ProdutoDetails[] } =
-          gruposProdutosOptions;
-
-        const filteredGroups = filterByProductionType(grupos);
-        const filteredProducts = filterByProductionType(produtos);
-        setGruposOptions(filteredGroups);
-        setProdutosOptions(filteredProducts);
-      }
-    };
-    getGruposProdutosOptions();
+    fetchGruposProdutosOptions();
   }, []);
 
   useEffect(() => {
-    const initGroups = () => {
-      if (!selectedGrupos[0]?.nm_grupo) {
-        const allGroupOptions = gruposOptions.map((g) => g.nm_grupo);
-        console.log("🚀 - initGroups - allGroupOptions:", allGroupOptions);
-        setAvailableGrupos(allGroupOptions);
-        return;
-      }
-
-      const produtos = selectedProdutos.filter((p) =>
-        selectedGrupos.some(
-          (g) => g?.id_grupo_produtos === p?.id_grupo_legado?.toString()
-        )
-      );
-      if (!produtos.length) return;
-
-      const availableGrupos = gruposOptions
-        .filter(
-          (g) => !selectedGrupos.some((sg) => sg?.nm_grupo === g?.nm_grupo)
-        )
-        .map((g) => g.nm_grupo);
-      setAvailableGrupos(availableGrupos);
-    };
-    initGroups();
+    updateAvailableGrupos();
   }, [gruposOptions, selectedGrupos]);
+
+  const fetchGruposProdutosOptions = async () => {
+    const perfilService = new PerfilService({ isConnected: !!isConnected });
+    const gruposProdutosOptions = await perfilService.getGruposProdutos();
+
+    if (gruposProdutosOptions?.grupos && gruposProdutosOptions?.produtos) {
+      const { grupos, produtos } = gruposProdutosOptions;
+
+      const filteredGroups = filterByProductionType(grupos);
+      const filteredProducts = filterByProductionType(produtos);
+      setGruposOptions(filteredGroups);
+      setProdutosOptions(filteredProducts);
+    }
+  };
+
+  const updateAvailableGrupos = () => {
+    if (!selectedGrupos[0]?.nm_grupo) {
+      const allGroupOptions = gruposOptions
+        .map((g) => g.nm_grupo)
+        .sort((a, b) => a.localeCompare(b));
+
+      setAvailableGrupos(allGroupOptions);
+      return;
+    }
+
+    const produtos = selectedProdutos.filter((p) =>
+      selectedGrupos.some(
+        (g) => g?.id_grupo_produtos === p?.id_grupo_legado?.toString()
+      )
+    );
+    if (!produtos.length) return;
+
+    const availableGrupos = gruposOptions
+      .filter((g) => !selectedGrupos.some((sg) => sg?.nm_grupo === g?.nm_grupo))
+      .map((g) => g.nm_grupo);
+    setAvailableGrupos(availableGrupos);
+  };
 
   const filterByProductionType = <T extends GrupoDetails | ProdutoDetails>(
     list: T[]
@@ -121,32 +118,40 @@ export const useManageGrupos = (field: string) => {
     setSelectedGrupos(grupos);
   };
 
+  // ***** TODO: Fix when changing selection in different group *****
   const handleSelectProduto = (produto: string) => {
     const selectedProduto = produtosOptions.find(
       (p) => p.nm_produto === produto
     )!;
+
     const selectedGroup = gruposOptions.find(
       (g) => g.id_grupo_legado == selectedProduto?.id_grupo_legado
     )!;
 
-    const produtos = selectedProdutos.filter(
-      (p) => p?.id_grupo_legado === selectedGroup.id_grupo_legado
-    ) as Produto[];
+    const grupos = selectedGrupos.map((group) => group) as GrupoDetails[];
 
+    const alreadySelectedProdutos =
+      (grupos.find(
+        (g) => g.id_grupo_legado === selectedProduto?.id_grupo_legado
+      )?.at_prf_see_produto as Produto[]) || [];
+
+    const produtos = [...alreadySelectedProdutos];
     const productIndex = produtos.findIndex((p) => !p.nm_produto);
-    if (productIndex !== -1) {
-      produtos[productIndex] = selectedProduto as Produto;
-    } else {
+
+    if (productIndex === -1) {
       produtos.push(selectedProduto as Produto);
+    } else {
+      produtos[productIndex] = selectedProduto as Produto;
     }
+
     produtos.push({} as Produto);
 
-    const index = selectedGrupos.findIndex(
-      (g) => g?.nm_grupo === selectedGroup.nm_grupo
+    const updatedGrupos = selectedGrupos.map((group) =>
+      group.nm_grupo === selectedGroup.nm_grupo
+        ? { ...group, at_prf_see_produto: produtos }
+        : group
     );
 
-    const updatedGrupos = [...selectedGrupos] as GrupoProdutos[];
-    updatedGrupos[index].at_prf_see_produto = produtos;
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
   };

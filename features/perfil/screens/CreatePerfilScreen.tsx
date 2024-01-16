@@ -12,8 +12,8 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
 
   const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
 
-  const { gruposOptions, produtosOptions, setSelectedGrupos } =
-    useManageGrupos();
+  // const { gruposOptions, produtosOptions, setSelectedGrupos } =
+  //   useManageGrupos();
 
   const [state, setState] = useState<any>({});
 
@@ -24,13 +24,13 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   }, [key, selectedItems]);
 
   const handleChange = (name: string, value: any) => {
-    if (name === "gruposOptions") {
-      const selectedGrupo = gruposOptions.find(
-        (grupo) => grupo.nm_grupo === value
-      );
-      setSelectedGrupos(selectedGrupo!);
-      return;
-    }
+    // if (name === "gruposOptions") {
+    //   const selectedGrupo = gruposOptions.find(
+    //     (grupo) => grupo.nm_grupo === value
+    //   );
+    //   setSelectedGrupos(selectedGrupo!);
+    //   return;
+    // }
     setState((state: any) => ({ ...state, [name]: value }));
   };
 

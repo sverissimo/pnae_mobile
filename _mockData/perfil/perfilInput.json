@@ -48,6 +48,8 @@
     "at_prf_see_grupos_produtos": [
       {
         "id": "135",
+        "id_grupo_produtos": "1",
+        "id_dados_producao": "2",
         "area_utilizada": 1,
         "producao_aproximada_ultimo_ano_pnae": "200",
         "producao_aproximada_ultimo_ano_total": "200",
@@ -57,10 +59,12 @@
         "at_prf_see_produto": [
           {
             "id_produto": "1091",
+            "id_grupo_produto": "12",
             "area_utilizada": 0.5,
             "producao_aproximada_ultimo_ano_pnae": "300",
             "producao_aproximada_ultimo_ano_total": "300",
             "at_prf_produto": {
+              "id_produto": "14",
               "nm_produto": "BANANA",
               "sg_und_medida": "KG"
             },
@@ -88,17 +92,22 @@
     "at_prf_see_grupos_produtos": [
       {
         "id": "134",
+        "id_grupo_produtos": "1",
+        "id_dados_producao": "2",
         "producao_aproximada_ultimo_ano_pnae": "200",
         "producao_aproximada_ultimo_ano_total": "200",
         "at_prf_grupo_produto": {
+          "id_produto": "14",
           "nm_grupo": "Ovos"
         },
         "at_prf_see_produto": [
           {
             "id_produto": "1004",
+            "id_grupo_produto": "12",
             "producao_aproximada_ultimo_ano_pnae": "0",
             "producao_aproximada_ultimo_ano_total": "0",
             "at_prf_produto": {
+              "id_produto": "14",
               "nm_produto": "Galinha",
               "sg_und_medida": "dz"
             },

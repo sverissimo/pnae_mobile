@@ -23,6 +23,7 @@ export type GrupoDetails = {
   id_grupo_legado?: number;
   tipo?: number;
   nm_grupo: string;
+  at_prf_see_produto?: Produto[];
 };
 
 export type GrupoProdutos = {
