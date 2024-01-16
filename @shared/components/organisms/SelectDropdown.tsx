@@ -14,7 +14,7 @@ export const SelectDropdown = ({
   onSelect,
 }: SelectDropdownProps) => {
   return (
-    <FormFieldContainer label={label}>
+    <FormFieldContainer key={label} label={label}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}

@@ -9,6 +9,7 @@ export type ProdutoDetails = {
 
 export type Produto = {
   id_produto: string;
+  id_grupo_produto: string;
   area_utilizada?: number | null;
   producao_aproximada_ultimo_ano_pnae: string | null;
   producao_aproximada_ultimo_ano_total: string | null;
@@ -26,6 +27,8 @@ export type GrupoDetails = {
 
 export type GrupoProdutos = {
   id: string;
+  id_grupo_produtos: string;
+  id_dados_producao: string;
   area_utilizada?: number | null;
   producao_aproximada_ultimo_ano_pnae?: string | null;
   producao_aproximada_ultimo_ano_total?: string | null;

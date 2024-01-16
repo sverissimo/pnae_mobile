@@ -72,7 +72,11 @@ export function FormTemplate({
             return (
               <TextInputComponent
                 key={item.key || item.field}
-                label={item.label}
+                label={
+                  data?.sg_und_medida && item.field !== "area_utilizada"
+                    ? item.label + " (" + data.sg_und_medida.toLowerCase() + ")"
+                    : item.label
+                }
                 item={item}
                 onChangeText={(value: any) => onValueChange(item.field, value)}
                 value={

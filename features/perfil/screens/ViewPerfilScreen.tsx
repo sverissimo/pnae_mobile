@@ -26,6 +26,10 @@ export const ViewPerfilScreen = ({ route }: any) => {
     ...at_prf_see_propriedade,
     municipio,
   };
+  // console.log(
+  //   "🚀 - ViewPerfilScreen - dados_producao_in_natura:",
+  //   JSON.stringify(dados_producao_in_natura.at_prf_see_grupos_produtos)
+  // );
 
   const date = formatDate(perfil?.data_preenchimento);
 

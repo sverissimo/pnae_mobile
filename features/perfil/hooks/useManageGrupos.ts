@@ -1,26 +1,27 @@
-import { GrupoDetails, ProdutoDetails } from "@domain/perfil/GrupoProdutos";
+import { useEffect, useState } from "react";
 import { PerfilService } from "@services/perfil/PerfilService";
 import { useManageConnection } from "@shared/hooks/useManageConnection";
-import { useEffect, useState } from "react";
+import {
+  GrupoDetails,
+  GrupoProdutos,
+  Produto,
+  ProdutoDetails,
+} from "@domain/perfil/GrupoProdutos";
 
-enum Atividade {
-  primaria = "Atividade Primária",
-  secundaria = "Atividade Secundária",
-  Ambas = "Ambas",
-}
-
-export const useManageGrupos = () => {
+export const useManageGrupos = (field: string) => {
   const { isConnected } = useManageConnection();
-  const [selectedGrupos, setSelectedGrupos] = useState({} as GrupoDetails);
-  const [filteredProdutosOptions, setFilteredProdutosOptions] = useState(
-    [] as ProdutoDetails[]
-  );
-  const [typeOfAtividade, setTypeOfAtividade] = useState<Atividade>(
-    "" as Atividade
-  );
+
   const [gruposOptions, setGruposOptions] = useState([] as GrupoDetails[]);
   const [produtosOptions, setProdutosOptions] = useState(
     [] as ProdutoDetails[]
+  );
+
+  const [selectedGrupos, setSelectedGrupos] = useState<GrupoProdutos[]>([
+    {} as GrupoProdutos,
+  ]);
+  const [availableGrupos, setAvailableGrupos] = useState<string[]>([]);
+  const [selectedProdutos, setSelectedProdutos] = useState<ProdutoDetails[]>(
+    []
   );
 
   useEffect(() => {
@@ -30,60 +31,171 @@ export const useManageGrupos = () => {
       });
       const gruposProdutosOptions = await perfilService.getGruposProdutos();
       if (gruposProdutosOptions?.grupos && gruposProdutosOptions?.produtos) {
-        const { grupos, produtos } = gruposProdutosOptions;
+        const {
+          grupos,
+          produtos,
+        }: { grupos: GrupoDetails[]; produtos: ProdutoDetails[] } =
+          gruposProdutosOptions;
 
-        setGruposOptions(grupos);
-        setProdutosOptions(produtos);
-        //   addGruposProdutos(pNaturaForm, gruposProdutosOptions);
+        const filteredGroups = filterByProductionType(grupos);
+        const filteredProducts = filterByProductionType(produtos);
+        setGruposOptions(filteredGroups);
+        setProdutosOptions(filteredProducts);
       }
     };
     getGruposProdutosOptions();
   }, []);
 
   useEffect(() => {
-    // if (selectedGrupos.length && produtosOptions.length) {
-    if (selectedGrupos && produtosOptions.length) {
-      /*   const filteredProdutos = produtosOptions.filter((p: ProdutoDetails) =>
-            selectedGrupos.find(
-              (g: GrupoDetails) => g.id_grupo_legado === p.id_grupo_legado
-            )
-          );
-         */ const filteredProdutos = produtosOptions.filter(
-        (p: ProdutoDetails) =>
-          selectedGrupos.id_grupo_legado === p.id_grupo_legado
+    const initGroups = () => {
+      if (!selectedGrupos[0]?.nm_grupo) {
+        const allGroupOptions = gruposOptions.map((g) => g.nm_grupo);
+        console.log("🚀 - initGroups - allGroupOptions:", allGroupOptions);
+        setAvailableGrupos(allGroupOptions);
+        return;
+      }
+
+      const produtos = selectedProdutos.filter((p) =>
+        selectedGrupos.some(
+          (g) => g?.id_grupo_produtos === p?.id_grupo_legado?.toString()
+        )
       );
-      setFilteredProdutosOptions(filteredProdutos);
+      if (!produtos.length) return;
+
+      const availableGrupos = gruposOptions
+        .filter(
+          (g) => !selectedGrupos.some((sg) => sg?.nm_grupo === g?.nm_grupo)
+        )
+        .map((g) => g.nm_grupo);
+      setAvailableGrupos(availableGrupos);
+    };
+    initGroups();
+  }, [gruposOptions, selectedGrupos]);
+
+  const filterByProductionType = <T extends GrupoDetails | ProdutoDetails>(
+    list: T[]
+  ) => {
+    const filteredList = list?.filter((p) =>
+      field === "gruposNaturaOptions" ? p.tipo === 1 : p.tipo === 0
+    );
+    return filteredList;
+  };
+
+  const filterAddProdutoOptions = (grupo: GrupoProdutos) => {
+    const alreadySelectedProducts = grupo.at_prf_see_produto
+      .filter((p) => !!p?.nm_produto)
+      .map((p) => p.nm_produto);
+
+    const filteredProdutos = produtosOptions
+      ?.filter(
+        (p) =>
+          p.id_grupo_legado ===
+          gruposOptions.find((g) => g.nm_grupo === grupo.nm_grupo)
+            ?.id_grupo_legado
+      )
+      .map((p) => p.nm_produto)
+      .sort((a, b) => a.localeCompare(b));
+
+    return filteredProdutos.filter(
+      (nomeProduto) => !alreadySelectedProducts?.includes(nomeProduto)
+    );
+  };
+
+  const handleSelectGrupo = (grupo: string) => {
+    const grupoDetails = gruposOptions.find(
+      (g) => g.nm_grupo === grupo
+    )! as GrupoProdutos;
+    console.log("🚀 - handleSelectGrupo - grupoDetails:", grupoDetails);
+
+    grupoDetails.at_prf_see_produto = [{} as Produto];
+
+    const grupos = [...selectedGrupos];
+    const index = grupos.findIndex(
+      (g) =>
+        Object.keys(g).length === 0 ||
+        g?.at_prf_see_produto?.length === 0 ||
+        !g?.at_prf_see_produto[0].nm_produto
+    );
+
+    grupos[index] = grupoDetails;
+    setSelectedGrupos(grupos);
+  };
+
+  const handleSelectProduto = (produto: string) => {
+    const selectedProduto = produtosOptions.find(
+      (p) => p.nm_produto === produto
+    )!;
+    const selectedGroup = gruposOptions.find(
+      (g) => g.id_grupo_legado == selectedProduto?.id_grupo_legado
+    )!;
+
+    const produtos = selectedProdutos.filter(
+      (p) => p?.id_grupo_legado === selectedGroup.id_grupo_legado
+    ) as Produto[];
+
+    const productIndex = produtos.findIndex((p) => !p.nm_produto);
+    if (productIndex !== -1) {
+      produtos[productIndex] = selectedProduto as Produto;
+    } else {
+      produtos.push(selectedProduto as Produto);
     }
-  }, [selectedGrupos, produtosOptions]);
+    produtos.push({} as Produto);
+
+    const index = selectedGrupos.findIndex(
+      (g) => g?.nm_grupo === selectedGroup.nm_grupo
+    );
+
+    const updatedGrupos = [...selectedGrupos] as GrupoProdutos[];
+    updatedGrupos[index].at_prf_see_produto = produtos;
+    setSelectedGrupos(updatedGrupos);
+    setSelectedProdutos(produtos);
+  };
+
+  const addGrupo = () => {
+    const grupos = [...selectedGrupos];
+    grupos.push({} as GrupoProdutos);
+    setSelectedGrupos(grupos);
+  };
+
+  const removeProduto = (produto: ProdutoDetails) => {
+    let updatedGrupos = [...selectedGrupos];
+    const activeGroupName = gruposOptions.find(
+      (g) => g.id_grupo_legado === produto?.id_grupo_legado
+    )?.nm_grupo!;
+
+    const groupIndex = selectedGrupos.findIndex(
+      (g) => g?.nm_grupo === activeGroupName
+    );
+
+    const grupo = updatedGrupos[groupIndex];
+    const selectedProdutos = grupo?.at_prf_see_produto;
+
+    const produtos = selectedProdutos.filter(
+      (p) => p.nm_produto !== produto.nm_produto
+    );
+
+    if (produtos.length <= 1) {
+      const removed = updatedGrupos.splice(groupIndex, 1);
+      const available = [...availableGrupos, removed[0].nm_grupo];
+      setAvailableGrupos(available);
+    } else {
+      updatedGrupos[groupIndex].at_prf_see_produto = produtos as Produto[];
+    }
+
+    setSelectedGrupos(updatedGrupos);
+    setSelectedProdutos(produtos);
+  };
 
   return {
     gruposOptions,
     produtosOptions,
-    setSelectedGrupos,
-    setTypeOfAtividade,
+    selectedGrupos,
+    selectedProdutos,
+    availableGrupos,
+    handleSelectGrupo,
+    handleSelectProduto,
+    addGrupo,
+    filterAddProdutoOptions,
+    removeProduto,
   };
 };
-
-//   const addGruposProdutos = (
-//     dadosProducaoForm: FormElement[],
-//     gruposProdutosOptions: GruposProdutosOptions
-//   ) => {
-//     const { grupos, produtos } = gruposProdutosOptions;
-//     const gruposOptions = grupos
-//       .filter((g) => g.tipo === 1)
-//       .map((g) => g.nm_grupo);
-//     console.log(
-//       "🚀 - file: useManagePerfil.ts:120 - useManagePerfil - gruposOptions:",
-//       gruposOptions
-//     );
-
-//     const produtosOptions = produtos.map((p) => p.nm_produto);
-
-//     const gruposOptionsField = dadosProducaoForm.find(
-//       (f) => f.field === "gruposOptions"
-//     );
-//     gruposOptionsField!.options = gruposOptions;
-//     // const produtosOptionsField = dadosProducaoForm.find((f) => f.field === "produtosOptions")
-//     // produtosOptionsField!.options = produtosOptions
-//     return dadosProducaoForm;
-//   };
