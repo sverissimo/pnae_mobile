@@ -6,7 +6,7 @@ import { Icon } from "../atoms";
 type SelectDropdownProps = {
   label: string;
   options: any;
-  onSelect: any;
+  onSelect: (args: any) => any;
 };
 export const SelectDropdown = ({
   label,
@@ -22,10 +22,7 @@ export const SelectDropdown = ({
       >
         <SelectDropDownNative
           data={options}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-            onSelect(selectedItem);
-          }}
+          onSelect={onSelect}
           defaultButtonText={"Selecionar"}
           buttonTextAfterSelection={(selectedItem, index) => {
             return selectedItem;

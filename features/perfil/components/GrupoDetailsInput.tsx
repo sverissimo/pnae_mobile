@@ -1,4 +1,4 @@
-import { ProdutoDetails } from "@domain/perfil";
+import { GrupoDetails, ProdutoDetails } from "@domain/perfil";
 import { FormTemplate } from "@shared/components/templates";
 import { Text, View, StyleSheet } from "react-native";
 import { produtoDetailsForm } from "../constants/produtoDetailsForm";
@@ -6,49 +6,56 @@ import { toCapitalCase } from "@shared/utils/formatStrings";
 import { globalColors } from "@constants/themes";
 import { Icon } from "@shared/components/atoms";
 
-type ProdutosDetailsInputProps = {
-  selectedProduto: ProdutoDetails;
+type GrupoDetailsInputProps = {
+  selectedGrupo: GrupoDetails;
+  selectedProdutos: ProdutoDetails[];
   groupIndex: number;
-  productIndex: number;
-  onValueChange: (
-    field: string,
-    value: any,
-    groupIndex: number,
-    productIndex: number
-  ) => void;
+  onValueChange: (field: string, value: any, groupIndex: number) => void;
   removeProduto: (produto: ProdutoDetails) => void;
 };
 
-export const ProdutosDetailsInput = ({
-  selectedProduto,
+export const GrupoDetailsInput = ({
+  selectedGrupo,
+  selectedProdutos,
   groupIndex,
-  productIndex,
   onValueChange: handleChange,
   removeProduto,
-}: ProdutosDetailsInputProps) => {
+}: GrupoDetailsInputProps) => {
   const onValueChange = (field: string, value: any) => {
-    handleChange(field, value, groupIndex, productIndex);
+    handleChange(field, value, groupIndex);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.produtoColumn}>
-        <Text style={styles.productText}>
-          {toCapitalCase(selectedProduto.nm_produto)}
-        </Text>
-      </View>
       <View style={styles.formColumn}>
         <FormTemplate
           form={produtoDetailsForm}
-          data={selectedProduto}
+          data={selectedGrupo}
           onValueChange={(field: string, value: string) =>
             onValueChange(field, value)
           }
           customStyles={styles.input}
         />
       </View>
-      <View style={styles.deleteIcon}>
-        <Icon iconName="trash" color="grey" size={18} onPress={removeProduto} />
+
+      <View style={styles.productList}>
+        {selectedProdutos &&
+          selectedProdutos.length > 0 &&
+          selectedProdutos
+            .filter((produto) => !!produto?.nm_produto)
+            .map((produto) => (
+              <View key={produto.nm_produto} style={styles.productRow}>
+                <Text style={styles.productText}>
+                  {toCapitalCase(produto.nm_produto)}
+                </Text>
+                <Icon
+                  iconName="trash"
+                  color="grey"
+                  size={18}
+                  onPress={() => removeProduto(produto)}
+                />
+              </View>
+            ))}
       </View>
     </View>
   );
@@ -56,7 +63,6 @@ export const ProdutosDetailsInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     backgroundColor: globalColors.primary[50],
     marginBottom: "1.5%",
     padding: "1%",
@@ -83,10 +89,15 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 10,
   },
-  deleteIcon: {
-    alignItems: "flex-end",
-    marginBottom: "1%",
-    marginRight: "1%",
-    justifyContent: "flex-end",
+  productList: {
+    padding: "2%",
+    justifyContent: "center",
+  },
+  productRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "3%",
+    gap: 8,
   },
 });

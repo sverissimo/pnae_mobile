@@ -23,6 +23,7 @@ export type GrupoDetails = {
   id_grupo_legado?: number;
   tipo?: number;
   nm_grupo: string;
+  dados_producao_estratificados_por_produto?: boolean;
   at_prf_see_produto?: Produto[];
 };
 
@@ -36,6 +37,7 @@ export type GrupoProdutos = {
   at_prf_grupo_produto: GrupoDetails;
   at_prf_see_produto: Produto[];
   nm_grupo: string;
+  dados_producao_estratificados_por_produto?: boolean;
 };
 
 export type GruposProdutosOptions = {

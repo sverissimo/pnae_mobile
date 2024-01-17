@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { useManageGrupos } from "../hooks/useManageGrupos";
 import { useCustomNavigation } from "@navigation/hooks";
-import { GrupoDetails, GrupoProdutos, ProdutoDetails } from "@domain/perfil";
 import { ProdutosDetailsInput } from "../components/ProdutosDetailsInput";
 import { Button } from "react-native-paper";
 import { SelectDropdown } from "@shared/components/organisms";
 import { globalColors } from "@constants/themes";
+import { GrupoDetailsInput } from "../components/GrupoDetailsInput";
 
 export const InsertGroupsScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
@@ -18,20 +18,13 @@ export const InsertGroupsScreen = ({ route }: any) => {
     availableGrupos,
     handleSelectGrupo,
     handleSelectProduto,
+    handleChange,
     addGrupo,
     filterAddProdutoOptions,
     removeProduto,
   } = useManageGrupos(field);
 
-  // console.log(
-  //   "🚀 - InsertGroupsScreen - selectedGrupos:",
-  //   JSON.stringify(selectedGrupos)
-  // );
-
-  const [activeProduto, setActiveProduto] = useState<ProdutoDetails>();
   const [enableAddGrupo, setEnableAddGrupo] = useState<boolean>(false);
-
-  const [state, setstate] = useState<GrupoProdutos[]>([]);
 
   useEffect(() => {
     const shouldEnable = selectedGrupos.every(
@@ -45,34 +38,6 @@ export const InsertGroupsScreen = ({ route }: any) => {
 
     setEnableAddGrupo(shouldEnable);
   }, [selectedGrupos]);
-
-  const onValueChange = (field: string, value: number) => {
-    if (!activeProduto?.nm_produto) return;
-
-    const grupoIndex = selectedGrupos.findIndex((g) =>
-      g.at_prf_see_produto.find(
-        (p) => p.nm_produto === activeProduto?.nm_produto
-      )
-    );
-    if (grupoIndex === -1) return;
-    const produtoIndex = selectedGrupos[
-      grupoIndex
-    ].at_prf_see_produto.findIndex(
-      (p) => p.nm_produto === activeProduto?.nm_produto
-    );
-    if (produtoIndex === -1) return;
-
-    const produtoDetails = { [field]: value };
-
-    const stateUpdate = [...selectedGrupos];
-    stateUpdate[grupoIndex].at_prf_see_produto[produtoIndex] = {
-      ...selectedGrupos[grupoIndex].at_prf_see_produto[produtoIndex],
-      ...produtoDetails,
-    };
-    // const stateUpdate = {...selectedGrupos[grupoIndex].at_prf_see_produto[produtoIndex], ...produtoDetails }
-
-    setstate(stateUpdate);
-  };
 
   return (
     <ScrollView>
@@ -96,27 +61,57 @@ export const InsertGroupsScreen = ({ route }: any) => {
             />
           ) : null}
           {grupo?.nm_grupo &&
-            grupo.at_prf_see_produto.map((produto, index) =>
+          grupo.dados_producao_estratificados_por_produto ? (
+            grupo.at_prf_see_produto.map((produto, productIndex) =>
               !produto.nm_produto &&
               filterAddProdutoOptions(grupo).length > 0 ? (
                 <SelectDropdown
-                  key={produto.id_produto || index + 741}
+                  key={produto.id_produto || productIndex + 741}
                   label="Adicionar produto"
                   options={filterAddProdutoOptions(grupo)}
-                  onSelect={(product: string) => handleSelectProduto(product)}
+                  onSelect={handleSelectProduto}
                 />
               ) : (
                 produto.nm_produto && (
                   <ProdutosDetailsInput
-                    key={produto.nm_produto || index + 852}
-                    setActiveProduto={setActiveProduto}
+                    key={produto.nm_produto || productIndex + 852}
+                    groupIndex={groupIndex}
+                    productIndex={productIndex}
                     selectedProduto={produto}
-                    onValueChange={onValueChange}
+                    onValueChange={handleChange}
                     removeProduto={() => removeProduto(produto)}
                   />
                 )
               )
-            )}
+            )
+          ) : (
+            <>
+              {grupo?.nm_grupo &&
+                grupo?.at_prf_see_produto?.length > 0 &&
+                grupo?.at_prf_see_produto?.[0]?.nm_produto && (
+                  <GrupoDetailsInput
+                    selectedGrupo={grupo}
+                    selectedProdutos={grupo.at_prf_see_produto || []}
+                    groupIndex={groupIndex}
+                    onValueChange={handleChange}
+                    removeProduto={removeProduto}
+                  />
+                )}
+              {grupo?.nm_grupo &&
+                filterAddProdutoOptions(grupo).length > 0 &&
+                grupo.at_prf_see_produto.map(
+                  (produto, index) =>
+                    !produto.nm_produto && (
+                      <SelectDropdown
+                        key={index + 741}
+                        label="Adicionar produto"
+                        options={filterAddProdutoOptions(grupo)}
+                        onSelect={handleSelectProduto}
+                      />
+                    )
+                )}
+            </>
+          )}
         </View>
       ))}
 

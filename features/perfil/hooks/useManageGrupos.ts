@@ -7,6 +7,7 @@ import {
   Produto,
   ProdutoDetails,
 } from "@domain/perfil/GrupoProdutos";
+import { log } from "@shared/utils/log";
 
 export const useManageGrupos = (field?: string) => {
   const { isConnected } = useManageConnection();
@@ -23,7 +24,10 @@ export const useManageGrupos = (field?: string) => {
   const [selectedProdutos, setSelectedProdutos] = useState<ProdutoDetails[]>(
     []
   );
-
+  const [state, setState] = useState<GrupoProdutos[]>([]);
+  // if (state[1]) log(state[1]);
+  // else console.log("🚀 - state:", JSON.stringify(state));
+  console.log("🚀 - state:", JSON.stringify(state));
   useEffect(() => {
     fetchGruposProdutosOptions();
   }, []);
@@ -97,12 +101,12 @@ export const useManageGrupos = (field?: string) => {
       (nomeProduto) => !alreadySelectedProducts?.includes(nomeProduto)
     );
   };
-
+  //** TODO - fix: When selecting the last group, details are not rendered unless select product too */
+  // ALSO: Remove completely state and work with selectedGroups only???
   const handleSelectGrupo = (grupo: string) => {
     const grupoDetails = gruposOptions.find(
       (g) => g.nm_grupo === grupo
     )! as GrupoProdutos;
-    console.log("🚀 - handleSelectGrupo - grupoDetails:", grupoDetails);
 
     grupoDetails.at_prf_see_produto = [{} as Produto];
 
@@ -118,7 +122,6 @@ export const useManageGrupos = (field?: string) => {
     setSelectedGrupos(grupos);
   };
 
-  // ***** TODO: Fix when changing selection in different group *****
   const handleSelectProduto = (produto: string) => {
     const selectedProduto = produtosOptions.find(
       (p) => p.nm_produto === produto
@@ -152,8 +155,44 @@ export const useManageGrupos = (field?: string) => {
         : group
     );
 
+    setState(updatedGrupos);
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
+  };
+
+  const handleChange = (
+    inputField: string,
+    value: number,
+    groupIndex: number,
+    productIndex?: number
+  ) => {
+    if (groupIndex === null || groupIndex === undefined) return;
+
+    const grupos = [...selectedGrupos];
+    const inputObject = { [inputField]: value };
+
+    if (
+      grupos[groupIndex].dados_producao_estratificados_por_produto === false
+    ) {
+      grupos[groupIndex] = {
+        ...grupos[groupIndex],
+        ...inputObject,
+      };
+
+      setSelectedGrupos(grupos);
+      setState(grupos);
+      return;
+    }
+
+    if (productIndex === undefined || productIndex === null) return;
+
+    grupos[groupIndex].at_prf_see_produto[productIndex] = {
+      ...grupos[groupIndex].at_prf_see_produto[productIndex],
+      ...inputObject,
+    };
+
+    setSelectedGrupos(grupos);
+    setState(grupos);
   };
 
   const addGrupo = () => {
@@ -187,6 +226,7 @@ export const useManageGrupos = (field?: string) => {
       updatedGrupos[groupIndex].at_prf_see_produto = produtos as Produto[];
     }
 
+    setState(updatedGrupos);
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
   };
@@ -197,6 +237,7 @@ export const useManageGrupos = (field?: string) => {
     selectedGrupos,
     selectedProdutos,
     availableGrupos,
+    handleChange,
     handleSelectGrupo,
     handleSelectProduto,
     addGrupo,
