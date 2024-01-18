@@ -34,21 +34,20 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         onValueChange={handleChange}
       />
 
-      {state.atividade === "Atividade Primária" ||
-        state.atividade === "Ambas" ||
-        (true && (
-          <View style={styles.formContainer}>
-            <Text style={styles.subTitle}>Dados de produção em natura</Text>
-            <FormTemplate
-              form={producaoNaturaForm}
-              data={state}
-              onValueChange={handleChange}
-            />
-          </View>
-        ))}
-
-      {(state.atividade === "Atividade Secundária" ||
+      {(state.atividade === "Atividade Primária" ||
         state.atividade === "Ambas") && (
+        <View style={styles.formContainer}>
+          <Text style={styles.subTitle}>Dados de produção em natura</Text>
+          <FormTemplate
+            form={producaoNaturaForm}
+            data={state}
+            onValueChange={handleChange}
+          />
+        </View>
+      )}
+
+      {(state.atividade === "Atividade Secundária" || true) && (
+        // state.atividade === "Ambas") && (
         <View style={styles.formContainer}>
           <Text style={styles.subTitle}>Dados de produção industrial</Text>
           <FormTemplate

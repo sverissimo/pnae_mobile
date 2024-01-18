@@ -18,7 +18,8 @@ import { PerfilOptions } from "./PerfilOptions";
 import { primeNumbersArray } from "./constants/primeNumbersArray";
 import { Perfil } from "@domain/perfil/Perfil";
 import { stringsPropsToBoolean } from "@domain/stringPropsToBoolean";
-
+import createPerfilInput from "_mockData/perfil/createPerfilInput.json";
+import perfilOptions from "_mockData/perfil/perfilOptions.json";
 export class PerfilAPIRepository
   extends API<Perfil>
   implements PerfilRepository
@@ -26,7 +27,18 @@ export class PerfilAPIRepository
   private url = `${env.SERVER_URL}/perfil`;
 
   async create(perfil: PerfilModel) {
-    await this.post<PerfilModel>(`${this.url}/`, perfil);
+    //@ts-ignore
+    console.log("************", perfil?.gruposNaturaOptions);
+    const p = this.extractDadosProducao(createPerfilInput);
+    //@ts-ignore
+    console.log("--------------", p?.gruposNaturaOptions);
+    const perfilDTO = this.toPerfilDTO(p as PerfilModel, perfilOptions!);
+
+    console.log("🚀 - create - perfilDTO:", perfilDTO);
+
+    // const perfilOptions = await this.getPerfilOptions();
+    // const perfilDTO = this.toPerfilDTO(perfil, perfilOptions!);
+    // await this.post<PerfilModel>(`${this.url}/`, perfil);
   }
 
   async getPerfilOptions() {
@@ -53,7 +65,6 @@ export class PerfilAPIRepository
       .concat(producaoIndustrialForm)
       .filter((f) => f.type === "selectMultiple")
       .map((f) => f.field as keyof PerfilDTO);
-    console.log("🚀 - file: PerfilAPIRepository.ts:45s", primeNumberFields);
 
     const { dados_producao_agro_industria, dados_producao_in_natura } = perfil;
     const result = this.createPrimePropsObj({
@@ -86,6 +97,33 @@ export class PerfilAPIRepository
     );
 
     return PerfilDTO;
+  };
+
+  private extractDadosProducao = (perfil: any) => {
+    const p = { ...perfil };
+    const dadosProducaoKeys = [
+      "controla_custos_producao",
+      "dificuldade_fornecimento",
+      "forma_entrega_produtos",
+      "informacoes_adicionais",
+      "local_comercializacao",
+      "tipo_regularizacao_ambiental",
+      "tipo_regularizacao_uso_recursos_hidricos",
+      "valor_total_obtido_outros",
+      "valor_total_obtido_pnae",
+      "at_prf_see_grupos_produtos",
+    ];
+    const dados_producao_in_natura = {} as any;
+
+    for (const key in p) {
+      if (dadosProducaoKeys.includes(key)) {
+        dados_producao_in_natura[key] = p[key];
+        delete p[key];
+      }
+    }
+    p.dados_producao_in_natura = dados_producao_in_natura;
+    p.dados_producao_agro_industria = dados_producao_in_natura;
+    return p;
   };
 
   private createPrimePropsObj = ({

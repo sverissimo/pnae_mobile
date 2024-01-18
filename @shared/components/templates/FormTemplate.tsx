@@ -39,7 +39,6 @@ export function FormTemplate({
                 label={item.label}
                 options={item.options}
                 onSelect={(value: any) => onValueChange(item.field, value)}
-                // value={data[item.field]}
               />
             );
           case "selectMultiple":

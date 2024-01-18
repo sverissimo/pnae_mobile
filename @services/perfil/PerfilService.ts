@@ -44,11 +44,17 @@ export class PerfilService {
 
   getPerfilOptions = async (): Promise<PerfilOptions | null> => {
     try {
-      if (!this.isConnected) {
-        const localPerfilOptions =
-          await this.localRepository.getPerfilOptions();
-        console.log("@@@ Getting perfilOptions from localRepository");
+      const localPerfilOptions = await this.localRepository.getPerfilOptions();
 
+      if (!this.isConnected) {
+        return localPerfilOptions;
+      }
+
+      const shouldUpdate = await this.syncHelpers.shouldSync(
+        1000 * 60 * 60 * 24 * 5
+      );
+      if (!shouldUpdate && localPerfilOptions) {
+        console.log("@@@ PerfilOptions stil valid, not running sync.");
         return localPerfilOptions;
       }
 

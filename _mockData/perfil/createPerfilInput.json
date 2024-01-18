@@ -1,0 +1,136 @@
+{
+  "atividade": "Atividade Primária",
+  "tipo_perfil": "SAÍDA",
+  "participa_organizacao": "true",
+  "grau_interesse_pnae": "ALTO",
+  "gruposNaturaOptions": [
+    {
+      "id_grupo": "80",
+      "id_grupo_legado": 5,
+      "tipo": 1,
+      "nm_grupo": "AGROEXTRATIVISMO",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1148",
+          "id_legado": 163,
+          "nm_produto": "PEQUI",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1150",
+          "id_legado": 165,
+          "nm_produto": "PINHÃO",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "2",
+      "producao_aproximada_ultimo_ano_pnae": "2",
+      "producao_aproximada_ultimo_ano_total": "2"
+    },
+    {
+      "id_grupo": "78",
+      "id_grupo_legado": 1,
+      "tipo": 1,
+      "nm_grupo": "OLERICULTURA",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1043",
+          "id_legado": 22,
+          "nm_produto": "CENOURA",
+          "tipo": 1,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1037",
+          "id_legado": 16,
+          "nm_produto": "BRÓCOLIS",
+          "tipo": 1,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "20",
+      "producao_aproximada_ultimo_ano_pnae": "20",
+      "producao_aproximada_ultimo_ano_total": "20"
+    },
+    {
+      "id_grupo": "79",
+      "id_grupo_legado": 2,
+      "tipo": 1,
+      "nm_grupo": "FRUTICULTURA",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1114",
+          "id_legado": 89,
+          "nm_produto": "MAÇÃ",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "3",
+          "producao_aproximada_ultimo_ano_pnae": "35",
+          "producao_aproximada_ultimo_ano_total": "35"
+        },
+        {
+          "id_produto": "1089",
+          "id_legado": 63,
+          "nm_produto": "AMORA",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "5",
+          "producao_aproximada_ultimo_ano_pnae": "12",
+          "producao_aproximada_ultimo_ano_total": "17"
+        },
+        {}
+      ]
+    }
+  ],
+  "nivel_tecnologico_cultivo": [
+    "Irrigação aspersão convencional",
+    "Fertirrigação",
+    "Conservação do solo - terraço, plantio em nível, etc."
+  ],
+  "sistema_producao": ["Convencional", "Cultivo protegido (plasticultura)"],
+  "condicao_posse": ["Posseiro"],
+  "dap_caf_vigente": "true",
+  "credito_rural": "false",
+  "fonte_captacao_agua": ["Cisterna"],
+  "forma_esgotamento_sanitario": ["Fossa TEVAP"],
+  "tipo_regularizacao_uso_recursos_hidricos": "Outorga",
+  "atividades_usam_recursos_hidricos": [
+    "Abastecimento doméstico",
+    "Irrigação de culturas"
+  ],
+  "tipo_regularizacao_ambiental": "Licença ambiental",
+  "atividades_com_regularizacao_ambiental": ["Fruticultura"],
+  "possui_cadastro_car": "true",
+  "aderiu_pra": "false",
+  "ciente_iniciativas_regularizacao_pra": "true",
+  "controla_custos_producao": "true",
+  "realiza_escalonamento_producao": "false",
+  "local_comercializacao": ["PNAE Estadual ", "Na propriedade", "Feira Livre"],
+  "valor_total_obtido_pnae": "150",
+  "valor_total_obtido_outros": "250",
+  "procedimento_pos_colheita": ["Sanitização"],
+  "forma_entrega_produtos": [
+    "Via cooperativa",
+    "Veículo próprio",
+    "Transportadora"
+  ],
+  "dificuldade_fornecimento": [
+    "Logística",
+    "Elaboração de projetos de venda",
+    "Acesso aos editais"
+  ],
+  "informacoes_adicionais": "Teste"
+}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { FormFieldContainer } from "../molecules";
 
@@ -36,6 +36,5 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.9 }],
     paddingLeft: 0,
     alignSelf: "flex-start",
-    //transform: [{ scale: 0.8 }, { translateX: -10 }],
   },
 });

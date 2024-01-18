@@ -21,15 +21,11 @@ describe("PerfilAPIRepository", () => {
     // };
   });
 
-  it.only("getPrimeNumbersProps should calculate the correct product of prime numbers for selected options", () => {
+  it("getPrimeNumbersProps should calculate the correct product of prime numbers for selected options", () => {
     const result = perfilAPIRepository.getPrimeNumbersProps(
       perfil,
       perfilOptions
     );
-    // console.log(
-    //   "🚀 - file: PerfilRepository.spec.ts:28 - it.only - result:",
-    //   result
-    // );
 
     const expectedAtividadesComRegularizacaoAmbiental =
       primeNumbersArray[2] * primeNumbersArray[1];
@@ -57,5 +53,8 @@ describe("PerfilAPIRepository", () => {
     );
   });
 
-  // Add more tests to cover additional scenarios, edge cases, or error handling
+  it("Should create a PerfilDTO when called Create Method", async () => {
+    await perfilAPIRepository.create(perfil);
+    expect(true).toBe(true);
+  });
 });

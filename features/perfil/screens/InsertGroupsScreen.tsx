@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { useManageGrupos } from "../hooks/useManageGrupos";
 import { useCustomNavigation } from "@navigation/hooks";
@@ -11,7 +11,7 @@ import { Icon } from "@shared/components/atoms";
 
 export const InsertGroupsScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
-  const { parentRoute, item, selectedItems } = route.params;
+  const { item, selectedItems } = route.params;
 
   const { field } = item;
   const {
@@ -79,15 +79,15 @@ export const InsertGroupsScreen = ({ route }: any) => {
               !produto.nm_produto &&
               filterAddProdutoOptions(grupo).length > 0 ? (
                 <SelectDropdown
-                  key={produto.id_produto || productIndex + 741}
+                  key={productIndex + 441}
                   label="Adicionar produto"
                   options={filterAddProdutoOptions(grupo)}
-                  onSelect={handleSelectProduto}
+                  onSelect={(p: string) => handleSelectProduto(p, grupo)}
                 />
               ) : (
-                produto.nm_produto && (
+                produto.id_produto && (
                   <ProdutosDetailsInput
-                    key={produto.nm_produto || productIndex + 852}
+                    key={produto.nm_produto + produto.id_produto}
                     groupIndex={groupIndex}
                     productIndex={productIndex}
                     selectedProduto={produto}
@@ -119,7 +119,9 @@ export const InsertGroupsScreen = ({ route }: any) => {
                         key={index + 741}
                         label="Adicionar produto"
                         options={filterAddProdutoOptions(grupo)}
-                        onSelect={handleSelectProduto}
+                        onSelect={(p: any, grupo: any) =>
+                          handleSelectProduto(p, grupo)
+                        }
                       />
                     )
                 )}

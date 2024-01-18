@@ -7,6 +7,7 @@ import {
   Produto,
   ProdutoDetails,
 } from "@domain/perfil/GrupoProdutos";
+import { PerfilModel } from "@domain/perfil";
 import { log } from "@shared/utils/log";
 
 export const useManageGrupos = (
@@ -27,7 +28,6 @@ export const useManageGrupos = (
   const [selectedProdutos, setSelectedProdutos] = useState<Produto[]>([]);
   const [enableAddGrupo, setEnableAddGrupo] = useState<boolean>(false);
 
-  // console.log("🚀 - state:", JSON.stringify(selectedGrupos));
   useEffect(() => {
     fetchGruposProdutosOptions();
   }, []);
@@ -122,7 +122,7 @@ export const useManageGrupos = (
       (nomeProduto) => !alreadySelectedProducts?.includes(nomeProduto)
     );
   };
-  //** TODO - fix: When selecting the last group, details are not rendered unless select product too */
+
   const handleSelectGrupo = (grupo: string) => {
     const grupoDetails = gruposOptions.find(
       (g) => g.nm_grupo === grupo
@@ -142,32 +142,23 @@ export const useManageGrupos = (
     setSelectedGrupos(grupos);
   };
 
-  const handleSelectProduto = (produto: string) => {
+  const handleSelectProduto = (
+    produto: string,
+    selectedGroup: GrupoDetails
+  ) => {
     const selectedProduto = produtosOptions.find(
-      (p) => p.nm_produto === produto
+      (p) =>
+        p.nm_produto === produto &&
+        p.id_grupo_legado === selectedGroup.id_grupo_legado
     )!;
 
-    const selectedGroup = gruposOptions.find(
-      (g) => g.id_grupo_legado == selectedProduto?.id_grupo_legado
-    )!;
-
-    const grupos = selectedGrupos.map((group) => group) as GrupoDetails[];
-
-    const alreadySelectedProdutos =
-      (grupos.find(
-        (g) => g.id_grupo_legado === selectedProduto?.id_grupo_legado
-      )?.at_prf_see_produto as Produto[]) || [];
-
+    const alreadySelectedProdutos = selectedGroup?.at_prf_see_produto ?? [];
     const produtos = [...alreadySelectedProdutos];
-    const productIndex = produtos.findIndex((p) => !p.nm_produto);
 
-    if (productIndex === -1) {
-      produtos.push(selectedProduto as Produto);
-    } else {
-      produtos[productIndex] = selectedProduto as Produto;
+    produtos.splice(produtos.length - 1, 0, selectedProduto as Produto);
+    if (alreadySelectedProdutos.length === produtos.length) {
+      produtos.push({} as Produto);
     }
-
-    produtos.push({} as Produto);
 
     const updatedGrupos = selectedGrupos.map((group) =>
       group.nm_grupo === selectedGroup.nm_grupo
@@ -246,6 +237,8 @@ export const useManageGrupos = (
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
   };
+
+  const savePerfil = async (perfil: PerfilModel) => {};
 
   return {
     gruposOptions,

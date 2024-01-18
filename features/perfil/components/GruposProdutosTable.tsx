@@ -29,8 +29,8 @@ export const GruposProdutosTable: React.FC<Props> = ({
             {type === "inNatura" && (
               <Text style={styles.header}>Área Utilizada (ha)</Text>
             )}
-            <Text style={styles.header}>Produção PNAE do Último Ano</Text>
             <Text style={styles.header}>Produção Total do Último Ano</Text>
+            <Text style={styles.header}>Produção PNAE do Último Ano</Text>
           </View>
           {grupo.at_prf_see_produto.map(
             (produto) =>
@@ -42,10 +42,10 @@ export const GruposProdutosTable: React.FC<Props> = ({
                     <Text style={styles.cell}>{produto.area_utilizada}</Text>
                   )}
                   <Text style={styles.cell}>
-                    {produto.producao_aproximada_ultimo_ano_pnae}
+                    {produto.producao_aproximada_ultimo_ano_total}
                   </Text>
                   <Text style={styles.cell}>
-                    {produto.producao_aproximada_ultimo_ano_total}
+                    {produto.producao_aproximada_ultimo_ano_pnae}
                   </Text>
                 </View>
               )
@@ -62,14 +62,14 @@ export const GruposProdutosTable: React.FC<Props> = ({
             <Text style={styles.cell}>
               {sumProperty(
                 grupo.at_prf_see_produto,
-                "producao_aproximada_ultimo_ano_pnae"
-              ) || grupo.producao_aproximada_ultimo_ano_pnae}
+                "producao_aproximada_ultimo_ano_total"
+              ) || grupo.producao_aproximada_ultimo_ano_total}
             </Text>
             <Text style={styles.cell}>
               {sumProperty(
                 grupo.at_prf_see_produto,
-                "producao_aproximada_ultimo_ano_total"
-              ) || grupo.producao_aproximada_ultimo_ano_total}
+                "producao_aproximada_ultimo_ano_pnae"
+              ) || grupo.producao_aproximada_ultimo_ano_pnae}
             </Text>
           </View>
         </View>

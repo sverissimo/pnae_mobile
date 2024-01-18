@@ -6,7 +6,7 @@ import { Icon } from "../atoms";
 type SelectDropdownProps = {
   label: string;
   options: any;
-  onSelect: (args: any) => any;
+  onSelect: (...args: any) => any;
 };
 export const SelectDropdown = ({
   label,
