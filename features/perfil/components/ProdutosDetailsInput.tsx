@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { ProdutoDetails } from "@domain/perfil";
 import { FormTemplate } from "@shared/components/templates";
-import { Text, View, StyleSheet } from "react-native";
 import { produtoDetailsForm } from "../constants/produtoDetailsForm";
 import { toCapitalCase } from "@shared/utils/formatStrings";
 import { globalColors } from "@constants/themes";
@@ -30,6 +31,16 @@ export const ProdutosDetailsInput = ({
     handleChange(field, value, groupIndex, productIndex);
   };
 
+  const [form, updateForm] = useState(produtoDetailsForm);
+
+  useEffect(() => {
+    const updatedForm =
+      selectedProduto?.tipo === 0
+        ? produtoDetailsForm.filter((item) => item.field !== "area_utilizada")
+        : produtoDetailsForm;
+    updateForm(updatedForm);
+  }, [selectedProduto]);
+
   return (
     <View style={styles.container}>
       <View style={styles.produtoColumn}>
@@ -39,7 +50,7 @@ export const ProdutosDetailsInput = ({
       </View>
       <View style={styles.formColumn}>
         <FormTemplate
-          form={produtoDetailsForm}
+          form={form}
           data={selectedProduto}
           onValueChange={(field: string, value: string) =>
             onValueChange(field, value)

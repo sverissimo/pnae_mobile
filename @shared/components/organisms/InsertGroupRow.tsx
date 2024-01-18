@@ -1,13 +1,14 @@
-import { Text, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { FormElement } from "@shared/types";
 import { ButtonInputComponent } from "./ButtonInputComponent";
 import { useCustomNavigation } from "@navigation/hooks";
-import { FormFieldContainer } from "../molecules";
-import { globalColors } from "@constants/themes";
+import { GruposProdutosTable } from "@features/perfil/components";
+import { GrupoProdutos } from "@domain/perfil";
+import { CustomButton } from "../atoms";
 
 type InsertGroupRowProps<T> = {
   item: FormElement;
-  selectedItems?: string[];
+  selectedItems?: string[] | GrupoProdutos[];
   onPressButton?: () => void;
 };
 
@@ -27,21 +28,31 @@ export const InsertGroupRow = <T extends Object>({
 
   return (
     <>
-      {selectedItems && selectedItems?.length > 0 ? (
-        <FormFieldContainer label={item.label}>
-          <Pressable onPress={handlePress} style={styles.container}>
-            <Text style={styles.selectedOptions}>
-              {selectedItems?.join(", ")}
-            </Text>
-          </Pressable>
-        </FormFieldContainer>
+      {selectedItems?.length ? (
+        <View style={styles.container}>
+          <GruposProdutosTable
+            grupoProdutos={selectedItems as GrupoProdutos[]}
+            type={
+              item.field === "gruposNaturaOptions" ? "inNatura" : "industrial"
+            }
+          />
+          <CustomButton
+            label="Alterar grupos"
+            icon="file-document-edit"
+            mode="text"
+            onPress={handlePress}
+            style={styles.button}
+          />
+        </View>
       ) : (
         <ButtonInputComponent
           key={item.field}
           label={item.label}
           fieldName={item.field}
           buttonLabel={
-            !selectedItems?.length ? "Inserir grupos de produtos" : "change"
+            !selectedItems?.length
+              ? "Inserir grupos de produtos"
+              : "Alterar grupos"
           }
           icon={
             !selectedItems?.length
@@ -57,16 +68,12 @@ export const InsertGroupRow = <T extends Object>({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    backgroundColor: globalColors.primary[50],
-    borderRadius: 10,
-    padding: 8,
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
-  selectedOptions: {
-    fontSize: 12,
-    marginLeft: 2,
-    marginBottom: 2,
+  button: {
+    marginTop: -5,
+    alignSelf: "flex-end",
   },
 });

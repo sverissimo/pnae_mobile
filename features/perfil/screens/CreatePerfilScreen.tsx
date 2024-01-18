@@ -5,17 +5,14 @@ import { useManagePerfil } from "../hooks/useManagePerfil";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
-import { useManageGrupos } from "../hooks/useManageGrupos";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
 
   const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
 
-  // const { gruposOptions, produtosOptions, setSelectedGrupos } =
-  //   useManageGrupos();
-
   const [state, setState] = useState<any>({});
+  console.log("🚀 - state:", JSON.stringify(state));
 
   useEffect(() => {
     if (key && selectedItems) {
@@ -24,13 +21,6 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   }, [key, selectedItems]);
 
   const handleChange = (name: string, value: any) => {
-    // if (name === "gruposOptions") {
-    //   const selectedGrupo = gruposOptions.find(
-    //     (grupo) => grupo.nm_grupo === value
-    //   );
-    //   setSelectedGrupos(selectedGrupo!);
-    //   return;
-    // }
     setState((state: any) => ({ ...state, [name]: value }));
   };
 

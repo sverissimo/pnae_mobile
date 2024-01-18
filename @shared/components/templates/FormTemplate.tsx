@@ -74,7 +74,10 @@ export function FormTemplate({
                 key={item.key || item.field}
                 label={
                   data?.sg_und_medida && item.field !== "area_utilizada"
-                    ? item.label + " (" + data.sg_und_medida.toLowerCase() + ")"
+                    ? item.label +
+                      " (" +
+                      data?.sg_und_medida?.toLowerCase() +
+                      ")"
                     : item.label
                 }
                 item={item}

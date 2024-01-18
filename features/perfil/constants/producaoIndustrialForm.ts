@@ -3,7 +3,7 @@ import { FormElement } from "../../../@shared/types/FormElement";
 export const producaoIndustrialForm: FormElement[] = [
   {
     field: "gruposIndustrialOptions",
-    label: "Grupos de Produtos",
+    label: "Grupos de Produtos da Agroindústria",
     type: "navigateToScreen",
     options: [],
   },

@@ -3,7 +3,7 @@ import { FormElement } from "../../../@shared/types/FormElement";
 export const producaoNaturaForm: FormElement[] = [
   {
     field: "gruposNaturaOptions",
-    label: "Grupo",
+    label: "Grupos de produtos in natura",
     type: "navigateToScreen",
     options: [],
   },
@@ -117,12 +117,13 @@ export const producaoNaturaForm: FormElement[] = [
     field: "valor_total_obtido_pnae",
     label: "Valor Total Obtido PNAE (R$)",
     type: "input",
+    keyboardType: "numeric",
   },
   {
     field: "valor_total_obtido_outros",
     label: "Valor Total Obtido de Outros (R$)",
-    keyboardType: "numeric",
     type: "input",
+    keyboardType: "numeric",
   },
   {
     field: "procedimento_pos_colheita",

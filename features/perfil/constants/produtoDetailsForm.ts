@@ -3,7 +3,7 @@ import { FormElement } from "@shared/types";
 export const produtoDetailsForm: FormElement[] = [
   {
     field: "area_utilizada",
-    label: "Área utilizada",
+    label: "Área utilizada (ha)",
     type: "input",
     keyboardType: "numeric",
   },

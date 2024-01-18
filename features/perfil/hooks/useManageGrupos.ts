@@ -9,7 +9,10 @@ import {
 } from "@domain/perfil/GrupoProdutos";
 import { log } from "@shared/utils/log";
 
-export const useManageGrupos = (field?: string) => {
+export const useManageGrupos = (
+  field?: string,
+  selectedItems?: GrupoProdutos[]
+) => {
   const { isConnected } = useManageConnection();
 
   const [gruposOptions, setGruposOptions] = useState([] as GrupoDetails[]);
@@ -21,13 +24,10 @@ export const useManageGrupos = (field?: string) => {
     {} as GrupoProdutos,
   ]);
   const [availableGrupos, setAvailableGrupos] = useState<string[]>([]);
-  const [selectedProdutos, setSelectedProdutos] = useState<ProdutoDetails[]>(
-    []
-  );
-  const [state, setState] = useState<GrupoProdutos[]>([]);
-  // if (state[1]) log(state[1]);
-  // else console.log("🚀 - state:", JSON.stringify(state));
-  console.log("🚀 - state:", JSON.stringify(state));
+  const [selectedProdutos, setSelectedProdutos] = useState<Produto[]>([]);
+  const [enableAddGrupo, setEnableAddGrupo] = useState<boolean>(false);
+
+  // console.log("🚀 - state:", JSON.stringify(selectedGrupos));
   useEffect(() => {
     fetchGruposProdutosOptions();
   }, []);
@@ -35,6 +35,26 @@ export const useManageGrupos = (field?: string) => {
   useEffect(() => {
     updateAvailableGrupos();
   }, [gruposOptions, selectedGrupos]);
+
+  useEffect(() => {
+    if (!selectedItems) return;
+    const availableGrupos = gruposOptions
+      .filter((g) => !selectedGrupos.some((sg) => sg?.nm_grupo === g?.nm_grupo))
+      .map((g) => g.nm_grupo);
+
+    setAvailableGrupos(availableGrupos);
+    setSelectedGrupos(selectedItems);
+  }, [gruposOptions]);
+
+  useEffect(() => {
+    const shouldEnable = selectedGrupos.every(
+      (grupo) =>
+        Object.keys(grupo).length > 0 &&
+        grupo.at_prf_see_produto.some((produto) => !!produto.nm_produto) &&
+        availableGrupos.length > 0
+    );
+    setEnableAddGrupo(shouldEnable);
+  }, [selectedGrupos, availableGrupos]);
 
   const fetchGruposProdutosOptions = async () => {
     const perfilService = new PerfilService({ isConnected: !!isConnected });
@@ -60,11 +80,12 @@ export const useManageGrupos = (field?: string) => {
       return;
     }
 
-    const produtos = selectedProdutos.filter((p) =>
+    const produtos = selectedProdutos.filter((p: ProdutoDetails) =>
       selectedGrupos.some(
         (g) => g?.id_grupo_produtos === p?.id_grupo_legado?.toString()
       )
     );
+
     if (!produtos.length) return;
 
     const availableGrupos = gruposOptions
@@ -102,7 +123,6 @@ export const useManageGrupos = (field?: string) => {
     );
   };
   //** TODO - fix: When selecting the last group, details are not rendered unless select product too */
-  // ALSO: Remove completely state and work with selectedGroups only???
   const handleSelectGrupo = (grupo: string) => {
     const grupoDetails = gruposOptions.find(
       (g) => g.nm_grupo === grupo
@@ -155,7 +175,6 @@ export const useManageGrupos = (field?: string) => {
         : group
     );
 
-    setState(updatedGrupos);
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
   };
@@ -180,7 +199,6 @@ export const useManageGrupos = (field?: string) => {
       };
 
       setSelectedGrupos(grupos);
-      setState(grupos);
       return;
     }
 
@@ -192,7 +210,6 @@ export const useManageGrupos = (field?: string) => {
     };
 
     setSelectedGrupos(grupos);
-    setState(grupos);
   };
 
   const addGrupo = () => {
@@ -226,7 +243,6 @@ export const useManageGrupos = (field?: string) => {
       updatedGrupos[groupIndex].at_prf_see_produto = produtos as Produto[];
     }
 
-    setState(updatedGrupos);
     setSelectedGrupos(updatedGrupos);
     setSelectedProdutos(produtos);
   };
@@ -235,8 +251,8 @@ export const useManageGrupos = (field?: string) => {
     gruposOptions,
     produtosOptions,
     selectedGrupos,
-    selectedProdutos,
     availableGrupos,
+    enableAddGrupo,
     handleChange,
     handleSelectGrupo,
     handleSelectProduto,

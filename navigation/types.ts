@@ -1,4 +1,9 @@
-import { PerfilModel } from "@domain/perfil";
+import {
+  GrupoProdutos,
+  GruposProdutosOptions,
+  PerfilModel,
+  Produto,
+} from "@domain/perfil";
 import { RelatorioModel } from "@features/relatorio/types";
 
 type ParamListBase = {
@@ -24,7 +29,12 @@ export type RootStackParamList = ParamListBase & {
   PropriedadeScreen: undefined;
   CreateRelatorioScreen: { relatorios: RelatorioModel[] | undefined };
   EditRelatorioScreen: { relatorioId: string | number };
-  CreatePerfilScreen: { key: string; selectedOptions: string[] } | undefined;
+  CreatePerfilScreen:
+    | {
+        key: string;
+        selectedItems: string[] | GrupoProdutos[];
+      }
+    | undefined;
   EditPerfilScreen: { perfil: any };
   ViewPerfilScreen: { perfil: PerfilModel; municipio: string };
   tabs: undefined;

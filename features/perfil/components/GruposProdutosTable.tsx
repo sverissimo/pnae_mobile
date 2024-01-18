@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import { GrupoProdutos, Produto } from "../types";
+import { GrupoProdutos, Produto } from "@domain/perfil";
 
 type Props = {
   grupoProdutos: GrupoProdutos[];
@@ -10,13 +10,18 @@ export const GruposProdutosTable: React.FC<Props> = ({
   grupoProdutos,
   type,
 }) => {
-  const sumProperty = (produtos: Produto[], property: keyof Produto) =>
-    produtos.reduce((acc, produto) => acc + (+produto[property] || 0), 0);
+  const sumProperty = (produtos: Produto[], property: keyof Produto) => {
+    const sum = produtos.reduce((acc, produto) => {
+      const value = produto[property] ?? 0;
+      return acc + Number(value) ?? 0;
+    }, 0);
+    return sum;
+  };
 
   return (
     <View style={styles.container}>
       {grupoProdutos.map((grupo, index) => (
-        <View key={grupo.id} style={styles.table}>
+        <View key={grupo.id || index} style={styles.table}>
           <Text style={styles.subTitle}>{grupo.nm_grupo.toLowerCase()}</Text>
           <View style={styles.row}>
             <Text style={styles.header}>Nome do Produto</Text>
@@ -27,21 +32,24 @@ export const GruposProdutosTable: React.FC<Props> = ({
             <Text style={styles.header}>Produção PNAE do Último Ano</Text>
             <Text style={styles.header}>Produção Total do Último Ano</Text>
           </View>
-          {grupo.at_prf_see_produto.map((produto) => (
-            <View key={produto.nm_produto} style={styles.row}>
-              <Text style={styles.cell}>{produto.nm_produto}</Text>
-              <Text style={styles.cell}>{produto.sg_und_medida}</Text>
-              {type === "inNatura" && (
-                <Text style={styles.cell}>{produto.area_utilizada}</Text>
-              )}
-              <Text style={styles.cell}>
-                {produto.producao_aproximada_ultimo_ano_pnae}
-              </Text>
-              <Text style={styles.cell}>
-                {produto.producao_aproximada_ultimo_ano_total}
-              </Text>
-            </View>
-          ))}
+          {grupo.at_prf_see_produto.map(
+            (produto) =>
+              produto?.nm_produto && (
+                <View key={produto.nm_produto} style={styles.row}>
+                  <Text style={styles.cell}>{produto.nm_produto}</Text>
+                  <Text style={styles.cell}>{produto.sg_und_medida}</Text>
+                  {type === "inNatura" && (
+                    <Text style={styles.cell}>{produto.area_utilizada}</Text>
+                  )}
+                  <Text style={styles.cell}>
+                    {produto.producao_aproximada_ultimo_ano_pnae}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {produto.producao_aproximada_ultimo_ano_total}
+                  </Text>
+                </View>
+              )
+          )}
           <View style={styles.row}>
             <Text style={styles.cellTotal}>TOTAL</Text>
             <Text style={styles.cell}> - </Text>

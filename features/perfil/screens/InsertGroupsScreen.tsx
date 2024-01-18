@@ -7,37 +7,47 @@ import { Button } from "react-native-paper";
 import { SelectDropdown } from "@shared/components/organisms";
 import { globalColors } from "@constants/themes";
 import { GrupoDetailsInput } from "../components/GrupoDetailsInput";
+import { Icon } from "@shared/components/atoms";
 
 export const InsertGroupsScreen = ({ route }: any) => {
   const { navigation } = useCustomNavigation();
-  const { parentRoute, item } = route.params;
-  const { field } = item;
+  const { parentRoute, item, selectedItems } = route.params;
 
+  const { field } = item;
   const {
     selectedGrupos,
     availableGrupos,
+    enableAddGrupo,
     handleSelectGrupo,
     handleSelectProduto,
     handleChange,
     addGrupo,
     filterAddProdutoOptions,
     removeProduto,
-  } = useManageGrupos(field);
-
-  const [enableAddGrupo, setEnableAddGrupo] = useState<boolean>(false);
+  } = useManageGrupos(field, selectedItems);
 
   useEffect(() => {
-    const shouldEnable = selectedGrupos.every(
-      (grupo) =>
-        Object.keys(grupo).length > 0 &&
-        grupo.at_prf_see_produto.some(
-          (produto) => Object.keys(produto).length > 0
-        ) &&
-        availableGrupos.length > 0
-    );
+    navigation.setOptions({
+      title: item.label,
+      headerLeft: () => (
+        <View style={{ marginRight: 30 }}>
+          <Icon iconName="arrow-back" size={26} onPress={handleBackPress} />
+        </View>
+      ),
+    });
+  }, [navigation, selectedGrupos]);
 
-    setEnableAddGrupo(shouldEnable);
-  }, [selectedGrupos]);
+  const handleBackPress = () => {
+    navigation.navigate("CreatePerfilScreen", {
+      key: item.field,
+      selectedItems: selectedGrupos.filter(
+        (g) =>
+          !!g.nm_grupo &&
+          g.at_prf_see_produto.length > 0 &&
+          Object.keys(g.at_prf_see_produto[0]).length > 1
+      ),
+    });
+  };
 
   return (
     <ScrollView>
@@ -52,14 +62,17 @@ export const InsertGroupsScreen = ({ route }: any) => {
             <View key={groupIndex + 50} style={styles.titleContainer}>
               <Text style={styles.title}>{grupo.nm_grupo}</Text>
             </View>
-          ) : availableGrupos.length ? (
-            <SelectDropdown
-              key={groupIndex + 100}
-              label="Adicionar grupo"
-              options={availableGrupos}
-              onSelect={(group: string) => handleSelectGrupo(group)}
-            />
-          ) : null}
+          ) : (
+            (availableGrupos.length && (
+              <SelectDropdown
+                key={groupIndex + 100}
+                label="Adicionar grupo"
+                options={availableGrupos}
+                onSelect={(group: string) => handleSelectGrupo(group)}
+              />
+            )) ||
+            null
+          )}
           {grupo?.nm_grupo &&
           grupo.dados_producao_estratificados_por_produto ? (
             grupo.at_prf_see_produto.map((produto, productIndex) =>
@@ -164,18 +177,3 @@ const styles = StyleSheet.create({
     width: "auto",
   },
 });
-
-//     useEffect(() => {
-//         navigation.setOptions({
-//             title: item.label,
-//             headerLeft: () => (
-//                 <View style={{ marginRight: 30 }}>
-//                     <Icon iconName="arrow-back" size={26} onPress={handleBackPress} />
-//                 </View>
-//             ),
-//         });
-//     }, [navigation, selectedItems]);
-
-//   const handleBackPress = () => {
-//           navigation.navigate("CreatePerfilScreen", { key: item.field, selectedItems:[] });
-//       };
