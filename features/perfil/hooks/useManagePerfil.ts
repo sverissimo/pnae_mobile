@@ -11,8 +11,12 @@ import {
   producaoNaturaForm as prodNaturaForm,
   producaoIndustrialForm as prodIndustrialForm,
 } from "../constants";
+import { useAuth } from "@auth/hooks/useAuth";
 
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
+  const { isConnected } = useManageConnection();
+  const { user } = useAuth();
+
   const [perfis, setPerfis] = useState<PerfilModel[]>([]);
   const [perfil, setPerfil] = useState<PerfilModel>({} as PerfilModel);
   const [producaoNaturaForm, setProducaoNaturaForm] = useState<FormElement[]>(
@@ -21,8 +25,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const [producaoIndustrialForm, setProducaoIndustrialForm] = useState<
     FormElement[]
   >([]);
-
-  const { isConnected } = useManageConnection();
 
   useEffect(() => {
     if (produtor?.perfis) {
@@ -93,6 +95,25 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     return dadosProducaoForm;
   };
 
+  const savePerfil = async (perfil: PerfilModel) => {
+    const perfilService = new PerfilService({ isConnected: !!isConnected });
+    const id_tecnico = user!.id_usuario;
+
+    const { id_pessoa_demeter, propriedades, perfis } = produtor!;
+    const id_propriedade =
+      perfis?.length && perfis[0].at_prf_see_propriedade?.atividade
+        ? perfis[0].at_prf_see_propriedade.atividade
+        : propriedades[0].id_pl_propriedade;
+
+    await perfilService.create({
+      ...perfil,
+      id_cliente: id_pessoa_demeter,
+      id_tecnico,
+      id_propriedade,
+    });
+    return;
+  };
+
   return {
     perfis,
     perfil,
@@ -101,5 +122,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     setPerfis,
     setPerfil,
     getPerfilListData,
+    savePerfil,
   };
 };

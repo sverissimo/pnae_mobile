@@ -238,8 +238,6 @@ export const useManageGrupos = (
     setSelectedProdutos(produtos);
   };
 
-  const savePerfil = async (perfil: PerfilModel) => {};
-
   return {
     gruposOptions,
     produtosOptions,

@@ -35,6 +35,7 @@
   "valor_total_obtido_outros": "22",
   "valor_total_obtido_pnae": "23",
   "id_tecnico": "string",
+  "id_pl_propriedade": "66483",
   "dados_producao_in_natura": {
     "tipo_regularizacao_uso_recursos_hidricos": "Não possui",
     "tipo_regularizacao_ambiental": "Não possui",

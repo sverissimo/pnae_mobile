@@ -9,7 +9,8 @@ import { perfilForm } from "../constants";
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
 
-  const { producaoNaturaForm, producaoIndustrialForm } = useManagePerfil();
+  const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
+    useManagePerfil();
 
   const [state, setState] = useState<any>({});
   console.log("🚀 - state:", JSON.stringify(state));
@@ -61,7 +62,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
       <Button
         mode="contained"
         style={styles.button}
-        onPress={() => console.log(state)}
+        onPress={() => savePerfil(state)}
       >
         Salvar
       </Button>

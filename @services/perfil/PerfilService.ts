@@ -6,6 +6,7 @@ import {
 import { PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import { SyncHelpers } from "@sync/SyncHelpers";
+import createPerfilInput from "_mockData/perfil/createPerfilInput2.json";
 
 export class PerfilService {
   private isConnected: boolean;
@@ -30,7 +31,12 @@ export class PerfilService {
         return;
       }
 
-      await this.remoteRepository.create(perfil);
+      const perfilOptions = await this.getPerfilOptions();
+
+      await this.remoteRepository.create(
+        perfil as unknown as PerfilModel,
+        perfilOptions!
+      );
     } catch (error) {
       console.log("🚀 PerfilService.ts:33 - createPerfil - error:", error);
       throw error;
@@ -42,7 +48,7 @@ export class PerfilService {
     return allPerfils;
   };
 
-  getPerfilOptions = async (): Promise<PerfilOptions | null> => {
+  getPerfilOptions = async (): Promise<PerfilOptions> => {
     try {
       const localPerfilOptions = await this.localRepository.getPerfilOptions();
 
@@ -107,9 +113,10 @@ export class PerfilService {
       return;
     }
 
+    const perfilOptions = await this.getPerfilOptions();
     for (const perfil of allPerfils) {
       try {
-        await this.remoteRepository.create(perfil);
+        await this.remoteRepository.create(perfil, perfilOptions!);
         await this.localRepository.delete!(perfil.id);
       } catch (error) {
         console.log("🚀 PerfilService.ts:60 - sync - error:", error);

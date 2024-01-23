@@ -129,7 +129,6 @@ export const InsertGroupsScreen = ({ route }: any) => {
           )}
         </View>
       ))}
-
       <View style={styles.buttonsContainer}>
         <Button
           onPress={addGrupo}
@@ -145,7 +144,6 @@ export const InsertGroupsScreen = ({ route }: any) => {
           Adicionar Grupo
         </Button>
       </View>
-
       <View></View>
     </ScrollView>
   );

@@ -2,6 +2,10 @@ import { Usuario } from "@shared/types";
 import { DadosProducaoInput } from ".";
 
 export type PerfilModel = {
+  id: string;
+  id_cliente: string;
+  id_tecnico: string;
+  id_propriedade: string;
   aderiu_pra: string;
   at_prf_see_propriedade: {
     atividade: string;
@@ -21,9 +25,6 @@ export type PerfilModel = {
   fonte_captacao_agua: string[];
   forma_esgotamento_sanitario: string[];
   grau_interesse_pnae: string;
-  id: string;
-  id_cliente: string;
-  id_tecnico: string;
   nivel_tecnologico_cultivo: string[];
   orgao_fiscalizacao_sanitaria: string;
   participa_organizacao: string;

@@ -7,6 +7,7 @@ import { SyncHelpers } from "@sync/SyncHelpers";
 import perfil from "_mockData//perfil/perfil.json";
 import gruposProdutosOptions from "_mockData/perfil/gruposProdutosOptions.json";
 import { GruposProdutosOptions } from "@domain/perfil";
+import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 
 jest.mock("@shared/utils/fileSystemUtils");
 
@@ -96,11 +97,13 @@ describe("PerfilService tests", () => {
         jest.spyOn(localRepository, "findAll").mockResolvedValue([perfilInput]);
         jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
         jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
-
+        jest
+          .spyOn(perfilService, "getPerfilOptions")
+          .mockResolvedValue({} as PerfilOptions);
         await perfilService.sync();
 
         expect(localRepository.findAll).toHaveBeenCalled();
-        expect(remoteRepository.create).toHaveBeenCalledWith(perfil);
+        expect(remoteRepository.create).toHaveBeenCalledWith(perfil, {});
         expect(localRepository.delete).toHaveBeenCalledWith(perfil.id);
       });
 
@@ -121,10 +124,14 @@ describe("PerfilService tests", () => {
   describe("PerfilService 2nd run", () => {
     describe("create method tests", () => {
       it("should create an perfil remotely when online", async () => {
+        jest
+          .spyOn(perfilService, "getPerfilOptions")
+          .mockResolvedValue({} as PerfilOptions);
+
         const result = await perfilService.create(perfilInput);
 
         expect(localRepository.create).not.toHaveBeenCalled();
-        expect(remoteRepository.create).toHaveBeenCalledWith(perfilInput);
+        expect(remoteRepository.create).toHaveBeenCalledWith(perfilInput, {});
         expect(result).toBeUndefined();
       });
 

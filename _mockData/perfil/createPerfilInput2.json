@@ -1,0 +1,157 @@
+{
+  "gruposIndustrialOptions": [
+    {
+      "id_grupo": "66",
+      "id_grupo_legado": 12,
+      "tipo": 0,
+      "nm_grupo": "Café",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "976",
+          "id_legado": 87,
+          "nm_produto": "Café Torrado Moído",
+          "tipo": 0,
+          "id_grupo_legado": 12,
+          "sg_und_medida": "kg",
+          "area_utilizada": "5",
+          "producao_aproximada_ultimo_ano_pnae": "12",
+          "producao_aproximada_ultimo_ano_total": "17"
+        },
+        {}
+      ]
+    }
+  ],
+  "gruposNaturaOptions": [
+    {
+      "id_grupo": "80",
+      "id_grupo_legado": 5,
+      "tipo": 1,
+      "nm_grupo": "AGROEXTRATIVISMO",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1148",
+          "id_legado": 163,
+          "nm_produto": "PEQUI",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1150",
+          "id_legado": 165,
+          "nm_produto": "PINHÃO",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "2",
+      "producao_aproximada_ultimo_ano_pnae": "2",
+      "producao_aproximada_ultimo_ano_total": "2"
+    },
+    {
+      "id_grupo": "78",
+      "id_grupo_legado": 1,
+      "tipo": 1,
+      "nm_grupo": "OLERICULTURA",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1043",
+          "id_legado": 22,
+          "nm_produto": "CENOURA",
+          "tipo": 1,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1037",
+          "id_legado": 16,
+          "nm_produto": "BRÓCOLIS",
+          "tipo": 1,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "20",
+      "producao_aproximada_ultimo_ano_pnae": "20",
+      "producao_aproximada_ultimo_ano_total": "20"
+    },
+    {
+      "id_grupo": "79",
+      "id_grupo_legado": 2,
+      "tipo": 1,
+      "nm_grupo": "FRUTICULTURA",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1114",
+          "id_legado": 89,
+          "nm_produto": "MAÇÃ",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "3",
+          "producao_aproximada_ultimo_ano_pnae": "35",
+          "producao_aproximada_ultimo_ano_total": "35"
+        },
+        {
+          "id_produto": "1089",
+          "id_legado": 63,
+          "nm_produto": "AMORA",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "5",
+          "producao_aproximada_ultimo_ano_pnae": "12",
+          "producao_aproximada_ultimo_ano_total": "17"
+        },
+        {}
+      ]
+    }
+  ],
+  "atividade": "Ambas",
+  "tipo_perfil": "Saída",
+  "tipo_regularizacao_uso_recursos_hidricos": "Outorga",
+  "atividades_usam_recursos_hidricos": ["Abastecimento doméstico"],
+  "tipo_regularizacao_ambiental": "Licença ambiental",
+  "atividades_com_regularizacao_ambiental": ["Fruticultura"],
+  "possui_cadastro_car": "true",
+  "aderiu_pra": "false",
+  "ciente_iniciativas_regularizacao_pra": "true",
+  "condicao_posse": ["Parceiro/Meeiro"],
+  "controla_custos_producao": "true",
+  "realiza_escalonamento_producao": "false",
+  "controla_custos_producao2": "false",
+  "tipo_regularizacao_ambiental2": "Licença ambiental",
+  "tipo_regularizacao_uso_recursos_hidricos2": "Outorga",
+  "local_comercializacao": ["Feira Livre", "Ceasa"],
+  "local_comercializacao2": ["Mercado Local", "PNAE Estadual "],
+  "dificuldade_fornecimento2": ["Não apresenta dificuldade(s)"],
+  "dificuldade_fornecimento": ["Logística", "Incapacidade de produção"],
+  "forma_entrega_produtos": ["Via cooperativa"],
+  "forma_entrega_produtos2": ["Correios", "Transportadora"],
+  "valor_total_obtido_pnae2": "33",
+  "valor_total_obtido_outros2": "33",
+  "valor_total_obtido_pnae": "11",
+  "valor_total_obtido_outros": "11",
+  "procedimento_pos_colheita": ["Armazenamento refrigerado", "Classificação"],
+  "informacoes_adicionais": "Natura",
+  "informacoes_adicionais2": "Industria",
+  "agroindustria_precisa_adaptacao_reforma": "true",
+  "possui_registro_orgao_fiscalizacao_sanitaria": "true",
+  "orgao_fiscalizacao_sanitaria": "Vigilância Sanitária",
+  "possui_agroindustria_propria": "true",
+  "tipo_gestao_unidade": "Familiar",
+  "pessoas_processamento_alimentos": "14",
+  "dap_caf_vigente": "true",
+  "credito_rural": "true",
+  "fonte_captacao_agua": [],
+  "id_tecnico": "3201",
+  "id_propriedade": "66483",
+  "id_cliente": "91025"
+}
