@@ -4,8 +4,9 @@ import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { GruposProdutosOptions, PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "./PerfilOptions";
 import { Perfil } from "@domain/perfil/Perfil";
-import { PerfilDataMapper } from "./PerfilDataMapper";
 import { log } from "@shared/utils/log";
+import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
+import { PerfilDTO } from "./PerfilDTO";
 
 export class PerfilAPIRepository
   extends API<Perfil>
@@ -13,13 +14,8 @@ export class PerfilAPIRepository
 {
   private url = `${env.SERVER_URL}/perfil`;
 
-  async create(perfil: PerfilModel, perfilOptions: PerfilOptions) {
-    const dataMapper = new PerfilDataMapper(perfilOptions as PerfilOptions);
-    const perfilDTO = dataMapper.toDTO(perfil);
-
-    log(perfilDTO);
-    await this.post(`${this.url}`, perfilDTO);
-    // return perfilDT;
+  async create(perfil: PerfilDTO) {
+    await this.post(`${this.url}`, perfil);
   }
 
   async getPerfilOptions() {

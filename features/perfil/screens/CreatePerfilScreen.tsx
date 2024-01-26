@@ -5,15 +5,23 @@ import { useManagePerfil } from "../hooks/useManagePerfil";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
+import { useSelectProdutor } from "@features/produtor/hooks";
+import { useCustomNavigation } from "@navigation/hooks";
+import { PerfilModel } from "@domain/perfil";
+import { useSnackBar } from "@shared/hooks";
+import perfInput from "_mockData/perfil/createPerfilInputComplete.json";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
-  const { key, selectedItems } = route?.params || {};
-
+  const { key, selectedItems, parent } = route?.params || {};
+  const { produtor } = useSelectProdutor();
+  const { navigation } = useCustomNavigation();
+  const { setSnackBarOptions } = useSnackBar();
   const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
-    useManagePerfil();
+    useManagePerfil(produtor);
 
-  const [state, setState] = useState<any>({});
-  console.log("🚀 - state:", JSON.stringify(state));
+  const [state, setState] = useState<any>(perfInput);
+  const [enableSave, setEnableSave] = useState<boolean>(true);
+  console.log("🚀 - state:", JSON.stringify(state.tipo_perfil));
 
   useEffect(() => {
     if (key && selectedItems) {
@@ -23,6 +31,28 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
 
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
+  };
+
+  const handleSave = async (perfil: PerfilModel) => {
+    try {
+      await savePerfil(perfil);
+      setSnackBarOptions({
+        message: "Perfil salvo com sucesso!",
+        status: "success",
+        duration: 1000,
+      });
+      // setEnableSave(false);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 900);
+    } catch (error: Error | any) {
+      console.log("🚀 - handleSave - error:", error);
+
+      setSnackBarOptions({
+        status: "error",
+        message: "Erro ao salvar perfil",
+      });
+    }
   };
 
   return (
@@ -47,8 +77,8 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         </View>
       )}
 
-      {(state.atividade === "Atividade Secundária" || true) && (
-        // state.atividade === "Ambas") && (
+      {(state.atividade === "Atividade Secundária" || // || true) && (
+        state.atividade === "Ambas") && (
         <View style={styles.formContainer}>
           <Text style={styles.subTitle}>Dados de produção industrial</Text>
           <FormTemplate
@@ -62,7 +92,8 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
       <Button
         mode="contained"
         style={styles.button}
-        onPress={() => savePerfil(state)}
+        onPress={() => handleSave(state)}
+        disabled={!enableSave}
       >
         Salvar
       </Button>

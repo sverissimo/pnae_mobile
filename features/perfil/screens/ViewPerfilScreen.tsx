@@ -1,12 +1,11 @@
 import { ScrollView, StyleSheet, View, Text } from "react-native";
-
 import { GruposProdutosTable } from "../components";
 import { FormFieldContainer } from "@shared/components/molecules";
 import { formatDate, parseValue } from "@shared/utils";
 import {
   viewPerfilForm,
-  producaoIndustrialForm,
-  producaoNaturaForm,
+  producaoIndustrialViewForm,
+  producaoNaturaViewForm,
 } from "../constants";
 import { PerfilModel } from "@domain/perfil";
 
@@ -26,10 +25,6 @@ export const ViewPerfilScreen = ({ route }: any) => {
     ...at_prf_see_propriedade,
     municipio,
   };
-  // console.log(
-  //   "🚀 - ViewPerfilScreen - dados_producao_in_natura:",
-  //   JSON.stringify(dados_producao_in_natura.at_prf_see_grupos_produtos)
-  // );
 
   const date = formatDate(perfil?.data_preenchimento);
 
@@ -48,7 +43,7 @@ export const ViewPerfilScreen = ({ route }: any) => {
       {["Atividade Primária", "Ambas"].includes(atividade) && (
         <Section
           title="DADOS DA PRODUÇÃO IN NATURA"
-          form={producaoNaturaForm}
+          form={producaoNaturaViewForm}
           grupoProdutos={dados_producao_in_natura.at_prf_see_grupos_produtos}
           type="inNatura"
         />
@@ -56,7 +51,7 @@ export const ViewPerfilScreen = ({ route }: any) => {
       {["Atividade Secundária", "Ambas"].includes(atividade) && (
         <Section
           title="DADOS DA PRODUÇÃO DE AGROINDÚSTRIA"
-          form={producaoIndustrialForm}
+          form={producaoIndustrialViewForm}
           grupoProdutos={
             dados_producao_agro_industria.at_prf_see_grupos_produtos
           }

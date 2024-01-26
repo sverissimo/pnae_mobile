@@ -18,21 +18,18 @@ export const producaoIndustrialForm: FormElement[] = [
     label: "Tipo de Gestão da Unidade",
     type: "select",
     options: [],
-    // key: "tipo_gestao_unidade2",
   },
   {
     field: "pessoas_processamento_alimentos",
     label: "Pessoas no Processamento de Alimentos",
     type: "input",
     keyboardType: "numeric",
-    // key: "pessoas_processamento_alimentos2",
   },
   {
     field: "tipo_estabelecimento",
     label: "Tipo de Estabelecimento",
     type: "select",
     options: [],
-    // key: "tipo_estabelecimento2",
   },
   {
     field: "tipo_pessoa_juridica",
@@ -47,13 +44,11 @@ export const producaoIndustrialForm: FormElement[] = [
     field: "agroindustria_precisa_adaptacao_reforma",
     label: "Agroindústria Precisa de Adaptação/Reforma",
     type: "radio",
-    // key: "agroindustria_precisa_adaptacao_reforma2",
   },
   {
     field: "possui_registro_orgao_fiscalizacao_sanitaria",
     label: "Possui Registro em Órgão de Fiscalização Sanitária",
     type: "radio",
-    // key: "possui_registro_orgao_fiscalizacao_sanitaria2",
   },
   {
     field: "orgao_fiscalizacao_sanitaria",
@@ -62,7 +57,6 @@ export const producaoIndustrialForm: FormElement[] = [
     options: [],
     dependsOn: "possui_registro_orgao_fiscalizacao_sanitaria",
     dependsOnValues: ["true"],
-    // key: "orgao_fiscalizacao_sanitaria2",
   },
   {
     field: "controla_custos_producao2",
@@ -86,41 +80,39 @@ export const producaoIndustrialForm: FormElement[] = [
     field: "valor_total_obtido_pnae2",
     label: "Valor Total Obtido PNAE",
     type: "input",
-    // key: "valor_total_obtido_pnae2",
   },
   {
     field: "valor_total_obtido_outros2",
     label: "Valor Total Obtido de Outros",
     type: "input",
-    // key: "valor_total_obtido_outros2",
   },
   {
     field: "local_comercializacao2",
     label: "Local de Comercialização",
     type: "selectMultiple",
     options: [],
-    // key: "local_comercializacao2",
   },
   {
     field: "forma_entrega_produtos2",
     label: "Forma de Entrega dos Produtos",
     type: "selectMultiple",
     options: [],
-    // key: "forma_entrega_produtos2",
   },
   {
     field: "dificuldade_fornecimento2",
     label: "Dificuldade de Fornecimento",
     type: "selectMultiple",
     options: [],
-    // key: "dificuldade_fornecimento2",
   },
   {
     field: "informacoes_adicionais2",
     label: "Informações Adicionais",
     type: "input",
-    // key: "informacoes_adicionais2",
     multiline: true,
     numberOfLines: 4,
   },
 ];
+
+export const producaoIndustrialViewForm = producaoIndustrialForm.filter(
+  ({ field }) => field !== "gruposIndustrialOptions"
+);

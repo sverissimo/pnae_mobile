@@ -25,11 +25,6 @@ export class SyncHelpers {
   }
 
   async shouldSync(miliseconds?: number) {
-    console.log(
-      "🚀 - file: SyncHelpers.ts:28 - SyncHelpers - shouldSync - miliseconds:",
-      miliseconds
-    );
-
     const currentDate = new Date();
     const lastSyncDate = await this.getLastSyncDate();
 
@@ -41,16 +36,11 @@ export class SyncHelpers {
 
     if (miliseconds) {
       syncExpirationDate.setMilliseconds(miliseconds);
-      console.log(
-        "🚀 - shouldSync - miliseconds:",
-        miliseconds / 1000 / 60 / 60
-      );
-
-      console.log("🚀 - SyncService - shouldSync - syncExpirationDate:", {
-        currentDate,
-        lastSyncDate,
-        syncExpirationDate,
-      });
+      // console.log("🚀 - SyncService - shouldSync - syncExpirationDate:", {
+      //   currentDate,
+      //   lastSyncDate,
+      //   syncExpirationDate,
+      // });
       return currentDate > syncExpirationDate;
     }
 

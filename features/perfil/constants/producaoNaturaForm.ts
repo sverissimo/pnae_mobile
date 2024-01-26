@@ -151,3 +151,7 @@ export const producaoNaturaForm: FormElement[] = [
     numberOfLines: 4,
   },
 ];
+
+export const producaoNaturaViewForm: FormElement[] = producaoNaturaForm.filter(
+  ({ field }) => field !== "gruposNaturaOptions"
+);

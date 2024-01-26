@@ -1,0 +1,198 @@
+{
+  "tipo_perfil": "Saída",
+  "participa_organizacao": "true",
+  "grau_interesse_pnae": "MÉDIO",
+  "atividade": "Ambas",
+  "gruposNaturaOptions": [
+    {
+      "id_grupo": "80",
+      "id_grupo_legado": 5,
+      "tipo": 1,
+      "nm_grupo": "AGROEXTRATIVISMO",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1151",
+          "id_legado": 195,
+          "nm_produto": "FRUTO DA JUÇARA",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1148",
+          "id_legado": 163,
+          "nm_produto": "PEQUI",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1150",
+          "id_legado": 165,
+          "nm_produto": "PINHÃO",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1149",
+          "id_legado": 164,
+          "nm_produto": "PANÂ / MAROLO / ARATICUM",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "1",
+      "producao_aproximada_ultimo_ano_total": "1",
+      "producao_aproximada_ultimo_ano_pnae": "1"
+    },
+    {
+      "id_grupo": "79",
+      "id_grupo_legado": 2,
+      "tipo": 1,
+      "nm_grupo": "FRUTICULTURA",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1086",
+          "id_legado": 60,
+          "nm_produto": "ABACATE",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "2",
+          "producao_aproximada_ultimo_ano_total": "2",
+          "producao_aproximada_ultimo_ano_pnae": "2"
+        },
+        {
+          "id_produto": "1087",
+          "id_legado": 61,
+          "nm_produto": "ACEROLA",
+          "tipo": 1,
+          "id_grupo_legado": 2,
+          "sg_und_medida": "KG",
+          "area_utilizada": "3",
+          "producao_aproximada_ultimo_ano_total": "3",
+          "producao_aproximada_ultimo_ano_pnae": "3"
+        },
+        {}
+      ]
+    }
+  ],
+  "nivel_tecnologico_cultivo": ["Adubação orgânica"],
+  "sistema_producao": ["Plantio direto", "Orgânico"],
+  "condicao_posse": ["Aluguel"],
+  "dap_caf_vigente": "true",
+  "credito_rural": "false",
+  "fonte_captacao_agua": ["Cisterna"],
+  "forma_esgotamento_sanitario": ["Outros", "Fossa TEVAP"],
+  "tipo_regularizacao_uso_recursos_hidricos": "Certidão de uso insignificante",
+  "atividades_usam_recursos_hidricos": [
+    "Outros",
+    "Lavagem dos alimentos pós-colheita"
+  ],
+  "tipo_regularizacao_ambiental": "Certidão de dispensa de licenciamento",
+  "atividades_com_regularizacao_ambiental": [
+    "Fruticultura",
+    "Agroextrativismo (palmito, pequi, pinhão, araticum, etc.)"
+  ],
+  "possui_cadastro_car": "true",
+  "aderiu_pra": "false",
+  "ciente_iniciativas_regularizacao_pra": "true",
+  "controla_custos_producao": "false",
+  "realiza_escalonamento_producao": "true",
+  "local_comercializacao": ["Ceasa", "Feira Livre", "Mercado Local"],
+  "valor_total_obtido_pnae": "11000",
+  "valor_total_obtido_outros": "12000",
+  "procedimento_pos_colheita": ["Armazenamento refrigerado"],
+  "forma_entrega_produtos": [
+    "Outros",
+    "Retirada na propriedade pelo cliente",
+    "Via associação",
+    "Via cooperativa"
+  ],
+  "dificuldade_fornecimento": ["Acesso aos editais"],
+  "informacoes_adicionais": "Teste in natura 2",
+  "gruposIndustrialOptions": [
+    {
+      "id_grupo": "56",
+      "id_grupo_legado": 1,
+      "tipo": 0,
+      "nm_grupo": "Aves",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "929",
+          "id_legado": 3,
+          "nm_produto": "Frango e outras",
+          "tipo": 0,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "kg",
+          "producao_aproximada_ultimo_ano_total": "5",
+          "producao_aproximada_ultimo_ano_pnae": "5"
+        },
+        {}
+      ]
+    },
+    {
+      "id_grupo": "62",
+      "id_grupo_legado": 8,
+      "tipo": 0,
+      "nm_grupo": "Mel",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "948",
+          "id_legado": 35,
+          "nm_produto": "Composto De Mel",
+          "tipo": 0,
+          "id_grupo_legado": 8,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "6",
+          "producao_aproximada_ultimo_ano_pnae": "6"
+        },
+        {
+          "id_produto": "946",
+          "id_legado": 33,
+          "nm_produto": "Extrato Própolis",
+          "tipo": 0,
+          "id_grupo_legado": 8,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "7",
+          "producao_aproximada_ultimo_ano_pnae": "7"
+        },
+        {
+          "id_produto": "947",
+          "id_legado": 34,
+          "nm_produto": "Própolis",
+          "tipo": 0,
+          "id_grupo_legado": 8,
+          "sg_und_medida": "kg",
+          "producao_aproximada_ultimo_ano_total": "8",
+          "producao_aproximada_ultimo_ano_pnae": "8"
+        },
+        {}
+      ]
+    }
+  ],
+  "possui_agroindustria_propria": "true",
+  "tipo_gestao_unidade": "Coletiva",
+  "pessoas_processamento_alimentos": "22",
+  "tipo_estabelecimento": "Pessoa Jurídica",
+  "tipo_pessoa_juridica": "Associação",
+  "agroindustria_precisa_adaptacao_reforma": "true",
+  "possui_registro_orgao_fiscalizacao_sanitaria": "true",
+  "orgao_fiscalizacao_sanitaria": "IMA (Instituto Mineiro de Agropecuária)",
+  "controla_custos_producao2": "true",
+  "tipo_regularizacao_ambiental2": "Licença ambiental",
+  "tipo_regularizacao_uso_recursos_hidricos2": "Outorga",
+  "valor_total_obtido_pnae2": "22000",
+  "valor_total_obtido_outros2": "33000",
+  "local_comercializacao2": ["PNAE Estadual ", "PAB", "Outros"],
+  "forma_entrega_produtos2": ["Via associação", "Transportadora"],
+  "dificuldade_fornecimento2": ["Acesso aos editais"],
+  "informacoes_adicionais2": "Teste prod industrial "
+}

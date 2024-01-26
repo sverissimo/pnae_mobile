@@ -113,16 +113,16 @@ describe("ProdutorService integration tests", () => {
     expect(produtor).toEqual(mockedProdutor);
   });
 
-  it("should fetch an existing produtor locally and call syncService and NOT call remoteRepository if savedLocally and connected to the internet", async () => {
+  it("should fetch an existing produtor locally and call syncService and call remoteRepository if savedLocally and connected to the internet", async () => {
     jest.spyOn(localRepository, "findByCPF").mockResolvedValue(mockedProdutor);
+    jest.spyOn(localRepository, "findByCPF").mockResolvedValue(mockedProdutor);
+    remoteRepository.findByCPF = jest.fn(() => Promise.resolve(mockedProdutor));
 
     const produtor = await produtorService.getProdutor("01234567890");
 
     expect(localRepository.findByCPF).toHaveBeenCalledWith("01234567890");
-    expect(remoteRepository.findByCPF).not.toHaveBeenCalled();
-    expect(syncService.syncProdutorAndPerfis).toHaveBeenCalledWith(
-      mockedProdutor
-    );
+    expect(remoteRepository.findByCPF).toHaveBeenCalledWith("01234567890");
+    expect(localRepository.create).toHaveBeenCalledWith(mockedProdutor);
     expect(produtor).toEqual(mockedProdutor);
   });
 

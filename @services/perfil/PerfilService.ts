@@ -7,6 +7,8 @@ import { PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import { SyncHelpers } from "@sync/SyncHelpers";
 import createPerfilInput from "_mockData/perfil/createPerfilInput2.json";
+import { PerfilViewModel } from "@services/perfil/dto/PerfilViewModel";
+import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
 
 export class PerfilService {
   private isConnected: boolean;
@@ -26,21 +28,37 @@ export class PerfilService {
 
   create = async (perfil: PerfilModel) => {
     try {
+      const perfilOptions = await this.getPerfilOptions();
+      if (!perfilOptions) throw new Error("PerfilOptions not found");
+
       if (!this.isConnected) {
         await this.localRepository.create(perfil);
         return;
       }
-
-      const perfilOptions = await this.getPerfilOptions();
-
-      await this.remoteRepository.create(
-        perfil as unknown as PerfilModel,
-        perfilOptions!
-      );
+      const perfilDTO = new PerfilDataMapper(
+        perfil,
+        perfilOptions
+      ).toRemoteDTO();
+      await this.remoteRepository.create(perfilDTO);
     } catch (error) {
       console.log("🚀 PerfilService.ts:33 - createPerfil - error:", error);
       throw error;
     }
+  };
+
+  perfilInputToModel = async (perfil: any) => {
+    const perfilOptions = await this.getPerfilOptions();
+    const perfilDataMapper = new PerfilDataMapper(perfil, perfilOptions);
+    if (
+      !perfil.dados_producao_in_natura &&
+      !perfil.dados_producao_agro_industria
+    ) {
+      const perfilModel = perfilDataMapper.toModel();
+      return perfilModel;
+    }
+
+    const perfilViewModel = perfilDataMapper.toViewModel() as PerfilViewModel;
+    return perfilViewModel;
   };
 
   getAllLocalPerfils = async () => {
@@ -116,7 +134,11 @@ export class PerfilService {
     const perfilOptions = await this.getPerfilOptions();
     for (const perfil of allPerfils) {
       try {
-        await this.remoteRepository.create(perfil, perfilOptions!);
+        const perfilDTO = new PerfilDataMapper(
+          perfil,
+          perfilOptions
+        ).toRemoteDTO();
+        await this.remoteRepository.create(perfilDTO);
         await this.localRepository.delete!(perfil.id);
       } catch (error) {
         console.log("🚀 PerfilService.ts:60 - sync - error:", error);

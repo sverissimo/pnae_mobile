@@ -4,6 +4,7 @@ import {
   PerfilModel,
   Produto,
 } from "@domain/perfil";
+import { PerfilViewModel } from "@services/perfil/dto/PerfilViewModel";
 import { RelatorioModel } from "@features/relatorio/types";
 
 type ParamListBase = {
@@ -31,12 +32,13 @@ export type RootStackParamList = ParamListBase & {
   EditRelatorioScreen: { relatorioId: string | number };
   CreatePerfilScreen:
     | {
-        key: string;
-        selectedItems: string[] | GrupoProdutos[];
+        key?: string;
+        selectedItems?: string[] | GrupoProdutos[];
+        parentRoute?: string;
       }
     | undefined;
   EditPerfilScreen: { perfil: any };
-  ViewPerfilScreen: { perfil: PerfilModel; municipio: string };
+  ViewPerfilScreen: { perfil: PerfilViewModel; municipio: string };
   tabs: undefined;
   GetSignature: RouteParamsList;
   OrientacaoScreen: undefined;

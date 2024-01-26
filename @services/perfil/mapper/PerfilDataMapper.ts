@@ -1,4 +1,5 @@
 import {
+  DadosProducaoIndustrialViewModel,
   GrupoDetails,
   GrupoProdutos,
   PerfilModel,
@@ -10,32 +11,138 @@ import {
   producaoNaturaForm,
   producaoIndustrialForm,
 } from "@features/perfil/constants";
-import { PerfilOptions } from "./PerfilOptions";
-import { primeNumbersArray } from "./constants/primeNumbersArray";
+import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import {
   dadosProducaoNaturaKeys,
   dadosIndustrialProducaoKeys,
-} from "./constants/dadosDeProducaoKeys";
+} from "@infrastructure/api/perfil/constants/dadosDeProducaoKeys";
+import { primeNumbersArray } from "@infrastructure/api/perfil/constants/primeNumbersArray";
+
 import {
+  convertArraysToStrings,
+  convertBooleansToStrings,
   stringPropsToNumber,
   stringsPropsToBoolean,
 } from "@infrastructure/utils/convertStringProps";
+import { log } from "@shared/utils/log";
+import { PerfilViewModel } from "../dto/PerfilViewModel";
 
 export class PerfilDataMapper {
-  constructor(private perfilOptions: PerfilOptions) {}
+  constructor(
+    private perfil: PerfilModel | any,
+    private perfilOptions: PerfilOptions
+  ) {
+    this.perfil = { ...perfil };
+    this.perfilOptions = perfilOptions;
+  }
 
-  toDTO = (perfil: PerfilModel) => {
-    const p = this.extractDadosProducao(perfil);
-    const p2 = this.extractGruposProdutos(p);
-    const p3 = this.getPrimeNumbersProps(p2, this.perfilOptions);
-    const p4 = stringsPropsToBoolean(p3);
-    const p5 = stringPropsToNumber(p4);
-    const p6 = this.addDates(p5);
-    return p6;
+  toViewModel = () => {
+    const perfilViewModel = this.changeDadosProdIndustrialKeys().build();
+
+    return perfilViewModel;
   };
 
-  private extractDadosProducao = (perfil: any) => {
-    const p = { ...perfil };
+  toModel = () => {
+    const perfilModel = this.extractDadosProducao()
+      .extractGruposProdutosView()
+      .parseArrays()
+      .booleanToStrings()
+      .addDates()
+      .build();
+
+    return perfilModel;
+  };
+
+  toRemoteDTO = () => {
+    const perfilRemoteInputDTO = this.extractDadosProducao()
+      .extractGruposProdutos()
+      .getPrimeNumbersProps()
+      .parseBooleanProps()
+      .parseNumberProps()
+      .addDates()
+      .build();
+    return perfilRemoteInputDTO;
+  };
+
+  changeDadosProdIndustrialKeys = () => {
+    const { dados_producao_agro_industria, ...rest } = this.perfil;
+    const dadosProducaoIndustrial = {} as DadosProducaoIndustrialViewModel;
+
+    for (const key in dados_producao_agro_industria) {
+      if (key === "at_prf_see_grupos_produtos")
+        (dadosProducaoIndustrial as any)[key] =
+          dados_producao_agro_industria[key];
+
+      const updatedKey = `${key}2` as keyof DadosProducaoIndustrialViewModel;
+
+      (dadosProducaoIndustrial as any)[updatedKey] = (
+        dados_producao_agro_industria as any
+      )[key];
+    }
+
+    const perfilViewModel = {
+      ...rest,
+      dados_producao_agro_industria: dadosProducaoIndustrial,
+    } as PerfilViewModel;
+
+    this.perfil = perfilViewModel;
+    return this;
+  };
+
+  extractGruposProdutosView = () => {
+    const { perfil } = this;
+    Object.assign(perfil, {
+      at_prf_see_propriedade: {
+        atividade: perfil.atividade,
+      },
+    });
+
+    const { gruposNaturaOptions, gruposIndustrialOptions } = perfil;
+
+    if (gruposIndustrialOptions) {
+      perfil.dados_producao_agro_industria.at_prf_see_grupos_produtos =
+        gruposIndustrialOptions;
+      perfil.gruposIndustrialOptions;
+    }
+
+    if (gruposNaturaOptions) {
+      perfil.dados_producao_in_natura.at_prf_see_grupos_produtos =
+        gruposNaturaOptions;
+      perfil.gruposNaturaOptions;
+    }
+    this.perfil = perfil;
+    return this;
+  };
+
+  private parseArrays = () => {
+    const p = convertArraysToStrings(this.perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private parseBooleanProps = () => {
+    const { perfil } = this;
+    const p = stringsPropsToBoolean(perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private booleanToStrings = () => {
+    const { perfil } = this;
+    const p = convertBooleansToStrings(perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private parseNumberProps = () => {
+    const { perfil } = this;
+    const p = stringPropsToNumber(perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  extractDadosProducao = () => {
+    const p = this.perfil;
 
     const dadosProducaoNatura = {} as any;
     const dadosProducaoIndustrial = {} as any;
@@ -62,30 +169,33 @@ export class PerfilDataMapper {
       .length
       ? dadosProducaoIndustrial
       : undefined;
-    return p;
+    // console.log({ dadosProducaoNatura, dadosProducaoIndustrial });
+    this.perfil = p as PerfilModel;
+    return this;
   };
 
-  private extractGruposProdutos = (perfil: any) => {
-    const { gruposNaturaOptions, gruposIndustrialOptions, ...p } = perfil;
+  extractGruposProdutos = () => {
+    const { gruposNaturaOptions, gruposIndustrialOptions, ...p } = this.perfil;
     const perfilModel = p as PerfilModel;
     const gruposProdutos = [gruposNaturaOptions, gruposIndustrialOptions];
 
     gruposProdutos.forEach((grupos, i) => {
-      if (grupos) {
-        const grupoProdutosDTO = grupos
-          .filter((g: GrupoDetails & GrupoProdutos) => !!g.id_grupo)
-          .map(this.extractGrupoProdutosDTO);
+      if (!grupos) return;
 
-        if (i === 0) {
-          perfilModel.dados_producao_in_natura.at_prf_see_grupos_produtos =
-            grupoProdutosDTO;
-        } else {
-          perfilModel.dados_producao_agro_industria.at_prf_see_grupos_produtos =
-            grupoProdutosDTO;
-        }
+      const grupoProdutosDTO = grupos
+        .filter((g: GrupoDetails & GrupoProdutos) => !!g.id_grupo)
+        .map(this.extractGrupoProdutosDTO);
+
+      if (i === 0) {
+        perfilModel.dados_producao_in_natura.at_prf_see_grupos_produtos =
+          grupoProdutosDTO;
+      } else {
+        perfilModel.dados_producao_agro_industria.at_prf_see_grupos_produtos =
+          grupoProdutosDTO;
       }
     });
-    return perfilModel;
+    this.perfil = perfilModel;
+    return this;
   };
 
   private extractGrupoProdutosDTO = (grupo: GrupoProdutos & GrupoDetails) => {
@@ -101,7 +211,6 @@ export class PerfilDataMapper {
     const parsedProduto = at_prf_see_produto
       .filter((p) => !!p.id_produto)
       .map(this.extractProdutoDTO);
-    console.log("🚀 - PerfilDataMapper - parsedProduto:", parsedProduto);
 
     return {
       ...grupoProdutos,
@@ -126,10 +235,9 @@ export class PerfilDataMapper {
     return produtoDTO;
   };
 
-  getPrimeNumbersProps = (
-    perfil: PerfilModel,
-    perfilOptions: PerfilOptions
-  ) => {
+  getPrimeNumbersProps = () => {
+    const { perfil, perfilOptions } = this;
+
     const primeNumberFields = producaoNaturaForm
       .concat(producaoIndustrialForm)
       .filter((f) => f.type === "selectMultiple")
@@ -170,21 +278,20 @@ export class PerfilDataMapper {
       });
     }
 
-    const perfilDTO = { ...perfil, ...result };
-    return perfilDTO;
+    this.perfil = { ...perfil, ...result };
+    return this;
   };
 
   private createPrimePropsObj = ({
     obj,
     primeNumberFields,
-    perfilOptions,
   }: {
     obj: Record<string, any>;
     primeNumberFields: string[];
     perfilOptions: PerfilOptions;
   }) => {
     if (!obj || typeof obj !== "object") return obj;
-
+    const { perfilOptions } = this;
     const result = {} as any;
     for (const field of primeNumberFields) {
       const selectedOptions = obj[field] as string[];
@@ -200,7 +307,7 @@ export class PerfilDataMapper {
     return result;
   };
 
-  private selectedOptionstoPrimeNumbers = (
+  selectedOptionstoPrimeNumbers = (
     selectedOptions: string[],
     availableOptions: string[]
   ) => {
@@ -214,9 +321,16 @@ export class PerfilDataMapper {
     return result;
   };
 
-  private addDates = (perfil: PerfilModel) => {
+  addDates = () => {
     const data_preenchimento = new Date().toISOString();
     const data_atualizacao = new Date().toISOString();
-    return { ...perfil, data_preenchimento, data_atualizacao };
+    console.log("🚀 - PerfilDataMapper - data_atualizacao:", data_atualizacao);
+
+    this.perfil = { ...this.perfil, data_preenchimento, data_atualizacao };
+    return this;
   };
+
+  build() {
+    return this.perfil;
+  }
 }

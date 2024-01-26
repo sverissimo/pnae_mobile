@@ -29,8 +29,6 @@ export class ProdutorSyncService {
       { produtorId, updatedAt }
     );
 
-    // log(syncInfo);
-
     return await this.handleSync(syncInfo, produtorLocal);
   }
 
@@ -59,6 +57,7 @@ export class ProdutorSyncService {
       missingOnClient,
       outdatedOnClient,
     } = syncInfo as CheckForUpdatesResponse<ProdutorModel>;
+    console.log("🚀 - ProdutorSyncService - syncInfo:", syncInfo);
 
     if (missingOnClient?.length > 0) {
       await this.produtorLocalRepository.create(missingOnClient[0]);

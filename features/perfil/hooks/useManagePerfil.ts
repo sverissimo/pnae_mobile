@@ -12,6 +12,9 @@ import {
   producaoIndustrialForm as prodIndustrialForm,
 } from "../constants";
 import { useAuth } from "@auth/hooks/useAuth";
+import { toCapitalCase } from "@shared/utils/formatStrings";
+import { log } from "@shared/utils/log";
+import perfilInputTest from "_mockData/perfil/createPerfilInputComplete.json";
 
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const { isConnected } = useManageConnection();
@@ -27,9 +30,17 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   >([]);
 
   useEffect(() => {
-    if (produtor?.perfis) {
-      setPerfis(produtor.perfis);
-    }
+    (async () => {
+      if (produtor?.perfis) {
+        const tst = await new PerfilService({
+          isConnected: !!isConnected,
+        }).perfilInputToModel(perfilInputTest as any);
+
+        console.log("🚀 - tst:", tst.participa_organizacao);
+        produtor.perfis.push(tst as any);
+        setPerfis(produtor.perfis);
+      }
+    })();
   }, [produtor]);
 
   useEffect(() => {
@@ -56,17 +67,17 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
       setProducaoNaturaForm(pNaturaForm);
       setProducaoIndustrialForm(pIndustrialForm);
     };
-
     getPerfilOptions();
   }, []);
 
   const getPerfilListData = (perfis: PerfilModel[]) =>
     perfis.map((p: any) => ({
       id: p.id,
-      tipo_perfil: p.tipo_perfil,
-      nome_tecnico: p.usuario.nome_usuario,
-      data_preenchimento: formatDate(p.data_preenchimento),
-      data_atualizacao: formatDate(p.data_atualizacao),
+      tipo_perfil: toCapitalCase(p.tipo_perfil),
+      nome_tecnico: p?.usuario?.nome_usuario || user?.nome_usuario,
+      data_preenchimento: formatDate(p?.data_preenchimento),
+      data_atualizacao: formatDate(p?.data_atualizacao),
+      assunto: p.id ? String(Math.random() * 1000) : undefined,
     }));
 
   const getDadosProducaoOptions = (
@@ -95,22 +106,36 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     return dadosProducaoForm;
   };
 
+  const toViewModel = async (perfil: PerfilModel) => {
+    const perfilService = new PerfilService({
+      isConnected: !!isConnected,
+    });
+
+    const perfilViewModel = await perfilService.perfilInputToModel(perfil);
+    return perfilViewModel;
+  };
+
   const savePerfil = async (perfil: PerfilModel) => {
     const perfilService = new PerfilService({ isConnected: !!isConnected });
+    const perfilModel: PerfilModel = await perfilService.perfilInputToModel(
+      perfil
+    );
+
     const id_tecnico = user!.id_usuario;
-
     const { id_pessoa_demeter, propriedades, perfis } = produtor!;
-    const id_propriedade =
-      perfis?.length && perfis[0].at_prf_see_propriedade?.atividade
-        ? perfis[0].at_prf_see_propriedade.atividade
-        : propriedades[0].id_pl_propriedade;
+    const id_propriedade = propriedades[0].id_pl_propriedade;
+    // perfis?.length && perfis[0].at_prf_see_propriedade?.atividade
+    //   ? perfis[0].at_prf_see_propriedade.id_propriedade
+    //   : propriedades[0].id_pl_propriedade;
 
-    await perfilService.create({
-      ...perfil,
+    Object.assign(perfilModel, {
       id_cliente: id_pessoa_demeter,
       id_tecnico,
       id_propriedade,
     });
+
+    produtor!.perfis.push(perfilModel);
+    await perfilService.create(perfilModel);
     return;
   };
 
@@ -122,6 +147,7 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     setPerfis,
     setPerfil,
     getPerfilListData,
+    toViewModel,
     savePerfil,
   };
 };

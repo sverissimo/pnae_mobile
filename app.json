@@ -2,7 +2,7 @@
   "expo": {
     "name": "PNAE App",
     "slug": "pnae_mobile",
-    "version": "1.2.2",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon_padding.png",
     "userInterfaceStyle": "light",

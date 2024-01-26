@@ -11,7 +11,7 @@ import { useCustomNavigation } from "@navigation/hooks";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-  const { perfis, producaoNaturaForm, producaoIndustrialForm } =
+  const { perfis, producaoNaturaForm, producaoIndustrialForm, toViewModel } =
     useManagePerfil(produtor);
   const { navigation } = useCustomNavigation();
   const [enableCreatePerfil, setEnableCreatePerfil] = useState<boolean>(false);
@@ -27,17 +27,26 @@ export const PerfilScreen = () => {
   }, [producaoIndustrialForm, producaoNaturaForm]);
 
   const handleCreatePerfil = () => {
-    navigation.navigate("CreatePerfilScreen");
+    navigation.navigate("CreatePerfilScreen", { parentRoute: "PerfilScreen" });
   };
 
-  const handleViewPerfil = (perfilId: string) => {
+  const handleViewPerfil = async (perfilId: string) => {
+    console.log("🚀 - handleViewPerfil - perfilId:", perfilId);
+
     if (!produtor) return console.log("produtor não encontrado");
 
     const { municipio } = produtor.propriedades![0];
-    const perfil = produtor.perfis!.find((p) => p.id === perfilId);
+    const perfil =
+      produtor.perfis!.find((p) => p.id === perfilId) ??
+      produtor.perfis[+perfilId];
 
     if (!perfil) return console.log("perfil não encontrado");
-    navigation.navigate("ViewPerfilScreen", { perfil, municipio });
+    const perfilViewModel = await toViewModel(perfil);
+
+    navigation.navigate("ViewPerfilScreen", {
+      perfil: perfilViewModel,
+      municipio,
+    });
   };
 
   const handleEditPerfil = (rowData: any) => {

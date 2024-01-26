@@ -109,6 +109,7 @@ export const useManageGrupos = (
       .map((p) => p.nm_produto);
 
     const filteredProdutos = produtosOptions
+
       ?.filter(
         (p) =>
           p.id_grupo_legado ===
@@ -139,6 +140,8 @@ export const useManageGrupos = (
     );
 
     grupos[index] = grupoDetails;
+    console.log({ grupoDetails, index });
+
     setSelectedGrupos(grupos);
   };
 
@@ -146,11 +149,14 @@ export const useManageGrupos = (
     produto: string,
     selectedGroup: GrupoDetails
   ) => {
+    console.log("🚀 - selectedGroup:", selectedGroup);
+
     const selectedProduto = produtosOptions.find(
       (p) =>
         p.nm_produto === produto &&
         p.id_grupo_legado === selectedGroup.id_grupo_legado
     )!;
+    console.log({ selectedGroup, selectedProduto });
 
     const alreadySelectedProdutos = selectedGroup?.at_prf_see_produto ?? [];
     const produtos = [...alreadySelectedProdutos];

@@ -1,5 +1,3 @@
-import { DadosProducao } from "@domain/perfil";
-
 export const dadosProducaoNaturaKeys = [
   "controla_custos_producao",
   "dificuldade_fornecimento",

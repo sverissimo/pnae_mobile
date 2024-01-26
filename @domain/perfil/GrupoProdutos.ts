@@ -7,6 +7,12 @@ export type ProdutoDetails = {
   sg_und_medida: string;
 };
 
+export type ProdutoInput = ProdutoDetails & {
+  area_utilizada?: number | null;
+  producao_aproximada_ultimo_ano_pnae?: string | null;
+  producao_aproximada_ultimo_ano_total?: string | null;
+};
+
 export type Produto = {
   id_produto: string;
   id_grupo_produto: string;
@@ -38,6 +44,13 @@ export type GrupoProdutos = {
   at_prf_see_produto: Produto[];
   nm_grupo: string;
   dados_producao_estratificados_por_produto?: boolean;
+};
+
+export type GrupoProdutosInput = Omit<GrupoDetails, "at_prf_see_produto"> & {
+  area_utilizada?: number | null;
+  producao_aproximada_ultimo_ano_pnae?: string | null;
+  producao_aproximada_ultimo_ano_total?: string | null;
+  at_prf_see_produto: ProdutoInput[] | Record<string, any>[];
 };
 
 export type GruposProdutosOptions = {

@@ -26,27 +26,13 @@ export class ProdutorService {
     CPFProdutor: string
   ): Promise<ProdutorModel | undefined> => {
     const produtorLocal = await this.localRepository.findByCPF!(CPFProdutor);
-    // const ids = await this.getAllLocalProdutoresIds();
-    // console.log("🚀 - file: ProdutorService.ts:31 -  ids:", ids);
     if (!this.isConnected) {
       console.log("@@@ No connection, returning produtorLocal");
       return produtorLocal;
     }
-
-    if (!produtorLocal) {
-      console.log("### Fetching produtor from server ###");
-      const produtor = await this.remoteRepository.findByCPF!(CPFProdutor);
-      produtor && (await this.localRepository.create(produtor));
-      return produtor;
-    }
-
-    const updatedProdutor = await this.syncService.syncProdutorAndPerfis(
-      produtorLocal
-    );
-    updatedProdutor && console.log("### Updating produtor ###");
-    !updatedProdutor && console.log("### produtor uptoDate ###");
-
-    return updatedProdutor ?? produtorLocal;
+    const produtor = await this.remoteRepository.findByCPF!(CPFProdutor);
+    produtor && (await this.localRepository.create(produtor));
+    return produtor || produtorLocal;
   };
 
   getAllLocalProdutoresIds = async () => {

@@ -24,17 +24,19 @@ export const List = <T extends Object>({
         <ListItem isHeader columns={columns} />
         <FlatList
           data={data}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListItem
               data={item}
               columns={columns}
-              onView={() => onView && onView(item.id)}
+              onView={() => onView && onView(item.id || index)}
               onEdit={() => onEdit && onEdit(item.id)}
               getPDFLink={() => getPDFLink && getPDFLink(item.id)}
               onDelete={onDelete}
             />
           )}
-          keyExtractor={(item) => item.id || item.assunto}
+          keyExtractor={(item) =>
+            item.id || Math.random().toString(36).slice(2)
+          }
         />
       </View>
     </SafeAreaView>

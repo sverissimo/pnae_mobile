@@ -19,7 +19,7 @@
   "nivel_tecnologico_cultivo": ["Adubação mineral", "Calagem"],
   "orgao_fiscalizacao_sanitaria": "Vigilância Sanitária",
   "participa_organizacao": "true",
-  "pessoas_processamento_alimentos": 2,
+  "pessoas_processamento_alimentos": "2",
   "possui_agroindustria_propria": "false",
   "possui_cadastro_car": "true",
   "possui_registro_orgao_fiscalizacao_sanitaria": "true",

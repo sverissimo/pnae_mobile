@@ -4,10 +4,10 @@ import { PerfilLocalStorageRepository } from "@infrastructure/localStorage/perfi
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { PerfilServiceConfig } from "./PerfilConfigService";
 import { SyncHelpers } from "@sync/SyncHelpers";
-import perfil from "_mockData//perfil/perfil.json";
-import gruposProdutosOptions from "_mockData/perfil/gruposProdutosOptions.json";
 import { GruposProdutosOptions } from "@domain/perfil";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
+import perfil from "_mockData/perfil/perfil.json";
+import perfilOptions from "_mockData/perfil/perfilOptions.json";
 
 jest.mock("@shared/utils/fileSystemUtils");
 
@@ -76,6 +76,10 @@ describe("PerfilService tests", () => {
   describe("PerfilService 1st run", () => {
     describe("create perfil method tests", () => {
       it("should create a perfil remotely if online", async () => {
+        perfilService.getPerfilOptions = jest
+          .fn()
+          .mockResolvedValue(perfilOptions);
+
         await perfilService.create(perfilInput);
         expect(remoteRepository.create).toHaveBeenCalled();
         expect(localRepository.create).not.toHaveBeenCalled();
