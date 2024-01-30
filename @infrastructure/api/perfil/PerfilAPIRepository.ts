@@ -7,6 +7,7 @@ import { Perfil } from "@domain/perfil/Perfil";
 import { log } from "@shared/utils/log";
 import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
 import { PerfilDTO } from "./PerfilDTO";
+import { ContractInfo } from "@domain/perfil/ContractInfo";
 
 export class PerfilAPIRepository
   extends API<Perfil>
@@ -26,5 +27,12 @@ export class PerfilAPIRepository
   async getGruposProdutos() {
     const gruposProdutos = (await this.get(`${this.url}/produtos`)) as unknown;
     return gruposProdutos as GruposProdutosOptions;
+  }
+
+  async getContractInfo() {
+    const contractInfo = (await this.get(
+      `${this.url}/contractInfo`
+    )) as unknown;
+    return contractInfo as ContractInfo[];
   }
 }

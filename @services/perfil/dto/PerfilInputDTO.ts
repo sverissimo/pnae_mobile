@@ -1,5 +1,4 @@
-import { Usuario } from "@shared/types";
-import { GrupoProdutos, GrupoProdutosInput } from "../../../@domain/perfil";
+import { GrupoProdutosInput } from "../../../@domain/perfil";
 
 export type PerfilInputDTO = {
   aderiu_pra: string;

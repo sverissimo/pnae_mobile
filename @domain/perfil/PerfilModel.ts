@@ -6,6 +6,7 @@ export type PerfilModel = {
   id: string;
   id_cliente: string;
   id_tecnico: string;
+  id_contrato: number;
   aderiu_pra: string;
   at_prf_see_propriedade: {
     atividade: string;

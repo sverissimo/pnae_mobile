@@ -289,9 +289,7 @@ export class PerfilDataMapper {
     const indexes = selectedOptions.map((option) =>
       availableOptions.indexOf(option)
     );
-    console.log("🚀 - PerfilDataMapper - selectedOptions:", selectedOptions);
 
-    console.log("🚀 - PerfilDataMapper - indexes:", indexes);
     let result = 1;
     indexes.forEach((index) => {
       result *= primeNumbersArray[index];

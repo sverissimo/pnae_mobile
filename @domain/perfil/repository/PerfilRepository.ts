@@ -3,6 +3,7 @@ import { PerfilModel } from "../PerfilModel";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import { GruposProdutosOptions } from "../GrupoProdutos";
 import { PerfilDTO } from "@infrastructure/api/perfil/PerfilDTO";
+import { ContractInfo } from "../ContractInfo";
 
 export interface PerfilRepository extends Partial<Repository<PerfilModel>> {
   create(perfil: PerfilModel | PerfilDTO): Promise<void>;
@@ -10,4 +11,6 @@ export interface PerfilRepository extends Partial<Repository<PerfilModel>> {
   savePerfilOptions?(perfilOptions: PerfilOptions): Promise<void>;
   getGruposProdutos(): Promise<GruposProdutosOptions>;
   saveGruposProdutos?(gruposProdutos: GruposProdutosOptions): Promise<void>;
+  getContractInfo(): Promise<ContractInfo[]>;
+  saveContractInfo?(contractInfo: any): Promise<void>;
 }

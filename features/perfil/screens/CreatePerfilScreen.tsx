@@ -7,28 +7,38 @@ import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
 import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
-import { PerfilModel } from "@domain/perfil";
+import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { useSnackBar } from "@shared/hooks";
 import perfInput from "_mockData/perfil/createPerfilInputComplete.json";
 import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
+import { FormElement } from "@shared/types";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
+  const { tipoPerfil } = useManageContratos();
   const { setSnackBarOptions } = useSnackBar();
   const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
     useManagePerfil(produtor);
 
   const [state, setState] = useState<any>(perfInput);
   const [enableSave, setEnableSave] = useState<boolean>(true);
-  console.log("🚀 - state:", JSON.stringify(state.tipo_perfil));
+  // console.log("🚀 - state:", JSON.stringify(state));
 
   useEffect(() => {
     if (key && selectedItems) {
       setState((state: any) => ({ ...state, [key]: selectedItems }));
     }
   }, [key, selectedItems]);
+
+  useEffect(() => {
+    if (tipoPerfil === "Entrada") {
+      setState((state: any) => ({ ...state, tipo_perfil: "Entrada" }));
+    } else if (tipoPerfil === "Saída") {
+      setState((state: any) => ({ ...state, tipo_perfil: "Saída" }));
+    }
+  }, [tipoPerfil]);
 
   const handleChange = (name: string, value: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
@@ -56,12 +66,26 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
     }
   };
 
+  const autoSelectTipoPerfil = (perfilForm: FormElement[]) => {
+    const filteredForm = perfilForm.filter((item) =>
+      tipoPerfil === "Entrada" || tipoPerfil === "Saída"
+        ? item.field !== "tipo_perfil"
+        : true
+    );
+    return filteredForm;
+  };
+
   return (
     <ScrollView style={styles.container}>
-      <ListTitle title="Preencha as informações abaixo" />
-
+      {tipoPerfil === "Entrada" ? (
+        <ListTitle title="CADASTRO DO PERFIL DE ENTRADA" />
+      ) : tipoPerfil === "Saída" ? (
+        <ListTitle title="CADASTRO DO PERFIL DE SAÍDA" />
+      ) : (
+        <ListTitle title="Preencha as informações abaixo" />
+      )}
       <FormTemplate
-        form={perfilForm}
+        form={autoSelectTipoPerfil(perfilForm)}
         data={state}
         onValueChange={handleChange}
       />

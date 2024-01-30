@@ -15,8 +15,10 @@ export const PerfilScreen = () => {
     perfis,
     producaoNaturaForm,
     producaoIndustrialForm,
+    enableSavePerfil,
     modelToViewModel,
   } = useManagePerfil(produtor);
+
   const { navigation } = useCustomNavigation();
   const [enableCreatePerfil, setEnableCreatePerfil] = useState<boolean>(false);
 
@@ -29,15 +31,12 @@ export const PerfilScreen = () => {
       setEnableCreatePerfil(true);
     }
   }, [producaoIndustrialForm, producaoNaturaForm]);
-  console.log("🚀 - PerfilScreen - producaoNaturaForm:", producaoNaturaForm);
 
   const handleCreatePerfil = () => {
     navigation.navigate("CreatePerfilScreen", { parentRoute: "PerfilScreen" });
   };
 
   const handleViewPerfil = async (perfilId: string) => {
-    console.log("🚀 - handleViewPerfil - perfilId:", perfilId);
-
     if (!produtor) return console.log("produtor não encontrado");
 
     const { municipio } = produtor.propriedades![0];
@@ -84,7 +83,18 @@ export const PerfilScreen = () => {
       )}
 
       {enableCreatePerfil ? (
-        <AddButton label="Criar Novo Perfil" onPress={handleCreatePerfil} />
+        <>
+          <AddButton
+            label="Criar Novo Perfil"
+            onPress={handleCreatePerfil}
+            disabled={!enableSavePerfil}
+          />
+          {!enableSavePerfil && (
+            <Text style={styles.text}>
+              Não é possível criar um novo perfil para o contrato vigente.
+            </Text>
+          )}
+        </>
       ) : (
         <Text style={styles.text}>
           Conecte-se á internet para opções de criação de perfil
@@ -102,8 +112,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: globalColors.grayscale[500],
-    fontSize: 11,
+    fontSize: 13,
     marginTop: 10,
+    fontWeight: "bold",
     fontStyle: "italic",
   },
 });

@@ -9,6 +9,7 @@ import { SyncHelpers } from "@sync/SyncHelpers";
 import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
 import { PerfilInputDTO } from "./dto/PerfilInputDTO";
 import { log } from "@shared/utils/log";
+import { ContractInfo } from "@domain/perfil/ContractInfo";
 
 export class PerfilService {
   private isConnected: boolean;
@@ -51,11 +52,15 @@ export class PerfilService {
     const perfil = allPerfis.filter(
       (perfil) => perfil.id_cliente === produtorId
     );
+
     return perfil;
   };
 
   getAllLocalPerfils = async () => {
     const allPerfils = await this.localRepository.findAll!();
+    // .map((perfil) =>
+    //   perfil.id_contrato ? perfil : { ...perfil, id_contrato: 1 }
+    // );
     return allPerfils;
   };
 
@@ -119,6 +124,40 @@ export class PerfilService {
     }
   };
 
+  getContractInfo = async () => {
+    try {
+      const localContractInfo = await this.localRepository.getContractInfo();
+      console.log(
+        "🚀 - getContractInfo= - localContractInfo:",
+        localContractInfo
+      );
+
+      if (!this.isConnected) {
+        return localContractInfo;
+      }
+
+      const shouldUpdate = await this.syncHelpers.shouldSync(
+        1000 * 60 * 60 * 24 * 5
+      );
+
+      if (!shouldUpdate && localContractInfo) {
+        console.log("@@@ ContractInfo stil valid, not running sync.");
+        return localContractInfo;
+      }
+
+      const contractInfo = await this.remoteRepository.getContractInfo();
+
+      contractInfo &&
+        (await this.localRepository.saveContractInfo!(contractInfo));
+
+      console.log("### Fetching contractInfo from remoteRepository");
+      return contractInfo;
+    } catch (error) {
+      console.log("🚀 PerfilService.ts:51 - getPerfilOptions - error:", error);
+      throw error;
+    }
+  };
+
   perfilInputToModel = async (perfil: any) => {
     const perfilOptions = await this.getPerfilOptions();
     return new PerfilDataMapper(perfil, perfilOptions).perfilInputToModel();
@@ -138,6 +177,7 @@ export class PerfilService {
     }
 
     const perfilOptions = await this.localRepository.getPerfilOptions();
+    await this.localRepository.getContractInfo();
 
     for (const perfil of allPerfils) {
       try {
@@ -145,7 +185,7 @@ export class PerfilService {
           perfil,
           perfilOptions
         ).modelToRemoteDTO();
-        log(perfilDTO);
+
         await this.remoteRepository.create(perfilDTO);
         await this.localRepository.delete!(perfil.id);
       } catch (error) {

@@ -9,6 +9,7 @@ import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import perfil from "_mockData/perfil/perfil.json";
 // import perfilInput
 import perfilOptions from "_mockData/perfil/perfilOptions.json";
+import { ContractInfo } from "@domain/perfil/ContractInfo";
 
 jest.mock("@shared/utils/fileSystemUtils");
 
@@ -18,6 +19,7 @@ jest.mock("@infrastructure/api/perfil/PerfilAPIRepository", () => {
       create: jest.fn(),
       getPerfilOptions: jest.fn(),
       getGruposProdutos: jest.fn(),
+      getContractInfo: jest.fn(),
     })),
   };
 });
@@ -43,6 +45,8 @@ jest.mock(
         savePerfilOptions: jest.fn(),
         getGruposProdutos: jest.fn(),
         saveGruposProdutos: jest.fn(),
+        getContractInfo: jest.fn(),
+        saveContractInfo: jest.fn(),
       })),
     };
   }
@@ -191,21 +195,21 @@ describe("PerfilService tests", () => {
         );
         expect(perfilOptions).toEqual(perfilInput);
       });
+      it("should NOT get perfilOptions from remote repository and save in localRepo if online but sync is up to date", async () => {
+        jest
+          .spyOn(localRepository, "getPerfilOptions")
+          .mockResolvedValueOnce(perfilInput);
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
+
+        const perfilOptions = await perfilService.getPerfilOptions();
+
+        expect(localRepository.getPerfilOptions).toHaveBeenCalled();
+        expect(remoteRepository.getPerfilOptions).not.toHaveBeenCalled();
+        expect(localRepository.savePerfilOptions).not.toHaveBeenCalled();
+        expect(perfilOptions).toEqual(perfilInput);
+      });
     });
 
-    it("should NOT get perfil options from remote repository and save in localRepo if online but sync is up to date", async () => {
-      jest
-        .spyOn(localRepository, "getPerfilOptions")
-        .mockResolvedValueOnce(perfilInput);
-      jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
-
-      const perfilOptions = await perfilService.getPerfilOptions();
-
-      expect(localRepository.getPerfilOptions).toHaveBeenCalled();
-      expect(remoteRepository.getPerfilOptions).not.toHaveBeenCalled();
-      expect(localRepository.savePerfilOptions).not.toHaveBeenCalled();
-      expect(perfilOptions).toEqual(perfilInput);
-    });
     describe("getGruposProdutos method", () => {
       it("should get gruposProdutos from local repository if offline", async () => {
         perfilService = new PerfilService({
@@ -281,6 +285,82 @@ describe("PerfilService tests", () => {
         expect(localRepository.findAll).toHaveBeenCalled();
         expect(remoteRepository.create).not.toHaveBeenCalled();
         expect(localRepository.delete).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("getContractInfo method tests", () => {
+      it("should get contractInfo from local repository if offline", async () => {
+        perfilService = new PerfilService({
+          ...perfilServiceTestConfig,
+          isConnected: false,
+        });
+
+        jest
+          .spyOn(localRepository, "getContractInfo")
+          .mockResolvedValue(perfilInput);
+
+        const contractInfo = await perfilService.getContractInfo();
+        expect(localRepository.getContractInfo).toHaveBeenCalled();
+        expect(remoteRepository.getContractInfo).not.toHaveBeenCalled();
+        expect(contractInfo).toEqual(perfilInput);
+      });
+
+      it("should get contractInfo from LOCAL repository online but NOT time to sync", async () => {
+        const mockedContractInfo = [] as ContractInfo[];
+        localRepository.getContractInfo = jest
+          .fn()
+          .mockResolvedValue(mockedContractInfo);
+
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
+
+        const contractInfo = await perfilService.getContractInfo();
+
+        expect(localRepository.getContractInfo).toHaveBeenCalled();
+        expect(syncHelpers.shouldSync).toHaveBeenCalled();
+        expect(remoteRepository.getContractInfo).not.toHaveBeenCalled();
+        expect(localRepository.saveContractInfo).not.toHaveBeenCalled();
+        expect(contractInfo).toEqual(mockedContractInfo);
+      });
+
+      it("should get contractInfo from REMOTE repository if online, time to sync but NO LOCAL data available", async () => {
+        const mockedContractInfo = [] as ContractInfo[];
+        localRepository.getContractInfo = jest.fn().mockResolvedValue(null);
+
+        remoteRepository.getContractInfo = jest.fn(() =>
+          Promise.resolve(mockedContractInfo)
+        );
+
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
+
+        const contractInfo = await perfilService.getContractInfo();
+
+        expect(localRepository.getContractInfo).toHaveBeenCalled();
+        expect(syncHelpers.shouldSync).toHaveBeenCalled();
+        expect(remoteRepository.getContractInfo).toHaveBeenCalled();
+        expect(localRepository.saveContractInfo).toHaveBeenCalledWith(
+          mockedContractInfo
+        );
+        expect(contractInfo).toEqual(mockedContractInfo);
+      });
+
+      it("should get contractInfo from remote repository and save in localRepo if online and SHOULD UPDATE", async () => {
+        const mockedContractInfo = [] as ContractInfo[];
+        localRepository.getContractInfo = jest
+          .fn()
+          .mockResolvedValue(mockedContractInfo);
+        remoteRepository.getContractInfo = jest.fn().mockResolvedValue([]);
+
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(true);
+
+        const contractInfo = await perfilService.getContractInfo();
+
+        expect(localRepository.getContractInfo).toHaveBeenCalled();
+        expect(syncHelpers.shouldSync).toHaveBeenCalled();
+        expect(remoteRepository.getContractInfo).toHaveBeenCalled();
+        expect(localRepository.saveContractInfo).toHaveBeenCalledWith(
+          mockedContractInfo
+        );
+        expect(contractInfo).toEqual(mockedContractInfo);
       });
     });
   });

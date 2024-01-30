@@ -2,6 +2,7 @@ import { GruposProdutosOptions, PerfilModel } from "@domain/perfil";
 import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { LocalStorageRepository } from "../LocalStorageRepository";
 import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
+import { ContractInfo } from "@domain/perfil/ContractInfo";
 
 export class PerfilLocalStorageRepository
   extends LocalStorageRepository
@@ -20,7 +21,10 @@ export class PerfilLocalStorageRepository
 
   async getPerfilOptions(): Promise<PerfilOptions> {
     const perfilOptionsString = await this.storage.getItem("perfilOptions");
-    const perfilOptions = JSON.parse(perfilOptionsString || "{}");
+    if (!perfilOptionsString) {
+      throw new Error("PerfilOptions not found");
+    }
+    const perfilOptions = JSON.parse(perfilOptionsString);
     return perfilOptions;
   }
 
@@ -42,5 +46,15 @@ export class PerfilLocalStorageRepository
       "gruposProdutos",
       JSON.stringify(gruposProdutos)
     );
+  }
+
+  async getContractInfo(): Promise<any> {
+    const contractInfoString = await this.storage.getItem("contractInfo");
+    const contractInfo = JSON.parse(contractInfoString || "{}");
+    return contractInfo;
+  }
+
+  async saveContractInfo(contractInfo: ContractInfo[]): Promise<void> {
+    await this.storage.setItem("contractInfo", JSON.stringify(contractInfo));
   }
 }
