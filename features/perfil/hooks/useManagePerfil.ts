@@ -15,6 +15,7 @@ import { useAuth } from "@auth/hooks/useAuth";
 import { toCapitalCase } from "@shared/utils/formatStrings";
 import { log } from "@shared/utils/log";
 import perfilInputTest from "_mockData/perfil/createPerfilInputComplete.json";
+import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const { isConnected } = useManageConnection();
@@ -32,12 +33,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   useEffect(() => {
     (async () => {
       if (produtor?.perfis) {
-        const tst = await new PerfilService({
-          isConnected: !!isConnected,
-        }).perfilInputToModel(perfilInputTest as any);
-
-        console.log("🚀 - tst:", tst.participa_organizacao);
-        produtor.perfis.push(tst as any);
         setPerfis(produtor.perfis);
       }
     })();
@@ -106,16 +101,16 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     return dadosProducaoForm;
   };
 
-  const toViewModel = async (perfil: PerfilModel) => {
+  const modelToViewModel = async (perfil: PerfilModel) => {
     const perfilService = new PerfilService({
       isConnected: !!isConnected,
     });
 
-    const perfilViewModel = await perfilService.perfilInputToModel(perfil);
+    const perfilViewModel = await perfilService.perfilModelToViewModel(perfil);
     return perfilViewModel;
   };
 
-  const savePerfil = async (perfil: PerfilModel) => {
+  const savePerfil = async (perfil: PerfilInputDTO) => {
     const perfilService = new PerfilService({ isConnected: !!isConnected });
     const perfilModel: PerfilModel = await perfilService.perfilInputToModel(
       perfil
@@ -134,7 +129,7 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
       id_propriedade,
     });
 
-    produtor!.perfis.push(perfilModel);
+    perfis.push(perfilModel);
     await perfilService.create(perfilModel);
     return;
   };
@@ -147,7 +142,7 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     setPerfis,
     setPerfil,
     getPerfilListData,
-    toViewModel,
+    modelToViewModel,
     savePerfil,
   };
 };

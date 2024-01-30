@@ -10,11 +10,6 @@ export class PerfilLocalStorageRepository
   protected readonly key = "id";
   protected readonly collection = "perfis";
 
-  async findAll(): Promise<PerfilModel[]> {
-    const allPerfils = await this.findAll();
-    return allPerfils;
-  }
-
   async create(perfil: PerfilModel): Promise<void> {
     await this.saveData(perfil.id, perfil);
   }

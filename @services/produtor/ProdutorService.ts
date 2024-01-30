@@ -5,6 +5,7 @@ import {
   ProdutorServiceConfigInterface,
   produtorDefaultConfig,
 } from "./ProdutorServiceConfig";
+import { PerfilService } from "@services/perfil/PerfilService";
 
 export class ProdutorService {
   private isConnected: boolean;
@@ -33,6 +34,13 @@ export class ProdutorService {
     const produtor = await this.remoteRepository.findByCPF!(CPFProdutor);
     produtor && (await this.localRepository.create(produtor));
     return produtor || produtorLocal;
+  };
+
+  getProdutorLocalPerfis = async (produtorId: string) => {
+    const localPerfis = await new PerfilService().getPerfisByProdutorId(
+      produtorId
+    );
+    return localPerfis;
   };
 
   getAllLocalProdutoresIds = async () => {

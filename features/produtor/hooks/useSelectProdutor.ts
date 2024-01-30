@@ -31,32 +31,31 @@ export const useSelectProdutor = () => {
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "") || "06627559609";
 
-    const produtor = await new ProdutorService({
+    const produtorService = new ProdutorService({
       isConnected: !!isConnected,
-    }).getProdutor(cpf);
+    });
 
-    // const prods = await new ProdutorService({
-    //   isConnected: isConnected,
-    // }).getAllLocalProdutoresIds();
-    // console.log(
-    //   "🚀 - file: useSelectProdutor.ts:39 - fetchProdutor - prods:",
-    //   prods
-    // );
-
-    // ********** TESTING ONLY
-    // const ids = await new SyncService()
-    //   .syncRelatorios(true)
-    //   .catch((e) => console.log("Callee error --------", e));
-    // console.log("🚀 ------------- fetchProdutor - dataFromServer:", ids);
+    const produtor = await produtorService.getProdutor(cpf);
 
     if (!produtor) {
       setSnackBarOptions({
         message: "Produtor não encontrado",
         status: "warning",
       });
+
       setIsLoading(false);
       return;
     }
+    const offlinePerfis = await produtorService.getProdutorLocalPerfis(
+      produtor.id_pessoa_demeter
+    );
+    produtor.perfis.push(...offlinePerfis);
+    // produtor.perfis.sort((a, b) =>
+    //   Date.parse(a.data_preenchimento) < Date.parse(b.data_preenchimento)
+    //     ? 1
+    //     : -1
+    // );
+
     setIsLoading(false);
     setProdutor(produtor);
   };

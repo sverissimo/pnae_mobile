@@ -1,0 +1,130 @@
+{
+  "tipo_perfil": "Saída",
+  "participa_organizacao": true,
+  "grau_interesse_pnae": "MÉDIO",
+  "atividade": "Ambas",
+  "nivel_tecnologico_cultivo": "2",
+  "sistema_producao": "143",
+  "condicao_posse": "2",
+  "dap_caf_vigente": true,
+  "credito_rural": false,
+  "fonte_captacao_agua": "2",
+  "forma_esgotamento_sanitario": "143",
+  "atividades_usam_recursos_hidricos": "77",
+  "atividades_com_regularizacao_ambiental": "10",
+  "possui_cadastro_car": true,
+  "aderiu_pra": false,
+  "ciente_iniciativas_regularizacao_pra": true,
+  "realiza_escalonamento_producao": true,
+  "procedimento_pos_colheita": "2",
+  "possui_agroindustria_propria": true,
+  "tipo_gestao_unidade": "Coletiva",
+  "pessoas_processamento_alimentos": 22,
+  "tipo_estabelecimento": "Pessoa Jurídica",
+  "tipo_pessoa_juridica": "Associação",
+  "agroindustria_precisa_adaptacao_reforma": true,
+  "possui_registro_orgao_fiscalizacao_sanitaria": true,
+  "orgao_fiscalizacao_sanitaria": "IMA (Instituto Mineiro de Agropecuária)",
+  "dados_producao_in_natura": {
+    "tipo_regularizacao_uso_recursos_hidricos": "Certidão de uso insignificante",
+    "tipo_regularizacao_ambiental": "Certidão de dispensa de licenciamento",
+    "controla_custos_producao": false,
+    "local_comercializacao": "30",
+    "valor_total_obtido_pnae": "11000",
+    "valor_total_obtido_outros": "12000",
+    "forma_entrega_produtos": "46189",
+    "dificuldade_fornecimento": "2",
+    "informacoes_adicionais": "Teste in natura 2",
+    "at_prf_see_grupos_produtos": [
+      {
+        "id_grupo": "80",
+        "area_utilizada": 1,
+        "producao_aproximada_ultimo_ano_total": "1",
+        "producao_aproximada_ultimo_ano_pnae": "1",
+        "at_prf_see_produto": [
+          {
+            "id_produto": "1151"
+          },
+          {
+            "id_produto": "1148"
+          },
+          {
+            "id_produto": "1150"
+          },
+          {
+            "id_produto": "1149"
+          }
+        ]
+      },
+      {
+        "id_grupo": "79",
+        "at_prf_see_produto": [
+          {
+            "id_produto": "1086",
+            "area_utilizada": 2,
+            "producao_aproximada_ultimo_ano_pnae": "2",
+            "producao_aproximada_ultimo_ano_total": "2"
+          },
+          {
+            "id_produto": "1087",
+            "area_utilizada": 3,
+            "producao_aproximada_ultimo_ano_pnae": "3",
+            "producao_aproximada_ultimo_ano_total": "3"
+          }
+        ]
+      }
+    ]
+  },
+  "dados_producao_agro_industria": {
+    "controla_custos_producao": true,
+    "tipo_regularizacao_ambiental": "Licença ambiental",
+    "tipo_regularizacao_uso_recursos_hidricos": "Outorga",
+    "valor_total_obtido_pnae": "22000",
+    "valor_total_obtido_outros": "33000",
+    "local_comercializacao": "4147",
+    "forma_entrega_produtos": "39",
+    "dificuldade_fornecimento": "2",
+    "informacoes_adicionais": "Teste prod industrial ",
+    "at_prf_see_grupos_produtos": [
+      {
+        "id_grupo": "56",
+        "at_prf_see_produto": [
+          {
+            "id_produto": "929",
+            "producao_aproximada_ultimo_ano_pnae": "5",
+            "producao_aproximada_ultimo_ano_total": "5"
+          }
+        ]
+      },
+      {
+        "id_grupo": "62",
+        "at_prf_see_produto": [
+          {
+            "id_produto": "948",
+            "producao_aproximada_ultimo_ano_pnae": "6",
+            "producao_aproximada_ultimo_ano_total": "6"
+          },
+          {
+            "id_produto": "946",
+            "producao_aproximada_ultimo_ano_pnae": "7",
+            "producao_aproximada_ultimo_ano_total": "7"
+          },
+          {
+            "id_produto": "947",
+            "producao_aproximada_ultimo_ano_pnae": "8",
+            "producao_aproximada_ultimo_ano_total": "8"
+          }
+        ]
+      }
+    ]
+  },
+  "at_prf_see_propriedade": {
+    "atividade": "Ambas"
+  },
+  "data_preenchimento": "2024-01-26T15:43:47.264Z",
+  "data_atualizacao": "2024-01-26T15:43:47.264Z",
+  "id_cliente": "91025",
+  "id_tecnico": "3201",
+  "id_propriedade": "66483",
+  "id_contrato": "1"
+}

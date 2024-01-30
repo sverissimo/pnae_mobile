@@ -10,9 +10,10 @@ import { useCustomNavigation } from "@navigation/hooks";
 import { PerfilModel } from "@domain/perfil";
 import { useSnackBar } from "@shared/hooks";
 import perfInput from "_mockData/perfil/createPerfilInputComplete.json";
+import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
-  const { key, selectedItems, parent } = route?.params || {};
+  const { key, selectedItems } = route?.params || {};
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
   const { setSnackBarOptions } = useSnackBar();
@@ -33,7 +34,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
 
-  const handleSave = async (perfil: PerfilModel) => {
+  const handleSave = async (perfil: PerfilInputDTO) => {
     try {
       await savePerfil(perfil);
       setSnackBarOptions({
@@ -41,7 +42,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         status: "success",
         duration: 1000,
       });
-      // setEnableSave(false);
+      setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
       }, 900);

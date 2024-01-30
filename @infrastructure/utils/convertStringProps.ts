@@ -5,9 +5,9 @@ export function stringsPropsToBoolean(obj: Record<string, any>) {
     const value = obj[key];
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       result[key] = stringsPropsToBoolean(value);
-    } else if (value === "true") {
+    } else if (value === "true" || value === "Sim") {
       result[key] = true;
-    } else if (value === "false") {
+    } else if (value === "false" || value === "Não") {
       result[key] = false;
     } else {
       result[key] = value;
@@ -95,8 +95,6 @@ export function convertBooleansToStrings(
         result[key] = obj[key];
       }
     }
-    console.log("🚀 - result:", result);
-
     return result;
   }
 }

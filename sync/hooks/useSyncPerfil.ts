@@ -15,6 +15,6 @@ export const useSyncPerfil = () => {
       console.log("Saving remote perfil in remoteRepository");
     };
 
-    // performSync();
+    performSync();
   }, [debouncedIsConnected]);
 };

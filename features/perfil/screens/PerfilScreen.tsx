@@ -11,8 +11,12 @@ import { useCustomNavigation } from "@navigation/hooks";
 
 export const PerfilScreen = () => {
   const { produtor } = useSelectProdutor();
-  const { perfis, producaoNaturaForm, producaoIndustrialForm, toViewModel } =
-    useManagePerfil(produtor);
+  const {
+    perfis,
+    producaoNaturaForm,
+    producaoIndustrialForm,
+    modelToViewModel,
+  } = useManagePerfil(produtor);
   const { navigation } = useCustomNavigation();
   const [enableCreatePerfil, setEnableCreatePerfil] = useState<boolean>(false);
 
@@ -25,6 +29,7 @@ export const PerfilScreen = () => {
       setEnableCreatePerfil(true);
     }
   }, [producaoIndustrialForm, producaoNaturaForm]);
+  console.log("🚀 - PerfilScreen - producaoNaturaForm:", producaoNaturaForm);
 
   const handleCreatePerfil = () => {
     navigation.navigate("CreatePerfilScreen", { parentRoute: "PerfilScreen" });
@@ -41,7 +46,7 @@ export const PerfilScreen = () => {
       produtor.perfis[+perfilId];
 
     if (!perfil) return console.log("perfil não encontrado");
-    const perfilViewModel = await toViewModel(perfil);
+    const perfilViewModel = await modelToViewModel(perfil);
 
     navigation.navigate("ViewPerfilScreen", {
       perfil: perfilViewModel,

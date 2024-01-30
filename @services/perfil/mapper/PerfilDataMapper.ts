@@ -24,8 +24,8 @@ import {
   stringPropsToNumber,
   stringsPropsToBoolean,
 } from "@infrastructure/utils/convertStringProps";
-import { log } from "@shared/utils/log";
 import { PerfilViewModel } from "../dto/PerfilViewModel";
+import { log } from "@shared/utils/log";
 
 export class PerfilDataMapper {
   constructor(
@@ -36,13 +36,12 @@ export class PerfilDataMapper {
     this.perfilOptions = perfilOptions;
   }
 
-  toViewModel = () => {
+  modelToViewModel = () => {
     const perfilViewModel = this.changeDadosProdIndustrialKeys().build();
-
     return perfilViewModel;
   };
 
-  toModel = () => {
+  perfilInputToModel = () => {
     const perfilModel = this.extractDadosProducao()
       .extractGruposProdutosView()
       .parseArrays()
@@ -50,16 +49,14 @@ export class PerfilDataMapper {
       .addDates()
       .build();
 
-    return perfilModel;
+    return perfilModel as PerfilModel;
   };
 
-  toRemoteDTO = () => {
-    const perfilRemoteInputDTO = this.extractDadosProducao()
-      .extractGruposProdutos()
+  modelToRemoteDTO = () => {
+    const perfilRemoteInputDTO = this.extractGruposProdutos()
       .getPrimeNumbersProps()
       .parseBooleanProps()
       .parseNumberProps()
-      .addDates()
       .build();
     return perfilRemoteInputDTO;
   };
@@ -102,42 +99,15 @@ export class PerfilDataMapper {
     if (gruposIndustrialOptions) {
       perfil.dados_producao_agro_industria.at_prf_see_grupos_produtos =
         gruposIndustrialOptions;
-      perfil.gruposIndustrialOptions;
+      // perfil.gruposIndustrialOptions;
     }
 
     if (gruposNaturaOptions) {
       perfil.dados_producao_in_natura.at_prf_see_grupos_produtos =
         gruposNaturaOptions;
-      perfil.gruposNaturaOptions;
+      // perfil.gruposNaturaOptions;
     }
     this.perfil = perfil;
-    return this;
-  };
-
-  private parseArrays = () => {
-    const p = convertArraysToStrings(this.perfil);
-    this.perfil = p;
-    return this;
-  };
-
-  private parseBooleanProps = () => {
-    const { perfil } = this;
-    const p = stringsPropsToBoolean(perfil);
-    this.perfil = p;
-    return this;
-  };
-
-  private booleanToStrings = () => {
-    const { perfil } = this;
-    const p = convertBooleansToStrings(perfil);
-    this.perfil = p;
-    return this;
-  };
-
-  private parseNumberProps = () => {
-    const { perfil } = this;
-    const p = stringPropsToNumber(perfil);
-    this.perfil = p;
     return this;
   };
 
@@ -294,8 +264,13 @@ export class PerfilDataMapper {
     const { perfilOptions } = this;
     const result = {} as any;
     for (const field of primeNumberFields) {
-      const selectedOptions = obj[field] as string[];
+      let selectedOptions = obj[field] as string[] | string;
+
       if (!selectedOptions) continue;
+      if (typeof selectedOptions === "string") {
+        const regex = /, (?![^()]*\))/g;
+        selectedOptions = selectedOptions.split(regex);
+      }
 
       const availableOptions = perfilOptions[Perfil.toPefilOptionsProp(field)];
 
@@ -314,6 +289,9 @@ export class PerfilDataMapper {
     const indexes = selectedOptions.map((option) =>
       availableOptions.indexOf(option)
     );
+    console.log("🚀 - PerfilDataMapper - selectedOptions:", selectedOptions);
+
+    console.log("🚀 - PerfilDataMapper - indexes:", indexes);
     let result = 1;
     indexes.forEach((index) => {
       result *= primeNumbersArray[index];
@@ -327,6 +305,33 @@ export class PerfilDataMapper {
     console.log("🚀 - PerfilDataMapper - data_atualizacao:", data_atualizacao);
 
     this.perfil = { ...this.perfil, data_preenchimento, data_atualizacao };
+    return this;
+  };
+
+  private parseArrays = () => {
+    const p = convertArraysToStrings(this.perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private parseBooleanProps = () => {
+    const { perfil } = this;
+    const p = stringsPropsToBoolean(perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private booleanToStrings = () => {
+    const { perfil } = this;
+    const p = convertBooleansToStrings(perfil);
+    this.perfil = p;
+    return this;
+  };
+
+  private parseNumberProps = () => {
+    const { perfil } = this;
+    const p = stringPropsToNumber(perfil);
+    this.perfil = p;
     return this;
   };
 

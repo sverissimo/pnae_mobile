@@ -1,6 +1,5 @@
 import { PerfilDataMapper } from "./PerfilDataMapper";
 import { PerfilInputDTO } from "../dto/PerfilInputDTO";
-import { log } from "@shared/utils/log";
 import { primeNumbersArray } from "@infrastructure/api/perfil/constants/primeNumbersArray";
 import perfilInputDTO from "_mockData/perfil/perfilInput.json";
 import perfilInput from "_mockData/perfil/perfil.json";
@@ -42,13 +41,20 @@ describe("PerfilDataMapper tests", () => {
       String(expectedDificuldadeFornecimentoNatura)
     );
   });
-  describe("PerfilDataMapper toRemoteDTO method", () => {
+
+  describe("PerfilDataMapper modelToRemoteDTO method", () => {
     const perfilDataMapper = new PerfilDataMapper(
       createPerfilInput as Partial<PerfilInputDTO>,
       perfilOptions
     );
 
-    const perfilDTO = perfilDataMapper.toRemoteDTO();
+    const perfilModel = perfilDataMapper.perfilInputToModel();
+
+    const perfilDTO = new PerfilDataMapper(
+      perfilModel,
+      perfilOptions
+    ).modelToRemoteDTO();
+
     const prodNatura = perfilDTO.dados_producao_in_natura;
     const prodIndustria = perfilDTO.dados_producao_agro_industria;
 
@@ -56,7 +62,6 @@ describe("PerfilDataMapper tests", () => {
       expect(perfilDTO).toBeDefined();
       expect(perfilDTO).toHaveProperty("dados_producao_agro_industria");
       expect(perfilDTO).toHaveProperty("dados_producao_in_natura");
-      expect(true).toBe(true);
     });
 
     it("Should convert grupos and produtos into nested arrays of objects", () => {
@@ -112,13 +117,20 @@ describe("PerfilDataMapper tests", () => {
     });
   });
 
-  describe("PerfilDataMapper toModel method", () => {
+  describe("PerfilDataMapper perfilInputToModel method", () => {
     const perfilDataMapper = new PerfilDataMapper(
       createPerfilInputComplete as PerfilInputDTO,
       perfilOptions
     );
 
-    const perfilModel = perfilDataMapper.toViewModel();
+    const perfilModel = perfilDataMapper.perfilInputToModel();
+    const { dados_producao_agro_industria, dados_producao_in_natura } =
+      perfilModel;
+    const { at_prf_see_grupos_produtos: gruposNatura } =
+      dados_producao_in_natura;
+    const { at_prf_see_grupos_produtos: gruposIndustria } =
+      dados_producao_agro_industria;
+
     it("Should convert nested arrays of objects to grupos and produtos", () => {
       expect(perfilModel.sistema_producao).toBe("Plantio direto, Orgânico");
       expect(perfilModel.condicao_posse).toBe("Aluguel");
@@ -136,6 +148,49 @@ describe("PerfilDataMapper tests", () => {
         "🚀 - it - perfilModel.dados_producao_agro_industria:",
         perfilModel.dados_producao_agro_industria
       );
+    });
+    it("Should create dadosProducaoNatura and dadosProducaoIndustrial properties", () => {
+      expect(perfilModel).toHaveProperty("dados_producao_agro_industria");
+      expect(perfilModel).toHaveProperty("dados_producao_in_natura");
+    });
+    it("Should create at_prf_see_grupos_produtos and at_prf_see_produto properties", () => {
+      expect(gruposNatura).toBeDefined();
+      expect(gruposIndustria).toBeDefined();
+      expect(gruposNatura).toHaveLength(2);
+      expect(gruposIndustria).toHaveLength(2);
+      expect(gruposNatura[0]).toHaveProperty("at_prf_see_produto");
+      expect(gruposIndustria[0]).toHaveProperty("at_prf_see_produto");
+    });
+
+    it("at_prf_see_grupos_produtos should NOT have one EMPTY object at the end.", () => {
+      expect(gruposNatura).toHaveLength(2);
+      expect(gruposIndustria).toHaveLength(2);
+      expect(gruposNatura.filter((g) => !g.nm_grupo)).toHaveLength(0);
+      expect(gruposNatura.filter((g) => !!g.nm_grupo)).toHaveLength(2);
+      expect(gruposIndustria.filter((g) => !g.nm_grupo)).toHaveLength(0);
+      expect(gruposIndustria.filter((g) => !!g.nm_grupo)).toHaveLength(2);
+    });
+    it("at_prf_see_produto should have ONE EMPTY object at the end. (SHOULD IT REALLY???)", () => {
+      const grupoNatura = gruposNatura[0];
+      const grupoIndustria = gruposIndustria[0];
+      const { at_prf_see_produto: produtosNatura } = grupoNatura;
+      const { at_prf_see_produto: produtosIndustria } = grupoIndustria;
+
+      expect(produtosNatura).toHaveLength(5);
+      expect(produtosIndustria).toHaveLength(2);
+      expect(produtosNatura.filter((p) => !p.id_produto)).toHaveLength(1);
+      expect(produtosNatura.filter((p) => !!p.id_produto)).toHaveLength(4);
+      expect(produtosIndustria.filter((p) => !p.id_produto)).toHaveLength(1);
+      expect(produtosIndustria.filter((p) => !!p.id_produto)).toHaveLength(1);
+    });
+    it("Should add dates to perfilDTO object", () => {
+      const { data_atualizacao, data_preenchimento } = perfilModel;
+      expect(data_atualizacao).toBeDefined();
+      expect(data_preenchimento).toBeDefined();
+      expect(typeof data_atualizacao).toBe("string");
+      expect(typeof data_preenchimento).toBe("string");
+      expect(Date.parse(data_atualizacao)).toBeGreaterThan(0);
+      expect(Date.parse(data_preenchimento)).toBeGreaterThan(0);
     });
   });
 });
