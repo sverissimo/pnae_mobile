@@ -19,12 +19,12 @@ export class PerfilLocalStorageRepository
     await this.removeData(id);
   }
 
-  async getPerfilOptions(): Promise<PerfilOptions> {
+  async getPerfilOptions() {
     const perfilOptionsString = await this.storage.getItem("perfilOptions");
     if (!perfilOptionsString) {
-      throw new Error("PerfilOptions not found");
+      return null;
     }
-    const perfilOptions = JSON.parse(perfilOptionsString);
+    const perfilOptions = JSON.parse(perfilOptionsString) as PerfilOptions;
     return perfilOptions;
   }
 
@@ -34,6 +34,10 @@ export class PerfilLocalStorageRepository
 
   async getGruposProdutos() {
     const gruposProdutosString = await this.storage.getItem("gruposProdutos");
+    if (!gruposProdutosString) {
+      return null;
+    }
+
     const gruposProdutos = JSON.parse(
       gruposProdutosString || "{}"
     ) as GruposProdutosOptions;
@@ -48,8 +52,11 @@ export class PerfilLocalStorageRepository
     );
   }
 
-  async getContractInfo(): Promise<any> {
+  async getContractInfo(): Promise<ContractInfo[] | null> {
     const contractInfoString = await this.storage.getItem("contractInfo");
+    if (!contractInfoString) {
+      return null;
+    }
     const contractInfo = JSON.parse(contractInfoString || "{}");
     return contractInfo;
   }

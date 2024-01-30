@@ -163,7 +163,7 @@ describe("PerfilService tests", () => {
       });
     });
 
-    describe("getPerfilOptions method", () => {
+    describe.only("getPerfilOptions method", () => {
       it("should get perfil options from local repository if offline", async () => {
         perfilService = new PerfilService({
           ...perfilServiceTestConfig,
@@ -195,6 +195,24 @@ describe("PerfilService tests", () => {
         );
         expect(perfilOptions).toEqual(perfilInput);
       });
+
+      it("should get perfilOptions from REMOTE and save in localRepo if online sync is up to date, but NO LOCAL data.", async () => {
+        jest.spyOn(localRepository, "getPerfilOptions").mockResolvedValue(null);
+        jest
+          .spyOn(remoteRepository, "getPerfilOptions")
+          .mockResolvedValueOnce(perfilOptions);
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
+
+        const perfilOptionsOutput = await perfilService.getPerfilOptions();
+
+        expect(localRepository.getPerfilOptions).toHaveBeenCalled();
+        expect(remoteRepository.getPerfilOptions).toHaveBeenCalled();
+        expect(localRepository.savePerfilOptions).toHaveBeenCalledWith(
+          perfilOptionsOutput
+        );
+        expect(perfilOptionsOutput).toEqual(perfilOptions);
+      });
+
       it("should NOT get perfilOptions from remote repository and save in localRepo if online but sync is up to date", async () => {
         jest
           .spyOn(localRepository, "getPerfilOptions")
@@ -225,6 +243,26 @@ describe("PerfilService tests", () => {
         expect(localRepository.getGruposProdutos).toHaveBeenCalled();
         expect(remoteRepository.getGruposProdutos).not.toHaveBeenCalled();
         expect(gruposProdutos).toEqual(perfilInput);
+      });
+
+      it("should get gruposProdutos from REMOTE repository if online, NOT time to sync but also NO LOCAL data available", async () => {
+        jest
+          .spyOn(localRepository, "getGruposProdutos")
+          .mockResolvedValue(null);
+
+        jest
+          .spyOn(remoteRepository, "getGruposProdutos")
+          .mockResolvedValueOnce({} as GruposProdutosOptions);
+
+        jest.spyOn(syncHelpers, "shouldSync").mockResolvedValueOnce(false);
+
+        const gruposProdutos = await perfilService.getGruposProdutos();
+
+        expect(localRepository.getGruposProdutos).toHaveBeenCalled();
+        expect(syncHelpers.shouldSync).toHaveBeenCalled();
+        expect(remoteRepository.getGruposProdutos).toHaveBeenCalled();
+        expect(localRepository.saveGruposProdutos).toHaveBeenCalledWith({});
+        expect(gruposProdutos).toEqual({});
       });
       it("should get gruposProdutos from remote repository and save in localRepo if online", async () => {
         jest

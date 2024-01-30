@@ -7,10 +7,10 @@ import { ContractInfo } from "../ContractInfo";
 
 export interface PerfilRepository extends Partial<Repository<PerfilModel>> {
   create(perfil: PerfilModel | PerfilDTO): Promise<void>;
-  getPerfilOptions(): Promise<PerfilOptions>;
+  getPerfilOptions(): Promise<PerfilOptions | null>;
   savePerfilOptions?(perfilOptions: PerfilOptions): Promise<void>;
-  getGruposProdutos(): Promise<GruposProdutosOptions>;
+  getGruposProdutos(): Promise<GruposProdutosOptions | null>;
   saveGruposProdutos?(gruposProdutos: GruposProdutosOptions): Promise<void>;
-  getContractInfo(): Promise<ContractInfo[]>;
+  getContractInfo(): Promise<ContractInfo[] | null>;
   saveContractInfo?(contractInfo: any): Promise<void>;
 }

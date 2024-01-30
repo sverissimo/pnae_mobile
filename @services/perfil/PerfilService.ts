@@ -64,7 +64,7 @@ export class PerfilService {
     return allPerfils;
   };
 
-  getPerfilOptions = async (): Promise<PerfilOptions> => {
+  getPerfilOptions = async () => {
     try {
       const localPerfilOptions = await this.localRepository.getPerfilOptions();
 
@@ -106,7 +106,7 @@ export class PerfilService {
         1000 * 60 * 60 * 24 * 5
       );
 
-      if (!shouldUpdate && localGruposProdutos.grupos) {
+      if (!shouldUpdate && localGruposProdutos?.grupos) {
         console.log("@@@ GruposProdutos stil valid, not running sync.");
         return localGruposProdutos;
       }
@@ -127,11 +127,6 @@ export class PerfilService {
   getContractInfo = async () => {
     try {
       const localContractInfo = await this.localRepository.getContractInfo();
-      console.log(
-        "🚀 - getContractInfo= - localContractInfo:",
-        localContractInfo
-      );
-
       if (!this.isConnected) {
         return localContractInfo;
       }
@@ -160,12 +155,12 @@ export class PerfilService {
 
   perfilInputToModel = async (perfil: any) => {
     const perfilOptions = await this.getPerfilOptions();
-    return new PerfilDataMapper(perfil, perfilOptions).perfilInputToModel();
+    return new PerfilDataMapper(perfil, perfilOptions!).perfilInputToModel();
   };
 
   perfilModelToViewModel = async (perfil: PerfilModel) => {
     const perfilOptions = await this.getPerfilOptions();
-    return new PerfilDataMapper(perfil, perfilOptions).modelToViewModel();
+    return new PerfilDataMapper(perfil, perfilOptions!).modelToViewModel();
   };
 
   sync = async () => {
@@ -176,8 +171,11 @@ export class PerfilService {
       return;
     }
 
-    const perfilOptions = await this.localRepository.getPerfilOptions();
-    await this.localRepository.getContractInfo();
+    await this.getContractInfo();
+    await this.getGruposProdutos();
+
+    const perfilOptions = await this.getPerfilOptions();
+    if (!perfilOptions) return;
 
     for (const perfil of allPerfils) {
       try {
@@ -186,8 +184,8 @@ export class PerfilService {
           perfilOptions
         ).modelToRemoteDTO();
 
-        await this.remoteRepository.create(perfilDTO);
-        await this.localRepository.delete!(perfil.id);
+        // await this.remoteRepository.create(perfilDTO);
+        // await this.localRepository.delete!(perfil.id);
       } catch (error) {
         console.log("🚀 PerfilService.ts:60 - sync - error:", error);
         throw error;

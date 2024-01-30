@@ -2,8 +2,6 @@ import { PerfilService } from "@services/perfil/PerfilService";
 import { useDebounce, useManageConnection } from "@shared/hooks";
 import { useEffect } from "react";
 
-const perfilService = new PerfilService();
-
 export const useSyncPerfil = () => {
   const { isConnected } = useManageConnection();
   const debouncedIsConnected = useDebounce(isConnected, 5000);
@@ -11,7 +9,9 @@ export const useSyncPerfil = () => {
   useEffect(() => {
     if (!debouncedIsConnected) return;
     const performSync = async () => {
-      await perfilService.sync();
+      await new PerfilService({
+        isConnected: !!debouncedIsConnected,
+      }).sync();
       console.log("Saving remote perfil in remoteRepository");
     };
 
