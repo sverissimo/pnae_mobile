@@ -12,7 +12,8 @@ export class PerfilLocalStorageRepository
   protected readonly collection = "perfis";
 
   async create(perfil: PerfilModel): Promise<void> {
-    await this.saveData(perfil.id, perfil);
+    const tempÍd = perfil.id || Math.random().toString(36).slice(2);
+    await this.saveData(tempÍd, perfil);
   }
 
   async delete(id: string): Promise<void> {

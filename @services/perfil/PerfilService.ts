@@ -58,9 +58,6 @@ export class PerfilService {
 
   getAllLocalPerfils = async () => {
     const allPerfils = await this.localRepository.findAll!();
-    // .map((perfil) =>
-    //   perfil.id_contrato ? perfil : { ...perfil, id_contrato: 1 }
-    // );
     return allPerfils;
   };
 
@@ -171,8 +168,7 @@ export class PerfilService {
       return;
     }
 
-    await this.getContractInfo();
-    await this.getGruposProdutos();
+    await Promise.all([this.getContractInfo(), this.getGruposProdutos()]);
 
     const perfilOptions = await this.getPerfilOptions();
     if (!perfilOptions) return;
@@ -184,8 +180,8 @@ export class PerfilService {
           perfilOptions
         ).modelToRemoteDTO();
 
-        // await this.remoteRepository.create(perfilDTO);
-        // await this.localRepository.delete!(perfil.id);
+        await this.remoteRepository.create(perfilDTO);
+        await this.localRepository.delete!(perfil.id);
       } catch (error) {
         console.log("🚀 PerfilService.ts:60 - sync - error:", error);
         throw error;
