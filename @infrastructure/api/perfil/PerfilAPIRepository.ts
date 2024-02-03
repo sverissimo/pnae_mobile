@@ -4,8 +4,6 @@ import { PerfilRepository } from "@domain/perfil/repository/PerfilRepository";
 import { GruposProdutosOptions, PerfilModel } from "@domain/perfil";
 import { PerfilOptions } from "./PerfilOptions";
 import { Perfil } from "@domain/perfil/Perfil";
-import { log } from "@shared/utils/log";
-import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
 import { PerfilDTO } from "./PerfilDTO";
 import { ContractInfo } from "@domain/perfil/ContractInfo";
 

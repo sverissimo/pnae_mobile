@@ -7,6 +7,7 @@ import { ContractInfo } from "../ContractInfo";
 
 export interface PerfilRepository extends Partial<Repository<PerfilModel>> {
   create(perfil: PerfilModel | PerfilDTO): Promise<void>;
+  findAllWithLocalIds?(): Promise<(PerfilModel & { localId: string })[]>;
   getPerfilOptions(): Promise<PerfilOptions | null>;
   savePerfilOptions?(perfilOptions: PerfilOptions): Promise<void>;
   getGruposProdutos(): Promise<GruposProdutosOptions | null>;

@@ -80,11 +80,13 @@ export const producaoIndustrialForm: FormElement[] = [
     field: "valor_total_obtido_pnae2",
     label: "Valor Total Obtido PNAE",
     type: "input",
+    keyboardType: "numeric",
   },
   {
     field: "valor_total_obtido_outros2",
     label: "Valor Total Obtido de Outros",
     type: "input",
+    keyboardType: "numeric",
   },
   {
     field: "local_comercializacao2",

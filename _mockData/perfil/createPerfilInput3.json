@@ -1,0 +1,99 @@
+{
+  "tipo_perfil": "Saída",
+  "participa_organizacao": "false",
+  "grau_interesse_pnae": "BAIXO",
+  "atividade": "Atividade Secundária",
+  "gruposIndustrialOptions": [
+    {
+      "id_grupo": "76",
+      "id_grupo_legado": 34,
+      "tipo": 0,
+      "nm_grupo": "Cana-de-açúcar",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1012",
+          "id_legado": 23,
+          "nm_produto": "Cachaça",
+          "tipo": 0,
+          "id_grupo_legado": 34,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "24",
+          "producao_aproximada_ultimo_ano_pnae": "2"
+        },
+        {
+          "id_produto": "1010",
+          "id_legado": 21,
+          "nm_produto": "Rapadura",
+          "tipo": 0,
+          "id_grupo_legado": 34,
+          "sg_und_medida": "kg",
+          "producao_aproximada_ultimo_ano_total": "90",
+          "producao_aproximada_ultimo_ano_pnae": "8"
+        },
+        {}
+      ]
+    },
+    {
+      "id_grupo": "65",
+      "id_grupo_legado": 11,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de vaca",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "971",
+          "id_legado": 58,
+          "nm_produto": "Iogurte",
+          "tipo": 0,
+          "id_grupo_legado": 11,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "12",
+          "producao_aproximada_ultimo_ano_pnae": "8"
+        },
+        {}
+      ]
+    },
+    {
+      "id_grupo": "72",
+      "id_grupo_legado": 26,
+      "tipo": 0,
+      "nm_grupo": "Derivados de leite de cabra",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "997",
+          "id_legado": 73,
+          "nm_produto": "Iogurte",
+          "tipo": 0,
+          "id_grupo_legado": 26,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "7",
+          "producao_aproximada_ultimo_ano_pnae": "3"
+        },
+        {}
+      ]
+    }
+  ],
+  "possui_agroindustria_propria": "true",
+  "tipo_gestao_unidade": "Familiar",
+  "pessoas_processamento_alimentos": "14",
+  "tipo_estabelecimento": "Pessoa Física",
+  "agroindustria_precisa_adaptacao_reforma": "true",
+  "possui_registro_orgao_fiscalizacao_sanitaria": "false",
+  "controla_custos_producao2": "true",
+  "tipo_regularizacao_ambiental2": "Licença ambiental",
+  "tipo_regularizacao_uso_recursos_hidricos2": "Certidão de uso insignificante",
+  "valor_total_obtido_pnae2": "15000",
+  "valor_total_obtido_outros2": "35000",
+  "local_comercializacao2": ["PNAE Estadual "],
+  "dificuldade_fornecimento2": [
+    "Não apresenta dificuldade(s)",
+    "Quantidade demandada pequena",
+    "Não se aplica (Não comercializou)",
+    "Preço de aquisição abaixo do valor de mercado",
+    "Logística"
+  ],
+  "informacoes_adicionais2": "Test ind online ",
+  "forma_entrega_produtos2": ["Via cooperativa", "Outros"]
+}

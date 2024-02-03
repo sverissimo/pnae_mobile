@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { globalColors } from "../../../@shared/constants/themes";
+import { useMemo } from "react";
+import { View, StyleSheet } from "react-native";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
-import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
-import { useSelectProdutor } from "@features/produtor/hooks";
-import { AddButton, ListTitle } from "@shared/components/atoms";
 import { useManagePerfil } from "../hooks/useManagePerfil";
-import PerfilList from "../components/PerfilList";
+import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
+import PerfilList from "../components/PerfilList";
+import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
+import { AddButton, ListTitle } from "@shared/components/atoms";
+import { globalColors } from "../../../@shared/constants/themes";
+import { HelperMessage } from "@shared/components/atoms/HelperMessage";
 
 export const PerfilScreen = () => {
+  const { navigation } = useCustomNavigation();
   const { produtor } = useSelectProdutor();
   const {
     perfis,
@@ -19,18 +21,11 @@ export const PerfilScreen = () => {
     modelToViewModel,
   } = useManagePerfil(produtor);
 
-  const { navigation } = useCustomNavigation();
-  const [enableCreatePerfil, setEnableCreatePerfil] = useState<boolean>(false);
+  const produtorHasNoPropriedades = !produtor?.propriedades?.length;
+  const disabled = !enableSavePerfil || produtorHasNoPropriedades;
 
-  useEffect(() => {
-    const perfilOptionsLoaded = !!(
-      producaoIndustrialForm.length && producaoNaturaForm.length
-    );
-
-    if (!enableCreatePerfil && perfilOptionsLoaded) {
-      setEnableCreatePerfil(true);
-    }
-  }, [producaoIndustrialForm, producaoNaturaForm]);
+  const perfilOptionsLoaded =
+    producaoIndustrialForm.length && producaoNaturaForm.length;
 
   const handleCreatePerfil = () => {
     navigation.navigate("CreatePerfilScreen", { parentRoute: "PerfilScreen" });
@@ -45,10 +40,11 @@ export const PerfilScreen = () => {
       produtor.perfis[+perfilId];
 
     if (!perfil) return console.log("perfil não encontrado");
+
     const perfilViewModel = await modelToViewModel(perfil);
 
     navigation.navigate("ViewPerfilScreen", {
-      perfil: perfilViewModel,
+      perfil: perfilViewModel as any,
       municipio,
     });
   };
@@ -63,6 +59,10 @@ export const PerfilScreen = () => {
       <View style={styles.container}>
         <ProdutorSearchBar />
       </View>
+    );
+  } else if (!perfilOptionsLoaded) {
+    return (
+      <HelperMessage message="Conecte-se á internet para opções de criação de perfil" />
     );
   }
 
@@ -81,25 +81,18 @@ export const PerfilScreen = () => {
       ) : (
         <ListTitle title={"Nenhum perfil cadastrado"} />
       )}
-
-      {enableCreatePerfil ? (
-        <>
-          <AddButton
-            label="Criar Novo Perfil"
-            onPress={handleCreatePerfil}
-            disabled={!enableSavePerfil}
-          />
-          {!enableSavePerfil && (
-            <Text style={styles.text}>
-              Não é possível criar um novo perfil para o contrato vigente.
-            </Text>
-          )}
-        </>
-      ) : (
-        <Text style={styles.text}>
-          Conecte-se á internet para opções de criação de perfil
-        </Text>
-      )}
+      <AddButton
+        label="Criar Novo Perfil"
+        onPress={handleCreatePerfil}
+        disabled={produtorHasNoPropriedades || !enableSavePerfil}
+        mode={disabled ? "outlined" : "contained"}
+        style={{ marginTop: "2%" }}
+      />
+      {produtorHasNoPropriedades ? (
+        <HelperMessage message="Não é possível criar um novo perfil para um produtor sem propriedades cadastradas no Demeter." />
+      ) : !enableSavePerfil ? (
+        <HelperMessage message="Não é possível criar um novo perfil para o contrato vigente." />
+      ) : null}
     </View>
   );
 };
@@ -109,12 +102,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
     alignItems: "center",
-  },
-  text: {
-    color: globalColors.grayscale[500],
-    fontSize: 13,
-    marginTop: 10,
-    fontWeight: "bold",
-    fontStyle: "italic",
   },
 });

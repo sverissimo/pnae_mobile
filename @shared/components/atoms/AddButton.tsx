@@ -16,15 +16,12 @@ type AddButonProps = {
 export const AddButton = (props: AddButonProps) => {
   return (
     <Button
-      style={styles.button}
+      style={{ ...styles.button, ...props.style }}
       icon="plus"
       buttonColor={globalColors.primary[500]}
       textColor="white"
+      mode={props.disabled ? "outlined" : "contained"}
       {...props}
-      //icon="file-plus-outline"
-      //icon="pen-plus"
-      //buttonColor={globalColors.primary[100]}
-      //textColor="black"
     >
       {props.label}
     </Button>

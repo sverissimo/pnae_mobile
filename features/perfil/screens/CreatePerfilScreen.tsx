@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useManagePerfil } from "../hooks/useManagePerfil";
-import { FormTemplate } from "@shared/components/templates";
-import { ListTitle } from "@shared/components/atoms";
-import { perfilForm } from "../constants";
 import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
 import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { useSnackBar } from "@shared/hooks";
-import perfInput from "_mockData/perfil/createPerfilInputComplete.json";
+import { FormTemplate } from "@shared/components/templates";
+import { ListTitle } from "@shared/components/atoms";
+import { perfilForm } from "../constants";
 import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 import { FormElement } from "@shared/types";
+import perfilInput from "_mockData/perfil/createPerfilInput3.json";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
@@ -22,9 +22,11 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
     useManagePerfil(produtor);
 
-  const [state, setState] = useState<any>(perfInput);
+  const [state, setState] = useState<PerfilInputDTO>(
+    {} as unknown as PerfilInputDTO
+  );
+
   const [enableSave, setEnableSave] = useState<boolean>(true);
-  // console.log("🚀 - state:", JSON.stringify(state));
 
   useEffect(() => {
     if (key && selectedItems) {

@@ -29,7 +29,7 @@ export const useSelectProdutor = () => {
       return;
     }
     setIsLoading(true);
-    const cpf = CPFProdutor.replace(/\D/g, "") || "06627559609";
+    const cpf = CPFProdutor.replace(/\D/g, "") || "05241895604";
 
     const produtorService = new ProdutorService({
       isConnected: !!isConnected,

@@ -106,15 +106,6 @@ describe("PerfilDataMapper tests", () => {
           .area_utilizada
       ).toBe("number");
     });
-    it("Should add dates to perfilDTO object", () => {
-      const { data_atualizacao, data_preenchimento } = perfilDTO;
-      expect(data_atualizacao).toBeDefined();
-      expect(data_preenchimento).toBeDefined();
-      expect(typeof data_atualizacao).toBe("string");
-      expect(typeof data_preenchimento).toBe("string");
-      expect(Date.parse(data_atualizacao)).toBeGreaterThan(0);
-      expect(Date.parse(data_preenchimento)).toBeGreaterThan(0);
-    });
   });
 
   describe("PerfilDataMapper perfilInputToModel method", () => {
@@ -144,11 +135,8 @@ describe("PerfilDataMapper tests", () => {
       expect(
         perfilModel.dados_producao_agro_industria.forma_entrega_produtos
       ).toBe("Via associação, Transportadora");
-      console.log(
-        "🚀 - it - perfilModel.dados_producao_agro_industria:",
-        perfilModel.dados_producao_agro_industria
-      );
     });
+
     it("Should create dadosProducaoNatura and dadosProducaoIndustrial properties", () => {
       expect(perfilModel).toHaveProperty("dados_producao_agro_industria");
       expect(perfilModel).toHaveProperty("dados_producao_in_natura");
@@ -170,18 +158,29 @@ describe("PerfilDataMapper tests", () => {
       expect(gruposIndustria.filter((g) => !g.nm_grupo)).toHaveLength(0);
       expect(gruposIndustria.filter((g) => !!g.nm_grupo)).toHaveLength(2);
     });
-    it("at_prf_see_produto should have ONE EMPTY object at the end. (SHOULD IT REALLY???)", () => {
+    it("at_prf_see_produto should NOT have ONE EMPTY object at the end.", () => {
       const grupoNatura = gruposNatura[0];
       const grupoIndustria = gruposIndustria[0];
       const { at_prf_see_produto: produtosNatura } = grupoNatura;
       const { at_prf_see_produto: produtosIndustria } = grupoIndustria;
 
-      expect(produtosNatura).toHaveLength(5);
-      expect(produtosIndustria).toHaveLength(2);
-      expect(produtosNatura.filter((p) => !p.id_produto)).toHaveLength(1);
+      expect(produtosNatura).toHaveLength(4);
+      expect(produtosIndustria).toHaveLength(1);
+      expect(produtosNatura.filter((p) => !p.id_produto)).toHaveLength(0);
       expect(produtosNatura.filter((p) => !!p.id_produto)).toHaveLength(4);
-      expect(produtosIndustria.filter((p) => !p.id_produto)).toHaveLength(1);
+      expect(produtosIndustria.filter((p) => !p.id_produto)).toHaveLength(0);
       expect(produtosIndustria.filter((p) => !!p.id_produto)).toHaveLength(1);
+    });
+
+    it("Should convert booleanProps to strings", () => {
+      expect(typeof perfilModel.possui_cadastro_car).toBe("string");
+      expect(typeof perfilModel.aderiu_pra).toBe("string");
+      expect(
+        typeof dados_producao_agro_industria.controla_custos_producao
+      ).toBe("string");
+      expect(typeof dados_producao_in_natura.controla_custos_producao).toBe(
+        "string"
+      );
     });
     it("Should add dates to perfilDTO object", () => {
       const { data_atualizacao, data_preenchimento } = perfilModel;

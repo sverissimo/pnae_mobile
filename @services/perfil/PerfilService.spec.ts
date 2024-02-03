@@ -40,6 +40,7 @@ jest.mock(
         create: jest.fn(),
         findByRelatorioId: jest.fn(),
         findAll: jest.fn(),
+        findAllWithLocalIds: jest.fn(),
         delete: jest.fn(),
         getPerfilOptions: jest.fn(),
         savePerfilOptions: jest.fn(),
@@ -104,27 +105,35 @@ describe("PerfilService tests", () => {
 
     describe("uploadPerfil method tests", () => {
       it("should upload perfil remotely and delete it locally", async () => {
-        jest.spyOn(localRepository, "findAll").mockResolvedValue([perfilInput]);
+        const perfilWithLocalId = { ...perfil, localId: "0123456" } as any;
+        jest
+          .spyOn(localRepository, "findAllWithLocalIds")
+          .mockResolvedValue([perfilWithLocalId]);
         jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
         jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
         jest
           .spyOn(localRepository, "getPerfilOptions")
           .mockResolvedValue(perfilOptions as PerfilOptions);
+
         await perfilService.sync();
 
-        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(localRepository.findAllWithLocalIds).toHaveBeenCalled();
         expect(remoteRepository.create).toHaveBeenCalled();
-        expect(localRepository.delete).toHaveBeenCalledWith(perfil.id);
+        expect(localRepository.delete).toHaveBeenCalledWith(
+          perfilWithLocalId.localId
+        );
       });
 
       it("should not upload perfil if it does not exist locally", async () => {
-        jest.spyOn(localRepository, "findAll").mockResolvedValue([]);
+        jest
+          .spyOn(localRepository, "findAllWithLocalIds")
+          .mockResolvedValue([]);
         jest.spyOn(remoteRepository, "create").mockResolvedValue(undefined);
         jest.spyOn(localRepository, "delete").mockResolvedValue(undefined);
 
         await perfilService.sync();
 
-        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(localRepository.findAllWithLocalIds).toHaveBeenCalled();
         expect(remoteRepository.create).not.toHaveBeenCalled();
         expect(localRepository.delete).not.toHaveBeenCalled();
       });
@@ -298,7 +307,7 @@ describe("PerfilService tests", () => {
       it("should sync all perfils", async () => {
         const perfilInput2 = { ...perfilInput, id: "456" };
 
-        localRepository.findAll = jest
+        localRepository.findAllWithLocalIds = jest
           .fn()
           .mockResolvedValue([perfilInput, perfilInput2]);
         remoteRepository.create = jest.fn().mockResolvedValue(true);
@@ -312,7 +321,7 @@ describe("PerfilService tests", () => {
 
         await perfilService.sync();
 
-        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(localRepository.findAllWithLocalIds).toHaveBeenCalled();
         expect(perfilService.getGruposProdutos).toHaveBeenCalled();
         expect(perfilService.getContractInfo).toHaveBeenCalled();
         expect(remoteRepository.create).toHaveBeenCalledTimes(2);
@@ -320,13 +329,13 @@ describe("PerfilService tests", () => {
       });
 
       it("should NOT sync perfils if there aint any saved locally", async () => {
-        localRepository.findAll = jest.fn().mockResolvedValue([]);
-
+        localRepository.findAllWithLocalIds = jest.fn().mockResolvedValue([]);
         perfilService.getGruposProdutos = jest.fn();
         perfilService.getContractInfo = jest.fn();
+
         await perfilService.sync();
 
-        expect(localRepository.findAll).toHaveBeenCalled();
+        expect(localRepository.findAllWithLocalIds).toHaveBeenCalled();
         expect(perfilService.getGruposProdutos).not.toHaveBeenCalled();
         expect(perfilService.getContractInfo).not.toHaveBeenCalled();
         expect(remoteRepository.create).not.toHaveBeenCalled();

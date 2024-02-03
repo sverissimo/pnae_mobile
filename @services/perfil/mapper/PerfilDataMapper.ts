@@ -25,14 +25,15 @@ import {
   stringsPropsToBoolean,
 } from "@infrastructure/utils/convertStringProps";
 import { PerfilViewModel } from "../dto/PerfilViewModel";
-import { log } from "@shared/utils/log";
+import { cleanEmptyObjects } from "../utils/cleanEmptyObjects";
+import { PerfilInputDTO } from "../dto/PerfilInputDTO";
 
 export class PerfilDataMapper {
   constructor(
     private perfil: PerfilModel | any,
     private perfilOptions: PerfilOptions
   ) {
-    this.perfil = { ...perfil };
+    this.perfil = JSON.parse(JSON.stringify(perfil));
     this.perfilOptions = perfilOptions;
   }
 
@@ -44,8 +45,9 @@ export class PerfilDataMapper {
   perfilInputToModel = () => {
     const perfilModel = this.extractDadosProducao()
       .extractGruposProdutosView()
-      .parseArrays()
-      .booleanToStrings()
+      .modifyPerfil(convertArraysToStrings)
+      .modifyPerfil(cleanEmptyObjects)
+      .modifyPerfil(convertBooleansToStrings)
       .addDates()
       .build();
 
@@ -55,14 +57,15 @@ export class PerfilDataMapper {
   modelToRemoteDTO = () => {
     const perfilRemoteInputDTO = this.extractGruposProdutos()
       .getPrimeNumbersProps()
-      .parseBooleanProps()
-      .parseNumberProps()
+      .modifyPerfil(stringsPropsToBoolean)
+      .modifyPerfil(stringPropsToNumber)
       .build();
     return perfilRemoteInputDTO;
   };
 
   changeDadosProdIndustrialKeys = () => {
     const { dados_producao_agro_industria, ...rest } = this.perfil;
+
     const dadosProducaoIndustrial = {} as DadosProducaoIndustrialViewModel;
 
     for (const key in dados_producao_agro_industria) {
@@ -268,7 +271,7 @@ export class PerfilDataMapper {
 
       if (!selectedOptions) continue;
       if (typeof selectedOptions === "string") {
-        const regex = /, (?![^()]*\))/g;
+        const regex = /, (?![^(]*\)|[a-z])/g;
         selectedOptions = selectedOptions.split(regex);
       }
 
@@ -300,38 +303,17 @@ export class PerfilDataMapper {
   addDates = () => {
     const data_preenchimento = new Date().toISOString();
     const data_atualizacao = new Date().toISOString();
-    console.log("🚀 - PerfilDataMapper - data_atualizacao:", data_atualizacao);
 
     this.perfil = { ...this.perfil, data_preenchimento, data_atualizacao };
     return this;
   };
 
-  private parseArrays = () => {
-    const p = convertArraysToStrings(this.perfil);
-    this.perfil = p;
+  private modifyPerfil(
+    modifyFunction: (perfil: PerfilModel | PerfilInputDTO) => void
+  ) {
+    this.perfil = modifyFunction(this.perfil);
     return this;
-  };
-
-  private parseBooleanProps = () => {
-    const { perfil } = this;
-    const p = stringsPropsToBoolean(perfil);
-    this.perfil = p;
-    return this;
-  };
-
-  private booleanToStrings = () => {
-    const { perfil } = this;
-    const p = convertBooleansToStrings(perfil);
-    this.perfil = p;
-    return this;
-  };
-
-  private parseNumberProps = () => {
-    const { perfil } = this;
-    const p = stringPropsToNumber(perfil);
-    this.perfil = p;
-    return this;
-  };
+  }
 
   build() {
     return this.perfil;

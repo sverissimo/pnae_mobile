@@ -4,12 +4,8 @@ import {
   perfilDefaultConfig,
 } from "./PerfilConfigService";
 import { PerfilModel } from "@domain/perfil";
-import { PerfilOptions } from "@infrastructure/api/perfil/PerfilOptions";
 import { SyncHelpers } from "@sync/SyncHelpers";
 import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
-import { PerfilInputDTO } from "./dto/PerfilInputDTO";
-import { log } from "@shared/utils/log";
-import { ContractInfo } from "@domain/perfil/ContractInfo";
 
 export class PerfilService {
   private isConnected: boolean;
@@ -27,7 +23,7 @@ export class PerfilService {
     this.syncHelpers = config.syncHelpers;
   }
 
-  create = async (perfil: PerfilModel | PerfilInputDTO) => {
+  create = async (perfil: PerfilModel) => {
     try {
       const perfilOptions = await this.getPerfilOptions();
       if (!perfilOptions) throw new Error("PerfilOptions not found");
@@ -49,11 +45,11 @@ export class PerfilService {
 
   getPerfisByProdutorId = async (produtorId: string) => {
     const allPerfis = await this.localRepository.findAll!();
-    const perfil = allPerfis.filter(
+    const perfis = allPerfis.filter(
       (perfil) => perfil.id_cliente === produtorId
     );
 
-    return perfil;
+    return perfis;
   };
 
   getAllLocalPerfils = async () => {
@@ -161,10 +157,12 @@ export class PerfilService {
   };
 
   sync = async () => {
-    const allPerfils = await this.localRepository.findAll!();
-    console.log("🚀 - sync= - allPerfils:", allPerfils.length);
+    if (!this.isConnected) return;
+    const allPerfilsWithLocalIds = await this.localRepository
+      .findAllWithLocalIds!();
 
-    if (allPerfils.length === 0) {
+    if (allPerfilsWithLocalIds.length === 0) {
+      console.log("@@@ No localPerfis to sync");
       return;
     }
 
@@ -173,15 +171,19 @@ export class PerfilService {
     const perfilOptions = await this.getPerfilOptions();
     if (!perfilOptions) return;
 
-    for (const perfil of allPerfils) {
+    for (const perfilWithoutLocalId of allPerfilsWithLocalIds) {
       try {
+        const { localId, ...perfil } = perfilWithoutLocalId;
+
         const perfilDTO = new PerfilDataMapper(
           perfil,
           perfilOptions
         ).modelToRemoteDTO();
 
         await this.remoteRepository.create(perfilDTO);
-        await this.localRepository.delete!(perfil.id);
+        await this.localRepository.delete!(localId);
+
+        console.log("### Local perfil synced with remoteRepository");
       } catch (error) {
         console.log("🚀 PerfilService.ts:60 - sync - error:", error);
         throw error;

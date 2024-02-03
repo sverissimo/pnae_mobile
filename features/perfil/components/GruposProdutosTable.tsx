@@ -20,60 +20,67 @@ export const GruposProdutosTable: React.FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      {grupoProdutos.map((grupo, index) => (
-        <View key={grupo.id || index} style={styles.table}>
-          <Text style={styles.subTitle}>{grupo.nm_grupo.toLowerCase()}</Text>
-          <View style={styles.row}>
-            <Text style={styles.header}>Nome do Produto</Text>
-            <Text style={styles.header}>Unidade de Medida</Text>
-            {type === "inNatura" && (
-              <Text style={styles.header}>Área Utilizada (ha)</Text>
-            )}
-            <Text style={styles.header}>Produção Total do Último Ano</Text>
-            <Text style={styles.header}>Produção PNAE do Último Ano</Text>
-          </View>
-          {grupo.at_prf_see_produto.map(
-            (produto) =>
-              produto?.nm_produto && (
-                <View key={produto.nm_produto} style={styles.row}>
-                  <Text style={styles.cell}>{produto.nm_produto}</Text>
-                  <Text style={styles.cell}>{produto.sg_und_medida}</Text>
-                  {type === "inNatura" && (
-                    <Text style={styles.cell}>{produto.area_utilizada}</Text>
-                  )}
-                  <Text style={styles.cell}>
-                    {produto.producao_aproximada_ultimo_ano_total}
-                  </Text>
-                  <Text style={styles.cell}>
-                    {produto.producao_aproximada_ultimo_ano_pnae}
-                  </Text>
-                </View>
-              )
-          )}
-          <View style={styles.row}>
-            <Text style={styles.cellTotal}>TOTAL</Text>
-            <Text style={styles.cell}> - </Text>
-            {type === "inNatura" && (
-              <Text style={styles.cell}>
-                {sumProperty(grupo.at_prf_see_produto, "area_utilizada") ||
-                  grupo.area_utilizada}
+      {grupoProdutos.map(
+        (grupo, index) =>
+          grupo.nm_grupo && (
+            <View key={grupo.id || index} style={styles.table}>
+              <Text style={styles.subTitle}>
+                {grupo.nm_grupo.toLowerCase()}
               </Text>
-            )}
-            <Text style={styles.cell}>
-              {sumProperty(
-                grupo.at_prf_see_produto,
-                "producao_aproximada_ultimo_ano_total"
-              ) || grupo.producao_aproximada_ultimo_ano_total}
-            </Text>
-            <Text style={styles.cell}>
-              {sumProperty(
-                grupo.at_prf_see_produto,
-                "producao_aproximada_ultimo_ano_pnae"
-              ) || grupo.producao_aproximada_ultimo_ano_pnae}
-            </Text>
-          </View>
-        </View>
-      ))}
+              <View style={styles.row}>
+                <Text style={styles.header}>Nome do Produto</Text>
+                <Text style={styles.header}>Unidade de Medida</Text>
+                {type === "inNatura" && (
+                  <Text style={styles.header}>Área Utilizada (ha)</Text>
+                )}
+                <Text style={styles.header}>Produção Total do Último Ano</Text>
+                <Text style={styles.header}>Produção PNAE do Último Ano</Text>
+              </View>
+              {grupo.at_prf_see_produto.map(
+                (produto) =>
+                  produto?.nm_produto && (
+                    <View key={produto.nm_produto} style={styles.row}>
+                      <Text style={styles.cell}>{produto.nm_produto}</Text>
+                      <Text style={styles.cell}>{produto.sg_und_medida}</Text>
+                      {type === "inNatura" && (
+                        <Text style={styles.cell}>
+                          {produto.area_utilizada}
+                        </Text>
+                      )}
+                      <Text style={styles.cell}>
+                        {produto.producao_aproximada_ultimo_ano_total}
+                      </Text>
+                      <Text style={styles.cell}>
+                        {produto.producao_aproximada_ultimo_ano_pnae}
+                      </Text>
+                    </View>
+                  )
+              )}
+              <View style={styles.row}>
+                <Text style={styles.cellTotal}>TOTAL</Text>
+                <Text style={styles.cell}> - </Text>
+                {type === "inNatura" && (
+                  <Text style={styles.cell}>
+                    {sumProperty(grupo.at_prf_see_produto, "area_utilizada") ||
+                      grupo.area_utilizada}
+                  </Text>
+                )}
+                <Text style={styles.cell}>
+                  {sumProperty(
+                    grupo.at_prf_see_produto,
+                    "producao_aproximada_ultimo_ano_total"
+                  ) || grupo.producao_aproximada_ultimo_ano_total}
+                </Text>
+                <Text style={styles.cell}>
+                  {sumProperty(
+                    grupo.at_prf_see_produto,
+                    "producao_aproximada_ultimo_ano_pnae"
+                  ) || grupo.producao_aproximada_ultimo_ano_pnae}
+                </Text>
+              </View>
+            </View>
+          )
+      )}
     </View>
   );
 };

@@ -26,11 +26,6 @@ export const InsertGroupsScreen = ({ route }: any) => {
     removeProduto,
   } = useManageGrupos(field, selectedItems);
 
-  console.log(
-    "🚀 - InsertGroupsScreen - selectedGrupos:",
-    JSON.stringify(selectedGrupos)
-  );
-
   useEffect(() => {
     navigation.setOptions({
       title: item.label,

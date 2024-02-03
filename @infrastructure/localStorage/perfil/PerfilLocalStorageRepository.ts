@@ -16,6 +16,17 @@ export class PerfilLocalStorageRepository
     await this.saveData(tempÍd, perfil);
   }
 
+  async findAllWithLocalIds(): Promise<(PerfilModel & { localId: string })[]> {
+    const result = await this.getCollection();
+
+    const allPerfis = [] as (PerfilModel & { localId: string })[];
+    for (const key in result) {
+      const parsedObject = JSON.parse(result[key]) as PerfilModel;
+      allPerfis.push({ ...parsedObject, localId: key });
+    }
+    return allPerfis;
+  }
+
   async delete(id: string): Promise<void> {
     await this.removeData(id);
   }

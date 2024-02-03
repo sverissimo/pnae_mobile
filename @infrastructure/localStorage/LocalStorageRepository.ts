@@ -52,7 +52,7 @@ export abstract class LocalStorageRepository {
     return collection;
   }
 
-  private async getCollection() {
+  async getCollection() {
     try {
       const fetchResult = await AsyncStorage.getItem(this.collection);
       const collection = fetchResult ? JSON.parse(fetchResult) : {};
@@ -64,6 +64,7 @@ export abstract class LocalStorageRepository {
 
   async findAll() {
     const result = await AsyncStorage.getItem(this.collection);
+
     if (!result) {
       return [];
     }

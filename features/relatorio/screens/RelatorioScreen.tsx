@@ -51,7 +51,7 @@ export const RelatorioScreen = () => {
         <ProdutorInfo />
         <ListTitle
           title={
-            "Para castrar um relatório, selecione um produtor com um perfil de entrada cadastrado."
+            "Antes de criar um novo relatório, é necessário cadastrar um perfil de entrada."
           }
         />
       </View>
