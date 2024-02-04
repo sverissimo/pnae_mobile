@@ -20,11 +20,10 @@ import { useSelectProdutor } from "@features/produtor/hooks";
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const { isConnected } = useManageConnection();
   const { user } = useAuth();
-  const { activeContrato } = useManageContratos();
+  const { activeContrato } = useManageContratos(produtor?.perfis);
   const { setProdutor } = useSelectProdutor();
 
   const [perfil, setPerfil] = useState<PerfilModel>({} as PerfilModel);
-  const [enableSavePerfil, setEnableSavePerfil] = useState<boolean>(false);
   const [producaoNaturaForm, setProducaoNaturaForm] = useState<FormElement[]>(
     []
   );
@@ -35,6 +34,8 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const perfis = produtor?.perfis || [];
 
   useEffect(() => {
+    if (producaoIndustrialForm.length && producaoNaturaForm.length) return;
+
     const getPerfilOptions = async () => {
       const perfilService = new PerfilService({
         isConnected: !!isConnected,
@@ -60,22 +61,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     };
     getPerfilOptions();
   }, []);
-
-  useEffect(() => {
-    if (!activeContrato) return;
-
-    const { inclusao_entrada, inclusao_saida } = activeContrato;
-
-    const roomForPerfil =
-      perfis.filter((p) => {
-        return p.id_contrato === activeContrato.id_contrato;
-      }).length < 2;
-
-    const enableSavePerfil =
-      (inclusao_entrada || inclusao_saida) && roomForPerfil;
-
-    setEnableSavePerfil(enableSavePerfil);
-  }, [activeContrato, perfis]);
 
   const getPerfilListData = (perfis: PerfilModel[]) =>
     perfis.map((p: any) => ({
@@ -157,7 +142,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     perfil,
     producaoNaturaForm,
     producaoIndustrialForm,
-    enableSavePerfil,
     setPerfil,
     getPerfilListData,
     modelToViewModel,

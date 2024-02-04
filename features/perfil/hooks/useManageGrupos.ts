@@ -140,8 +140,6 @@ export const useManageGrupos = (
     );
 
     grupos[index] = grupoDetails;
-    console.log({ grupoDetails, index });
-
     setSelectedGrupos(grupos);
   };
 
@@ -149,8 +147,6 @@ export const useManageGrupos = (
     produto: string,
     selectedGroup: GrupoDetails
   ) => {
-    console.log("🚀 - selectedGroup:", selectedGroup);
-
     const selectedProduto = produtosOptions.find(
       (p) =>
         p.nm_produto === produto &&

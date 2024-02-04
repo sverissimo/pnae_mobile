@@ -8,7 +8,7 @@ import {
 import PerfilList from "@features/perfil/components/PerfilList";
 import { PropriedadesList } from "@features/propriedade/components/PropriedadeList";
 import { globalColors } from "@shared/constants/themes";
-import { ListTitle } from "@shared/components/atoms";
+import { HelperMessage, ListTitle } from "@shared/components/atoms";
 import { Loading } from "@shared/components/organisms";
 
 export const ProdutorScreen = () => {
@@ -21,22 +21,31 @@ export const ProdutorScreen = () => {
       </View>
     );
   }
+  const { propriedades, perfis } = produtor;
 
   return (
     <View style={styles.container}>
       <ProdutorInfo />
-      <View style={styles.title}>
-        <ListTitle title={"Dados do Produtor"} />
-      </View>
+      <ListTitle title={"Dados do Produtor"} />
       <ProdutorDetails />
-      <View style={styles.title}>
-        <ListTitle title={"Propriedades cadastradas"} />
-      </View>
-      <PropriedadesList />
-      <View style={styles.title}>
-        <ListTitle title={"Perfis cadastrados"} />
-      </View>
-      <PerfilList data={produtor.perfis || []} />
+
+      {propriedades?.length ? (
+        <>
+          <ListTitle title="Propriedades cadastradas" />
+          <PropriedadesList />
+        </>
+      ) : (
+        <HelperMessage message={"Nenhuma propriedade cadastrada"} />
+      )}
+
+      {perfis?.length > 0 ? (
+        <>
+          <ListTitle title={"Perfis cadastrados"} />
+          <PerfilList data={produtor.perfis || []} />
+        </>
+      ) : (
+        <HelperMessage message={"Nenhum perfil cadastrado"} />
+      )}
     </View>
   );
 };
@@ -46,8 +55,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
     alignItems: "center",
-  },
-  title: {
-    marginLeft: "2%",
   },
 });

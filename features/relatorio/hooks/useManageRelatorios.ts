@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
 import { RelatorioService } from "@services/relatorio/RelatorioService";
@@ -25,9 +25,12 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const { extensionistas } = useManageTecnico(relatorio);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (produtorId) {
-      (async () => await getRelatorios(produtorId))();
+      (async () => {
+        setIsLoading(true);
+        await getRelatorios(produtorId);
+      })();
     }
   }, [produtorId]);
 
@@ -121,7 +124,6 @@ export const useManageRelatorio = (produtorId?: string) => {
       return [];
     }
     try {
-      setIsLoading(true);
       const connected = !!(isConnected && connectionType !== "unknown");
       const relatorios = await new RelatorioService({
         isConnected: connected,

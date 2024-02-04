@@ -3,7 +3,7 @@ import { useCustomNavigation } from "@navigation/hooks";
 import { useSelectProdutor } from "@features/produtor/hooks";
 import { useManageRelatorio } from "../hooks";
 import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
-import { AddButton, ListTitle } from "@shared/components/atoms";
+import { AddButton, HelperMessage, ListTitle } from "@shared/components/atoms";
 import { CustomDialog, List, Loading } from "@shared/components/organisms";
 import { RelatorioModel } from "../types";
 import { globalColors } from "@shared/constants/themes";
@@ -25,6 +25,14 @@ export const RelatorioScreen = () => {
     isLoading,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
+  const loadingData = isLoading || isLoadingProdutor;
+
+  const noPerfisSaved = !produtor?.perfis?.length;
+  const noRelatorios = !relatorios?.length;
+
+  const disableButton =
+    isLoading || isLoadingProdutor || noPerfisSaved || noRelatorios;
+
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
   };
@@ -41,19 +49,21 @@ export const RelatorioScreen = () => {
     return (
       <View style={styles.container}>
         <ProdutorSearchBar />
-        {(isLoading || isLoadingProdutor) && <Loading />}
+        {loadingData && <Loading />}
       </View>
     );
   }
-  if (!produtor?.perfis?.length) {
+  if (noPerfisSaved && !loadingData) {
     return (
       <View style={styles.container}>
         <ProdutorInfo />
-        <ListTitle
-          title={
-            "Antes de criar um novo relatório, é necessário cadastrar um perfil de entrada."
-          }
+        <ListTitle title={"Nenhum relatório cadastrado"} />
+        <AddButton
+          label="Criar Novo Relatório"
+          onPress={handleCreateRelatorio}
+          disabled={disableButton}
         />
+        <HelperMessage message="Antes de criar um novo relatório, é necessário cadastrar um perfil de entrada." />
       </View>
     );
   }
@@ -62,7 +72,7 @@ export const RelatorioScreen = () => {
     <>
       <View style={styles.container}>
         <ProdutorInfo />
-        {relatorios?.length ? (
+        {!noRelatorios ? (
           <>
             <ListTitle title={"Relatorios cadastrados"} />
             <List<RelatorioModel>
@@ -82,14 +92,15 @@ export const RelatorioScreen = () => {
             />
           </>
         ) : (
-          relatorios?.length === 0 &&
-          !isLoading &&
-          !isLoadingProdutor && (
-            <ListTitle title={"Nenhum relatório cadastrado"} />
-          )
+          <>
+            {loadingData ? (
+              <Loading />
+            ) : (
+              <ListTitle title={"Nenhum relatório cadastrado"} />
+            )}
+          </>
         )}
-        {(isLoading || isLoadingProdutor) && <Loading />}
-        {!isLoading && !isLoadingProdutor && (
+        {!loadingData && (
           <AddButton
             label="Criar Novo Relatório"
             onPress={handleCreateRelatorio}

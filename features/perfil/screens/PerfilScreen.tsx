@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { useManagePerfil } from "../hooks/useManagePerfil";
@@ -9,15 +8,19 @@ import { ProdutorInfo } from "../../produtor/components/ProdutorInfo";
 import { AddButton, ListTitle } from "@shared/components/atoms";
 import { globalColors } from "../../../@shared/constants/themes";
 import { HelperMessage } from "@shared/components/atoms/HelperMessage";
+import { Loading } from "@shared/components/organisms";
+import { useManageContratos } from "@shared/hooks/useManageContratos";
 
 export const PerfilScreen = () => {
   const { navigation } = useCustomNavigation();
-  const { produtor } = useSelectProdutor();
+  const { produtor, isLoading } = useSelectProdutor();
+  const { enableSavePerfil, contractPermissionMessage } = useManageContratos(
+    produtor?.perfis
+  );
   const {
     perfis,
     producaoNaturaForm,
     producaoIndustrialForm,
-    enableSavePerfil,
     modelToViewModel,
   } = useManagePerfil(produtor);
 
@@ -58,6 +61,7 @@ export const PerfilScreen = () => {
     return (
       <View style={styles.container}>
         <ProdutorSearchBar />
+        {isLoading && <Loading />}
       </View>
     );
   } else if (!perfilOptionsLoaded) {
@@ -86,13 +90,17 @@ export const PerfilScreen = () => {
         onPress={handleCreatePerfil}
         disabled={produtorHasNoPropriedades || !enableSavePerfil}
         mode={disabled ? "outlined" : "contained"}
-        style={{ marginTop: "2%" }}
       />
-      {produtorHasNoPropriedades ? (
-        <HelperMessage message="Não é possível criar um novo perfil para um produtor sem propriedades cadastradas no Demeter." />
-      ) : !enableSavePerfil ? (
-        <HelperMessage message="Não é possível criar um novo perfil para o contrato vigente." />
-      ) : null}
+
+      {(!!produtorHasNoPropriedades || !!!enableSavePerfil) && (
+        <HelperMessage
+          message={
+            produtorHasNoPropriedades
+              ? "Não é possível criar um novo perfil para um produtor sem propriedades cadastradas no Demeter."
+              : contractPermissionMessage || ""
+          }
+        />
+      )}
     </View>
   );
 };

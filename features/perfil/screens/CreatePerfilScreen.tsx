@@ -17,7 +17,8 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
   const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { tipoPerfil } = useManageContratos();
+  const { tipoPerfil } = useManageContratos(produtor?.perfis || []);
+
   const { setSnackBarOptions } = useSnackBar();
   const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
     useManagePerfil(produtor);
@@ -120,7 +121,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         mode="contained"
         style={styles.button}
         onPress={() => handleSave(state)}
-        disabled={!enableSave}
+        disabled={!enableSave || !state.atividade}
       >
         Salvar
       </Button>
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: "6%",
+    marginHorizontal: "2%",
   },
   obs: {
     marginVertical: "6%",

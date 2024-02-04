@@ -15,6 +15,7 @@ import { ConnectionContextProvider } from "@contexts/ConnectionContext";
 import { useDatabaseInitialization } from "@config/useDatabaseInitialization";
 import { SyncContextProvider } from "@contexts/SyncContext";
 import { ContratoContextProvider } from "@contexts/ContratoContext";
+import { grayscale } from "@constants/colorsPallete";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
 export default function App() {
@@ -40,8 +41,9 @@ export default function App() {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={background[700]}
-        barStyle="light-content"
+        backgroundColor={grayscale[700]}
+        // backgroundColor="#000"
+        barStyle="default"
         /* barStyle={statusBarStyle}
         showHideTransition={statusBarTransition}
         hidden={hidden} */
