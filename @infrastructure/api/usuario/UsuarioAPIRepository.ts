@@ -14,15 +14,9 @@ export class UsuarioAPIRepository implements Partial<Repository<Usuario>> {
     try {
       let { ids } = params;
       const { matricula } = params;
-      //ids = ids || "1545" ; // dev/test purposes only
-      //ids = ids || "1535"; // dev/test purposes only
-      // ids = ids || "1620"; // dev/test purposes only
-      // ids = ids || "2363"; // dev/test purposes only
-      // matricula = matricula || "09860"; // dev/test purposes only
 
       if (!ids && !matricula) {
-        ids = "1620";
-        // throw new Error("You must provide either ids or matricula");
+        throw new Error("É necessário informar matrícula e senha válidos.");
       }
 
       let url = this.baseUrl;
@@ -34,6 +28,31 @@ export class UsuarioAPIRepository implements Partial<Repository<Usuario>> {
       return Array.isArray(usuarios) ? usuarios : [usuarios];
     } catch (error) {
       console.error("Error fetching Usuarios:", error);
+      throw error;
+    }
+  }
+
+  static async login(params: {
+    matricula_usuario: string;
+    password: string;
+  }): Promise<Usuario> {
+    try {
+      const { matricula_usuario, password } = params;
+      if (!matricula_usuario || !password) {
+        throw new Error("É necessário informar matrícula e senha válidos.");
+      }
+
+      const url = `${this.baseUrl}/login`;
+      const result = (await this.api.post(url, {
+        matricula_usuario,
+        password,
+      })) as string;
+
+      if (!result) throw new Error("Erro ao fazer login.");
+
+      const usuario = JSON.parse(result) as Usuario;
+      return usuario as Usuario;
+    } catch (error) {
       throw error;
     }
   }

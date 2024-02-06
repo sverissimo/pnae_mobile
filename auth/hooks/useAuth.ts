@@ -1,16 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { Usuario } from "../../@shared/types/Usuario";
-import { env } from "../../config/env";
 import { UsuarioAPIRepository } from "@infrastructure/api/usuario/UsuarioAPIRepository";
 import { getData, removeValue, storeData } from "@shared/utils";
 import { Alert } from "react-native";
 import { perfisAutorizados } from "@auth/constants";
 import { useSelectProdutor } from "@features/produtor/hooks";
+import { useSnackBar } from "@shared/hooks";
 
 export const useAuth = () => {
   const { user, setUser } = useContext(UserContext);
   const { setProdutor } = useSelectProdutor();
+  const { setSnackBarOptions } = useSnackBar();
   const [userInput, setUserInput] = useState({} as Usuario);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,54 +34,49 @@ export const useAuth = () => {
   };
 
   const loginHandler = async () => {
-    const testUser = env.TEST_USER;
     setIsLoading(true);
-    if (!userInput?.matricula_usuario && !user?.matricula_usuario) {
-      setUser(testUser);
-      await storeData("user", testUser);
-      // setIsLoading(false);
+    const { matricula_usuario, password } = userInput;
+
+    if (!matricula_usuario || !password) {
+      const emptyField = !matricula_usuario ? "matrícula" : "senha";
+      handleLoginError(`É necessário informar a ${emptyField}.`);
       return;
     }
-    const queryResult: any = await UsuarioAPIRepository.findMany({
-      matricula: userInput.matricula_usuario,
+
+    try {
+      const usuario = await attemptLogin(matricula_usuario, password);
+
+      if (!isUserAuthorized(usuario)) {
+        handleLoginError("Usuário não autorizado.");
+        setIsLoading(false);
+        return;
+      }
+
+      await storeData("user", usuario);
+      setUser(usuario);
+      setIsLoading(false);
+    } catch (error) {
+      handleLoginError("Matrícula ou senha inválidos.");
+    }
+  };
+
+  const attemptLogin = async (matricula_usuario: string, password: string) => {
+    return await UsuarioAPIRepository.login({
+      matricula_usuario,
+      password,
     });
+  };
 
-    const result = queryResult[0];
-    console.log("🚀 ~ file: useAuth.ts:41 ~ loginHandler ~ result:", result);
-    if (!result) {
-      Alert.alert(
-        "Usuário não encontrado",
-        "Favor verificar a matrícula e tentar novamente."
-      );
-      setIsLoading(false);
-      return;
-    }
-
-    if (result?.error) {
-      alert(result.message);
-      setIsLoading(false);
-      return;
-    }
-    const usuario = result as Usuario;
-
+  const isUserAuthorized = (usuario: Usuario) => {
     const authorized =
-      usuario?.perfis?.some((perfil: string) =>
-        perfisAutorizados.includes(perfil)
-      ) || false;
+      usuario?.perfis?.some((perfil) => perfisAutorizados.includes(perfil)) ||
+      false;
 
-    console.log({ authorized, result });
     if (!authorized) {
-      Alert.alert(
-        "Usuário não autorizado",
-        "O perfil de usuário não está autorizado a acessar o aplicativo. Favor contatar o administrador do sistema."
-      );
-      setIsLoading(false);
-      return;
+      return false;
     }
 
-    await storeData("user", result);
-    setUser(result);
-    setIsLoading(false);
+    return true;
   };
 
   const confirmLogout = () =>
@@ -97,10 +93,6 @@ export const useAuth = () => {
       ],
       {
         cancelable: true,
-        onDismiss: () => {
-          // setUser({} as Usuario);
-          // removeValue("user");
-        },
       }
     );
 
@@ -108,8 +100,15 @@ export const useAuth = () => {
     setProdutor(null);
     setUser(null);
     await removeValue("user");
-    console.log(await getData("user"));
     return;
+  };
+
+  const handleLoginError = (message: string) => {
+    setSnackBarOptions({
+      message: message || "Erro ao fazer login.",
+      status: "error",
+    });
+    setIsLoading(false);
   };
 
   return {

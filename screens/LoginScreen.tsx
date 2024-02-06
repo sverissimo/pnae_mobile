@@ -12,6 +12,7 @@ const { primary, grayscale } = globalColors;
 
 const LoginScreen = () => {
   const { user, inputHandler, loginHandler, isLoading } = useAuth();
+
   return (
     <View style={styles.loginForm}>
       <View style={styles.formContainer}>
@@ -39,7 +40,7 @@ const LoginScreen = () => {
               placeholder="Senha"
               secureTextEntry={true}
               value={user?.password}
-              onChangeText={(value) => inputHandler("senha", value)}
+              onChangeText={(value) => inputHandler("password", value)}
             />
           </View>
           <Pressable
