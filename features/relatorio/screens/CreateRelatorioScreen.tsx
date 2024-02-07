@@ -41,6 +41,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
 
   const handleSaveRelatorio = async () => {
     try {
+      setEnableSave(false);
       await saveRelatorio({ ...relatorio, pictureURI, assinaturaURI });
       setSnackBarOptions({
         message: "Relatório salvo com sucesso!",
@@ -48,7 +49,6 @@ export const CreateRelatorioScreen = ({ route }: any) => {
         duration: 1000,
       });
 
-      setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
       }, 900);
@@ -82,7 +82,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          // disabled={!enableSave || !pictureURI || !assinaturaURI}
+          disabled={!enableSave || !pictureURI || !assinaturaURI}
         >
           Salvar
         </Button>

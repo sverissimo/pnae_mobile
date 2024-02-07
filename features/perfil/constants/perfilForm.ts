@@ -5,7 +5,6 @@ export const perfilForm: FormElement[] = [
     field: "tipo_perfil",
     label: "Tipo de Perfil",
     type: "select",
-    options: ["ENTRADA", "SAÍDA"],
   },
   {
     field: "participa_organizacao",
@@ -16,7 +15,7 @@ export const perfilForm: FormElement[] = [
     field: "grau_interesse_pnae",
     label: "Grau interesse PNAE",
     type: "select",
-    options: ["BAIXO", "MÉDIO", "ALTO"],
+    options: ["Baixo", "Moderado", "Alto"],
   },
   {
     field: "atividade",
@@ -31,7 +30,6 @@ export const viewPerfilForm: FormElement[] = [
     field: "tipo_perfil",
     label: "Tipo de Perfil",
     type: "select",
-    options: ["ENTRADA", "SAÍDA"],
   },
   {
     field: "municipio",
@@ -47,12 +45,10 @@ export const viewPerfilForm: FormElement[] = [
     field: "grau_interesse_pnae",
     label: "Grau interesse PNAE",
     type: "select",
-    options: ["BAIXO", "MODERADO", "ALTO"],
   },
   {
     field: "atividade",
     label: "Atividade Desenvolvida",
     type: "select",
-    options: ["Atividade Primária", "Atividade Secundária", "Ambas"],
   },
 ];

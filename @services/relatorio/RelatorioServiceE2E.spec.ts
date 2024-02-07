@@ -20,6 +20,7 @@ const relatorioInput: RelatorioModel = {
   tecnicoId: "1620",
   nomeTecnico: "Elisio Geraldo Campos",
   numeroRelatorio: 30,
+  contratoId: 1,
   assunto: "Teste",
   orientacao: "Teste",
   pictureURI: "Teste",
@@ -92,6 +93,7 @@ describe("RelatorioService local e2e tests", () => {
     expect(relatorio[0].outroExtensionista).toEqual([]);
     expect(relatorio[0].readOnly).toBe(false);
     expect(relatorio[0].createdAt).not.toBeNull();
+    expect(relatorio[0].contratoId).toBe(1);
     expect(Date.parse(relatorio[0].createdAt)).toBeTruthy();
     expect(
       Date.parse(relatorio[0].createdAt) < new Date().getTime()
@@ -111,6 +113,7 @@ describe("RelatorioService local e2e tests", () => {
       tecnicoId: "1620",
       nomeTecnico: "John <-- Should Be Replaced to --> Elisio Geraldo Campos",
       numeroRelatorio: 31,
+      contratoId: 1,
       assunto: "Updated teste",
       orientacao: "Updated orientação",
       pictureURI: "Updated pictureURI",

@@ -3,6 +3,7 @@ export type RelatorioLocalDTO = {
   produtor_id: string;
   tecnico_id: string;
   numero_relatorio: number;
+  id_contrato: number;
   assunto: string;
   orientacao: string;
   picture_uri: string;

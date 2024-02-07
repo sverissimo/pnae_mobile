@@ -61,7 +61,6 @@ export class RelatorioService {
         "@@@ not Connected, returning relatorios from local storage."
       );
       const relatoriosWithTecnicos = this.addTecnicosToRelatorio(relatorios);
-
       return relatoriosWithTecnicos;
     }
 
@@ -150,6 +149,7 @@ export class RelatorioService {
     const relatoriosFromServer = await this.remoteRepository.findByProdutorId(
       produtorId
     );
+
     if (relatoriosFromServer?.length) {
       await this.localRepository.createMany(relatoriosFromServer);
     }

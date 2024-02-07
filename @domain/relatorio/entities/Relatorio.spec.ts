@@ -1,6 +1,7 @@
 import { env } from "@config/env";
 import { Relatorio } from "./Relatorio";
 import relatorios from "_mockData/relatorios.json";
+import { RelatorioModel } from "@features/relatorio/types";
 
 const filesFolder = env.FILES_FOLDER;
 const relatorio = relatorios[1];
@@ -17,6 +18,20 @@ describe("Relatorio domain class", () => {
       expect(() => new Relatorio({ ...relatorio, tecnicoId: "" })).toThrow(
         "Técnico não pode ser vazio"
       );
+    });
+
+    it("should throw an error if contratoId is not provided", () => {
+      expect(() => new Relatorio({ ...relatorio, contratoId: 0 })).toThrow(
+        "Id do contrato não localizado"
+      );
+
+      expect(
+        () =>
+          new Relatorio({
+            ...relatorio,
+            contratoId: undefined,
+          } as unknown as RelatorioModel)
+      ).toThrow("Id do contrato não localizado");
     });
 
     it("should throw an error if numeroRelatorio is not between 1 and 999", () => {
@@ -44,6 +59,11 @@ describe("Relatorio domain class", () => {
       };
       const relatorioModel = new Relatorio(updatedRelatorio);
       const newRelatorio = relatorioModel.getUpdatedProps(relatorio);
+      console.log("🚀 - it - newRelatorio:", {
+        updatedRelatorio,
+        newRelatorio,
+      });
+
       expect(Object.keys(newRelatorio)).toHaveLength(3);
       expect(newRelatorio.id).toBe(relatorioModel.toModel().id);
       expect(newRelatorio).toHaveProperty("orientacao");

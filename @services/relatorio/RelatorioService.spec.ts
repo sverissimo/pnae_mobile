@@ -11,6 +11,7 @@ const relatorioInput: RelatorioModel = {
   tecnicoId: "1620",
   nomeTecnico: "Elisio Geraldo Campos",
   numeroRelatorio: 30,
+  contratoId: 1,
   assunto: "Teste",
   orientacao: "Teste",
   pictureURI: "Teste",

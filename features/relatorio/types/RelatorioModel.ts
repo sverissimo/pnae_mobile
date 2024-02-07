@@ -4,6 +4,7 @@ export type RelatorioModel = {
   id: string;
   produtorId: string;
   tecnicoId: string;
+  contratoId: number;
   nomeTecnico: string;
   numeroRelatorio: number;
   assunto: string;

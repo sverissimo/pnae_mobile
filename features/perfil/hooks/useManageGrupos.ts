@@ -40,7 +40,8 @@ export const useManageGrupos = (
     if (!selectedItems) return;
     const availableGrupos = gruposOptions
       .filter((g) => !selectedGrupos.some((sg) => sg?.nm_grupo === g?.nm_grupo))
-      .map((g) => g.nm_grupo);
+      .map((g) => g.nm_grupo)
+      .sort((a, b) => a.localeCompare(b));
 
     setAvailableGrupos(availableGrupos);
     setSelectedGrupos(selectedItems);

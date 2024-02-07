@@ -10,12 +10,16 @@ import { useLocation, useManageConnection } from "@shared/hooks";
 import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, truncateString } from "@shared/utils";
+import { useManageContratos } from "@shared/hooks/useManageContratos";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
+
   const { getLocation } = useLocation();
   const { isConnected, connectionType } = useManageConnection();
+  const { activeContrato } = useManageContratos();
+
   const { user } = useAuth();
 
   const [relatorio, setState] = useState<RelatorioModel>({} as RelatorioModel);
@@ -67,16 +71,12 @@ export const useManageRelatorio = (produtorId?: string) => {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
+        contratoId: activeContrato?.id_contrato!,
         outroExtensionista: extensionistas,
         coordenadas,
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");
-
-      //********************FAKE INPUT FOR TESTING !!!!!!!!!!!!!!!!! */
-      // const { pictureURI, assinaturaURI, ...input } = createRelatorioInput;
-      // Object.assign(relatorioInput, input); // Testing ONLY!!!
-      //************************ */
 
       console.log(
         "🚀 - file: useManageRelatorios.ts:82 - saveRelatorio - relatorioInput:",
@@ -97,9 +97,9 @@ export const useManageRelatorio = (produtorId?: string) => {
         id_relatorio: relatorioId,
       };
 
-      await new AtendimentoService({ isConnected: connected }).create(
-        atendimento
-      );
+      // await new AtendimentoService({ isConnected: connected }).create(
+      //   atendimento
+      // );
 
       setRelatorios([
         ...relatorios,
@@ -124,9 +124,8 @@ export const useManageRelatorio = (produtorId?: string) => {
       return [];
     }
     try {
-      const connected = !!(isConnected && connectionType !== "unknown");
       const relatorios = await new RelatorioService({
-        isConnected: connected,
+        isConnected: !!isConnected,
       }).getRelatorios(produtorId);
       if (!relatorios.length) {
         setIsLoading(false);
@@ -148,6 +147,8 @@ export const useManageRelatorio = (produtorId?: string) => {
         ...relatorio,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
+        contratoId:
+          Number(relatorio.contratoId) || activeContrato?.id_contrato!,
       };
 
       const connected = !!(isConnected && connectionType !== "unknown");

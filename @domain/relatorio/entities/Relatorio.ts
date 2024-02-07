@@ -10,13 +10,21 @@ export class Relatorio {
   }
 
   private validate() {
-    const { produtorId, tecnicoId, numeroRelatorio } = this.relatorio;
+    const { produtorId, tecnicoId, contratoId, numeroRelatorio } =
+      this.relatorio;
     if (!produtorId) {
       throw new Error("Produtor não pode ser vazio");
     }
+
     if (!tecnicoId) {
       throw new Error("Técnico não pode ser vazio");
     }
+
+    if (!contratoId) {
+      throw new Error("Id do contrato não localizado");
+    }
+
+    this.relatorio.contratoId = Number(contratoId);
     Relatorio.parseAndValidateNumeroRelatorio(numeroRelatorio);
   }
 
@@ -64,7 +72,11 @@ export class Relatorio {
     if (Object.keys(update).length === 1 && !!update.id)
       throw new Error("Nenhum dado foi alterado");
 
-    return { ...update, id, updatedAt };
+    return {
+      ...update,
+      id,
+      updatedAt,
+    };
   };
 
   toModel() {

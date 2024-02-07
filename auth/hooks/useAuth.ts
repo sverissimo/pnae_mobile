@@ -68,15 +68,11 @@ export const useAuth = () => {
   };
 
   const isUserAuthorized = (usuario: Usuario) => {
-    const authorized =
-      usuario?.perfis?.some((perfil) => perfisAutorizados.includes(perfil)) ||
-      false;
+    const authorized = usuario?.perfis?.some((perfil) =>
+      perfisAutorizados.includes(perfil)
+    );
 
-    if (!authorized) {
-      return false;
-    }
-
-    return true;
+    return !!authorized;
   };
 
   const confirmLogout = () =>

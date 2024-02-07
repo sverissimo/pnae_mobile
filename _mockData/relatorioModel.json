@@ -2,6 +2,7 @@
   "id": "123",
   "produtorId": "123",
   "tecnicoId": "123",
+  "contratoId": 1,
   "numeroRelatorio": 1,
   "nomeTecnico": "John Doe",
   "assunto": "Assunto",

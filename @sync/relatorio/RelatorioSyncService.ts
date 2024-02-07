@@ -61,7 +61,10 @@ export class RelatorioSyncService {
       ? [produtorId]
       : await this.produtorLocalRepository.getAllProdutoresIds!();
 
-    const relatoriosLocal = await this.relatorioLocalRepository.findAll();
+    const relatoriosLocal = (await this.relatorioLocalRepository.findAll()).map(
+      (relatorio) =>
+        relatorio.contratoId ? relatorio : { ...relatorio, contratoId: 1 }
+    );
 
     const relatoriosSyncRequest = relatoriosLocal
       .filter((relatorio) => produtorIds.includes(relatorio.produtorId))

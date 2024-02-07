@@ -5,6 +5,7 @@ export type RelatorioDTO = {
   produtor_id: string;
   tecnico_id: string;
   numero_relatorio: number;
+  id_contrato: number;
   assunto: string;
   orientacao: string;
   produtor?: Produtor;

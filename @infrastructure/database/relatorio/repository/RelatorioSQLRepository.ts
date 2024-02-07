@@ -98,6 +98,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
         if (key === "assinatura_uri") {
           return "assinaturaURI";
         }
+        if (key === "id_contrato") {
+          return "contratoId";
+        }
         return convert(key, options);
       },
     }) as RelatorioModel;
@@ -112,6 +115,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
         }
         if (key === "assinaturaURI") {
           return "assinatura_uri";
+        }
+        if (key === "contratoId") {
+          return "id_contrato";
         }
         return convert(key, options);
       },

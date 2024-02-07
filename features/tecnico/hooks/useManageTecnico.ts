@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { RelatorioModel } from "@features/relatorio/types";
-import { UsuarioAPIRepository } from "@infrastructure/api";
 import { Usuario } from "@shared/types";
 import { debounce } from "@shared/utils";
 import { useManageConnection } from "@shared/hooks";
@@ -45,9 +44,7 @@ export function useManageTecnico(relatorio: RelatorioModel) {
         const extensionistas = await new UsuarioService({
           isConnected: !!isConnected,
         }).findMany({ matriculas });
-        // await UsuarioAPIRepository.findMany({
-        //   matricula: matriculas.join(","),
-        // });
+
         const sortedExtensionistas = matriculas
           .map((matricula) =>
             extensionistas.find((ext) => ext.matricula_usuario === matricula)
@@ -56,7 +53,7 @@ export function useManageTecnico(relatorio: RelatorioModel) {
 
         setExtensionistas(sortedExtensionistas);
       } catch (error) {
-        console.error("Failed to fetch extensionistas", error);
+        console.log("Failed to fetch extensionistas", error);
       }
     }, 300),
     []

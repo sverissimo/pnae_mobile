@@ -49,13 +49,14 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
 
   const handleSave = async (perfil: PerfilInputDTO) => {
     try {
+      setEnableSave(false);
       await savePerfil(perfil);
+
       setSnackBarOptions({
         message: "Perfil salvo com sucesso!",
         status: "success",
         duration: 1000,
       });
-      setEnableSave(false);
       setTimeout(() => {
         navigation.goBack();
       }, 900);

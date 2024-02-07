@@ -12,3 +12,7 @@ ALTER TABLE "relatorio" ADD COLUMN read_only BOOLEAN;
 export const addCoordsRelatorioTable = `
 ALTER TABLE "relatorio" ADD COLUMN coordenadas TEXT;
 `;
+
+export const addContratoIdColumn = `
+ALTER TABLE "relatorio" ADD COLUMN id_contrato INTEGER;
+`;

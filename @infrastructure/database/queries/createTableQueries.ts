@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS "relatorio" (
   id TEXT PRIMARY KEY,
   produtor_id TEXT,
   tecnico_id TEXT,
+  id_contrato INTEGER,
   numero_relatorio INTEGER,
   assunto TEXT,
   orientacao TEXT,

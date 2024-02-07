@@ -3,6 +3,7 @@
   "produtorId": "123",
   "tecnicoId": "123",
   "numeroRelatorio": 1,
+  "contratoId": 1,
   "assunto": "Assunto",
   "orientacao": "Orientação",
   "pictureURI": "pictureURI",
