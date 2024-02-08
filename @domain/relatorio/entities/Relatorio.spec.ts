@@ -1,6 +1,6 @@
 import { env } from "@config/env";
 import { Relatorio } from "./Relatorio";
-import relatorios from "_mockData/relatorios.json";
+import relatorios from "_mockData/relatorio/relatorios.json";
 import { RelatorioModel } from "@features/relatorio/types";
 
 const filesFolder = env.FILES_FOLDER;

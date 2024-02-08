@@ -13,7 +13,7 @@
   "fonte_captacao_agua": ["Cisterna"],
   "forma_entrega_produtos": ["Correios"],
   "forma_esgotamento_sanitario": ["Fossa séptica (alvenaria ou pré fabricada)"],
-  "grau_interesse_pnae": "MÉDIO",
+  "grau_interesse_pnae": "MODERADO",
   "informacoes_adicionais": "Ok",
   "local_comercializacao": ["PAB"],
   "nivel_tecnologico_cultivo": ["Adubação mineral", "Calagem"],

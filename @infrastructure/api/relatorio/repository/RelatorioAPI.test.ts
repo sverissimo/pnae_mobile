@@ -1,8 +1,8 @@
 import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioAPIRepository } from "./RelatorioAPIRepository";
 import { RelatorioBackendDTO } from "../dto";
-import relatorioModel from "_mockData/relatorioModel.json";
-import relatorioDTO from "_mockData/relatorioBackendDTO.json";
+import relatorioModel from "_mockData/relatorio/relatorioModel.json";
+import relatorioDTO from "_mockData/relatorio/relatorioBackendDTO.json";
 
 const relatorio = relatorioModel as RelatorioModel;
 const expectedDTO = relatorioDTO as RelatorioBackendDTO;

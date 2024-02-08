@@ -1,6 +1,6 @@
 import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioDomainService } from "./RelatorioDomainService";
-import relatorioModel from "_mockData/relatorioModel.json";
+import relatorioModel from "_mockData/relatorio/relatorioModel.json";
 
 const { outroExtensionista } = relatorioModel;
 const ext = outroExtensionista[0];

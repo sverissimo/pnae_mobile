@@ -97,9 +97,9 @@ export const useManageRelatorio = (produtorId?: string) => {
         id_relatorio: relatorioId,
       };
 
-      // await new AtendimentoService({ isConnected: connected }).create(
-      //   atendimento
-      // );
+      await new AtendimentoService({ isConnected: connected }).create(
+        atendimento
+      );
 
       setRelatorios([
         ...relatorios,

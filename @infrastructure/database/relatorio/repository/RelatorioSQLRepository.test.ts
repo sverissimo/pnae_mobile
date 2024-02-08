@@ -6,8 +6,8 @@ import { SQL_DAO } from "@infrastructure/database/dao/SQL_DAO";
 import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioLocalDTO } from "../dto/RelatorioLocalDTO";
 
-import relatorioModel from "_mockData/relatorioModel.json";
-import relatorioDTO from "_mockData/relatorioLocalDTO.json";
+import relatorioModel from "_mockData/relatorio/relatorioModel.json";
+import relatorioDTO from "_mockData/relatorio/relatorioLocalDTO.json";
 
 const relatorio = relatorioModel as RelatorioModel;
 const expectedDTO = relatorioDTO as RelatorioLocalDTO;
