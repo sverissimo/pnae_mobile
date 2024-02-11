@@ -1,0 +1,98 @@
+{
+  "tipo_perfil": "Saída",
+  "participa_organizacao": "true",
+  "grau_interesse_pnae": "Moderado",
+  "atividade": "Atividade Secundária",
+  "gruposNaturaOptions": [
+    {
+      "id_grupo": "110",
+      "id_grupo_legado": 9,
+      "tipo": 1,
+      "nm_grupo": "OUTROS",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1630",
+          "id_legado": 198,
+          "nm_produto": "CAFÉ VERDE",
+          "tipo": 1,
+          "id_grupo_legado": 9,
+          "sg_und_medida": "KG"
+        },
+        {
+          "id_produto": "1629",
+          "id_legado": 197,
+          "nm_produto": "LEITE RESFRIADO",
+          "tipo": 1,
+          "id_grupo_legado": 9,
+          "sg_und_medida": "LT"
+        },
+        {}
+      ],
+      "area_utilizada": "2",
+      "producao_aproximada_ultimo_ano_total": "2"
+    }
+  ],
+  "dap_caf_vigente": "true",
+  "credito_rural": "true",
+  "condicao_posse": ["Comodatário"],
+  "tipo_regularizacao_uso_recursos_hidricos": "Não possui",
+  "gruposIndustrialOptions": [
+    {
+      "id_grupo": "66",
+      "id_grupo_legado": 12,
+      "tipo": 0,
+      "nm_grupo": "Café",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "977",
+          "id_legado": 88,
+          "nm_produto": "Café Torrado Cápsulas",
+          "tipo": 0,
+          "id_grupo_legado": 12,
+          "sg_und_medida": "kg",
+          "producao_aproximada_ultimo_ano_total": "2",
+          "producao_aproximada_ultimo_ano_pnae": "5"
+        },
+        {}
+      ]
+    },
+    {
+      "id_grupo": "59",
+      "id_grupo_legado": 4,
+      "tipo": 0,
+      "nm_grupo": "Bebida",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "932",
+          "id_legado": 12,
+          "nm_produto": "Licor",
+          "tipo": 0,
+          "id_grupo_legado": 4,
+          "sg_und_medida": "litros",
+          "producao_aproximada_ultimo_ano_total": "4",
+          "producao_aproximada_ultimo_ano_pnae": "4"
+        },
+        {}
+      ]
+    }
+  ],
+  "possui_agroindustria_propria": "true",
+  "tipo_gestao_unidade": "Familiar",
+  "pessoas_processamento_alimentos": "5",
+  "tipo_estabelecimento": "Pessoa Jurídica",
+  "agroindustria_precisa_adaptacao_reforma": "true",
+  "possui_registro_orgao_fiscalizacao_sanitaria": "false",
+  "controla_custos_producao2": "true",
+  "tipo_regularizacao_ambiental2": "Licença ambiental",
+  "tipo_regularizacao_uso_recursos_hidricos2": "Outorga",
+  "valor_total_obtido_pnae2": "5",
+  "valor_total_obtido_outros2": "5",
+  "local_comercializacao2": ["PAB"],
+  "forma_entrega_produtos2": ["Correios"],
+  "dificuldade_fornecimento2": ["Acesso aos editais"],
+  "tipo_pessoa_juridica": "MEI",
+  "informacoes_adicionais2": "Okay"
+}

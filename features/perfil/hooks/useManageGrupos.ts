@@ -153,7 +153,6 @@ export const useManageGrupos = (
         p.nm_produto === produto &&
         p.id_grupo_legado === selectedGroup.id_grupo_legado
     )!;
-    console.log({ selectedGroup, selectedProduto });
 
     const alreadySelectedProdutos = selectedGroup?.at_prf_see_produto ?? [];
     const produtos = [...alreadySelectedProdutos];

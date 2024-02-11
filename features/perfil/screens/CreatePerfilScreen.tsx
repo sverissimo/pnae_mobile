@@ -11,7 +11,8 @@ import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
 import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 import { FormElement } from "@shared/types";
-import perfilInput from "_mockData/perfil/createPerfilInput3.json";
+import perfilInput from "_mockData/perfil/createPerfilInputWrong.json";
+import { log } from "@shared/utils/log";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
@@ -20,8 +21,13 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { tipoPerfil } = useManageContratos(produtor?.perfis || []);
 
   const { setSnackBarOptions } = useSnackBar();
-  const { producaoNaturaForm, producaoIndustrialForm, savePerfil } =
-    useManagePerfil(produtor);
+  const {
+    producaoNaturaForm,
+    producaoIndustrialForm,
+    savePerfil,
+    checkForMissingProps,
+    missingFields,
+  } = useManagePerfil(produtor);
 
   const [state, setState] = useState<PerfilInputDTO>(
     {} as unknown as PerfilInputDTO
@@ -43,8 +49,15 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
     }
   }, [tipoPerfil]);
 
-  const handleChange = (name: string, value: any) => {
-    setState((state: any) => ({ ...state, [name]: value }));
+  useEffect(() => {
+    checkForMissingProps(state);
+  }, [state]);
+
+  const handleChange = <K extends keyof PerfilInputDTO>(
+    name: K,
+    value: string
+  ) => {
+    setState((state: PerfilInputDTO) => ({ ...state, [name]: value }));
   };
 
   const handleSave = async (perfil: PerfilInputDTO) => {
@@ -67,10 +80,11 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         status: "error",
         message: "Erro ao salvar perfil",
       });
+      setEnableSave(true);
     }
   };
 
-  const autoSelectTipoPerfil = (perfilForm: FormElement[]) => {
+  const removeTipoPerfilOption = (perfilForm: FormElement[]) => {
     const filteredForm = perfilForm.filter((item) =>
       tipoPerfil === "Entrada" || tipoPerfil === "Saída"
         ? item.field !== "tipo_perfil"
@@ -89,7 +103,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         <ListTitle title="Preencha as informações abaixo" />
       )}
       <FormTemplate
-        form={autoSelectTipoPerfil(perfilForm)}
+        form={removeTipoPerfilOption(perfilForm)}
         data={state}
         onValueChange={handleChange}
       />
@@ -122,7 +136,7 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
         mode="contained"
         style={styles.button}
         onPress={() => handleSave(state)}
-        disabled={!enableSave || !state.atividade}
+        disabled={!enableSave || !state.atividade || missingFields.length > 0}
       >
         Salvar
       </Button>

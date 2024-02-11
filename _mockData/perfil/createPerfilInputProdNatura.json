@@ -1,0 +1,44 @@
+{
+  "aderiu_pra": "false",
+  "atividade": "Atividade Primária",
+  "atividades_usam_recursos_hidricos": ["Outros"],
+  "ciente_iniciativas_regularizacao_pra": "false",
+  "condicao_posse": ["Proprietário"],
+  "controla_custos_producao": "true",
+  "credito_rural": "false",
+  "dap_caf_vigente": "true",
+  "dificuldade_fornecimento": [
+    "Falta de qualidade dos produtos",
+    "Impossibilidade de apresentação da documentação prevista no edital"
+  ],
+  "fonte_captacao_agua": ["Outros"],
+  "forma_entrega_produtos": ["Via cooperativa"],
+  "forma_esgotamento_sanitario": ["Outros"],
+  "grau_interesse_pnae": "Moderado",
+  "gruposNaturaOptions": [
+    {
+      "area_utilizada": "1",
+      "at_prf_see_produto": [],
+      "dados_producao_estratificados_por_produto": false,
+      "id_grupo": "81",
+      "id_grupo_legado": 6,
+      "nm_grupo": "PLANTAS CONDIMENTARES",
+      "producao_aproximada_ultimo_ano_pnae": "3",
+      "producao_aproximada_ultimo_ano_total": "2",
+      "tipo": 1
+    }
+  ],
+  "informacoes_adicionais": "Tst perfil natura pós mudança db demeter",
+  "local_comercializacao": ["Outros"],
+  "nivel_tecnologico_cultivo": ["Adubação mineral"],
+  "participa_organizacao": "true",
+  "possui_cadastro_car": "true",
+  "procedimento_pos_colheita": ["Armazenamento refrigerado"],
+  "realiza_escalonamento_producao": "true",
+  "sistema_producao": ["Hidropônico", "Cultivo protegido (plasticultura)"],
+  "tipo_perfil": "Saída",
+  "tipo_regularizacao_ambiental": "Licença ambiental",
+  "tipo_regularizacao_uso_recursos_hidricos": "Outorga",
+  "valor_total_obtido_outros": "22500",
+  "valor_total_obtido_pnae": "12000"
+}

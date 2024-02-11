@@ -16,6 +16,8 @@ import { toCapitalCase } from "@shared/utils/formatStrings";
 import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { useSelectProdutor } from "@features/produtor/hooks";
+import { log } from "@shared/utils/log";
+import { Perfil } from "@domain/perfil/Perfil";
 
 export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const { isConnected } = useManageConnection();
@@ -24,6 +26,8 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
   const { setProdutor } = useSelectProdutor();
 
   const [perfil, setPerfil] = useState<PerfilModel>({} as PerfilModel);
+  const [missingFields, setMissingFields] = useState<string[]>([]);
+
   const [producaoNaturaForm, setProducaoNaturaForm] = useState<FormElement[]>(
     []
   );
@@ -107,7 +111,18 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     return perfilViewModel;
   };
 
+  const checkForMissingProps = (perfil: PerfilInputDTO) => {
+    if (!perfil.atividade) return false;
+
+    const missingFields = new Perfil(perfil).getMissingProps();
+
+    // log(missingFields);
+
+    setMissingFields(missingFields);
+  };
+
   const savePerfil = async (perfil: PerfilInputDTO) => {
+    console.log("🚀 - savePerfil - perfil:", JSON.stringify(perfil));
     const perfilService = new PerfilService({ isConnected: !!isConnected });
     const perfilModel: PerfilModel = await perfilService.perfilInputToModel(
       perfil
@@ -117,9 +132,6 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     const { id_pessoa_demeter, propriedades } = produtor!;
     const id_propriedade = propriedades[0].id_pl_propriedade;
     const { id_contrato } = activeContrato!;
-    // perfis?.length && perfis[0].at_prf_see_propriedade?.atividade
-    //   ? perfis[0].at_prf_see_propriedade.id_propriedade
-    //   : propriedades[0].id_pl_propriedade;
 
     Object.assign(perfilModel, {
       id_cliente: id_pessoa_demeter,
@@ -142,9 +154,11 @@ export const useManagePerfil = (produtor?: ProdutorModel | null) => {
     perfil,
     producaoNaturaForm,
     producaoIndustrialForm,
+    missingFields,
     setPerfil,
     getPerfilListData,
     modelToViewModel,
     savePerfil,
+    checkForMissingProps,
   };
 };

@@ -52,5 +52,5 @@ export type PerfilInputDTO = {
   valor_total_obtido_pnae2: string;
 
   gruposNaturaOptions?: GrupoProdutosInput[];
-  gruposIndustralOptions?: GrupoProdutosInput[];
+  gruposIndustrialOptions?: GrupoProdutosInput[];
 };

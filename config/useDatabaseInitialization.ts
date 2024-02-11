@@ -9,7 +9,7 @@ export const useDatabaseInitialization = () => {
       .then(() => {
         setDbInitialized(true);
         console.log("---------------------------------------\n");
-        // checkFiles(); // Uncomment or remove based on your logic
+        // checkFiles();
       })
       .catch((err) => {
         console.error("Database initialization error:", err);

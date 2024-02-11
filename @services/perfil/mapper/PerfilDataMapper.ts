@@ -44,6 +44,7 @@ export class PerfilDataMapper {
 
   perfilInputToModel = () => {
     const perfilModel = this.extractDadosProducao()
+      .clearWrongDadosProducaoProps()
       .extractGruposProdutosView()
       .modifyPerfil(convertArraysToStrings)
       .modifyPerfil(cleanEmptyObjects)
@@ -52,6 +53,29 @@ export class PerfilDataMapper {
       .build();
 
     return perfilModel as PerfilModel;
+  };
+
+  private clearWrongDadosProducaoProps = () => {
+    const perfil = { ...this.perfil };
+    const { atividade } = perfil;
+    const propsTodelete: string[] = [];
+
+    for (const key in this.perfil) {
+      if (atividade === "Atividade Primária") {
+        producaoIndustrialForm.forEach((el) => propsTodelete.push(el.field));
+      }
+
+      if (atividade === "Atividade Secundária") {
+        producaoNaturaForm.forEach((el) => propsTodelete.push(el.field));
+      }
+
+      if (propsTodelete.includes(key)) {
+        delete perfil[key];
+      }
+    }
+
+    this.perfil = perfil;
+    return this;
   };
 
   modelToRemoteDTO = () => {
@@ -97,25 +121,38 @@ export class PerfilDataMapper {
       },
     });
 
-    const { gruposNaturaOptions, gruposIndustrialOptions } = perfil;
+    const {
+      gruposNaturaOptions,
+      gruposIndustrialOptions,
+      dados_producao_in_natura,
+      dados_producao_agro_industria,
+    } = perfil;
 
-    if (gruposIndustrialOptions) {
-      perfil.dados_producao_agro_industria.at_prf_see_grupos_produtos =
-        gruposIndustrialOptions;
-      // perfil.gruposIndustrialOptions;
-    }
-
-    if (gruposNaturaOptions) {
+    if (
+      gruposNaturaOptions &&
+      dados_producao_in_natura &&
+      perfil.atividade !== "Atividade Secundária"
+    ) {
       perfil.dados_producao_in_natura.at_prf_see_grupos_produtos =
         gruposNaturaOptions;
-      // perfil.gruposNaturaOptions;
     }
+
+    if (
+      gruposIndustrialOptions &&
+      dados_producao_agro_industria &&
+      perfil.atividade !== "Atividade Primária"
+    ) {
+      perfil.dados_producao_agro_industria.at_prf_see_grupos_produtos =
+        gruposIndustrialOptions;
+    }
+
     this.perfil = perfil;
     return this;
   };
 
   extractDadosProducao = () => {
     const p = this.perfil;
+    const { atividade } = p;
 
     const dadosProducaoNatura = {} as any;
     const dadosProducaoIndustrial = {} as any;
@@ -135,14 +172,17 @@ export class PerfilDataMapper {
         delete p[key];
       }
     }
-    p.dados_producao_in_natura = Object.keys(dadosProducaoNatura).length
-      ? dadosProducaoNatura
-      : undefined;
-    p.dados_producao_agro_industria = Object.keys(dadosProducaoIndustrial)
-      .length
-      ? dadosProducaoIndustrial
-      : undefined;
-    // console.log({ dadosProducaoNatura, dadosProducaoIndustrial });
+    p.dados_producao_in_natura =
+      Object.keys(dadosProducaoNatura).length > 0 &&
+      atividade !== "Atividade Secundária"
+        ? dadosProducaoNatura
+        : undefined;
+    p.dados_producao_agro_industria =
+      Object.keys(dadosProducaoIndustrial).length > 0 &&
+      atividade !== "Atividade Primária"
+        ? dadosProducaoIndustrial
+        : undefined;
+
     this.perfil = p as PerfilModel;
     return this;
   };
@@ -150,6 +190,7 @@ export class PerfilDataMapper {
   extractGruposProdutos = () => {
     const { gruposNaturaOptions, gruposIndustrialOptions, ...p } = this.perfil;
     const perfilModel = p as PerfilModel;
+    const { atividade } = perfilModel.at_prf_see_propriedade;
     const gruposProdutos = [gruposNaturaOptions, gruposIndustrialOptions];
 
     gruposProdutos.forEach((grupos, i) => {
@@ -159,10 +200,10 @@ export class PerfilDataMapper {
         .filter((g: GrupoDetails & GrupoProdutos) => !!g.id_grupo)
         .map(this.extractGrupoProdutosDTO);
 
-      if (i === 0) {
+      if (i === 0 && atividade !== "Atividade Secundária") {
         perfilModel.dados_producao_in_natura.at_prf_see_grupos_produtos =
           grupoProdutosDTO;
-      } else {
+      } else if (i === 1 && atividade !== "Atividade Primária") {
         perfilModel.dados_producao_agro_industria.at_prf_see_grupos_produtos =
           grupoProdutosDTO;
       }

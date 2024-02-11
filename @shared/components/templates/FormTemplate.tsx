@@ -28,6 +28,9 @@ export function FormTemplate({
     <View>
       {form.map((item) => {
         if (!shouldRender(item, data)) {
+          if (data[item.field]) {
+            onValueChange(item.field, undefined);
+          }
           return null;
         }
 

@@ -5,7 +5,9 @@ import perfilInputDTO from "_mockData/perfil/perfilInput.json";
 import perfilInput from "_mockData/perfil/perfil.json";
 import createPerfilInput from "_mockData/perfil/createPerfilInput2.json";
 import createPerfilInputComplete from "_mockData/perfil/createPerfilInputComplete.json";
+import createPerfilInputWrong from "_mockData/perfil/createPerfilInputWrong.json";
 import perfilOptions from "_mockData/perfil/perfilOptions.json";
+import { PerfilDTO } from "@infrastructure/api/perfil/PerfilDTO";
 
 describe("PerfilDataMapper tests", () => {
   it("getPrimeNumbersProps should calculate the correct product of prime numbers for selected options", () => {
@@ -65,17 +67,33 @@ describe("PerfilDataMapper tests", () => {
     });
 
     it("Should convert grupos and produtos into nested arrays of objects", () => {
+      const { at_prf_see_grupos_produtos } = prodNatura;
+
       expect(prodNatura).toHaveProperty("at_prf_see_grupos_produtos");
-      expect(prodNatura.at_prf_see_grupos_produtos).toHaveLength(3);
-      expect(prodNatura.at_prf_see_grupos_produtos[0]).toHaveProperty(
-        "id_grupo"
-      );
-      expect(prodNatura.at_prf_see_grupos_produtos[0]).toHaveProperty(
+      expect(at_prf_see_grupos_produtos).toHaveLength(3);
+      expect(at_prf_see_grupos_produtos[0]).toHaveProperty("id_grupo");
+      expect(at_prf_see_grupos_produtos[0]).toHaveProperty(
         "at_prf_see_produto"
       );
       expect(
-        prodNatura.at_prf_see_grupos_produtos[0].at_prf_see_produto[0]
+        at_prf_see_grupos_produtos[0].at_prf_see_produto[0]
       ).toHaveProperty("id_produto");
+    });
+
+    it("Should remove grupoNaturaOptions and dados_producao_natura if atividade === Secundaria", () => {
+      const perfilDataMapper = new PerfilDataMapper(
+        createPerfilInputWrong as any,
+        perfilOptions
+      );
+
+      const perfilModel = perfilDataMapper.perfilInputToModel() as any;
+      const perfilDTO = new PerfilDataMapper(
+        perfilModel,
+        perfilOptions
+      ).modelToRemoteDTO();
+
+      expect(perfilDTO.dados_producao_in_natura).toBeUndefined();
+      expect(perfilDTO.grupoNaturaOptions).toBeUndefined();
     });
 
     it("Should convert arrays of string to prime numbers", () => {
@@ -122,6 +140,51 @@ describe("PerfilDataMapper tests", () => {
     const { at_prf_see_grupos_produtos: gruposIndustria } =
       dados_producao_agro_industria;
 
+    it("Should create dadosProducaoNatura and dadosProducaoIndustrial properties", () => {
+      expect(perfilModel).toHaveProperty("dados_producao_agro_industria");
+      expect(perfilModel).toHaveProperty("dados_producao_in_natura");
+    });
+    it("Should create at_prf_see_grupos_produtos and at_prf_see_produto properties", () => {
+      expect(gruposNatura).toBeDefined();
+      expect(gruposIndustria).toBeDefined();
+      expect(gruposNatura).toHaveLength(2);
+      expect(gruposIndustria).toHaveLength(2);
+      expect(gruposNatura[0]).toHaveProperty("at_prf_see_produto");
+      expect(gruposIndustria[0]).toHaveProperty("at_prf_see_produto");
+    });
+
+    it("Should remove grupoNaturaOptions and dados_producao_natura if atividade === Secundaria", () => {
+      const perfilDataMapper = new PerfilDataMapper(
+        createPerfilInputWrong as any,
+        perfilOptions
+      );
+
+      const perfilModel = perfilDataMapper.perfilInputToModel() as any;
+      expect(perfilModel.dados_producao_in_natura).toBeUndefined();
+    });
+
+    it("Should create dados_producao_agro_industria if atividade === Secundária", () => {
+      const perfilDataMapper = new PerfilDataMapper(
+        createPerfilInputWrong as any,
+        perfilOptions
+      );
+
+      const perfilModel = perfilDataMapper.perfilInputToModel() as any;
+
+      const { dados_producao_agro_industria } = perfilModel;
+      const { at_prf_see_grupos_produtos } = dados_producao_agro_industria;
+
+      expect(dados_producao_agro_industria).toBeDefined();
+      expect(at_prf_see_grupos_produtos).toBeDefined();
+      expect(at_prf_see_grupos_produtos).toHaveLength(2);
+      expect(at_prf_see_grupos_produtos[0]).toHaveProperty(
+        "at_prf_see_produto"
+      );
+      expect(
+        at_prf_see_grupos_produtos[0].at_prf_see_produto[0].id_produto
+      ).toBe("977");
+    });
+
     it("Should convert nested arrays of objects to grupos and produtos", () => {
       expect(perfilModel.sistema_producao).toBe("Plantio direto, Orgânico");
       expect(perfilModel.condicao_posse).toBe("Aluguel");
@@ -135,19 +198,6 @@ describe("PerfilDataMapper tests", () => {
       expect(
         perfilModel.dados_producao_agro_industria.forma_entrega_produtos
       ).toBe("Via associação, Transportadora");
-    });
-
-    it("Should create dadosProducaoNatura and dadosProducaoIndustrial properties", () => {
-      expect(perfilModel).toHaveProperty("dados_producao_agro_industria");
-      expect(perfilModel).toHaveProperty("dados_producao_in_natura");
-    });
-    it("Should create at_prf_see_grupos_produtos and at_prf_see_produto properties", () => {
-      expect(gruposNatura).toBeDefined();
-      expect(gruposIndustria).toBeDefined();
-      expect(gruposNatura).toHaveLength(2);
-      expect(gruposIndustria).toHaveLength(2);
-      expect(gruposNatura[0]).toHaveProperty("at_prf_see_produto");
-      expect(gruposIndustria[0]).toHaveProperty("at_prf_see_produto");
     });
 
     it("at_prf_see_grupos_produtos should NOT have one EMPTY object at the end.", () => {
@@ -170,6 +220,28 @@ describe("PerfilDataMapper tests", () => {
       expect(produtosNatura.filter((p) => !!p.id_produto)).toHaveLength(4);
       expect(produtosIndustria.filter((p) => !p.id_produto)).toHaveLength(0);
       expect(produtosIndustria.filter((p) => !!p.id_produto)).toHaveLength(1);
+    });
+
+    it("Should remove wrong dadosProducao props from perfilInput object ", () => {
+      const perfilDataMapper = new PerfilDataMapper(
+        createPerfilInputWrong as any,
+        perfilOptions
+      );
+
+      const perfilModel = perfilDataMapper.perfilInputToModel() as any;
+      const perfilDTO = new PerfilDataMapper(
+        perfilModel,
+        perfilOptions
+      ).modelToRemoteDTO() as PerfilDTO;
+
+      expect(perfilDTO.condicao_posse).toBeUndefined();
+      expect(perfilDTO.credito_rural).toBeUndefined();
+      expect(perfilDTO.dap_caf_vigente).toBeUndefined();
+
+      expect(perfilDTO.tipo_perfil).toBeDefined();
+      expect(perfilDTO.participa_organizacao).toBeDefined();
+      expect(perfilDTO.possui_agroindustria_propria).toBeDefined();
+      expect(perfilDTO.tipo_estabelecimento).toBeDefined();
     });
 
     it("Should convert booleanProps to strings", () => {
