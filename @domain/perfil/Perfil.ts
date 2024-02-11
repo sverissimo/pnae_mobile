@@ -40,7 +40,7 @@ export class Perfil {
       return ["gruposProdutos"];
     } else if (
       (atividade === "Ambas" && !gruposNaturaOptions) ||
-      !gruposIndustrialOptions
+      (atividade === "Ambas" && !gruposIndustrialOptions)
     ) {
       return ["gruposProdutos"];
     }
