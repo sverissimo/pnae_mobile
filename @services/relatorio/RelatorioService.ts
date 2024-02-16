@@ -82,7 +82,7 @@ export class RelatorioService {
 
   updateRelatorio = async (relatorio: RelatorioModel) => {
     try {
-      const { id, produtorId } = relatorio;
+      const { id, produtorId, contratoId } = relatorio;
       const relatoriosList = await this.getRelatorios(produtorId);
 
       const originalRelatorio = relatoriosList.find((r) => r.id === id);
@@ -100,7 +100,11 @@ export class RelatorioService {
       console.log("### Relatorio locally updated!!");
 
       if (this.isConnected) {
-        await this.remoteRepository.update(relatorioUpdate);
+        await this.remoteRepository.update({
+          ...relatorioUpdate,
+          produtorId,
+          contratoId,
+        });
         console.log("### Relatorio updated on server!!");
       }
       return;

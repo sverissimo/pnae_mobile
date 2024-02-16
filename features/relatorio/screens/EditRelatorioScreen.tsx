@@ -74,7 +74,6 @@ export const EditRelatorioScreen = ({ route }: any) => {
       setEnableSave(false);
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
       await updateRelatorio(updatedRelatorio as RelatorioModel);
-      console.log("🚀 ~ ******************");
       await clearOldPictures();
       setSnackBarOptions({
         message: "Relatório salvo com sucesso",
@@ -91,6 +90,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
       });
       console.log("🚀 EditRelatorioScreen.tsx:44: ", error);
     }
+    setEnableSave(true);
   };
 
   const navigateTo = (route: string) => {

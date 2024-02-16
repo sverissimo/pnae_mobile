@@ -151,10 +151,10 @@ export const useManageRelatorio = (produtorId?: string) => {
           Number(relatorio.contratoId) || activeContrato?.id_contrato!,
       };
 
-      const connected = !!(isConnected && connectionType !== "unknown");
-      await new RelatorioService({ isConnected: connected }).updateRelatorio(
-        relatorioUpdate
-      );
+      await new RelatorioService({
+        isConnected: !!isConnected,
+      }).updateRelatorio(relatorioUpdate);
+
       updateRelatoriosList(relatorioUpdate);
     } catch (error) {
       console.log("🚀 ~ file: useManageRelatorios.ts:118:", error);

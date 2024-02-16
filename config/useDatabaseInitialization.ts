@@ -1,4 +1,5 @@
 import { init_db } from "@infrastructure/database/config/expoSQLite";
+import { checkFiles, fileExists } from "@shared/utils";
 import { useState, useEffect } from "react";
 
 export const useDatabaseInitialization = () => {
