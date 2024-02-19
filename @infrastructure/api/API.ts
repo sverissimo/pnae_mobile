@@ -37,7 +37,7 @@ export class API<T> {
         ? await response.json()
         : await response.text();
     } else {
-      throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+      throw new Error(`Failed to fetch ${url}: ${response.toString()}`);
     }
   }
 

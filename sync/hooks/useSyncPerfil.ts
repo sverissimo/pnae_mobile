@@ -8,7 +8,7 @@ export const useSyncPerfil = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    if (!debouncedIsConnected) return;
+    if (!debouncedIsConnected || !isConnected) return;
     const performSync = async () => {
       try {
         await new PerfilService({
@@ -26,5 +26,5 @@ export const useSyncPerfil = () => {
     };
 
     performSync();
-  }, [debouncedIsConnected]);
+  }, [debouncedIsConnected, isConnected]);
 };

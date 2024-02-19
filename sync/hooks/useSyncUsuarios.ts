@@ -9,11 +9,11 @@ export const useSyncUsuarios = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    if (!debouncedIsConnected) return;
+    if (!debouncedIsConnected || !isConnected) return;
     const performSync = async () => {
       await usuarioSyncService.sync();
     };
 
     performSync();
-  }, [debouncedIsConnected]);
+  }, [debouncedIsConnected, isConnected]);
 };

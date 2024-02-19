@@ -10,8 +10,7 @@ export const useSyncAtendimentos = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    // if (!debouncedIsConnected) return;
-    if (!isConnected) return;
+    if (!debouncedIsConnected || !isConnected) return;
     const performSync = async () => {
       await atendimentoService.sync();
       // await syncHelpers.saveLastSyncDate();
@@ -19,5 +18,5 @@ export const useSyncAtendimentos = () => {
     };
 
     performSync();
-  }, [isConnected]);
+  }, [debouncedIsConnected, isConnected]);
 };

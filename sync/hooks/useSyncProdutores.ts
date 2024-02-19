@@ -7,7 +7,7 @@ export const useSyncProdutores = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    if (!debouncedIsConnected) return;
+    if (!debouncedIsConnected || !isConnected) return;
     // TODO: Implement this
-  }, [debouncedIsConnected]);
+  }, [debouncedIsConnected, isConnected]);
 };

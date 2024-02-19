@@ -11,7 +11,7 @@ export const useSyncRelatorios = () => {
   const debouncedIsConnected = useDebounce(isConnected, 5000);
 
   useEffect(() => {
-    if (!debouncedIsConnected) return;
+    if (!debouncedIsConnected || !isConnected) return;
 
     const performSync = async () => {
       try {
@@ -24,5 +24,5 @@ export const useSyncRelatorios = () => {
     };
 
     performSync();
-  }, [debouncedIsConnected]);
+  }, [debouncedIsConnected, isConnected]);
 };

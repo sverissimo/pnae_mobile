@@ -77,9 +77,19 @@ export abstract class LocalStorageRepository {
     return collection;
   }
 
-  async getAllData() {
-    console.log("!!!!!!!!!!!! GET ALL DATA !!!!!!!!!!!!!!");
+  async getAllKeys() {
     return await AsyncStorage.getAllKeys();
+  }
+
+  async getData(collectionName: string) {
+    try {
+      const fetchResult = await AsyncStorage.getItem(collectionName);
+
+      const collection = fetchResult ? JSON.parse(fetchResult) : {};
+      return collection;
+    } catch (e) {
+      console.log("🚀 ~ file: localStorage.ts:17 ~ getData ~ e:", e);
+    }
   }
 
   async removeData(key: string) {

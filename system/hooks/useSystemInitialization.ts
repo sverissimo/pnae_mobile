@@ -1,21 +1,20 @@
-import { init_db } from "@infrastructure/database/config/expoSQLite";
 import { checkFiles, fileExists } from "@shared/utils";
 import { useState, useEffect } from "react";
+import { SystemUtils } from "system/SystemUtils";
 
-export const useDatabaseInitialization = () => {
-  const [dbInitialized, setDbInitialized] = useState(false);
+export const useSystemInitialization = () => {
+  const [systemInitialized, setSystemInitialized] = useState(false);
 
   useEffect(() => {
-    init_db()
+    SystemUtils.init_system()
       .then(() => {
-        setDbInitialized(true);
+        setSystemInitialized(true);
         console.log("---------------------------------------\n");
-        // checkFiles();
       })
       .catch((err) => {
         console.error("Database initialization error:", err);
       });
   }, []);
 
-  return dbInitialized;
+  return systemInitialized;
 };

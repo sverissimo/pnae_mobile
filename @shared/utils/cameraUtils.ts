@@ -14,20 +14,7 @@ export const takePicture = async () => {
   try {
     const hasPermission = await verifyPermission();
     if (!hasPermission) {
-      Alert.alert(
-        "Permissão negada",
-        "Essa funcionalidade precisa de permissão de acesso à câmera e aos arquivos de mídia. Deseja abrir as configurações para habilitá-las?",
-        [
-          {
-            text: "Sim",
-            onPress: () => Linking.openSettings(),
-          },
-          {
-            text: "Não",
-            onPress: () => {},
-          },
-        ]
-      );
+      openAndroidSettings();
       return;
     }
 
@@ -41,6 +28,12 @@ export const takePicture = async () => {
     }
   } catch (error) {
     console.log("🚀 ~ file: cameraUtils.ts:41 ~ error:", error);
+    const hasPermission = await verifyPermission();
+    if (!hasPermission) {
+      openAndroidSettings();
+      return;
+    }
+
     throw new Error(
       "Erro ao utilizar a câmera. Verifique as permissões, limpe o cache do app e tente de novo."
     );
@@ -62,4 +55,22 @@ async function verifyPermission() {
   const mediaAfter = await getMediaLibraryPermissionsAsync();
 
   return cameraAfter.granted && mediaAfter.granted;
+}
+
+function openAndroidSettings() {
+  Alert.alert(
+    "Permissão negada",
+    "Essa funcionalidade precisa de permissão de acesso à câmera e aos arquivos de mídia. Deseja abrir as configurações para habilitá-las?",
+    [
+      {
+        text: "Sim",
+        onPress: () => Linking.openSettings(),
+      },
+      {
+        text: "Não",
+        onPress: () => {},
+      },
+    ]
+  );
+  return;
 }

@@ -48,6 +48,20 @@ export async function init_db() {
   });
 }
 
+export async function drop_table_relatorio() {
+  return new Promise((resolve, reject) => {
+    db.transaction(async (tx) => {
+      try {
+        await executeSqlAsync(tx, "DROP TABLE IF EXISTS relatorio;");
+        resolve(true);
+      } catch (error) {
+        console.log("🚀 - db.transaction - error:", error);
+        reject(false);
+      }
+    });
+  });
+}
+
 function executeSqlAsync(
   tx: SQLite.SQLTransaction,
   query: string,
