@@ -72,7 +72,10 @@ export class RelatorioAPIRepository implements RelatorioRepository {
   }
 
   async delete(relatorioId: string): Promise<void> {
+    const token = env.ACCESS_TOKEN;
+    const headers = { Authorization: `Bearer ${token}` };
     const result = await fetch(`${this.url}/${relatorioId}`, {
+      headers,
       method: "DELETE",
     });
     const responseData = await result.text();

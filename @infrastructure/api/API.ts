@@ -1,3 +1,4 @@
+import { env } from "@config/env";
 import { CheckForUpdatesResponse } from "@sync/types/CheckForUpdatesResponse";
 
 enum HttpMethod {
@@ -13,6 +14,8 @@ interface FetchOptions {
   isFormData?: boolean;
 }
 
+const token = env.ACCESS_TOKEN;
+const authHeaders = { Authorization: `Bearer ${token}` };
 export class API<T> {
   private async fetchResource({
     url,
@@ -21,8 +24,9 @@ export class API<T> {
     isFormData,
   }: FetchOptions): Promise<any> {
     const headers = isFormData
-      ? undefined
+      ? authHeaders
       : {
+          ...authHeaders,
           "Content-Type": "application/json",
         };
 
@@ -37,7 +41,8 @@ export class API<T> {
         ? await response.json()
         : await response.text();
     } else {
-      throw new Error(`Failed to fetch ${url}: ${response.toString()}`);
+      const responsObj = await response.json();
+      throw new Error(`Failed to fetch ${url}: ${JSON.stringify(responsObj)}`);
     }
   }
 
@@ -75,12 +80,7 @@ export class API<T> {
     url: string,
     body: any
   ): Promise<CheckForUpdatesResponse<T>> {
-    // console.log("🚀 - file: API.ts:79", {
-    //   url,
-    //   body: body?.relatoriosSyncInfo,
-    // });
     const updateResponse = await this.post(url, body);
-
     return JSON.parse(updateResponse as string);
   }
 }
