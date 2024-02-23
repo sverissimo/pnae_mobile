@@ -10,7 +10,7 @@ export class ProdutorAPIRepository
   url = `${env.SERVER_URL}/produtor`;
 
   findByCPF = async (cpf: string) => {
-    cpf = cpf || "06627559609"; // dev/test purposes only
+    // cpf = cpf || "06627559609"; // dev/test purposes only
     // cpf = cpf || "15609048605"; // dev/test purposes only
     // cpf = cpf || "04548773665"; // dev/test purposes only
     // cpf = cpf || "02491855631"; // dev/test purposes only
