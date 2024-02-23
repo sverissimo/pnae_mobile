@@ -29,12 +29,12 @@ export const useSelectProdutor = () => {
       return;
     }
     setIsLoading(true);
-    const cpf =
-      CPFProdutor.replace(/\D/g, "") ||
-      // "05336559601"
-      // "84602503691"
-      // "06094979605";
-      "15609048605";
+    const cpf = CPFProdutor.replace(/\D/g, "");
+    // ||
+    // "05336559601"
+    // "84602503691"
+    // "06094979605";
+    // "15609048605";
     // "06627559609";
     // "05241895604";
 

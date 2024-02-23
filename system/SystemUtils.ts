@@ -14,7 +14,7 @@ export class SystemUtils extends LocalStorageRepository {
   static readonly NON_DELETABLE_KEYS = [
     "perfilOptions",
     "gruposProdutos",
-    "keepLocalData",
+    "keepLocalDataProd",
     "user",
     // "system",
   ];
@@ -31,7 +31,7 @@ export class SystemUtils extends LocalStorageRepository {
         await init_db();
         await this.resetData();
         await this.deleteAllFiles();
-        await AsyncStorage.setItem("keepLocalData", "true");
+        await AsyncStorage.setItem("keepLocalDataProd", "true");
       }
 
       // console.log(await SystemUtils.listAllLocalData());
@@ -46,7 +46,7 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async should_NOT_ResetData() {
     try {
-      const keepData = await AsyncStorage.getItem("keepLocalData");
+      const keepData = await AsyncStorage.getItem("keepLocalDataProd");
       return !!keepData;
     } catch (error) {
       console.error("Error checking if data should be reset:", error);
@@ -57,7 +57,7 @@ export class SystemUtils extends LocalStorageRepository {
   static async resetData() {
     try {
       const doNotReset = await this.should_NOT_ResetData();
-      // --------   await AsyncStorage.removeItem("keepLocalData"); ---->>> REMOVE THIS TO RESET DATA
+      // --------   await AsyncStorage.removeItem("keepLocalDataProd"); ---->>> REMOVE THIS TO RESET DATA
 
       if (doNotReset) {
         console.log("Data reset not required.");
