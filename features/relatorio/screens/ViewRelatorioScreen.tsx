@@ -62,9 +62,13 @@ export const ViewRelatorioScreen = ({ route }: any) => {
       <ListTitle
         title={`Relatório nº ${relatorio.numeroRelatorio} - ${date}`}
       />
+      {relatorio?.atendimentoId && (
+        <ListTitle title={`Id do Atendimento - ${relatorio.atendimentoId}`} />
+      )}
+
       {relatorio?.nomeOutroExtensionista && (
         <>
-          <ListTitle title={`Extensionistas`} />
+          <ListTitle title="Extensionistas" />
           <View style={styles.assuntoContainer}>
             <Text style={{ fontSize: 12 }}>{relatorio.nomeTecnico}</Text>
             {relatorio?.outroExtensionista?.map((extensionista) => (

@@ -2,7 +2,6 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
 import { RelatorioService } from "@services/relatorio/RelatorioService";
-import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useAuth } from "@auth/hooks/useAuth";
@@ -11,6 +10,7 @@ import { useManageTecnico } from "@features/tecnico/hooks";
 import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, truncateString } from "@shared/utils";
 import { useManageContratos } from "@shared/hooks/useManageContratos";
+import { Relatorio } from "@domain/relatorio";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
@@ -64,11 +64,13 @@ export const useManageRelatorio = (produtorId?: string) => {
     setState((state: any) => ({ ...state, [name]: value }));
   };
 
-  const saveRelatorio = async (relatorio: RelatorioModel) => {
+  const saveRelatorio = async (relatorioInput: RelatorioModel) => {
     try {
       const coordenadas = getLocation();
-      const relatorioInput = {
-        ...relatorio,
+      const propriedade = produtor!.propriedades![0];
+
+      const relatorio = {
+        ...relatorioInput,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
         contratoId: activeContrato?.id_contrato!,
@@ -76,41 +78,32 @@ export const useManageRelatorio = (produtorId?: string) => {
         coordenadas,
       };
 
-      const connected = !!(isConnected && connectionType !== "unknown");
+      const connected = !!isConnected;
+      const relatorioModel = new Relatorio(relatorio).create();
 
-      console.log(
-        "🚀 - file: useManageRelatorios.ts:82 - saveRelatorio - relatorioInput:",
-        relatorioInput
-      );
-
-      const relatorioId = await new RelatorioService({
-        isConnected: !!connected,
-      }).createRelatorio(relatorioInput);
-
-      // *** Cria o atendimento offline ou remoto (caso online)
-      const propriedade = produtor!.propriedades![0];
       const atendimento = {
         id_usuario: user!.id_usuario,
         id_pessoa_demeter: produtor!.id_pessoa_demeter,
         id_pl_propriedade: propriedade.id_pl_propriedade,
         id_und_empresa: propriedade.id_und_empresa,
-        id_relatorio: relatorioId,
+        id_relatorio: relatorioModel.id,
       };
 
-      await new AtendimentoService({ isConnected: connected }).create(
-        atendimento
-      );
+      const atendimentoId = await new RelatorioService({
+        isConnected: !!connected,
+      }).createRelatorio(relatorioModel, atendimento);
 
-      setRelatorios([
-        ...relatorios,
-        {
-          ...relatorioInput,
-          id: relatorioId,
-          nomeTecnico: user?.nome_usuario || "",
-          produtorId: produtor!.id_pessoa_demeter!,
-          createdAt: formatDate(new Date().toISOString()),
-        },
-      ]);
+      console.log("🚀 - saveRelatorio - atendimentoId:", atendimentoId);
+
+      const relatorioView = {
+        ...relatorioModel,
+        nomeTecnico: user?.nome_usuario || "",
+        produtorId: produtor!.id_pessoa_demeter!,
+        createdAt: formatDate(relatorioModel.createdAt),
+        atendimentoId,
+      };
+
+      setRelatorios([...relatorios, relatorioView]);
     } catch (error) {
       console.log("🚀 useManageRelatorios.ts:38 ~ error:", error);
       throw error;

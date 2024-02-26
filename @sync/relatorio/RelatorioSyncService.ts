@@ -1,5 +1,5 @@
-import { RelatorioRepository } from "@domain/relatorio";
 import { RelatorioDomainService } from "@domain/relatorio/services";
+import { RelatorioRepository } from "@domain/relatorio";
 import { RelatorioModel } from "@features/relatorio/types";
 import { SyncData } from "../types/SyncData";
 import { CheckForUpdatesResponse } from "../types/CheckForUpdatesResponse";
@@ -10,6 +10,7 @@ import {
   defaultRelatorioSyncConfig,
 } from "./RelatorioSyncConfig";
 import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
+import { RelatorioService } from "@services/index";
 
 export class RelatorioSyncService {
   private syncURL: string;
@@ -46,7 +47,12 @@ export class RelatorioSyncService {
       await this.relatorioLocalRepository.updateMany(outdatedOnClient);
     }
     if (missingOnServer?.length > 0) {
-      await this.relatorioRemoteRepository.createMany(missingOnServer);
+      await Promise.all(
+        missingOnServer.map((relatorio) =>
+          new RelatorioService().createRelatorio(relatorio)
+        )
+      );
+      // await this.relatorioRemoteRepository.createMany(missingOnServer);
     }
     if (outdatedOnServer?.length > 0) {
       await this.relatorioRemoteRepository.updateMany(outdatedOnServer);

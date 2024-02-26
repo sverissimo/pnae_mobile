@@ -8,8 +8,9 @@ export type RelatorioLocalDTO = {
   orientacao: string;
   picture_uri: string;
   assinatura_uri: string;
+  id_at_atendimento?: string | null;
   outro_extensionista?: string;
-  read_only?: boolean;
+  read_only?: boolean | number;
   coordenadas?: string;
   created_at: any;
   updated_at?: any;

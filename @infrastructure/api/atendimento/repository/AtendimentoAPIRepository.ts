@@ -15,7 +15,8 @@ export class AtendimentoAPIRepository
   async create(atendimento: AtendimentoModel) {
     const atendimentoDTO = new Atendimento(atendimento).toDTO(env.SERVER_URL);
 
-    const response = await this.api.post(this.url, atendimentoDTO);
-    console.log("🚀 ~ file: AtendimentoAPI.ts:25:", { response });
+    const atendimentoId: string = await this.api.post(this.url, atendimentoDTO);
+    console.log("🚀 ~ file: AtendimentoAPI.ts:25:", { atendimentoId });
+    return atendimentoId;
   }
 }

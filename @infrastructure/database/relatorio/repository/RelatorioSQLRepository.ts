@@ -23,8 +23,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       "produtor_id"
     )) as RelatorioLocalDTO[];
 
-    const relatorios = result.map(this.camelizeRelatorio);
-    relatorios.forEach((r) => (r.readOnly = Boolean(r.readOnly)));
+    const relatorios = result.map(this.toModel);
     return relatorios;
   }
 
@@ -33,15 +32,17 @@ export class RelatorioSQLRepository implements RelatorioRepository {
     if (result.length === 0) {
       return null;
     }
-    const relatorio = this.camelizeRelatorio(result[0]);
-    relatorio.readOnly = Boolean(relatorio.readOnly);
+    const relatorio = this.toModel(result[0]);
+
     return relatorio;
   }
 
   async findAll(): Promise<RelatorioModel[]> {
     const relatorioDTOs =
       (await this.relatorioDAO.find()) as RelatorioLocalDTO[];
-    const relatorios = relatorioDTOs.map(this.camelizeRelatorio);
+
+    const relatorios = relatorioDTOs.map(this.toModel);
+
     return relatorios;
   }
 
@@ -86,7 +87,21 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       relatorioLocalDTO.outro_extensionista =
         RelatorioDomainService.getOutrosExtensionistasIds(relatorio);
     }
+
     return relatorioLocalDTO;
+  };
+
+  private toModel = (relatorioLocalDTO: RelatorioLocalDTO): RelatorioModel => {
+    const { ...relatorio } = relatorioLocalDTO;
+
+    const relatorioModel = this.camelizeRelatorio(relatorio);
+    const { atendimentoId } = relatorioModel;
+
+    if (!atendimentoId || atendimentoId === "null") {
+      relatorioModel.atendimentoId = undefined;
+    }
+    relatorioModel.readOnly = !!relatorioModel.readOnly;
+    return relatorioModel;
   };
 
   private camelizeRelatorio = (relatorioLocalDTO: RelatorioLocalDTO) => {
@@ -100,6 +115,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
         }
         if (key === "id_contrato") {
           return "contratoId";
+        }
+        if (key === "id_at_atendimento") {
+          return "atendimentoId";
         }
         return convert(key, options);
       },
@@ -115,6 +133,9 @@ export class RelatorioSQLRepository implements RelatorioRepository {
         }
         if (key === "assinaturaURI") {
           return "assinatura_uri";
+        }
+        if (key === "atendimentoId") {
+          return "id_at_atendimento";
         }
         if (key === "contratoId") {
           return "id_contrato";

@@ -1,6 +1,7 @@
 import { AtendimentoDTO } from "@infrastructure/api/atendimento/dto/AtendimentoDTO";
 
 export type AtendimentoModel = {
+  id_at_atendimento?: string;
   id_usuario: string;
   id_und_empresa: string;
   id_pessoa_demeter: string;

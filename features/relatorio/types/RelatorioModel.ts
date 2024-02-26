@@ -11,11 +11,12 @@ export type RelatorioModel = {
   orientacao: string;
   pictureURI: string;
   assinaturaURI: string;
+  atendimentoId?: string;
   outroExtensionista?: Usuario[];
   matriculaOutroExtensionista?: string;
   nomeOutroExtensionista?: string;
   readOnly?: boolean;
   coordenadas?: string;
-  createdAt: any;
+  createdAt?: any;
   updatedAt?: any;
 };

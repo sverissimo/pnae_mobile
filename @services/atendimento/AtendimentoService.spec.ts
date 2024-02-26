@@ -146,7 +146,7 @@ describe("AtendimentoService tests", () => {
       });
     });
 
-    describe("sync method tests", () => {
+    describe("findAll method tests", () => {
       it("should retrieve all atendimentos from local repository", async () => {
         localRepository.findAll = jest
           .fn()
@@ -156,39 +156,6 @@ describe("AtendimentoService tests", () => {
 
         expect(localRepository.findAll).toHaveBeenCalled();
         expect(result).toEqual([atendimentoInput]);
-      });
-
-      it("should sync all atendimentos", async () => {
-        const atendimentoInput2 = { ...atendimentoInput, id_relatorio: "456" };
-
-        localRepository.findAll = jest
-          .fn()
-          .mockResolvedValue([atendimentoInput, atendimentoInput2]);
-        remoteRepository.create = jest.fn().mockResolvedValue(true);
-        localRepository.delete = jest.fn().mockResolvedValue(undefined);
-
-        await atendimentoService.sync();
-
-        expect(localRepository.findAll).toHaveBeenCalled();
-        expect(remoteRepository.create).toHaveBeenCalledTimes(2);
-        expect(localRepository.delete).toHaveBeenCalledTimes(2);
-
-        for (const atendimento of [atendimentoInput]) {
-          expect(remoteRepository.create).toHaveBeenCalledWith(atendimento);
-          expect(localRepository.delete).toHaveBeenCalledWith(
-            atendimento.id_relatorio
-          );
-        }
-      });
-
-      it("should NOT sync atendimentos if there aint any saved locally", async () => {
-        localRepository.findAll = jest.fn().mockResolvedValue([]);
-
-        await atendimentoService.sync();
-
-        expect(localRepository.findAll).toHaveBeenCalled();
-        expect(remoteRepository.create).not.toHaveBeenCalled();
-        expect(localRepository.delete).not.toHaveBeenCalled();
       });
     });
   });

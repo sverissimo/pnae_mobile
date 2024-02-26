@@ -8,9 +8,10 @@ export type RelatorioDTO = {
   id_contrato: number;
   assunto: string;
   orientacao: string;
-  produtor?: Produtor;
   picture_uri: string;
   assinatura_uri: string;
+  id_at_atendimento?: string;
+  produtor?: Produtor;
   outro_extensionista?: string;
   created_at: any;
   updated_at?: any;

@@ -5,6 +5,7 @@ import { Produtor } from "@features/produtor/types/Produtor";
 import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useManageConnection, useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
+import { SnackBarStateProps } from "@contexts/SnackbarContext";
 
 export const useSelectProdutor = () => {
   const {
@@ -19,22 +20,23 @@ export const useSelectProdutor = () => {
   const { setSnackBarOptions } = useSnackBar();
 
   const fetchProdutor = async (CPFProdutor: string) => {
+    if (!CPFProdutor) {
+      handleError("É necessário informar o CPF do produtor", "warning");
+      // return;
+    }
+
     const cpfIsValid = isValidCPForCNPJ(CPFProdutor);
     if (!cpfIsValid && !!CPFProdutor) {
       const doc = CPFProdutor.length > 14 ? "CNPJ" : "CPF";
-      setSnackBarOptions({
-        message: `${doc} inválido`,
-        status: "error",
-      });
+      handleError(`${doc} inválido`);
       return;
     }
+
     setIsLoading(true);
-    const cpf = CPFProdutor.replace(/\D/g, "");
-    // ||
+    const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
     // "05336559601"
     // "84602503691"
     // "06094979605";
-    // "15609048605";
     // "06627559609";
     // "05241895604";
 
@@ -45,14 +47,10 @@ export const useSelectProdutor = () => {
     const produtor = await produtorService.getProdutor(cpf);
 
     if (!produtor) {
-      setSnackBarOptions({
-        message: "Produtor não encontrado",
-        status: "warning",
-      });
-
-      setIsLoading(false);
+      handleError("Produtor não encontrado", "warning");
       return;
     }
+
     const offlinePerfis = await produtorService.getProdutorLocalPerfis(
       produtor.id_pessoa_demeter
     );
@@ -63,8 +61,8 @@ export const useSelectProdutor = () => {
     //     : -1
     // );
 
-    setIsLoading(false);
     setProdutor(produtor);
+    setIsLoading(false);
   };
 
   const setProdutor = async (produtorDTO: Produtor | null) => {
@@ -90,6 +88,17 @@ export const useSelectProdutor = () => {
   const resetProdutor = () => {
     setProdutorContext(null);
     setRelatorios([]);
+  };
+
+  const handleError = (
+    message: string,
+    status?: SnackBarStateProps["status"]
+  ) => {
+    setSnackBarOptions({
+      message: message || "Erro ao buscar o produtor.",
+      status: status || "error",
+    });
+    setIsLoading(false);
   };
 
   return {

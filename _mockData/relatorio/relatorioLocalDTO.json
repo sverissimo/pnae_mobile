@@ -8,8 +8,9 @@
   "orientacao": "<div>*******</div><div>thats it...</div><div><br></div><div><b><i>052.418.956-04</i></b></div><div><b><i>******</i></b></div>",
   "picture_uri": "file:///data/user/0/br.gov.mg.emater.pnae_mobile/cache/ImagePicker/24d9cd00-9e86-4522-ac5c-79c95334558a.jpeg",
   "assinatura_uri": "file:///data/user/0/br.gov.mg.emater.pnae_mobile/files/1698103234950.png",
+  "id_at_atendimento": null,
   "outro_extensionista": "2681",
-  "read_only": false,
+  "read_only": 0,
   "coordenadas": "-43.9506153,-19.8643373",
   "created_at": "2023-10-23T23:20:49.335Z",
   "updated_at": null

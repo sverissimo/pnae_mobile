@@ -4,9 +4,11 @@ import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioService } from "@services/usuario/UsuarioService";
 import { RelatorioSyncService } from "@sync/relatorio/RelatorioSyncService";
 import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
+import atendimentoInput from "_mockData/createAtendimentoInput.json";
+import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 
 const relatorioInput: RelatorioModel = {
-  id: "",
+  id: "1",
   produtorId: "1",
   tecnicoId: "1620",
   nomeTecnico: "Elisio Geraldo Campos",
@@ -39,7 +41,23 @@ jest.mock("@infrastructure/database/config/expoSQLite");
 jest.mock(
   "@infrastructure/database/relatorio/repository/RelatorioSQLRepository"
 );
-jest.mock("@sync/relatorio/RelatorioSyncService");
+
+jest.mock("@sync/relatorio/RelatorioSyncService", () => ({
+  RelatorioSyncService: jest
+    .fn()
+    .mockImplementation(() => ({ syncRelatorios: jest.fn() })),
+}));
+
+jest.mock("@services/atendimento/AtendimentoService", () => ({
+  AtendimentoService: jest.fn().mockImplementation(() => {
+    return {
+      create: jest.fn(),
+      setConnectionStatus: jest.fn(),
+      getAtendimentoLocal: jest.fn(),
+      deleteAtendimentoLocal: jest.fn(),
+    };
+  }),
+}));
 
 jest.mock("@infrastructure/api/relatorio/repository/RelatorioAPIRepository");
 jest.mock("@services/usuario/UsuarioService", () => ({
@@ -59,6 +77,8 @@ const localRepository = new RelatorioSQLRepository(
 const remoteRepository =
   new RelatorioAPIRepository() as jest.Mocked<RelatorioAPIRepository>;
 const usuarioService = new UsuarioService() as jest.Mocked<UsuarioService>;
+const atendimentoService =
+  new AtendimentoService() as jest.Mocked<AtendimentoService>;
 
 const relatorioServiceConfig = {
   isConnected: true,
@@ -66,6 +86,7 @@ const relatorioServiceConfig = {
   remoteRepository,
   usuarioService,
   syncService,
+  atendimentoService,
 };
 
 describe("RelatorioService tests", () => {
@@ -75,6 +96,51 @@ describe("RelatorioService tests", () => {
       .spyOn(usuarioService, "getUsuariosByIds")
       .mockResolvedValue([usuarioInput]);
   });
+
+  describe("createRelatorio method", () => {
+    it("should create relatorio locally if not connected", async () => {
+      const relatorioService: RelatorioService = new RelatorioService({
+        ...relatorioServiceConfig,
+        isConnected: false,
+        localRepository,
+      });
+
+      await relatorioService.createRelatorio(relatorioInput, atendimentoInput);
+
+      expect(localRepository.create).toHaveBeenCalledWith(relatorioInput);
+      expect(atendimentoService.create).toHaveBeenCalledWith(atendimentoInput);
+      expect(syncService.syncRelatorios).not.toHaveBeenCalled();
+      expect(remoteRepository.create).not.toHaveBeenCalled();
+      expect(atendimentoService.deleteAtendimentoLocal).not.toHaveBeenCalled();
+    });
+
+    it("should create relatorio remotely if connected >> normal flow", async () => {
+      const relatorioService = new RelatorioService(
+        relatorioServiceConfig
+      ) as RelatorioService & any;
+
+      jest
+        .spyOn(relatorioService, "createRelatorioRemote")
+        .mockResolvedValue("1234");
+
+      const relatorioDTO = { ...relatorioInput, atendimentoId: "1234" };
+
+      await relatorioService.createRelatorio(relatorioInput, atendimentoInput);
+
+      expect(atendimentoService.getAtendimentoLocal).not.toHaveBeenCalled();
+      expect(relatorioService.createRelatorioRemote).toHaveBeenCalledWith(
+        relatorioInput,
+        atendimentoInput
+      );
+      expect(localRepository.findById).toHaveBeenCalledWith("1");
+      expect(localRepository.create).toHaveBeenCalledWith(relatorioDTO);
+      expect(localRepository.update).not.toHaveBeenCalled();
+      expect(atendimentoService.deleteAtendimentoLocal).toHaveBeenCalledWith(
+        "1"
+      );
+    });
+  });
+
   describe("getRelatorios Method", () => {
     it("should return relatorios from local repository and not sync if offline", async () => {
       jest
@@ -179,14 +245,16 @@ describe("RelatorioService tests", () => {
       expect(remoteRepository.delete).toHaveBeenCalledTimes(1);
       expect(syncService.syncRelatorios).not.toHaveBeenCalled();
     });
-  });
-  it("should throw an error if relatorio is not found", async () => {
-    const relatorioService: RelatorioService = new RelatorioService(
-      relatorioServiceConfig
-    );
+    it("should throw an error if relatorio is not found", async () => {
+      const relatorioService: RelatorioService = new RelatorioService(
+        relatorioServiceConfig
+      );
 
-    jest.spyOn(localRepository, "findById").mockResolvedValue(null);
+      jest.spyOn(localRepository, "findById").mockResolvedValue(null);
 
-    await expect(relatorioService.deleteRelatorio("1")).rejects.toThrowError();
+      await expect(
+        relatorioService.deleteRelatorio("1")
+      ).rejects.toThrowError();
+    });
   });
 });

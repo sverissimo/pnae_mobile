@@ -1,7 +1,8 @@
 import { AtendimentoModel } from "../entity/Atendimento";
-import { Repository } from "@domain/Repository";
-export interface AtendimentoRepository extends Repository<AtendimentoModel> {
-  create(atendimento: AtendimentoModel): Promise<void>;
+
+export interface AtendimentoRepository {
+  create(atendimento: AtendimentoModel): Promise<string | void>;
   findByRelatorioId(id_relatorio: string): Promise<AtendimentoModel | null>;
+  findAll?(): Promise<AtendimentoModel[]>;
   delete: (id_relatorio: string) => Promise<void>;
 }

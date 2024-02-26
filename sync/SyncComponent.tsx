@@ -1,5 +1,4 @@
 import { useSyncRelatorios } from "sync/hooks/useSyncRelatorios";
-import { useSyncAtendimentos } from "./hooks/useSyncAtendimentos";
 import { useSyncUsuarios } from "./hooks/useSyncUsuarios";
 import { useSyncPerfilOptions } from "./hooks/useSyncPerfilOptions";
 import { useSyncPerfil } from "./hooks/useSyncPerfil";
@@ -8,7 +7,6 @@ import { useSyncPerfil } from "./hooks/useSyncPerfil";
 export const SyncComponent = () => {
   console.log("----------------");
   useSyncRelatorios();
-  // useSyncAtendimentos();
   // useSyncUsuarios();
   // useSyncPerfilOptions();
   useSyncPerfil();

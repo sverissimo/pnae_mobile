@@ -2,6 +2,7 @@ import { Usuario } from "@shared/types/Usuario";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { getUpdatedProps } from "@shared/utils/getUpdatedProps";
 import { parseURI } from "@shared/utils/parseURI";
+import { generateUUID } from "@shared/utils/generateUUID";
 
 export class Relatorio {
   constructor(private readonly relatorio: RelatorioModel) {
@@ -81,5 +82,13 @@ export class Relatorio {
 
   toModel() {
     return this.relatorio;
+  }
+
+  create() {
+    const id = generateUUID();
+    const createdAt = new Date().toISOString();
+    const readOnly = false;
+    const relatorio = { ...this.relatorio, id, readOnly, createdAt };
+    return relatorio;
   }
 }

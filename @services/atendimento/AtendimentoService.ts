@@ -20,7 +20,13 @@ export class AtendimentoService {
     this.remoteRepository = config.remoteRepository;
   }
 
-  create = async (atendimentoInput: AtendimentoModel): Promise<void> => {
+  setConnectionStatus(value: boolean) {
+    this.isConnected = value;
+  }
+
+  create = async (
+    atendimentoInput: AtendimentoModel
+  ): Promise<string | undefined> => {
     try {
       const atendimento = new Atendimento(atendimentoInput).toModel();
 
@@ -29,11 +35,22 @@ export class AtendimentoService {
         console.log("@@@ App offline, saved atendimento locally.", atendimento);
         return;
       }
-      await this.remoteRepository.create!(atendimento);
+
+      const atendimentoId = await this.remoteRepository.create!(atendimento);
+      console.log("🚀 - AtendimentoService - atendimentoId:", atendimentoId);
+
+      return atendimentoId as unknown as string;
     } catch (error: any) {
       console.log("🚀 RelatorioService.ts:43: ", error);
       throw new Error(error.message);
     }
+  };
+
+  getAtendimentoLocal = async (relatorioId: string) => {
+    const atendimento = await this.localRepository.findByRelatorioId(
+      relatorioId
+    );
+    return atendimento;
   };
 
   getAtendimentos = async () => {
@@ -54,23 +71,31 @@ export class AtendimentoService {
     await this.localRepository.delete(relatorioId);
   };
 
-  sync = async () => {
-    const atendimentos = await this.localRepository.findAll!();
-
-    if (atendimentos.length === 0) {
-      console.log("@@@ No atendimentos to sync");
-      return;
-    }
-
-    for (const atendimento of atendimentos) {
-      try {
-        await this.remoteRepository.create!(atendimento);
-        await this.localRepository.delete(atendimento.id_relatorio);
-      } catch (error) {
-        console.log("🚀 AtendimentoService.ts:74 - sync error: ", error);
-        continue;
-      }
-      console.log(`### synced ${atendimentos.length} atendimentos`);
+  deleteAtendimentoLocal = async (relatorioId: string) => {
+    try {
+      await this.localRepository.delete(relatorioId);
+    } catch (error) {
+      throw error;
     }
   };
+
+  // sync = async () => {
+  //   const atendimentos = await this.localRepository.findAll!();
+
+  //   if (atendimentos.length === 0) {
+  //     console.log("@@@ No atendimentos to sync");
+  //     return;
+  //   }
+
+  //   for (const atendimento of atendimentos) {
+  //     try {
+  //       const atendimentoId = await this.remoteRepository.create!(atendimento);
+  //       await this.localRepository.delete(atendimento.id_relatorio);
+  //     } catch (error) {
+  //       console.log("🚀 AtendimentoService.ts:74 - sync error: ", error);
+  //       continue;
+  //     }
+  //     console.log(`### synced ${atendimentos.length} atendimentos`);
+  //   }
+  // };
 }

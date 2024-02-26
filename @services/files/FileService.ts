@@ -79,18 +79,20 @@ export class FileService {
       listFiles(filesFolder),
       listFiles(cacheFolder),
     ]);
+
     const allImageFiles = allFiles
       .flat()
-      .filter((file) => file.includes(".png") || file.includes(".jpeg"));
+      .filter(
+        (file) => file && (file.includes(".png") || file.includes(".jpeg"))
+      );
     // log(allImageFiles);
     const relatorioFiles = relatorios
       .map((r) => [r.pictureURI, r.assinaturaURI])
       .flat();
 
     const filesToRemove = allImageFiles.filter((file) => {
-      const fileExistsInRelatorios = relatorioFiles.some((r) =>
-        r?.includes(file)
-      );
+      const fileExistsInRelatorios =
+        file && relatorioFiles.some((r) => r?.includes(file));
       return !fileExistsInRelatorios;
     });
 

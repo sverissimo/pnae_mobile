@@ -1,8 +1,5 @@
 import { env } from "@config/env";
-import {
-  drop_table_relatorio,
-  init_db,
-} from "@infrastructure/database/config/expoSQLite";
+import DatabaseService from "@infrastructure/database/config/expoSQLite";
 import { LocalStorageRepository } from "@infrastructure/localStorage/LocalStorageRepository";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RelatorioService } from "@services/index";
@@ -21,22 +18,24 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async init_system() {
     try {
-      await init_db();
+      const db = new DatabaseService();
+      await db.initDB();
       console.log("% db_init %");
+
       const cleanInstall = !!!(await this.should_NOT_ResetData());
       console.log("🚀 SystemUtils - init_system - cleanInstall:", cleanInstall);
 
       if (cleanInstall) {
-        await drop_table_relatorio();
-        await init_db();
+        await db.dropTable("relatorios");
+        await db.initDB();
         await this.resetData();
         await this.deleteAllFiles();
         await AsyncStorage.setItem("keepLocalDataProd", "true");
       }
 
       // console.log(await SystemUtils.listAllLocalData());
-      // console.log(await new RelatorioService().getLocalRelatorios());
-      // console.log((await new RelatorioService().getLocalRelatorios()).length);
+      console.log(await new RelatorioService().getLocalRelatorios());
+      console.log((await new RelatorioService().getLocalRelatorios()).length);
 
       // checkFiles();
     } catch (error) {
@@ -69,9 +68,6 @@ export class SystemUtils extends LocalStorageRepository {
         (key) => !SystemUtils.NON_DELETABLE_KEYS.includes(key)
       );
 
-      for (const key of keysToDelete) {
-        console.log(await new SystemUtils().getData(key));
-      }
       await AsyncStorage.multiRemove(keysToDelete);
       console.log("Data reset completed.");
     } catch (error) {
@@ -99,6 +95,9 @@ export class SystemUtils extends LocalStorageRepository {
     await Promise.all(
       folders.map(async (folder) => {
         const files = await listFiles(folder);
+        if (!files || !files.length) {
+          return;
+        }
         await Promise.all(files.map(deleteFile));
       })
     );

@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS "relatorio" (
   orientacao TEXT,
   picture_uri TEXT,
   assinatura_uri TEXT,
+  id_at_atendimento TEXT,
   outro_extensionista TEXT,
   read_only BOOLEAN,
   coordenadas TEXT,

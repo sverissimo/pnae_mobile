@@ -4,20 +4,21 @@ import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepos
 import { RelatorioDomainService } from "@domain/relatorio/services";
 import { UsuarioService } from "../usuario/UsuarioService";
 import { toDateMsec } from "@shared/utils/formatDate";
-import { generateUUID } from "@shared/utils/generateUUID";
 import { deleteFile } from "@shared/utils/fileSystemUtils";
 import {
   RelatorioServiceConfig,
   defaultConfig,
 } from "./RelatorioServiceConfig";
-import { RelatorioSyncService } from "@sync/relatorio/RelatorioSyncService";
+import { AtendimentoModel } from "@domain/atendimento";
+import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 
 export class RelatorioService {
   private isConnected: boolean;
   private usuarioService: UsuarioService;
   private localRepository: RelatorioRepository;
   private remoteRepository: RelatorioRepository;
-  private syncService: RelatorioSyncService;
+  private syncService: typeof defaultConfig.syncService;
+  private atendimentoService: AtendimentoService;
 
   constructor(
     relatorioServiceConfig: Partial<RelatorioServiceConfig> = defaultConfig
@@ -27,39 +28,104 @@ export class RelatorioService {
     this.usuarioService = config.usuarioService;
     this.localRepository = config.localRepository;
     this.remoteRepository = config.remoteRepository;
+    this.atendimentoService = config.atendimentoService!;
     this.syncService = config.syncService;
 
     this.usuarioService.setConnectionStatus(this.isConnected);
+    this.atendimentoService.setConnectionStatus(this.isConnected);
   }
 
-  createRelatorio = async (input: RelatorioModel): Promise<string> => {
+  createRelatorio = async (
+    relatorio: RelatorioModel,
+    atendimentoInput?: AtendimentoModel
+  ): Promise<string | undefined> => {
     try {
-      const id = generateUUID();
-      const createdAt = new Date().toISOString();
-      const readOnly = false;
-      const relatorio = { ...input, id, readOnly, createdAt };
+      //#### Quando rodar o relatorioSyncService -- Missing on CLIENT:
+      //#### Se já tem atendimentoId, com certeza já foi criado atendimento E relatório no servidor
+      // Hipótese excluída, o RelatorioSync chama direto o createMany do localRepository
+      // if (relatorio.atendimentoId) {
+      //   await this.createRelatorioLocal(relatorio);
+      //   return;
+      // }
 
-      const relatorioModel = new Relatorio(relatorio).toModel();
-      await this.localRepository.create(relatorioModel);
-      console.log("### Saved resultLocal ok.");
+      if (!this.isConnected) {
+        await this.createRelatorioLocal(relatorio, atendimentoInput!);
+        return;
+      }
+      const atendimento =
+        atendimentoInput ||
+        (await this.atendimentoService.getAtendimentoLocal(relatorio.id));
+      //------SE ONLINE, cria primeiro no servidor para pegar o id do atendimento
 
-      if (this.isConnected) {
-        await this.remoteRepository.create(relatorioModel);
+      const atendimentoId = await this.createRelatorioRemote(
+        relatorio,
+        atendimento!
+      );
+
+      relatorio.atendimentoId = atendimentoId;
+      console.log("🚀 - RelatorioService - atendimentoId:", atendimentoId);
+
+      console.log("🚀 - RelatorioService - relatorio:", relatorio);
+
+      //----DEPOIS, cria localmente caso o relatório esteja sendo criado ONLINE
+      const localExists = await this.localRepository.findById!(relatorio.id);
+      if (!localExists) {
+        console.log("🚀 - RelatorioService - localExists:", localExists);
+
+        await this.localRepository.create({ ...relatorio, atendimentoId });
+      } else {
+        //--------------- CASO criado offline e agora ESTEJA RODANDO SYNC: Missing on SERVER ----------------
+        await this.localRepository.update({
+          id: relatorio.id,
+          atendimentoId,
+        });
       }
 
-      return id;
+      await this.atendimentoService.deleteAtendimentoLocal(relatorio.id);
+
+      return atendimentoId;
     } catch (error: any) {
       throw new Error(error.message);
     }
+  };
+
+  private createRelatorioLocal = async (
+    relatorio: RelatorioModel,
+    atendimento?: AtendimentoModel
+  ) => {
+    await this.localRepository.create(relatorio);
+    atendimento && (await this.atendimentoService.create(atendimento!));
+    return;
+  };
+
+  private createRelatorioRemote = async (
+    relatorio: RelatorioModel,
+    atendimento: Omit<AtendimentoModel, "id_at_atendimento">
+  ) => {
+    const atendimentoModel = { ...atendimento };
+    // ||      (await this.atendimentoService.getAtendimentoLocal(relatorio.id))!;
+
+    const atendimentoId = await this.atendimentoService.create(
+      atendimentoModel
+    );
+
+    relatorio.atendimentoId = atendimentoId;
+    await this.remoteRepository.create(relatorio);
+
+    // ###### Em todas as hipoteses, local terá o relatorio E O Atendimento!!!######
+    // const localExists = await this.localRepository.findById!(relatorio.id);
+    // if (!localExists) {
+    //   await this.localRepository.create(relatorio);
+    // }
+
+    return atendimentoId;
   };
 
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
     let relatorios = await this.localRepository.findByProdutorId(produtorId);
 
     if (!this.isConnected) {
-      console.log(
-        "@@@ not Connected, returning relatorios from local storage."
-      );
+      console.log("@@@ not Connected, returning relatorios from local mem.");
       const relatoriosWithTecnicos = this.addTecnicosToRelatorio(relatorios);
       return relatoriosWithTecnicos;
     }

@@ -56,25 +56,19 @@ export const fileExists = async (fileURI?: string) => {
 };
 
 export const listFiles = async (folder: string) => {
-  const files = await FileSystem.readDirectoryAsync(folder);
-  const cache = FileSystem.cacheDirectory;
-  // console.log("🚀 - listFiles - cache:", cache);
-
-  return files;
+  try {
+    const files = await FileSystem.readDirectoryAsync(folder);
+    const cache = FileSystem.cacheDirectory;
+    // console.log("🚀 - listFiles - cache:", cache);
+    return files;
+  } catch (error) {
+    console.log("Error listing files:", error);
+  }
 };
 
 export const checkFiles = () => {
   listFiles(
-    // "file:///data/user/0/br.gov.mg.emater.pnae_mobile/cache/ImagePicker"
     env.PICTURE_FOLDER
     // env.ASSINATURA_FOLDER
-  ).then((files) => console.log("files", log(files)));
-  // checkDBSchema();
-  // new RelatorioService(true).getAllRelatorios().then((r) => {
-  // console.log(
-  //   log(r.map((r) => ({ pic: r.pictureURI, ass: r.assinaturaURI })))
-  // );
-  // console.log("\nrelatorios");
-  // log(r);
-  // });
+  ).then((files) => files && console.log("files", log(files)));
 };
