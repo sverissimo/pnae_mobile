@@ -41,7 +41,7 @@ export class AtendimentoService {
 
       return atendimentoId as unknown as string;
     } catch (error: any) {
-      console.log("🚀 RelatorioService.ts:43: ", error);
+      console.log("🚀 AtendimentoService.ts:44: ", error);
       throw new Error(error.message);
     }
   };

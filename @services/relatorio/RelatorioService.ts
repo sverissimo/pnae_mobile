@@ -40,47 +40,18 @@ export class RelatorioService {
     atendimentoInput?: AtendimentoModel
   ): Promise<string | undefined> => {
     try {
-      //#### Quando rodar o relatorioSyncService -- Missing on CLIENT:
-      //#### Se já tem atendimentoId, com certeza já foi criado atendimento E relatório no servidor
-      // Hipótese excluída, o RelatorioSync chama direto o createMany do localRepository
-      // if (relatorio.atendimentoId) {
-      //   await this.createRelatorioLocal(relatorio);
-      //   return;
-      // }
-
       if (!this.isConnected) {
         await this.createRelatorioLocal(relatorio, atendimentoInput!);
         return;
       }
-      const atendimento =
-        atendimentoInput ||
-        (await this.atendimentoService.getAtendimentoLocal(relatorio.id));
-      //------SE ONLINE, cria primeiro no servidor para pegar o id do atendimento
 
       const atendimentoId = await this.createRelatorioRemote(
         relatorio,
-        atendimento!
+        atendimentoInput!
       );
-
-      relatorio.atendimentoId = atendimentoId;
       console.log("🚀 - RelatorioService - atendimentoId:", atendimentoId);
 
-      console.log("🚀 - RelatorioService - relatorio:", relatorio);
-
-      //----DEPOIS, cria localmente caso o relatório esteja sendo criado ONLINE
-      const localExists = await this.localRepository.findById!(relatorio.id);
-      if (!localExists) {
-        console.log("🚀 - RelatorioService - localExists:", localExists);
-
-        await this.localRepository.create({ ...relatorio, atendimentoId });
-      } else {
-        //--------------- CASO criado offline e agora ESTEJA RODANDO SYNC: Missing on SERVER ----------------
-        await this.localRepository.update({
-          id: relatorio.id,
-          atendimentoId,
-        });
-      }
-
+      await this.localRepository.create({ ...relatorio, atendimentoId });
       await this.atendimentoService.deleteAtendimentoLocal(relatorio.id);
 
       return atendimentoId;
@@ -102,22 +73,9 @@ export class RelatorioService {
     relatorio: RelatorioModel,
     atendimento: Omit<AtendimentoModel, "id_at_atendimento">
   ) => {
-    const atendimentoModel = { ...atendimento };
-    // ||      (await this.atendimentoService.getAtendimentoLocal(relatorio.id))!;
+    const atendimentoId = await this.atendimentoService.create(atendimento);
 
-    const atendimentoId = await this.atendimentoService.create(
-      atendimentoModel
-    );
-
-    relatorio.atendimentoId = atendimentoId;
-    await this.remoteRepository.create(relatorio);
-
-    // ###### Em todas as hipoteses, local terá o relatorio E O Atendimento!!!######
-    // const localExists = await this.localRepository.findById!(relatorio.id);
-    // if (!localExists) {
-    //   await this.localRepository.create(relatorio);
-    // }
-
+    await this.remoteRepository.create({ ...relatorio, atendimentoId });
     return atendimentoId;
   };
 

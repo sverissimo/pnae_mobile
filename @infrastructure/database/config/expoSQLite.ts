@@ -45,7 +45,6 @@ class DatabaseService {
     for (const col of columns) {
       const { columnName, type } = col;
       const columnExists = existingColumns.includes(columnName);
-      console.log("🚀 - columnExists:", col, columnExists);
 
       if (!columnExists) {
         await this.addColumn(tableName, columnName, type);

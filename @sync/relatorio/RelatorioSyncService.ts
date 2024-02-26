@@ -10,13 +10,14 @@ import {
   defaultRelatorioSyncConfig,
 } from "./RelatorioSyncConfig";
 import { ProdutorRepository } from "@domain/produtor/repository/ProdutorRepository";
-import { RelatorioService } from "@services/index";
+import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 
 export class RelatorioSyncService {
   private syncURL: string;
   private produtorLocalRepository: ProdutorRepository;
   private relatorioLocalRepository: RelatorioRepository;
   private relatorioRemoteRepository: RelatorioRepository;
+  private atendimentoService = new AtendimentoService();
 
   constructor(
     relatorioSyncConfig: RelatorioSyncConfig = defaultRelatorioSyncConfig
@@ -26,6 +27,7 @@ export class RelatorioSyncService {
     this.produtorLocalRepository = config.produtorLocalRepository;
     this.relatorioLocalRepository = config.relatorioLocalRepository;
     this.relatorioRemoteRepository = config.relatorioRemoteRepository;
+    this.atendimentoService = config.atendimentoService;
   }
 
   async syncRelatorios(produtorId?: string) {
@@ -39,6 +41,7 @@ export class RelatorioSyncService {
       outdatedOnClient,
       upToDateIds,
     } = syncData;
+    log(syncData);
 
     if (missingOnClient?.length > 0) {
       await this.relatorioLocalRepository.createMany(missingOnClient);
@@ -49,7 +52,7 @@ export class RelatorioSyncService {
     if (missingOnServer?.length > 0) {
       await Promise.all(
         missingOnServer.map((relatorio) =>
-          new RelatorioService().createRelatorio(relatorio)
+          this.createRelatorioRemote(relatorio)
         )
       );
       // await this.relatorioRemoteRepository.createMany(missingOnServer);
@@ -119,5 +122,26 @@ export class RelatorioSyncService {
       throw new Error("*** Failed to get check for updates response");
     }
     return response as CheckForUpdatesResponse<RelatorioModel>;
+  }
+
+  private async createRelatorioRemote(relatorio: RelatorioModel) {
+    const atendimento = (await this.atendimentoService.getAtendimentoLocal(
+      relatorio.id
+    ))!;
+    const atendimentoId = await this.atendimentoService.create(atendimento);
+
+    await this.relatorioRemoteRepository.create({
+      ...relatorio,
+      atendimentoId,
+    });
+    console.log("🚀 - RelatorioService - atendimentoId:", atendimentoId);
+
+    await this.relatorioLocalRepository.update({
+      id: relatorio.id,
+      atendimentoId,
+    });
+
+    await this.atendimentoService.deleteAtendimentoLocal(relatorio.id);
+    return atendimentoId;
   }
 }

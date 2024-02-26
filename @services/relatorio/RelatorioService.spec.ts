@@ -4,8 +4,8 @@ import { RelatorioModel } from "@features/relatorio/types";
 import { UsuarioService } from "@services/usuario/UsuarioService";
 import { RelatorioSyncService } from "@sync/relatorio/RelatorioSyncService";
 import { RelatorioAPIRepository } from "@infrastructure/api/relatorio/repository/RelatorioAPIRepository";
-import atendimentoInput from "_mockData/createAtendimentoInput.json";
 import { AtendimentoService } from "@services/atendimento/AtendimentoService";
+import atendimentoInput from "_mockData/createAtendimentoInput.json";
 
 const relatorioInput: RelatorioModel = {
   id: "1",
@@ -132,12 +132,12 @@ describe("RelatorioService tests", () => {
         relatorioInput,
         atendimentoInput
       );
-      expect(localRepository.findById).toHaveBeenCalledWith("1");
       expect(localRepository.create).toHaveBeenCalledWith(relatorioDTO);
-      expect(localRepository.update).not.toHaveBeenCalled();
       expect(atendimentoService.deleteAtendimentoLocal).toHaveBeenCalledWith(
         "1"
       );
+      expect(localRepository.findById).not.toHaveBeenCalled();
+      expect(localRepository.update).not.toHaveBeenCalled();
     });
   });
 

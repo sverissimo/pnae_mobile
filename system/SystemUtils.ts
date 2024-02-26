@@ -2,6 +2,7 @@ import { env } from "@config/env";
 import DatabaseService from "@infrastructure/database/config/expoSQLite";
 import { LocalStorageRepository } from "@infrastructure/localStorage/LocalStorageRepository";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AtendimentoService } from "@services/atendimento/AtendimentoService";
 import { RelatorioService } from "@services/index";
 import { checkFiles, deleteFile, listFiles } from "@shared/utils";
 
@@ -23,7 +24,7 @@ export class SystemUtils extends LocalStorageRepository {
       console.log("% db_init %");
 
       const cleanInstall = !!!(await this.should_NOT_ResetData());
-      console.log("🚀 SystemUtils - init_system - cleanInstall:", cleanInstall);
+      console.log("🚀 SystemUtils - cleanInstall:", cleanInstall);
 
       if (cleanInstall) {
         await db.dropTable("relatorios");
@@ -33,9 +34,14 @@ export class SystemUtils extends LocalStorageRepository {
         await AsyncStorage.setItem("keepLocalDataProd", "true");
       }
 
-      // console.log(await SystemUtils.listAllLocalData());
-      console.log(await new RelatorioService().getLocalRelatorios());
-      console.log((await new RelatorioService().getLocalRelatorios()).length);
+      // console.log(
+      //   await new AtendimentoService().deleteAtendimentoLocal(
+      //     "92d43fc5-fb68-4816-819e-59be25087305"
+      //   )
+      // );
+
+      // console.log(await new RelatorioService().getLocalRelatorios());
+      // console.log((await new RelatorioService().getLocalRelatorios()).length);
 
       // checkFiles();
     } catch (error) {
