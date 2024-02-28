@@ -16,13 +16,15 @@ export const RelatorioScreen = () => {
   const {
     relatorio,
     relatorios,
-    onDelete,
+    isLoading,
+    createdToday,
+    dailyLimit,
     showDeleteDialog,
+    onDelete,
     setShowDeleteDialog,
     formatRelatorioRows,
     onConfirmDelete,
     sharePDFLink,
-    isLoading,
   } = useManageRelatorio(produtor?.id_pessoa_demeter);
 
   const loadingData = isLoading || isLoadingProdutor;
@@ -104,6 +106,16 @@ export const RelatorioScreen = () => {
           <AddButton
             label="Criar Novo Relatório"
             onPress={handleCreateRelatorio}
+            disabled={createdToday || dailyLimit}
+          />
+        )}
+        {(createdToday || dailyLimit) && (
+          <HelperMessage
+            message={
+              createdToday
+                ? "Não é possível criar mais de um relatório no mesmo dia para o mesmo produtor."
+                : "Limite diário de relatórios atingido."
+            }
           />
         )}
       </View>

@@ -11,6 +11,7 @@ import { RelatorioModel } from "@features/relatorio/types";
 import { formatDate, truncateString } from "@shared/utils";
 import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { Relatorio } from "@domain/relatorio";
+import { RelatorioDomainService } from "@domain/relatorio/services";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
@@ -26,6 +27,8 @@ export const useManageRelatorio = (produtorId?: string) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [enableSave, setEnableSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [createdToday, setCreatedToday] = useState(false);
+  const [dailyLimit, setDailyLimit] = useState(false);
 
   const { extensionistas } = useManageTecnico(relatorio);
 
@@ -59,6 +62,26 @@ export const useManageRelatorio = (produtorId?: string) => {
     });
     setEnableSave(validInput);
   }, [relatorio]);
+
+  useEffect(() => {
+    const checkCreateLimits = async () => {
+      const createdToday =
+        RelatorioDomainService.checkForCreatedToday(relatorios);
+
+      const allRelatoriosLocal =
+        await new RelatorioService().getLocalRelatorios();
+
+      const reachedDailyLimit = RelatorioDomainService.getCreateLimit(
+        allRelatoriosLocal,
+        user!.id_usuario
+      );
+
+      setCreatedToday(createdToday);
+      setDailyLimit(reachedDailyLimit);
+    };
+
+    checkCreateLimits();
+  }, [relatorios]);
 
   const handleChange = (name: string, value: any): void => {
     setState((state: any) => ({ ...state, [name]: value }));
@@ -241,6 +264,8 @@ export const useManageRelatorio = (produtorId?: string) => {
     showDeleteDialog,
     enableSave,
     isLoading,
+    createdToday,
+    dailyLimit,
     setRelatorio: setState,
     getRelatorios,
     handleChange,

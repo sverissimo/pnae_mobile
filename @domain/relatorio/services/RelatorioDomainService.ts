@@ -1,36 +1,9 @@
-import { RelatorioDTO, RelatorioModel } from "@features/relatorio/types";
+import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioBackendDTO } from "@infrastructure/api/relatorio/dto";
 import { Usuario } from "@shared/types";
+import { formatDate } from "@shared/utils";
 
 export class RelatorioDomainService {
-  static mergeRelatorios(
-    relatorios: RelatorioModel[],
-    relatoriosFromServer: RelatorioModel[]
-  ) {
-    const relatoriosFromLocalDB = relatorios.map((relatorio) => {
-      const serverRel = relatoriosFromServer.find(
-        (r: RelatorioModel) => r.id === relatorio.id
-      );
-      const readOnly = serverRel?.readOnly || false;
-      return { ...relatorio, readOnly };
-    });
-
-    const relatorioMap = new Map<string, RelatorioModel>();
-    const updateMap = (relatorio: RelatorioModel) => {
-      const existing = relatorioMap.get(relatorio.id);
-      if (
-        !existing ||
-        new Date(relatorio.updatedAt) > new Date(existing.updatedAt)
-      ) {
-        relatorioMap.set(relatorio.id, relatorio);
-      }
-    };
-
-    [...relatoriosFromLocalDB, ...relatoriosFromServer].forEach(updateMap);
-    const updatedRelatorios = Array.from(relatorioMap.values());
-    return updatedRelatorios;
-  }
-
   static getOutrosExtensionistasIds = (relatorio: Partial<RelatorioModel>) => {
     const outroExtensionista = relatorio.outroExtensionista || [];
     if (outroExtensionista && typeof outroExtensionista === "string") {
@@ -138,5 +111,30 @@ export class RelatorioDomainService {
       });
 
     return toUpdateOnServer;
+  }
+
+  static checkForCreatedToday(relatorios: RelatorioModel[]): boolean {
+    const today = new Date();
+    const todayString = formatDate(today.toISOString());
+
+    const relatoriosWithSameDate = relatorios.some(
+      (relatorio) => formatDate(relatorio.createdAt) === todayString
+    );
+    return relatoriosWithSameDate;
+  }
+
+  static getCreateLimit(
+    relatorios: RelatorioModel[],
+    tecnicoId: string
+  ): boolean {
+    const today = new Date();
+    const todayString = formatDate(today.toISOString());
+
+    const relatoriosWithSameDate = relatorios.filter(
+      (rel) =>
+        formatDate(rel.createdAt) === todayString && rel.tecnicoId === tecnicoId
+    );
+
+    return relatoriosWithSameDate.length >= 6;
   }
 }

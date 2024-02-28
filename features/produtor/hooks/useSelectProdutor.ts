@@ -33,12 +33,14 @@ export const useSelectProdutor = () => {
     }
 
     setIsLoading(true);
-    const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
-    // "05336559601"
-    // "84602503691"
-    // "06094979605";
-    // "06627559609";
+    const cpf =
+      CPFProdutor.replace(/\D/g, "") ||
+      // "06627559609";
+      "15609048605";
     // "05241895604";
+    // "84602503691";
+    // "06094979605";
+    // "05336559601";
 
     const produtorService = new ProdutorService({
       isConnected: !!isConnected,
