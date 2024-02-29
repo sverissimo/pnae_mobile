@@ -52,7 +52,7 @@ describe("Relatorio domain class", () => {
       );
     });
 
-    it("should return a new RelatorioModel object with changed properties plus id and updatedAt", () => {
+    it("should return a new RelatorioModel object with changed properties plus id, numeroRelatorio, updatedAt and atendimentoId ", () => {
       const updatedRelatorio = {
         ...relatorio,
         orientacao: "orientacao2",
@@ -64,11 +64,14 @@ describe("Relatorio domain class", () => {
         newRelatorio,
       });
 
-      expect(Object.keys(newRelatorio)).toHaveLength(3);
+      expect(Object.keys(newRelatorio)).toHaveLength(5);
       expect(newRelatorio.id).toBe(relatorioModel.toModel().id);
       expect(newRelatorio).toHaveProperty("orientacao");
       expect(newRelatorio).toHaveProperty("updatedAt");
-      expect(newRelatorio).not.toHaveProperty("numeroRelatorio");
+      expect(newRelatorio).toHaveProperty("numeroRelatorio");
+      expect(newRelatorio).toHaveProperty("atendimentoId");
+      expect(newRelatorio.atendimentoId).toEqual("456");
+
       expect(newRelatorio).not.toHaveProperty("assunto");
       expect(newRelatorio).not.toHaveProperty("pictureURI");
       expect(newRelatorio).not.toHaveProperty("assinaturaURI");
@@ -91,10 +94,15 @@ describe("Relatorio domain class", () => {
       const updates = relatorioModel.getUpdatedProps(relatorio);
       console.log("🚀 - it - updates:", updates);
 
+      expect(updates).toHaveProperty("id");
       expect(updates).toHaveProperty("assunto");
       expect(updates).toHaveProperty("pictureURI");
       expect(updates).toHaveProperty("updatedAt");
-      expect(updates).not.toHaveProperty("numeroRelatorio");
+      expect(updates).toHaveProperty("numeroRelatorio");
+      expect(updates).toHaveProperty("atendimentoId");
+      expect(updates).not.toHaveProperty("nomeTecnico");
+
+      expect(updates).not.toHaveProperty("createdAt");
       expect(updates).not.toHaveProperty("assinaturaURI");
       expect(updates).not.toHaveProperty("outroExtensionista");
     });

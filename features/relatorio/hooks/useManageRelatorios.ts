@@ -12,6 +12,7 @@ import { formatDate, truncateString } from "@shared/utils";
 import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { Relatorio } from "@domain/relatorio";
 import { RelatorioDomainService } from "@domain/relatorio/services";
+import { AtendimentoModel } from "@domain/atendimento";
 
 export const useManageRelatorio = (produtorId?: string) => {
   const { produtor } = useContext(ProdutorContext);
@@ -104,12 +105,13 @@ export const useManageRelatorio = (produtorId?: string) => {
       const connected = !!isConnected;
       const relatorioModel = new Relatorio(relatorio).create();
 
-      const atendimento = {
+      const atendimento: AtendimentoModel = {
         id_usuario: user!.id_usuario,
         id_pessoa_demeter: produtor!.id_pessoa_demeter,
         id_pl_propriedade: propriedade.id_pl_propriedade,
         id_und_empresa: propriedade.id_und_empresa,
         id_relatorio: relatorioModel.id,
+        numero_relatorio: String(relatorioModel.numeroRelatorio),
       };
 
       const atendimentoId = await new RelatorioService({
@@ -167,11 +169,17 @@ export const useManageRelatorio = (produtorId?: string) => {
           Number(relatorio.contratoId) || activeContrato?.id_contrato!,
       };
 
-      await new RelatorioService({
+      const newAtendimentoId = await new RelatorioService({
         isConnected: !!isConnected,
       }).updateRelatorio(relatorioUpdate);
 
-      updateRelatoriosList(relatorioUpdate);
+      console.log("🚀 - updateRelatorio - newAtendimentoId:", newAtendimentoId);
+
+      const update = newAtendimentoId
+        ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
+        : relatorioUpdate;
+
+      updateRelatoriosList(update);
     } catch (error) {
       console.log("🚀 ~ file: useManageRelatorios.ts:118:", error);
       throw error;

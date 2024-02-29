@@ -7,6 +7,7 @@ export type AtendimentoModel = {
   id_pessoa_demeter: string;
   id_pl_propriedade: string;
   id_relatorio: string;
+  numero_relatorio?: string;
 };
 
 export class Atendimento {

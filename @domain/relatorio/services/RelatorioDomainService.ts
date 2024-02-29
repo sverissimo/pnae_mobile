@@ -1,7 +1,7 @@
 import { RelatorioModel } from "@features/relatorio/types";
 import { RelatorioBackendDTO } from "@infrastructure/api/relatorio/dto";
 import { Usuario } from "@shared/types";
-import { formatDate } from "@shared/utils";
+import { formatDate } from "@shared/utils/formatDate";
 
 export class RelatorioDomainService {
   static getOutrosExtensionistasIds = (relatorio: Partial<RelatorioModel>) => {

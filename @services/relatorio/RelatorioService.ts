@@ -120,18 +120,27 @@ export class RelatorioService {
         originalRelatorio
       ) as Partial<RelatorioModel> & { id: string };
 
-      await this.localRepository.update(relatorioUpdate);
-      console.log("### Relatorio locally updated!!");
-
-      if (this.isConnected) {
-        await this.remoteRepository.update({
-          ...relatorioUpdate,
-          produtorId,
-          contratoId,
-        });
-        console.log("### Relatorio updated on server!!");
+      if (!this.isConnected) {
+        await this.localRepository.update(relatorioUpdate);
+        console.log("@@@ Relatorio locally updated!!");
+        return;
       }
-      return;
+
+      const newAtendimentoId = (await this.remoteRepository.update({
+        ...relatorioUpdate,
+        produtorId,
+        contratoId,
+      })) as any;
+      console.log("### Relatorio updated on server!!!!");
+
+      const localUpdate = newAtendimentoId
+        ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
+        : relatorioUpdate;
+
+      await this.localRepository.update(localUpdate);
+      console.log("@@@ Relatorio locally updated!!");
+
+      return newAtendimentoId;
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(`${error.message}`);

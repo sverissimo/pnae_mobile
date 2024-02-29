@@ -10,6 +10,7 @@
     "orientacao": "Orientação",
     "pictureURI": "pictureURI",
     "assinaturaURI": "assinaturaURI",
+    "atendimentoId": "456",
     "outroExtensionista": [
       {
         "id_usuario": "456",
@@ -35,6 +36,7 @@
     "nomeTecnico": "nomeTecnico",
     "pictureURI": "pictureURI",
     "assinaturaURI": "assinaturaURI",
+    "atendimentoId": "456",
     "outroExtensionista": [
       {
         "id_usuario": "789",

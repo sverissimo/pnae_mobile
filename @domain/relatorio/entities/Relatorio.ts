@@ -54,7 +54,8 @@ export class Relatorio {
   getUpdatedProps = (
     originalRelatorio: RelatorioModel
   ): Partial<RelatorioModel> => {
-    const { createdAt, ...rest } = this.relatorio;
+    const { numeroRelatorio, createdAt, atendimentoId, ...rest } =
+      this.relatorio;
 
     const specialComparators = {
       numeroRelatorio: (a: string, b: string) => +a === +b,
@@ -76,7 +77,9 @@ export class Relatorio {
     return {
       ...update,
       id,
+      numeroRelatorio,
       updatedAt,
+      atendimentoId,
     };
   };
 

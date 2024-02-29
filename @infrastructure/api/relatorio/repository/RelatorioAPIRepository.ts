@@ -62,7 +62,9 @@ export class RelatorioAPIRepository implements RelatorioRepository {
       `${this.url}/${id}`,
       formData
     );
+
     console.log("Form data submitted successfully:", response);
+    return response as any;
   }
 
   async updateMany(relatorios: RelatorioModel[]): Promise<void> {
