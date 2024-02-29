@@ -41,7 +41,7 @@ export class RelatorioSyncService {
       outdatedOnClient,
       upToDateIds,
     } = syncData;
-    log(syncData);
+    // log(syncData);
 
     if (missingOnClient?.length > 0) {
       await this.relatorioLocalRepository.createMany(missingOnClient);
@@ -128,6 +128,16 @@ export class RelatorioSyncService {
     const atendimento = (await this.atendimentoService.getAtendimentoLocal(
       relatorio.id
     ))!;
+
+    if (!atendimento) {
+      this.relatorioRemoteRepository.create(relatorio);
+      console.log(
+        "*** - Atendimento not created for relatorio id",
+        relatorio.id
+      );
+      return;
+    }
+
     const atendimentoId = await this.atendimentoService.create(atendimento);
 
     await this.relatorioRemoteRepository.create({

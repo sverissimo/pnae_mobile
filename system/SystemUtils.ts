@@ -12,7 +12,7 @@ export class SystemUtils extends LocalStorageRepository {
   static readonly NON_DELETABLE_KEYS = [
     "perfilOptions",
     "gruposProdutos",
-    "keepLocalDataProd",
+    "keepLocalDataProd2",
     "user",
     // "system",
   ];
@@ -27,11 +27,11 @@ export class SystemUtils extends LocalStorageRepository {
       console.log("🚀 SystemUtils - cleanInstall:", cleanInstall);
 
       if (cleanInstall) {
-        await db.dropTable("relatorios");
+        await db.dropTable("relatorio");
         await db.initDB();
         await this.resetData();
         await this.deleteAllFiles();
-        await AsyncStorage.setItem("keepLocalDataProd", "true");
+        await AsyncStorage.setItem("keepLocalDataProd2", "true");
       }
 
       // console.log(
@@ -39,10 +39,13 @@ export class SystemUtils extends LocalStorageRepository {
       //     "92d43fc5-fb68-4816-819e-59be25087305"
       //   )
       // );
+      console.log(
+        (await new RelatorioService().getLocalRelatorios()).map(
+          (r) => r.assunto
+        )
+      );
 
-      // console.log(await new RelatorioService().getLocalRelatorios());
-      // console.log((await new RelatorioService().getLocalRelatorios()).length);
-
+      console.log((await new RelatorioService().getLocalRelatorios()).length);
       // checkFiles();
     } catch (error) {
       console.error("Error initializing storage:", error);
@@ -51,7 +54,7 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async should_NOT_ResetData() {
     try {
-      const keepData = await AsyncStorage.getItem("keepLocalDataProd");
+      const keepData = await AsyncStorage.getItem("keepLocalDataProd2");
       return !!keepData;
     } catch (error) {
       console.error("Error checking if data should be reset:", error);
@@ -62,7 +65,8 @@ export class SystemUtils extends LocalStorageRepository {
   static async resetData() {
     try {
       const doNotReset = await this.should_NOT_ResetData();
-      // --------   await AsyncStorage.removeItem("keepLocalDataProd"); ---->>> REMOVE THIS TO RESET DATA
+      // ---->>> REMOVE THIS TO RESET DATA
+      await AsyncStorage.removeItem("keepLocalDataProd");
 
       if (doNotReset) {
         console.log("Data reset not required.");

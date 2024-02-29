@@ -41,7 +41,13 @@ export class API<T> {
         ? await response.json()
         : await response.text();
     } else {
-      const responsObj = await response.json();
+      let responsObj;
+      try {
+        responsObj = await response.text();
+      } catch (_err) {
+        responsObj = await response.text();
+      }
+
       throw new Error(`Failed to fetch ${url}: ${JSON.stringify(responsObj)}`);
     }
   }
