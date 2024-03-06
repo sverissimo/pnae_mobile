@@ -90,7 +90,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
       });
       console.log("🚀 EditRelatorioScreen.tsx:44: ", error);
     }
-    setEnableSave(true);
+    // setEnableSave(true);
   };
 
   const navigateTo = (route: string) => {

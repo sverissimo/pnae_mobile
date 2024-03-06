@@ -12,7 +12,7 @@ export class SystemUtils extends LocalStorageRepository {
   static readonly NON_DELETABLE_KEYS = [
     "perfilOptions",
     "gruposProdutos",
-    "keepLocalDataProd2",
+    "keepLocalDataProd3",
     "user",
     // "system",
   ];
@@ -31,7 +31,7 @@ export class SystemUtils extends LocalStorageRepository {
         await db.initDB();
         await this.resetData();
         await this.deleteAllFiles();
-        await AsyncStorage.setItem("keepLocalDataProd2", "true");
+        await AsyncStorage.setItem("keepLocalDataProd3", "true");
       }
 
       // console.log(
@@ -39,13 +39,12 @@ export class SystemUtils extends LocalStorageRepository {
       //     "92d43fc5-fb68-4816-819e-59be25087305"
       //   )
       // );
-      console.log(
-        (await new RelatorioService().getLocalRelatorios()).map(
-          (r) => r.assunto
-        )
-      );
-
-      console.log((await new RelatorioService().getLocalRelatorios()).length);
+      // console.log(
+      //   (await new RelatorioService().getLocalRelatorios()).map(
+      //     (r) => r.assunto
+      //   )
+      // );
+      // console.log((await new RelatorioService().getLocalRelatorios()).length);
       // checkFiles();
     } catch (error) {
       console.error("Error initializing storage:", error);
@@ -54,7 +53,7 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async should_NOT_ResetData() {
     try {
-      const keepData = await AsyncStorage.getItem("keepLocalDataProd2");
+      const keepData = await AsyncStorage.getItem("keepLocalDataProd3");
       return !!keepData;
     } catch (error) {
       console.error("Error checking if data should be reset:", error);
@@ -67,6 +66,8 @@ export class SystemUtils extends LocalStorageRepository {
       const doNotReset = await this.should_NOT_ResetData();
       // ---->>> REMOVE THIS TO RESET DATA
       await AsyncStorage.removeItem("keepLocalDataProd");
+      await AsyncStorage.removeItem("keepLocalDataProd2");
+      await AsyncStorage.removeItem("keepLocalDataProd3");
 
       if (doNotReset) {
         console.log("Data reset not required.");

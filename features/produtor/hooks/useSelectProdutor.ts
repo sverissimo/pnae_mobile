@@ -22,7 +22,7 @@ export const useSelectProdutor = () => {
   const fetchProdutor = async (CPFProdutor: string) => {
     if (!CPFProdutor) {
       handleError("É necessário informar o CPF do produtor", "warning");
-      // return;
+      return;
     }
 
     const cpfIsValid = isValidCPForCNPJ(CPFProdutor);
@@ -33,10 +33,9 @@ export const useSelectProdutor = () => {
     }
 
     setIsLoading(true);
-    const cpf =
-      CPFProdutor.replace(/\D/g, "") ||
-      // "06627559609";
-      "15609048605";
+    const cpf = CPFProdutor.replace(/\D/g, "");
+    // ||       "06627559609";
+    // "15609048605";
     // "05241895604";
     // "84602503691";
     // "06094979605";
