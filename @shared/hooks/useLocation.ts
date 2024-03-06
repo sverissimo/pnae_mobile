@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
 import * as Location from "expo-location";
 import { LocationContext } from "@contexts/index";
 import { Linking } from "react-native";
@@ -8,7 +8,7 @@ export function useLocation() {
   const { location, setLocation } = useContext(LocationContext);
   const [locationPermission, setLocationPermission] = useState<string>();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       setLocationPermission(status);
