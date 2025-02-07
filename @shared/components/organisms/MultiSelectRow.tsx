@@ -8,7 +8,6 @@ import { globalColors } from "@constants/themes";
 type MultiSelectRowProps<T> = {
   item: FormElement;
   selectedItems?: string[];
-  navigateTo: (route: string) => void;
   onPressButton?: () => void;
 };
 

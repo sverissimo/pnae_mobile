@@ -1,4 +1,5 @@
-import { View, StyleSheet } from "react-native";
+import { useMemo } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { ProdutorSearchBar } from "../../produtor/components/ProdutorSearchBar";
 import { useManagePerfil } from "../hooks/useManagePerfil";
 import { useSelectProdutor } from "@features/produtor/hooks";
@@ -9,32 +10,25 @@ import { AddButton, ListTitle } from "@shared/components/atoms";
 import { globalColors } from "../../../@shared/constants/themes";
 import { HelperMessage } from "@shared/components/atoms/HelperMessage";
 import { Loading } from "@shared/components/organisms";
-import { useManageContratos } from "@shared/hooks/useManageContratos";
+import { PerfilDataMapper } from "@services/perfil/mapper/PerfilDataMapper";
+import { usePerfilPermissions } from "../hooks/usePerfilPermissions";
 
 export const PerfilScreen = () => {
   const { navigation } = useCustomNavigation();
   const { produtor, isLoading } = useSelectProdutor();
-  const { enableSavePerfil, contractPermissionMessage } = useManageContratos(
-    produtor?.perfis
-  );
-  const {
-    perfis,
-    producaoNaturaForm,
-    producaoIndustrialForm,
-    modelToViewModel,
-  } = useManagePerfil(produtor);
+  const { helperMessage } = usePerfilPermissions();
+  const { perfis, producaoNaturaForm, producaoIndustrialForm } =
+    useManagePerfil();
 
-  const produtorHasNoPropriedades = !produtor?.propriedades?.length;
-  const disabled = !enableSavePerfil || produtorHasNoPropriedades;
-
-  const perfilOptionsLoaded =
-    producaoIndustrialForm.length && producaoNaturaForm.length;
+  const perfilOptionsLoaded = useMemo(() => {
+    return producaoIndustrialForm.length && producaoNaturaForm.length;
+  }, [producaoIndustrialForm, producaoNaturaForm]);
 
   const handleCreatePerfil = () => {
     navigation.navigate("CreatePerfilScreen", { parentRoute: "PerfilScreen" });
   };
 
-  const handleViewPerfil = async (perfilId: string) => {
+  const handleViewPerfil = (perfilId: string) => {
     if (!produtor) return console.log("produtor não encontrado");
 
     const { municipio } = produtor.propriedades![0];
@@ -44,7 +38,7 @@ export const PerfilScreen = () => {
 
     if (!perfil) return console.log("perfil não encontrado");
 
-    const perfilViewModel = await modelToViewModel(perfil);
+    const perfilViewModel = new PerfilDataMapper(perfil).modelToViewModel();
 
     navigation.navigate("ViewPerfilScreen", {
       perfil: perfilViewModel as any,
@@ -88,19 +82,9 @@ export const PerfilScreen = () => {
       <AddButton
         label="Criar Novo Perfil"
         onPress={handleCreatePerfil}
-        disabled={produtorHasNoPropriedades || !enableSavePerfil}
-        mode={disabled ? "outlined" : "contained"}
+        disabled={!!helperMessage}
       />
-
-      {(!!produtorHasNoPropriedades || !!!enableSavePerfil) && (
-        <HelperMessage
-          message={
-            produtorHasNoPropriedades
-              ? "Não é possível criar um novo perfil para um produtor sem propriedades cadastradas no Demeter."
-              : contractPermissionMessage || ""
-          }
-        />
-      )}
+      <Text style={styles.helperMessage}>{helperMessage}</Text>
     </View>
   );
 };
@@ -110,5 +94,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: globalColors.grayscale[50],
     alignItems: "center",
+  },
+  helperMessage: {
+    textAlign: "justify",
+    fontStyle: "italic",
+    color: globalColors.grayscale[500],
+    fontWeight: "bold",
+    padding: 20,
+    marginHorizontal: "auto",
   },
 });

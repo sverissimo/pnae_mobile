@@ -1,61 +1,19 @@
 import { PerfilDataMapper } from "./PerfilDataMapper";
 import { PerfilInputDTO } from "../dto/PerfilInputDTO";
-import { primeNumbersArray } from "@infrastructure/api/perfil/constants/primeNumbersArray";
-import perfilInputDTO from "_mockData/perfil/perfilInput.json";
-import perfilInput from "_mockData/perfil/perfil.json";
 import createPerfilInput from "_mockData/perfil/createPerfilInput2.json";
 import createPerfilInputComplete from "_mockData/perfil/createPerfilInputComplete.json";
 import createPerfilInputWrong from "_mockData/perfil/createPerfilInputWrong.json";
-import perfilOptions from "_mockData/perfil/perfilOptions.json";
 import { PerfilDTO } from "@infrastructure/api/perfil/PerfilDTO";
 
 describe("PerfilDataMapper tests", () => {
-  it("getPrimeNumbersProps should calculate the correct product of prime numbers for selected options", () => {
-    const perfil = {
-      ...perfilInput,
-      ...perfilInputDTO,
-    } as Partial<PerfilInputDTO>;
-    const perfilDataMapper = new PerfilDataMapper(perfil, perfilOptions);
-    const result = perfilDataMapper.getPrimeNumbersProps().build();
-
-    const expectedAtividadesComRegularizacaoAmbiental =
-      primeNumbersArray[2] * primeNumbersArray[1];
-
-    const expectedProcedimentoPosColheita = 11 * 13;
-    primeNumbersArray[2] * primeNumbersArray[1];
-
-    const expectedAtividadesUsamRecursosHidricos = primeNumbersArray[2];
-    const expectedCondicaoPosse = primeNumbersArray[3];
-
-    const expectedDificuldadeFornecimentoNatura = 17;
-
-    expect(result.atividades_com_regularizacao_ambiental).toBe(
-      String(expectedAtividadesComRegularizacaoAmbiental)
-    );
-    expect(result.atividades_usam_recursos_hidricos).toBe(
-      String(expectedAtividadesUsamRecursosHidricos)
-    );
-    expect(result.condicao_posse).toBe(String(expectedCondicaoPosse));
-    expect(result.procedimento_pos_colheita).toBe(
-      String(expectedProcedimentoPosColheita)
-    );
-    expect(result.dados_producao_in_natura.dificuldade_fornecimento).toBe(
-      String(expectedDificuldadeFornecimentoNatura)
-    );
-  });
-
   describe("PerfilDataMapper modelToRemoteDTO method", () => {
     const perfilDataMapper = new PerfilDataMapper(
-      createPerfilInput as Partial<PerfilInputDTO>,
-      perfilOptions
+      createPerfilInput as Partial<PerfilInputDTO>
     );
 
     const perfilModel = perfilDataMapper.perfilInputToModel();
 
-    const perfilDTO = new PerfilDataMapper(
-      perfilModel,
-      perfilOptions
-    ).modelToRemoteDTO();
+    const perfilDTO = new PerfilDataMapper(perfilModel).modelToRemoteDTO();
 
     const prodNatura = perfilDTO.dados_producao_in_natura;
     const prodIndustria = perfilDTO.dados_producao_agro_industria;
@@ -82,15 +40,11 @@ describe("PerfilDataMapper tests", () => {
 
     it("Should remove grupoNaturaOptions and dados_producao_natura if atividade === Secundaria", () => {
       const perfilDataMapper = new PerfilDataMapper(
-        createPerfilInputWrong as any,
-        perfilOptions
+        createPerfilInputWrong as any
       );
 
       const perfilModel = perfilDataMapper.perfilInputToModel() as any;
-      const perfilDTO = new PerfilDataMapper(
-        perfilModel,
-        perfilOptions
-      ).modelToRemoteDTO();
+      const perfilDTO = new PerfilDataMapper(perfilModel).modelToRemoteDTO();
 
       expect(perfilDTO.dados_producao_in_natura).toBeUndefined();
       expect(perfilDTO.grupoNaturaOptions).toBeUndefined();
@@ -128,8 +82,7 @@ describe("PerfilDataMapper tests", () => {
 
   describe("PerfilDataMapper perfilInputToModel method", () => {
     const perfilDataMapper = new PerfilDataMapper(
-      createPerfilInputComplete as PerfilInputDTO,
-      perfilOptions
+      createPerfilInputComplete as PerfilInputDTO
     );
 
     const perfilModel = perfilDataMapper.perfilInputToModel();
@@ -155,8 +108,7 @@ describe("PerfilDataMapper tests", () => {
 
     it("Should remove grupoNaturaOptions and dados_producao_natura if atividade === Secundaria", () => {
       const perfilDataMapper = new PerfilDataMapper(
-        createPerfilInputWrong as any,
-        perfilOptions
+        createPerfilInputWrong as any
       );
 
       const perfilModel = perfilDataMapper.perfilInputToModel() as any;
@@ -165,8 +117,7 @@ describe("PerfilDataMapper tests", () => {
 
     it("Should create dados_producao_agro_industria if atividade === Secundária", () => {
       const perfilDataMapper = new PerfilDataMapper(
-        createPerfilInputWrong as any,
-        perfilOptions
+        createPerfilInputWrong as any
       );
 
       const perfilModel = perfilDataMapper.perfilInputToModel() as any;
@@ -224,14 +175,12 @@ describe("PerfilDataMapper tests", () => {
 
     it("Should remove wrong dadosProducao props from perfilInput object ", () => {
       const perfilDataMapper = new PerfilDataMapper(
-        createPerfilInputWrong as any,
-        perfilOptions
+        createPerfilInputWrong as any
       );
 
       const perfilModel = perfilDataMapper.perfilInputToModel() as any;
       const perfilDTO = new PerfilDataMapper(
-        perfilModel,
-        perfilOptions
+        perfilModel
       ).modelToRemoteDTO() as PerfilDTO;
 
       expect(perfilDTO.condicao_posse).toBeUndefined();

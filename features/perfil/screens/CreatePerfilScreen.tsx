@@ -2,74 +2,60 @@ import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useManagePerfil } from "../hooks/useManagePerfil";
-import { useSelectProdutor } from "@features/produtor/hooks";
 import { useCustomNavigation } from "@navigation/hooks";
-import { useManageContratos } from "@shared/hooks/useManageContratos";
 import { useSnackBar } from "@shared/hooks";
 import { FormTemplate } from "@shared/components/templates";
 import { ListTitle } from "@shared/components/atoms";
 import { perfilForm } from "../constants";
 import { PerfilInputDTO } from "@services/perfil/dto/PerfilInputDTO";
 import { FormElement } from "@shared/types";
-import perfilInput from "_mockData/perfil/createPerfilInputWrong.json";
-import { log } from "@shared/utils/log";
+import { usePerfilPermissions } from "../hooks/usePerfilPermissions";
 
 export const CreatePerfilScreen: React.FC = ({ route }: any) => {
   const { key, selectedItems } = route?.params || {};
-  const { produtor } = useSelectProdutor();
   const { navigation } = useCustomNavigation();
-  const { tipoPerfil } = useManageContratos(produtor?.perfis || []);
-
   const { setSnackBarOptions } = useSnackBar();
+
+  const { tipoPerfil } = usePerfilPermissions();
   const {
     producaoNaturaForm,
     producaoIndustrialForm,
+    perfil,
+    setPerfil,
     savePerfil,
-    checkForMissingProps,
     missingFields,
-  } = useManagePerfil(produtor);
-
-  const [state, setState] = useState<PerfilInputDTO>(
-    {} as unknown as PerfilInputDTO
-  );
+  } = useManagePerfil();
 
   const [enableSave, setEnableSave] = useState<boolean>(true);
 
+  // Fills the form with the selected items from the previous screen
   useEffect(() => {
     if (key && selectedItems) {
-      setState((state: any) => ({ ...state, [key]: selectedItems }));
+      setPerfil((perfil: PerfilInputDTO) => ({
+        ...perfil,
+        [key]: selectedItems,
+      }));
     }
   }, [key, selectedItems]);
-
-  useEffect(() => {
-    if (tipoPerfil === "Entrada") {
-      setState((state: any) => ({ ...state, tipo_perfil: "Entrada" }));
-    } else if (tipoPerfil === "Saída") {
-      setState((state: any) => ({ ...state, tipo_perfil: "Saída" }));
-    }
-  }, [tipoPerfil]);
-
-  useEffect(() => {
-    checkForMissingProps(state);
-  }, [state]);
 
   const handleChange = <K extends keyof PerfilInputDTO>(
     name: K,
     value: string
   ) => {
-    setState((state: PerfilInputDTO) => ({ ...state, [name]: value }));
+    setPerfil((perfil: PerfilInputDTO) => ({ ...perfil, [name]: value }));
   };
 
-  const handleSave = async (perfil: PerfilInputDTO) => {
+  const handleSave = async () => {
     try {
       setEnableSave(false);
-      await savePerfil(perfil);
+      await savePerfil(tipoPerfil);
 
       setSnackBarOptions({
         message: "Perfil salvo com sucesso!",
         status: "success",
         duration: 1000,
       });
+
       setTimeout(() => {
         navigation.goBack();
       }, 900);
@@ -104,29 +90,29 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
       )}
       <FormTemplate
         form={removeTipoPerfilOption(perfilForm)}
-        data={state}
+        data={perfil}
         onValueChange={handleChange}
       />
 
-      {(state.atividade === "Atividade Primária" ||
-        state.atividade === "Ambas") && (
+      {(perfil.atividade === "Atividade Primária" ||
+        perfil.atividade === "Ambas") && (
         <View style={styles.formContainer}>
           <Text style={styles.subTitle}>Dados de produção em natura</Text>
           <FormTemplate
             form={producaoNaturaForm}
-            data={state}
+            data={perfil}
             onValueChange={handleChange}
           />
         </View>
       )}
 
-      {(state.atividade === "Atividade Secundária" || // || true) && (
-        state.atividade === "Ambas") && (
+      {(perfil.atividade === "Atividade Secundária" || // || true) && (
+        perfil.atividade === "Ambas") && (
         <View style={styles.formContainer}>
           <Text style={styles.subTitle}>Dados de produção industrial</Text>
           <FormTemplate
             form={producaoIndustrialForm}
-            data={state}
+            data={perfil}
             onValueChange={handleChange}
           />
         </View>
@@ -135,8 +121,8 @@ export const CreatePerfilScreen: React.FC = ({ route }: any) => {
       <Button
         mode="contained"
         style={styles.button}
-        onPress={() => handleSave(state)}
-        disabled={!enableSave || !state.atividade || missingFields.length > 0}
+        onPress={handleSave}
+        disabled={!enableSave || !perfil.atividade || missingFields.length > 0}
       >
         Salvar
       </Button>

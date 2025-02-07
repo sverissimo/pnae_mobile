@@ -24,7 +24,6 @@ export default function App() {
   if (!systemInitialized) {
     return <Loading />;
   }
-
   const { primary, background } = globalColors;
 
   const theme = {

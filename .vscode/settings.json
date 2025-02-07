@@ -24,5 +24,6 @@
     "@services": "Resolver",
     "@shared": "shared",
     "@sync": "CI"
-  }
+  },
+  "editor.mouseWheelScrollSensitivity": 7
 }

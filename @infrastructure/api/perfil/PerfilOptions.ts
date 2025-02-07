@@ -20,4 +20,6 @@ export interface PerfilOptions {
   TipoProducao: string[];
   TipoRegularizacaoAmbiental: string[];
   TipoRegularizacaoUsoRecursosHidricos: string[];
+  ValorDemais?: string[];
+  ValorPnae?: string[];
 }

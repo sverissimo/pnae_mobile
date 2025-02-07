@@ -20,10 +20,10 @@ export const useSelectProdutor = () => {
   const { setSnackBarOptions } = useSnackBar();
 
   const fetchProdutor = async (CPFProdutor: string) => {
-    if (!CPFProdutor) {
-      handleError("É necessário informar o CPF do produtor", "warning");
-      return;
-    }
+    // if (!CPFProdutor) {
+    //   handleError("É necessário informar o CPF do produtor", "warning");
+    //   return;
+    // }
 
     const cpfIsValid = isValidCPForCNPJ(CPFProdutor);
     if (!cpfIsValid && !!CPFProdutor) {

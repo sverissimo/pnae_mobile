@@ -143,8 +143,12 @@ export class Perfil {
       .replace(/Dos/g, "")
       .replace(/Do/g, "")
       .replace(/Que/g, "")
+      .replace("(R$)", "")
       .replace("ProcedimentoPosColheita", "ProcedimentosPosColheita")
-      .replace("TipoEstabelecimento", "TipoOrganizacaoEstabelecimento");
+      .replace("TipoEstabelecimento", "TipoOrganizacaoEstabelecimento")
+      .replace("ValorTotalObtidoPNAE", "ValorPnae")
+      .replace("ValorTotalObtidoPnae", "ValorPnae")
+      .replace("ValorTotalObtidoOutros", "ValorDemais");
     return camelizedField as keyof PerfilOptions;
   };
 }

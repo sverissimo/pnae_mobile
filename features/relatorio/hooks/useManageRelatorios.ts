@@ -1,4 +1,10 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
 import { RelatorioService } from "@services/relatorio/RelatorioService";
@@ -14,7 +20,7 @@ import { Relatorio } from "@domain/relatorio";
 import { RelatorioDomainService } from "@domain/relatorio/services";
 import { AtendimentoModel } from "@domain/atendimento";
 
-export const useManageRelatorio = (produtorId?: string) => {
+export const useManageRelatorio = () => {
   const { produtor } = useContext(ProdutorContext);
   const { relatorios, setRelatorios } = useContext(RelatorioContext);
 
@@ -33,14 +39,20 @@ export const useManageRelatorio = (produtorId?: string) => {
 
   const { extensionistas } = useManageTecnico(relatorio);
 
+  const relatoriosCount = useMemo(() => {
+    return relatorios.filter(
+      (r) => r.contratoId === activeContrato?.id_contrato
+    ).length;
+  }, [relatorios]);
+
   useLayoutEffect(() => {
-    if (produtorId) {
+    if (produtor?.id_pessoa_demeter) {
       (async () => {
         setIsLoading(true);
-        await getRelatorios(produtorId);
+        await getRelatorios(produtor?.id_pessoa_demeter);
       })();
     }
-  }, [produtorId]);
+  }, [produtor?.id_pessoa_demeter]);
 
   useEffect(() => {
     const nomeOutroExtensionista = extensionistas
@@ -269,6 +281,7 @@ export const useManageRelatorio = (produtorId?: string) => {
   return {
     relatorio,
     relatorios,
+    relatoriosCount,
     showDeleteDialog,
     enableSave,
     isLoading,

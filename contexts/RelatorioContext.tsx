@@ -22,7 +22,6 @@ export const RelatorioContextProvider: FC<RelatorioContextProviderProps> = ({
   children,
 }) => {
   const [relatorios, setRelatorios] = useState<RelatorioModel[]>([]);
-  const [state, setState] = useState({});
 
   return (
     <RelatorioContext.Provider value={{ relatorios, setRelatorios }}>

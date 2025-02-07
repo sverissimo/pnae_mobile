@@ -26,16 +26,15 @@ export class PerfilService {
   create = async (perfil: PerfilModel) => {
     try {
       const perfilOptions = await this.getPerfilOptions();
+
       if (!perfilOptions) throw new Error("PerfilOptions not found");
 
       if (!this.isConnected) {
         await this.localRepository.create(perfil as PerfilModel);
         return;
       }
-      const perfilDTO = new PerfilDataMapper(
-        perfil,
-        perfilOptions
-      ).modelToRemoteDTO();
+      const perfilDTO = new PerfilDataMapper(perfil).modelToRemoteDTO();
+
       await this.remoteRepository.create(perfilDTO);
     } catch (error) {
       console.log("🚀 PerfilService.ts:33 - createPerfil - error:", error);
@@ -68,15 +67,17 @@ export class PerfilService {
       const shouldUpdate = await this.syncHelpers.shouldSync(
         1000 * 60 * 60 * 24 * 5
       );
-      //if (!shouldUpdate && Object.keys(localPerfilOptions).length > 0) {
+
       if (!shouldUpdate && localPerfilOptions) {
         console.log("@@@ PerfilOptions stil valid, not running sync.");
         return localPerfilOptions;
       }
 
       const perfilOptions = await this.remoteRepository.getPerfilOptions();
-      perfilOptions &&
-        (await this.localRepository.savePerfilOptions!(perfilOptions));
+
+      if (perfilOptions) {
+        await this.localRepository.savePerfilOptions!(perfilOptions);
+      }
 
       console.log("### Fetching perfilOptions from remoteRepository");
       return perfilOptions;
@@ -146,16 +147,6 @@ export class PerfilService {
     }
   };
 
-  perfilInputToModel = async (perfil: any) => {
-    const perfilOptions = await this.getPerfilOptions();
-    return new PerfilDataMapper(perfil, perfilOptions!).perfilInputToModel();
-  };
-
-  perfilModelToViewModel = async (perfil: PerfilModel) => {
-    const perfilOptions = await this.getPerfilOptions();
-    return new PerfilDataMapper(perfil, perfilOptions!).modelToViewModel();
-  };
-
   sync = async () => {
     if (!this.isConnected) return;
     const allPerfilsWithLocalIds = await this.localRepository
@@ -175,10 +166,7 @@ export class PerfilService {
       try {
         const { localId, ...perfil } = perfilWithoutLocalId;
 
-        const perfilDTO = new PerfilDataMapper(
-          perfil,
-          perfilOptions
-        ).modelToRemoteDTO();
+        const perfilDTO = new PerfilDataMapper(perfil).modelToRemoteDTO();
 
         await this.remoteRepository.create(perfilDTO);
         await this.localRepository.delete!(localId);

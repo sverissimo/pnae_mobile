@@ -1,0 +1,84 @@
+{
+  "participa_organizacao": "true",
+  "grau_interesse_pnae": "Alto",
+  "atividade": "Ambas",
+  "gruposNaturaOptions": [
+    {
+      "id_grupo": "80",
+      "id_grupo_legado": 5,
+      "tipo": 1,
+      "nm_grupo": "AGROEXTRATIVISMO",
+      "dados_producao_estratificados_por_produto": false,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "1151",
+          "id_legado": 195,
+          "nm_produto": "FRUTO DA JUÇARA",
+          "tipo": 1,
+          "id_grupo_legado": 5,
+          "sg_und_medida": "KG"
+        },
+        {}
+      ],
+      "area_utilizada": "1",
+      "producao_aproximada_ultimo_ano_total": "1",
+      "producao_aproximada_ultimo_ano_pnae": "1"
+    }
+  ],
+  "local_comercializacao": [
+    "PNAE Estadual ",
+    "PNAE Municipal",
+    "Na propriedade"
+  ],
+  "valor_total_obtido_pnae": "entre R$ 5.000,01 e 10.000,00",
+  "valor_total_obtido_outros": "entre R$ 50.000,01 e 100.000,00",
+  "nivel_tecnologico_cultivo": [
+    "Adubação orgânica",
+    "Adubação mineral",
+    "Análise de solo",
+    "Calagem"
+  ],
+  "sistema_producao": ["Hidropônico", "Orgânico"],
+  "controla_custos_producao": "true",
+  "realiza_escalonamento_producao": "true",
+  "procedimento_pos_colheita": ["Armazenamento refrigerado"],
+  "dificuldade_fornecimento": [
+    "Acesso aos editais",
+    "Elaboração de projetos de venda"
+  ],
+  "informacoes_adicionais": "Tst1",
+  "gruposIndustrialOptions": [
+    {
+      "id_grupo": "56",
+      "id_grupo_legado": 1,
+      "tipo": 0,
+      "nm_grupo": "Aves",
+      "dados_producao_estratificados_por_produto": true,
+      "at_prf_see_produto": [
+        {
+          "id_produto": "929",
+          "id_legado": 3,
+          "nm_produto": "Frango e outras",
+          "tipo": 0,
+          "id_grupo_legado": 1,
+          "sg_und_medida": "kg",
+          "producao_aproximada_ultimo_ano_total": "2",
+          "producao_aproximada_ultimo_ano_pnae": "2"
+        },
+        {}
+      ]
+    }
+  ],
+  "local_comercializacao2": ["PNAE Federal", "PAA"],
+  "valor_total_obtido_pnae2": "entre R$ 20.000,01 e 25.000,00",
+  "valor_total_obtido_outros2": "entre R$ 200.000,01 e 250.000,00",
+  "orgao_fiscalizacao_sanitaria": "MAPA (Ministério da Agricultura, Pecuária e Abastecimento)",
+  "controla_custos_producao2": "true",
+  "dificuldade_fornecimento2": ["Emissão de notas fiscais"],
+  "informacoes_adicionais2": "Tst2",
+  "tipo_perfil": "",
+  "id_cliente": "63536",
+  "id_tecnico": "3319",
+  "id_propriedade": "66746",
+  "id_contrato": 2
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "agroindustria_precisa_adaptacao_reforma": "true",
+    "atividade": "Atividade Secundária",
+    "grau_interesse_pnae": "Baixo",
+    "gruposIndustrialOptions": [],
+    "local_comercializacao2": ["Feira Livre"],
+    "participa_organizacao": "true",
+    "pessoas_processamento_alimentos": "12",
+    "possui_agroindustria_propria": "true",
+    "tipo_estabelecimento": "Pessoa Física",
+    "tipo_gestao_unidade": "Coletiva",
+    "tipo_perfil": "Entrada",
+    "valor_total_obtido_outros2": "entre R$ 200.000,01 e 250.000,00",
+    "valor_total_obtido_pnae2": "entre R$ 20.000,01 e 25.000,00"
+  },
+  {
+    "atividade": "Atividade Primária",
+    "atividades_usam_recursos_hidricos": [],
+    "controla_custos_producao": "false",
+    "credito_rural": "false",
+    "dap_caf_vigente": "true",
+    "grau_interesse_pnae": "Baixo",
+    "informacoes_adicionais": "Fffff",
+    "nivel_tecnologico_cultivo": [
+      "Calagem",
+      "Compostagem ",
+      "Conservação do solo - terraço, plantio em nível, etc."
+    ],
+    "participa_organizacao": "true",
+    "possui_cadastro_car": "false",
+    "realiza_escalonamento_producao": "true",
+    "tipo_perfil": "Entrada",
+    "tipo_regularizacao_ambiental": "Licença ambiental",
+    "tipo_regularizacao_uso_recursos_hidricos": "Certidão de uso insignificante",
+    "valor_total_obtido_outros": "entre R$ 100.000,01 e 150.000,00",
+    "valor_total_obtido_pnae": "entre R$ 10.000,01 e 15.000,00"
+  },
+  {
+    "at_prf_see_propriedade": { "atividade": "Atividade Primária" },
+    "atividade": "Atividade Primária",
+    "credito_rural": "Sim",
+    "dados_producao_in_natura": {
+      "controla_custos_producao": "Sim",
+      "informacoes_adicionais": "Uej",
+      "tipo_regularizacao_ambiental": "Certidão de dispensa de licenciamento",
+      "tipo_regularizacao_uso_recursos_hidricos": "Não possui",
+      "valor_total_obtido_outros": "até R$ 50.000,00",
+      "valor_total_obtido_pnae": "entre R$ 10.000,01 e 15.000,00"
+    },
+    "dap_caf_vigente": "Sim",
+    "data_atualizacao": "2025-01-29T22:23:09.445Z",
+    "data_preenchimento": "2025-01-29T22:23:09.445Z",
+    "grau_interesse_pnae": "Moderado",
+    "id_cliente": "63536",
+    "id_contrato": 2,
+    "id_propriedade": "66746",
+    "id_tecnico": "3319",
+    "nivel_tecnologico_cultivo": "Fertirrigação, Conservação do solo - terraço, plantio em nível, etc., Compostagem ",
+    "participa_organizacao": "Não",
+    "possui_cadastro_car": "Não",
+    "realiza_escalonamento_producao": "Sim",
+    "tipo_perfil": "Entrada"
+  }
+]

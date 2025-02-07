@@ -50,7 +50,6 @@ export function FormTemplate({
                 key={item.key || item.field}
                 item={item}
                 selectedItems={data[item.field]}
-                navigateTo={navigateTo}
               />
             );
           case "navigateToScreen":

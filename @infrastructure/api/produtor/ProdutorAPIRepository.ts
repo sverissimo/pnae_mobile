@@ -11,7 +11,7 @@ export class ProdutorAPIRepository
 
   findByCPF = async (cpf: string) => {
     // cpf = cpf || "06627559609"; // dev/test purposes only
-    // cpf = cpf || "15609048605"; // dev/test purposes only
+    cpf = cpf || "15609048605"; // dev/test purposes only
     // cpf = cpf || "04548773665"; // dev/test purposes only
     // cpf = cpf || "02491855631"; // dev/test purposes only
     // cpf = cpf || "53804131107"; // dev/test purposes only
@@ -20,6 +20,7 @@ export class ProdutorAPIRepository
     // cpf = cpf || "05241895604"; // dev/test purposes only
     try {
       const data = await this.get(`${this.url}?cpfProdutor=${cpf}`);
+      console.log("🚀 - findByCPF= - data:", data);
       if (data) {
         return data as Produtor;
       }
