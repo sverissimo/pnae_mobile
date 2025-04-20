@@ -2,38 +2,33 @@ import { StyleSheet, View } from "react-native";
 import { useCustomNavigation } from "@navigation/hooks";
 import { useSelectProdutor } from "@features/produtor/hooks";
 import { useManageRelatorio } from "../hooks";
-import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
-import { AddButton, HelperMessage, ListTitle } from "@shared/components/atoms";
-import { CustomDialog, List, Loading } from "@shared/components/organisms";
+import { useCreateRelatorioHelper } from "../hooks/useCreateRelatorioHelper";
 import { RelatorioModel } from "../types";
+import { ProdutorInfo, ProdutorSearchBar } from "@features/produtor/components";
+import { CustomDialog, List, Loading } from "@shared/components/organisms";
+import { AddButton, HelperMessage, ListTitle } from "@shared/components/atoms";
 import { globalColors } from "@shared/constants/themes";
 import { RELATORIO_COLUMNS } from "../constants";
 
 export const RelatorioScreen = () => {
   const { produtor, isLoading: isLoadingProdutor } = useSelectProdutor();
-
   const { navigation } = useCustomNavigation();
   const {
     relatorio,
     relatorios,
-    isLoading,
-    createdToday,
-    dailyLimit,
     showDeleteDialog,
+    isLoading: isLoadingRelatorios,
     onDelete,
     setShowDeleteDialog,
     formatRelatorioRows,
     onConfirmDelete,
     sharePDFLink,
-  } = useManageRelatorio(produtor?.id_pessoa_demeter);
+  } = useManageRelatorio();
 
-  const loadingData = isLoading || isLoadingProdutor;
-
-  const noPerfisSaved = !produtor?.perfis?.length;
-  const noRelatorios = !relatorios?.length;
-
-  const disableButton =
-    isLoading || isLoadingProdutor || noPerfisSaved || noRelatorios;
+  const { noRelatorios, disableSaveButton, helperMessage } =
+    useCreateRelatorioHelper();
+  // console.log({ helperMessage, disableSaveButton });
+  const isLoading = isLoadingProdutor || isLoadingRelatorios;
 
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
@@ -51,21 +46,7 @@ export const RelatorioScreen = () => {
     return (
       <View style={styles.container}>
         <ProdutorSearchBar />
-        {loadingData && <Loading />}
-      </View>
-    );
-  }
-  if (noPerfisSaved && !loadingData) {
-    return (
-      <View style={styles.container}>
-        <ProdutorInfo />
-        <ListTitle title={"Nenhum relatório cadastrado"} />
-        <AddButton
-          label="Criar Novo Relatório"
-          onPress={handleCreateRelatorio}
-          disabled={disableButton}
-        />
-        <HelperMessage message="Antes de criar um novo relatório, é necessário cadastrar um perfil de entrada." />
+        {isLoading && <Loading />}
       </View>
     );
   }
@@ -74,7 +55,12 @@ export const RelatorioScreen = () => {
     <>
       <View style={styles.container}>
         <ProdutorInfo />
-        {!noRelatorios ? (
+        {isLoading && <Loading />}
+        {!isLoading && noRelatorios && (
+          <ListTitle title={"Nenhum relatório cadastrado"} />
+        )}
+
+        {!isLoading && !noRelatorios && (
           <>
             <ListTitle title={"Relatorios cadastrados"} />
             <List<RelatorioModel>
@@ -93,31 +79,18 @@ export const RelatorioScreen = () => {
               onConfirmDelete={onConfirmDelete}
             />
           </>
-        ) : (
-          <>
-            {loadingData ? (
-              <Loading />
-            ) : (
-              <ListTitle title={"Nenhum relatório cadastrado"} />
-            )}
-          </>
         )}
-        {!loadingData && (
+
+        <>
+          {!isLoading && helperMessage && (
+            <HelperMessage message={helperMessage} />
+          )}
           <AddButton
             label="Criar Novo Relatório"
             onPress={handleCreateRelatorio}
-            disabled={createdToday || dailyLimit}
+            disabled={isLoading || disableSaveButton}
           />
-        )}
-        {(createdToday || dailyLimit) && (
-          <HelperMessage
-            message={
-              createdToday
-                ? "Não é possível criar mais de um relatório no mesmo dia para o mesmo produtor."
-                : "Limite diário de relatórios atingido."
-            }
-          />
-        )}
+        </>
       </View>
     </>
   );

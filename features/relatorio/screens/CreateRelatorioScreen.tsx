@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useCustomNavigation } from "navigation/hooks/useCustomNavigation";
 import { useLocation } from "@shared/hooks";
@@ -20,6 +20,8 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   const { relatorio, handleChange, saveRelatorio, enableSave, setEnableSave } =
     useManageRelatorio();
 
+  const isLocationUpdated = useRef(false);
+
   useEffect(() => {
     clearURIs();
   }, []);
@@ -32,10 +34,22 @@ export const CreateRelatorioScreen = ({ route }: any) => {
   }, [route.params]);
 
   useEffect(() => {
-    if (pictureURI) {
-      (async () => {
-        await getUpdatedLocation();
-      })();
+    if (pictureURI && !isLocationUpdated.current) {
+      const updateLocation = async () => {
+        try {
+          await getUpdatedLocation();
+          isLocationUpdated.current = true;
+        } catch (error) {
+          console.log("Error getting location:", error);
+          setSnackBarOptions({
+            message:
+              "Erro ao obter localização. Verifique as permissões do celular e certifique-se de que o GPS está ativado.",
+            status: "error",
+            duration: 2000,
+          });
+        }
+      };
+      updateLocation();
     }
   }, [pictureURI]);
 
@@ -82,7 +96,7 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           mode="contained"
           style={styles.button}
           onPress={handleSaveRelatorio}
-          disabled={!enableSave || !pictureURI || !assinaturaURI}
+          // disabled={!enableSave || !pictureURI || !assinaturaURI}
         >
           Salvar
         </Button>

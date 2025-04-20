@@ -24,11 +24,11 @@ export function getCreatePerfilRules(
     }));
 
   const perfisEntrada = perfisInThisContract.filter(
-    (p) => p.tipo_perfil === "ENTRADA"
+    (p) => p.tipo_perfil.toLowerCase() === "entrada"
   );
 
   const perfisSaida = perfisInThisContract.filter(
-    (p) => p.tipo_perfil === "SAIDA"
+    (p) => p.tipo_perfil === "SAIDA" || p.tipo_perfil === "Saída"
   );
 
   const roomForPerfil = perfisInThisContract.length < 2;

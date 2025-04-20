@@ -60,7 +60,7 @@ export const PerfilScreen = () => {
     );
   } else if (!perfilOptionsLoaded) {
     return (
-      <HelperMessage message="Conecte-se á internet para opções de criação de perfil" />
+      <HelperMessage message="Conecte-se à internet para opções de criação de perfil" />
     );
   }
 

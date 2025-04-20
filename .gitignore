@@ -42,3 +42,6 @@ _mockData/old
 
 #bug
 %ProgramData%
+
+#other
+fill*.js

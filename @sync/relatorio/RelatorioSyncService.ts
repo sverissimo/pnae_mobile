@@ -68,7 +68,7 @@ export class RelatorioSyncService {
   ): Promise<SyncData<RelatorioModel>> {
     const produtorIds = produtorId
       ? [produtorId]
-      : await this.produtorLocalRepository.getAllProdutoresIds!();
+      : (await this.produtorLocalRepository.getAllProdutoresIds!()) || [];
 
     const relatoriosLocal = (await this.relatorioLocalRepository.findAll()).map(
       (relatorio) =>
@@ -83,6 +83,9 @@ export class RelatorioSyncService {
         pictureURI: parseURI(relatorio.pictureURI),
         updatedAt: relatorio.updatedAt,
       }));
+
+    // REFACTOR: MAYBE DO NOTE MAKE SERVER CALL IF !produtorIds.length && relatoriosLocal.length === 0
+    // if (!produtorIds.length && relatoriosLocal.length > 0)
 
     const syncInfo = await this.getCheckForUpdatesResponse(
       produtorIds,

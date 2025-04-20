@@ -40,6 +40,12 @@ export const relatorioForm: FormElement[] = [
     iconAlt: "pen-remove",
   },
   {
+    field: "temas_atendimento",
+    label: "Tema do Atendimento",
+    type: "selectMultipleBox",
+    options: ["Agroindústria", "Culturas", "Pecuária"],
+  },
+  {
     field: "matriculaOutroExtensionista",
     label: "Outro extensionista? (inserir nº matrícula)",
     type: "input",

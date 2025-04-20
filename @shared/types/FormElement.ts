@@ -4,6 +4,7 @@ export type FormElement = {
   type:
     | "select"
     | "selectMultiple"
+    | "selectMultipleBox"
     | "radio"
     | "input"
     | "image"

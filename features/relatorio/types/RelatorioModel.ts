@@ -12,6 +12,7 @@ export type RelatorioModel = {
   pictureURI: string;
   assinaturaURI: string;
   atendimentoId?: string;
+  temas_atendimento?: string[];
   outroExtensionista?: Usuario[];
   matriculaOutroExtensionista?: string;
   nomeOutroExtensionista?: string;

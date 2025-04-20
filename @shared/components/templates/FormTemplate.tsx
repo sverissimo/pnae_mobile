@@ -8,6 +8,7 @@ import {
 } from "../organisms";
 import { MultiSelectRow } from "../organisms/MultiSelectRow";
 import { InsertGroupRow } from "../organisms/InsertGroupRow";
+import MultiSelectBox from "../organisms/MultiSelectBox";
 
 type FormTemplateProps = {
   form: FormElement[];
@@ -50,6 +51,18 @@ export function FormTemplate({
                 key={item.key || item.field}
                 item={item}
                 selectedItems={data[item.field]}
+              />
+            );
+          case "selectMultipleBox":
+            return (
+              <MultiSelectBox
+                key={item.key || item.field}
+                label={item.label}
+                options={item.options! as string[]}
+                selectedValues={data[item.field]}
+                onSelectionChange={(selected) =>
+                  onValueChange(item.field, selected)
+                }
               />
             );
           case "navigateToScreen":

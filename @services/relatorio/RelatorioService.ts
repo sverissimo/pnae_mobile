@@ -11,6 +11,7 @@ import {
 } from "./RelatorioServiceConfig";
 import { AtendimentoModel } from "@domain/atendimento";
 import { AtendimentoService } from "@services/atendimento/AtendimentoService";
+import { CreateRelatorioInputDTO } from "@features/relatorio/types/CreateRelatorioInputDTO";
 
 export class RelatorioService {
   private isConnected: boolean;
@@ -39,15 +40,21 @@ export class RelatorioService {
     relatorio: RelatorioModel,
     atendimentoInput?: AtendimentoModel
   ): Promise<string | undefined> => {
+    const { temas_atendimento, ...relatorioDTO } = relatorio;
+    const atendimento = {
+      ...atendimentoInput,
+      temas_atendimento,
+    } as AtendimentoModel;
+
     try {
       if (!this.isConnected) {
-        await this.createRelatorioLocal(relatorio, atendimentoInput!);
+        await this.createRelatorioLocal(relatorioDTO, atendimento);
         return;
       }
 
       const atendimentoId = await this.createRelatorioRemote(
-        relatorio,
-        atendimentoInput!
+        relatorioDTO,
+        atendimento
       );
       console.log("🚀 - RelatorioService - atendimentoId:", atendimentoId);
 
@@ -70,7 +77,7 @@ export class RelatorioService {
   };
 
   private createRelatorioRemote = async (
-    relatorio: RelatorioModel,
+    relatorio: CreateRelatorioInputDTO,
     atendimento: Omit<AtendimentoModel, "id_at_atendimento">
   ) => {
     const atendimentoId = await this.atendimentoService.create(atendimento);

@@ -8,6 +8,7 @@ export type AtendimentoModel = {
   id_pl_propriedade: string;
   id_relatorio: string;
   numero_relatorio?: string;
+  temas_atendimento?: string[];
 };
 
 export class Atendimento {

@@ -8,8 +8,13 @@ import { RelatorioDomainService } from "@domain/relatorio/services";
 export class RelatorioSQLRepository implements RelatorioRepository {
   constructor(private relatorioDAO: SQL_DAO<RelatorioLocalDTO>) {}
   async create(relatorio: RelatorioModel): Promise<void> {
-    const relatorioLocalDTO = this.toLocalDTO(relatorio);
-    await this.relatorioDAO.create(relatorioLocalDTO);
+    try {
+      const relatorioLocalDTO = this.toLocalDTO(relatorio);
+      await this.relatorioDAO.create(relatorioLocalDTO);
+    } catch (error) {
+      console.log("🚀 - RelatorioSQLRepository - create - error:", error);
+      throw error;
+    }
   }
 
   async createMany(relatorios: RelatorioModel[]): Promise<void> {
@@ -33,7 +38,6 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       return null;
     }
     const relatorio = this.toModel(result[0]);
-
     return relatorio;
   }
 
@@ -72,6 +76,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       outroExtensionista,
       nomeOutroExtensionista,
       matriculaOutroExtensionista,
+      temas_atendimento,
       ...rest
     } = relatorio;
 

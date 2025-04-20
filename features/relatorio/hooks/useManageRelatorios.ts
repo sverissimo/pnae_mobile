@@ -34,7 +34,6 @@ export const useManageRelatorio = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [enableSave, setEnableSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [createdToday, setCreatedToday] = useState(false);
   const [dailyLimit, setDailyLimit] = useState(false);
 
   const { extensionistas } = useManageTecnico(relatorio);
@@ -78,9 +77,6 @@ export const useManageRelatorio = () => {
 
   useEffect(() => {
     const checkCreateLimits = async () => {
-      const createdToday =
-        RelatorioDomainService.checkForCreatedToday(relatorios);
-
       const allRelatoriosLocal =
         await new RelatorioService().getLocalRelatorios();
 
@@ -88,8 +84,6 @@ export const useManageRelatorio = () => {
         allRelatoriosLocal,
         user!.id_usuario
       );
-
-      setCreatedToday(createdToday);
       setDailyLimit(reachedDailyLimit);
     };
 
@@ -285,7 +279,6 @@ export const useManageRelatorio = () => {
     showDeleteDialog,
     enableSave,
     isLoading,
-    createdToday,
     dailyLimit,
     setRelatorio: setState,
     getRelatorios,

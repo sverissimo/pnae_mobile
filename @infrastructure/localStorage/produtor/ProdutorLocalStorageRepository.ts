@@ -20,8 +20,10 @@ export class ProdutorLocalStorageRepository
   }
 
   async getAllProdutoresIds(): Promise<string[]> {
-    const allProdutores = await this.findAll();
-    return allProdutores.map((produtor) => produtor.id_pessoa_demeter);
+    const allProdutores = (await this.findAll()) || [];
+    return allProdutores
+      .map((produtor) => produtor.id_pessoa_demeter)
+      .filter((id) => !!id) as string[];
   }
 
   async update(produtor: ProdutorModel): Promise<void> {
