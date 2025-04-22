@@ -77,14 +77,14 @@ export const PerfilScreen = () => {
           />
         </>
       ) : (
-        <ListTitle title={"Nenhum perfil cadastrado"} />
+        !isLoading && <ListTitle title={"Nenhum perfil cadastrado"} />
       )}
+      <Text style={styles.helperMessage}>{helperMessage}</Text>
       <AddButton
         label="Criar Novo Perfil"
         onPress={handleCreatePerfil}
         disabled={!!helperMessage}
       />
-      <Text style={styles.helperMessage}>{helperMessage}</Text>
     </View>
   );
 };
@@ -100,7 +100,9 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: globalColors.grayscale[500],
     fontWeight: "bold",
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 8,
     marginHorizontal: "auto",
   },
 });

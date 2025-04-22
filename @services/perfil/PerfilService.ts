@@ -125,19 +125,10 @@ export class PerfilService {
         return localContractInfo;
       }
 
-      const shouldUpdate = await this.syncHelpers.shouldSync(
-        1000 * 60 * 60 * 24 * 5
-      );
-
-      if (!shouldUpdate && localContractInfo) {
-        console.log("@@@ ContractInfo stil valid, not running sync.");
-        return localContractInfo;
-      }
-
       const contractInfo = await this.remoteRepository.getContractInfo();
-
-      contractInfo &&
-        (await this.localRepository.saveContractInfo!(contractInfo));
+      if (contractInfo) {
+        await this.localRepository.saveContractInfo!(contractInfo);
+      }
 
       console.log("### Fetching contractInfo from remoteRepository");
       return contractInfo;

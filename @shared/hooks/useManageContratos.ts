@@ -1,6 +1,6 @@
+import { useContext, useEffect, useRef } from "react";
 import { ContratoContext } from "@contexts/ContratoContext";
 import { PerfilService } from "@services/perfil/PerfilService";
-import { useContext, useEffect } from "react";
 import { useManageConnection } from ".";
 
 export const useManageContratos = () => {
@@ -20,9 +20,7 @@ export const useManageContratos = () => {
 
     if (contratos && contratos.length > 0) {
       const activeContrato =
-        contratos.findLast(
-          (contrato) => !!contrato.contrato_ativo && !!contrato.inclusao_entrada
-        ) || null;
+        contratos.findLast((contrato) => !!contrato.contrato_ativo) || null;
 
       setActiveContract(activeContrato);
     }

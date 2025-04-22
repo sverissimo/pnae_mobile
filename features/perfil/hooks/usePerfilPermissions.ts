@@ -20,6 +20,7 @@ export const usePerfilPermissions = () => {
     roomForPerfil,
     hasPerfilEntradaForActiveContract,
     canCreatePerfilForThisContract,
+    contractDoesNotAllowSaidaYet,
   } = useMemo(
     () => getCreatePerfilRules(perfis, activeContrato ?? ({} as ContractInfo)),
     [perfis, activeContrato]
@@ -53,6 +54,7 @@ export const usePerfilPermissions = () => {
         canAddSaida,
         roomForPerfil,
         relatoriosCount,
+        contractDoesNotAllowSaidaYet,
       }),
     [
       produtorHasNoPropriedades,
@@ -60,6 +62,7 @@ export const usePerfilPermissions = () => {
       canAddSaida,
       roomForPerfil,
       relatoriosCount,
+      contractDoesNotAllowSaidaYet,
     ]
   );
 

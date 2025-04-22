@@ -24,26 +24,17 @@ export function useLocation() {
   const [locationPermission, setLocationPermission] = useState<string>();
 
   // 1) Just request permission once (doesn't wait on GPS)
-  useEffect(() => {
-    Location.requestForegroundPermissionsAsync()
-      .then(({ status }) => setLocationPermission(status))
-      .catch(console.error);
+  useLayoutEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      setLocationPermission(status);
+      if (status === "granted") {
+        const location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+        console.log("🚀 - location:", location);
+      }
+    })();
   }, []);
-
-  // useLayoutEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     setLocationPermission(status);
-  //     if (status === "granted") {
-  //       console.log(
-  //         "🚀 - useLocation.ts:12: status === granted, getting location..."
-  //       );
-  //       const location = await Location.getCurrentPositionAsync({});
-  //       setLocation(location);
-  //       console.log("🚀 - location:", location);
-  //     }
-  //   })();
-  // }, []);
 
   const getLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -72,7 +63,7 @@ export function useLocation() {
       setLocation(loc);
       return locationObjToText(loc);
     } catch (err) {
-      console.warn(
+      console.log(
         "useLocation#getUpdatedLocation failed, using last known:",
         err
       );

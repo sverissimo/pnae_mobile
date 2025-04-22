@@ -14,7 +14,6 @@ export const useSyncPerfil = () => {
         await new PerfilService({
           isConnected: !!debouncedIsConnected,
         }).sync();
-        console.log("Saving remote perfil in remoteRepository");
       } catch (error) {
         console.log("🚀 - performSync - error:", error);
 

@@ -5,6 +5,7 @@ interface IPerfilHelperMessage {
   roomForPerfil: boolean;
   relatoriosCount: number;
   isContractExpired: boolean;
+  contractDoesNotAllowSaidaYet?: boolean;
 }
 
 export const getPerfilHelperMessage = ({
@@ -14,15 +15,17 @@ export const getPerfilHelperMessage = ({
   canAddSaida,
   roomForPerfil,
   relatoriosCount,
+  contractDoesNotAllowSaidaYet,
 }: IPerfilHelperMessage): string => {
-  console.log("🚀 ***********************- :", {
-    produtorHasNoPropriedades,
-    isContractExpired,
-    canAddEntrada,
-    canAddSaida,
-    roomForPerfil,
-    relatoriosCount,
-  });
+  // console.log("🚀 ***********************- :", {
+  //   produtorHasNoPropriedades,
+  //   isContractExpired,
+  //   canAddEntrada,
+  //   canAddSaida,
+  //   roomForPerfil,
+  //   relatoriosCount,
+  //   contractDoesNotAllowSaidaYet,
+  // });
 
   if (produtorHasNoPropriedades) {
     return "Não é possível criar um novo perfil para um produtor sem propriedades cadastradas no Demeter.";
@@ -34,6 +37,10 @@ export const getPerfilHelperMessage = ({
 
   if (!roomForPerfil) {
     return "Não é possível criar um novo perfil para o contrato vigente.";
+  }
+
+  if (contractDoesNotAllowSaidaYet) {
+    return "O contrato vigente não permite a criação de perfis de saída no momento.";
   }
 
   if (canAddSaida && relatoriosCount < 4) {

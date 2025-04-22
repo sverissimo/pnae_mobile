@@ -59,7 +59,7 @@ export class RelatorioSQLRepository implements RelatorioRepository {
   }
 
   async updateMany(relatorios: Partial<RelatorioModel>[]): Promise<void> {
-    const relatoriosLocalDTO = relatorios.map(this.toLocalDTO);
+    const relatoriosLocalDTO = relatorios.map((r) => this.toLocalDTO(r));
     await this.relatorioDAO.updateMany(relatoriosLocalDTO);
   }
 
@@ -77,11 +77,11 @@ export class RelatorioSQLRepository implements RelatorioRepository {
       nomeOutroExtensionista,
       matriculaOutroExtensionista,
       temas_atendimento,
-      ...rest
+      ...update
     } = relatorio;
 
     const relatorioLocalDTO = this.decamelizeRelatorio(
-      rest
+      update
     ) as RelatorioLocalDTO;
 
     if (numeroRelatorio) {

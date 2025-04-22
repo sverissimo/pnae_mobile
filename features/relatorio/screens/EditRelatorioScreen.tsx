@@ -73,13 +73,19 @@ export const EditRelatorioScreen = ({ route }: any) => {
     try {
       setEnableSave(false);
       const updatedRelatorio = { ...relatorio, pictureURI, assinaturaURI };
-      await updateRelatorio(updatedRelatorio as RelatorioModel);
-      await clearOldPictures();
-      setSnackBarOptions({
-        message: "Relatório salvo com sucesso",
-        status: "success",
-        duration: 1000,
-      });
+      const didUpdate = await updateRelatorio(
+        updatedRelatorio as RelatorioModel
+      );
+
+      if (didUpdate) {
+        await clearOldPictures();
+        setSnackBarOptions({
+          message: "Relatório salvo com sucesso",
+          status: "success",
+          duration: 1000,
+        });
+      }
+
       setTimeout(() => {
         navigation.goBack();
       }, 900);
@@ -127,6 +133,7 @@ export const EditRelatorioScreen = ({ route }: any) => {
           style={styles.button}
           onPress={handleSaveRelatorio}
           disabled={!enableSave || !pictureURI || !assinaturaURI}
+          // disabled={!enableSave}
         >
           Salvar
         </Button>

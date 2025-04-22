@@ -33,7 +33,8 @@ export const useSelectProdutor = () => {
     }
 
     setIsLoading(true);
-    const cpf = CPFProdutor.replace(/\D/g, "") || "15609048605";
+    const cpf = CPFProdutor.replace(/\D/g, "");
+    // || "15609048605";
     // ||       "06627559609";
     // "05241895604";
     // "84602503691";

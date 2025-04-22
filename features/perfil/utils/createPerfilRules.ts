@@ -16,7 +16,6 @@ export function getCreatePerfilRules(
   const { inclusao_entrada, inclusao_saida, id_contrato } = activeContrato;
 
   const perfisInThisContract = perfis
-
     .filter((p) => p.id_contrato === id_contrato)
     .map((p) => ({
       tipo_perfil: p.tipo_perfil,
@@ -37,11 +36,10 @@ export function getCreatePerfilRules(
     inclusao_saida && perfisEntrada.length > 0 && perfisSaida.length === 0
   );
 
-  const hasPerfilEntradaForActiveContract = perfis.some(
-    (p) =>
-      p.tipo_perfil === "Entrada" &&
-      p.id_contrato === activeContrato?.id_contrato
-  );
+  const contractDoesNotAllowSaidaYet =
+    perfisEntrada.length > 0 && !inclusao_saida && perfisSaida.length === 0;
+
+  const hasPerfilEntradaForActiveContract = perfisEntrada.length > 0;
   const tipoPerfil = canAddEntrada ? "Entrada" : canAddSaida ? "Saída" : "";
 
   const canCreatePerfilForThisContract =
@@ -54,5 +52,6 @@ export function getCreatePerfilRules(
     roomForPerfil,
     hasPerfilEntradaForActiveContract,
     canCreatePerfilForThisContract,
+    contractDoesNotAllowSaidaYet,
   };
 }

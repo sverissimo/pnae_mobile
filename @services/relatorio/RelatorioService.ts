@@ -38,24 +38,17 @@ export class RelatorioService {
 
   createRelatorio = async (
     relatorio: RelatorioModel,
-    atendimentoInput?: AtendimentoModel
+    atendimento: Omit<AtendimentoModel, "id_at_atendimento">
   ): Promise<string | undefined> => {
-    const { temas_atendimento, ...relatorioDTO } = relatorio;
-    const atendimento = {
-      ...atendimentoInput,
-      temas_atendimento,
-    } as AtendimentoModel;
-
     try {
       if (!this.isConnected) {
-        await this.createRelatorioLocal(relatorioDTO, atendimento);
+        await this.localRepository.create(relatorio);
+        await this.atendimentoService.create(atendimento);
         return;
       }
 
-      const atendimentoId = await this.createRelatorioRemote(
-        relatorioDTO,
-        atendimento
-      );
+      const atendimentoId = await this.atendimentoService.create(atendimento);
+      await this.remoteRepository.create({ ...relatorio, atendimentoId });
       console.log("🚀 - RelatorioService - atendimentoId:", atendimentoId);
 
       await this.localRepository.create({ ...relatorio, atendimentoId });
@@ -67,27 +60,9 @@ export class RelatorioService {
     }
   };
 
-  private createRelatorioLocal = async (
-    relatorio: RelatorioModel,
-    atendimento?: AtendimentoModel
-  ) => {
-    await this.localRepository.create(relatorio);
-    atendimento && (await this.atendimentoService.create(atendimento!));
-    return;
-  };
-
-  private createRelatorioRemote = async (
-    relatorio: CreateRelatorioInputDTO,
-    atendimento: Omit<AtendimentoModel, "id_at_atendimento">
-  ) => {
-    const atendimentoId = await this.atendimentoService.create(atendimento);
-
-    await this.remoteRepository.create({ ...relatorio, atendimentoId });
-    return atendimentoId;
-  };
-
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
     let relatorios = await this.localRepository.findByProdutorId(produtorId);
+    console.log("🚀 - RelatorioService - LOCALrelatorios:", relatorios);
 
     if (!this.isConnected) {
       console.log("@@@ not Connected, returning relatorios from local mem.");
@@ -114,18 +89,20 @@ export class RelatorioService {
   updateRelatorio = async (relatorio: RelatorioModel) => {
     try {
       const { id, produtorId, contratoId } = relatorio;
-      const relatoriosList = await this.getRelatorios(produtorId);
+      // const relatoriosList = await this.getRelatorios(produtorId);
 
-      const originalRelatorio = relatoriosList.find((r) => r.id === id);
-      if (!originalRelatorio) {
-        throw new Error(
-          `Erro ao atualizar o relatorio número: ${relatorio.numeroRelatorio} - relatorio não encontrado.`
-        );
-      }
-      // *** Adicona updatedAt, remove unmodified props
-      const relatorioUpdate = new Relatorio(relatorio).getUpdatedProps(
-        originalRelatorio
-      ) as Partial<RelatorioModel> & { id: string };
+      // if (!originalRelatorio) {
+      //   throw new Error(
+      //     `Erro ao atualizar o relatorio número: ${relatorio.numeroRelatorio} - relatorio não encontrado.`
+      //   );
+      // }
+      // // *** Adicona updatedAt, remove unmodified props
+
+      const updatedAt = new Date().toISOString();
+      const relatorioUpdate = {
+        ...relatorio,
+        updatedAt,
+      };
 
       if (!this.isConnected) {
         await this.localRepository.update(relatorioUpdate);
@@ -140,11 +117,13 @@ export class RelatorioService {
       })) as any;
       console.log("### Relatorio updated on server!!!!");
 
-      const localUpdate = newAtendimentoId
-        ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
-        : relatorioUpdate;
+      // ************ ITEM 134 (Rel é sub de outro) FOI REMOVIDO DO BANCO. ************
+      // const localUpdate = newAtendimentoId
+      //   ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
+      //   : relatorioUpdate;
+      // ***********************************************************
 
-      await this.localRepository.update(localUpdate);
+      await this.localRepository.update(relatorioUpdate);
       console.log("@@@ Relatorio locally updated!!");
 
       return newAtendimentoId;

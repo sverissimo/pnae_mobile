@@ -24,6 +24,7 @@ export class SystemUtils extends LocalStorageRepository {
       console.log("% db_init %");
 
       const cleanInstall = !!!(await this.should_NOT_ResetData());
+      // const cleanInstall = true;
       console.log("🚀 SystemUtils - cleanInstall:", cleanInstall);
 
       if (cleanInstall) {
@@ -31,7 +32,7 @@ export class SystemUtils extends LocalStorageRepository {
         await db.initDB();
         await this.resetData();
         await this.deleteAllFiles();
-        await AsyncStorage.setItem("keepLocalDataProd3", "true");
+        await AsyncStorage.setItem("keepLocalDataProd22abr25", "true");
       }
 
       // console.log(
@@ -53,7 +54,7 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async should_NOT_ResetData() {
     try {
-      const keepData = await AsyncStorage.getItem("keepLocalDataProd3");
+      const keepData = await AsyncStorage.getItem("keepLocalDataProd22abr25");
       return !!keepData;
     } catch (error) {
       console.error("Error checking if data should be reset:", error);
@@ -64,11 +65,11 @@ export class SystemUtils extends LocalStorageRepository {
   static async resetData() {
     try {
       const doNotReset = await this.should_NOT_ResetData();
-      // ---->>> REMOVE THIS TO RESET DATA
       await AsyncStorage.removeItem("keepLocalDataProd");
       await AsyncStorage.removeItem("keepLocalDataProd2");
       await AsyncStorage.removeItem("keepLocalDataProd3");
 
+      // ---->>> REMOVE THIS TO RESET DATA
       if (doNotReset) {
         console.log("Data reset not required.");
         return;
@@ -91,7 +92,8 @@ export class SystemUtils extends LocalStorageRepository {
     console.log("🚀 - SystemUtils - listAllLocalData - allKeys:", allKeys);
 
     for (const key of allKeys) {
-      console.log(await new SystemUtils().getData(key));
+      !["produtores", "gruposProdutos"].includes(key) &&
+        console.log(`${key} ---------  `, await new SystemUtils().getData(key));
     }
   }
 

@@ -17,14 +17,33 @@ import { SyncContextProvider } from "@contexts/SyncContext";
 import { ContratoContextProvider } from "@contexts/ContratoContext";
 import { grayscale } from "@constants/colorsPallete";
 import { useSystemInitialization } from "system/hooks/useSystemInitialization";
+import { useEffect } from "react";
+import SystemUtils from "system/SystemUtils";
+import { ProdutorService, RelatorioService } from "./@services";
+import { PerfilService } from "@services/perfil/PerfilService";
+import { PerfilLocalStorageRepository } from "@infrastructure/localStorage/perfil/PerfilLocalStorageRepository";
 
 LogBox.ignoreLogs(["new NativeEventEmitter()"]);
+// let i = 0;
+
 export default function App() {
   const systemInitialized = useSystemInitialization();
   if (!systemInitialized) {
     return <Loading />;
   }
+
   const { primary, background } = globalColors;
+
+  // if (i === 0) {
+  //   i++;
+  //   // const rels = new RelatorioService().getLocalRelatorios();
+  //   // rels.then((res) => console.log(res));
+  //   // const perf = new PerfilLocalStorageRepository().findAll!()
+  //   //   .then((res) => console.log(res))
+  //   //   .catch((err) => console.log(err));
+  //   // console.log("🚀 - App - perf:", perf);
+  //   // SystemUtils.listAllLocalData();
+  // }
 
   const theme = {
     ...DefaultTheme,

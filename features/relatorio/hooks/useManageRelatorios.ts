@@ -99,8 +99,9 @@ export const useManageRelatorio = () => {
       const coordenadas = getLocation();
       const propriedade = produtor!.propriedades![0];
 
+      const { temas_atendimento, ...relatorioData } = relatorioInput;
       const relatorio = {
-        ...relatorioInput,
+        ...relatorioData,
         produtorId: produtor!.id_pessoa_demeter!,
         tecnicoId: user!.id_usuario,
         contratoId: activeContrato?.id_contrato!,
@@ -118,6 +119,7 @@ export const useManageRelatorio = () => {
         id_und_empresa: propriedade.id_und_empresa,
         id_relatorio: relatorioModel.id,
         numero_relatorio: String(relatorioModel.numeroRelatorio),
+        temas_atendimento,
       };
 
       const atendimentoId = await new RelatorioService({
@@ -175,17 +177,30 @@ export const useManageRelatorio = () => {
           Number(relatorio.contratoId) || activeContrato?.id_contrato!,
       };
 
-      const newAtendimentoId = await new RelatorioService({
+      const originalRelatorio = relatorios.find((r) => r.id === relatorio.id)!;
+      const updatedRelatorioData = new Relatorio(relatorio).getUpdatedProps(
+        originalRelatorio
+      ) as RelatorioModel;
+
+      if (Object.keys(updatedRelatorioData).length === 0) {
+        console.log("Nenhuma propriedade foi alterada.");
+        setEnableSave(true);
+        return false;
+      }
+
+      await new RelatorioService({
         isConnected: !!isConnected,
-      }).updateRelatorio(relatorioUpdate);
+      }).updateRelatorio(updatedRelatorioData);
 
-      console.log("🚀 - updateRelatorio - newAtendimentoId:", newAtendimentoId);
+      // const newAtendimentoId = await new RelatorioService({
+      //   isConnected: !!isConnected,
+      // }).updateRelatorio(relatorioUpdate);
+      // // const update = newAtendimentoId
+      //   ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
+      //   : relatorioUpdate;
 
-      const update = newAtendimentoId
-        ? { ...relatorioUpdate, atendimentoId: newAtendimentoId }
-        : relatorioUpdate;
-
-      updateRelatoriosList(update);
+      updateRelatoriosList(relatorioUpdate);
+      return true;
     } catch (error) {
       console.log("🚀 ~ file: useManageRelatorios.ts:118:", error);
       throw error;
@@ -255,7 +270,7 @@ export const useManageRelatorio = () => {
     const nomeProdutor = produtor?.nm_pessoa;
     const url = `${env.SERVER_URL}/relatorios/pdf/${relatorioId}`;
     try {
-      const result = await Share.share(
+      await Share.share(
         {
           title: `Relatório nº${numeroRelatorio} - PNAE Mobile APP`,
           url: "../../../assets/images/logo.png",
@@ -264,9 +279,6 @@ export const useManageRelatorio = () => {
         },
         { dialogTitle: "Compartilhar Relatório" }
       );
-      if (result.action === Share.sharedAction) {
-        console.info("🚀 useManageRelatorios.ts:185 ~ sharePDFLink:", result);
-      }
     } catch (error: any) {
       console.error("🚀 RelatorioScreen.tsx:49:", error);
     }

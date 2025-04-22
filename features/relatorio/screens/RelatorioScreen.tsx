@@ -25,10 +25,9 @@ export const RelatorioScreen = () => {
     sharePDFLink,
   } = useManageRelatorio();
 
+  const isLoading = isLoadingProdutor || isLoadingRelatorios;
   const { noRelatorios, disableSaveButton, helperMessage } =
     useCreateRelatorioHelper();
-  // console.log({ helperMessage, disableSaveButton });
-  const isLoading = isLoadingProdutor || isLoadingRelatorios;
 
   const handleCreateRelatorio = () => {
     navigation.navigate("CreateRelatorioScreen", { relatorios });
@@ -85,11 +84,13 @@ export const RelatorioScreen = () => {
           {!isLoading && helperMessage && (
             <HelperMessage message={helperMessage} />
           )}
-          <AddButton
-            label="Criar Novo Relatório"
-            onPress={handleCreateRelatorio}
-            disabled={isLoading || disableSaveButton}
-          />
+          {!isLoading && (
+            <AddButton
+              label="Criar Novo Relatório"
+              onPress={handleCreateRelatorio}
+              disabled={isLoading || disableSaveButton}
+            />
+          )}
         </>
       </View>
     </>

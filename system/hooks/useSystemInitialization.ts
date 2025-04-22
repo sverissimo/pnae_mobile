@@ -8,7 +8,7 @@ export const useSystemInitialization = () => {
     SystemUtils.init_system()
       .then(() => {
         setSystemInitialized(true);
-        console.log("---------------------------------------\n");
+        console.log("---------------------------------------init\n");
       })
       .catch((err) => {
         console.error("Database initialization error:", err);

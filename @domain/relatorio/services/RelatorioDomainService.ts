@@ -114,8 +114,9 @@ export class RelatorioDomainService {
   }
 
   static checkForCreatedToday(relatorios: RelatorioModel[]): boolean {
-    const today = new Date();
-    const todayString = formatDate(today.toISOString());
+    const now = new Date();
+    now.setHours(now.getHours() - 3);
+    const todayString = formatDate(now.toISOString());
 
     const relatoriosWithSameDate = relatorios.some(
       (relatorio) => formatDate(relatorio.createdAt) === todayString
