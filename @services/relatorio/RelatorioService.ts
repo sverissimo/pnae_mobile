@@ -1,4 +1,3 @@
-import { Relatorio } from "@features/relatorio/entity";
 import { RelatorioModel } from "@features/relatorio/types/RelatorioModel";
 import { RelatorioRepository } from "@domain/relatorio/repository/RelatorioRepository";
 import { RelatorioDomainService } from "@domain/relatorio/services";
@@ -11,8 +10,6 @@ import {
 } from "./RelatorioServiceConfig";
 import { AtendimentoModel } from "@domain/atendimento";
 import { AtendimentoService } from "@services/atendimento/AtendimentoService";
-import { CreateRelatorioInputDTO } from "@features/relatorio/types/CreateRelatorioInputDTO";
-
 export class RelatorioService {
   private isConnected: boolean;
   private usuarioService: UsuarioService;
@@ -62,7 +59,6 @@ export class RelatorioService {
 
   getRelatorios = async (produtorId: string): Promise<RelatorioModel[]> => {
     let relatorios = await this.localRepository.findByProdutorId(produtorId);
-    console.log("🚀 - RelatorioService - LOCALrelatorios:", relatorios);
 
     if (!this.isConnected) {
       console.log("@@@ not Connected, returning relatorios from local mem.");

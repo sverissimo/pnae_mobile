@@ -24,7 +24,12 @@ export const ProdutorContextProvider: FC<ProdutorContextProviderProps> = ({
 
   return (
     <ProdutorContext.Provider
-      value={{ produtor, setProdutor, isLoading, setIsLoading }}
+      value={{
+        produtor,
+        isLoading,
+        setProdutor,
+        setIsLoading,
+      }}
     >
       {children}
     </ProdutorContext.Provider>

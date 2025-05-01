@@ -2,18 +2,16 @@ import { env } from "@config/env";
 import DatabaseService from "@infrastructure/database/config/expoSQLite";
 import { LocalStorageRepository } from "@infrastructure/localStorage/LocalStorageRepository";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AtendimentoService } from "@services/atendimento/AtendimentoService";
-import { RelatorioService } from "@services/index";
 import { checkFiles, deleteFile, listFiles } from "@shared/utils";
 
 export class SystemUtils extends LocalStorageRepository {
   protected collection = "system";
   protected key = "";
   static readonly NON_DELETABLE_KEYS = [
-    "perfilOptions",
-    "gruposProdutos",
-    "keepLocalDataProd3",
+    // "perfilOptions",
+    // "gruposProdutos",
     "user",
+    // "keepLocalDataProd3",
     // "system",
   ];
 
@@ -24,7 +22,6 @@ export class SystemUtils extends LocalStorageRepository {
       console.log("% db_init %");
 
       const cleanInstall = !!!(await this.should_NOT_ResetData());
-      // const cleanInstall = true;
       console.log("🚀 SystemUtils - cleanInstall:", cleanInstall);
 
       if (cleanInstall) {
@@ -32,21 +29,9 @@ export class SystemUtils extends LocalStorageRepository {
         await db.initDB();
         await this.resetData();
         await this.deleteAllFiles();
-        await AsyncStorage.setItem("keepLocalDataProd22abr25", "true");
+        await AsyncStorage.setItem("keepLocalDataProd01mai25", "true");
       }
-
-      // console.log(
-      //   await new AtendimentoService().deleteAtendimentoLocal(
-      //     "92d43fc5-fb68-4816-819e-59be25087305"
-      //   )
-      // );
-      // console.log(
-      //   (await new RelatorioService().getLocalRelatorios()).map(
-      //     (r) => r.assunto
-      //   )
-      // );
-      // console.log((await new RelatorioService().getLocalRelatorios()).length);
-      // checkFiles();
+      // checkFiles()
     } catch (error) {
       console.error("Error initializing storage:", error);
     }
@@ -54,7 +39,7 @@ export class SystemUtils extends LocalStorageRepository {
 
   static async should_NOT_ResetData() {
     try {
-      const keepData = await AsyncStorage.getItem("keepLocalDataProd22abr25");
+      const keepData = await AsyncStorage.getItem("keepLocalDataProd01mai25");
       return !!keepData;
     } catch (error) {
       console.error("Error checking if data should be reset:", error);
@@ -65,11 +50,8 @@ export class SystemUtils extends LocalStorageRepository {
   static async resetData() {
     try {
       const doNotReset = await this.should_NOT_ResetData();
-      await AsyncStorage.removeItem("keepLocalDataProd");
-      await AsyncStorage.removeItem("keepLocalDataProd2");
-      await AsyncStorage.removeItem("keepLocalDataProd3");
 
-      // ---->>> REMOVE THIS TO RESET DATA
+      // ---->>> REMOVE THIS TO MANUALLY RESET DATA
       if (doNotReset) {
         console.log("Data reset not required.");
         return;

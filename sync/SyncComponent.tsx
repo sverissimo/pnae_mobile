@@ -11,5 +11,5 @@ export const SyncComponent = () => {
   // useSyncPerfilOptions();
   useSyncPerfil();
   //   useSyncProdutores();
-  return <></>;
+  return null;
 };

@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
 import { Button } from "react-native-paper";
 
 type GetLocationScreenProps = {
@@ -21,7 +20,7 @@ export function GetLocationScreen({
         style={styles.button}
         mode="contained"
         buttonColor="teal"
-        onPress={() => getLocationPermission()}
+        onPress={getLocationPermission}
       >
         Autorizar
       </Button>

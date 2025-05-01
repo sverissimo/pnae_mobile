@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { ProdutorContext } from "@contexts/ProdutorContext";
 import { ProdutorService } from "@services/produtor/ProdutorService";
 import { Produtor } from "@features/produtor/types/Produtor";
-import { RelatorioContext } from "@contexts/RelatorioContext";
 import { useManageConnection, useSnackBar } from "@shared/hooks";
 import { isValidCPForCNPJ } from "@shared/utils/cpfUtils";
 import { SnackBarStateProps } from "@contexts/SnackbarContext";
@@ -15,15 +14,14 @@ export const useSelectProdutor = () => {
     setIsLoading,
   } = useContext(ProdutorContext);
 
-  const { setRelatorios } = useContext(RelatorioContext);
   const { isConnected } = useManageConnection();
   const { setSnackBarOptions } = useSnackBar();
 
   const fetchProdutor = async (CPFProdutor: string) => {
-    // if (!CPFProdutor) {
-    //   handleError("É necessário informar o CPF do produtor", "warning");
-    //   return;
-    // }
+    if (!CPFProdutor) {
+      handleError("É necessário informar o CPF do produtor", "warning");
+      return;
+    }
 
     const cpfIsValid = isValidCPForCNPJ(CPFProdutor);
     if (!cpfIsValid && !!CPFProdutor) {
@@ -34,13 +32,6 @@ export const useSelectProdutor = () => {
 
     setIsLoading(true);
     const cpf = CPFProdutor.replace(/\D/g, "");
-    // || "15609048605";
-    // ||       "06627559609";
-    // "05241895604";
-    // "84602503691";
-    // "06094979605";
-    // "05336559601";
-
     const produtorService = new ProdutorService({
       isConnected: !!isConnected,
     });
@@ -55,12 +46,8 @@ export const useSelectProdutor = () => {
     const offlinePerfis = await produtorService.getProdutorLocalPerfis(
       produtor.id_pessoa_demeter
     );
+    // In case perfis were created offline and not synced yet
     produtor.perfis.push(...offlinePerfis);
-    // produtor.perfis.sort((a, b) =>
-    //   Date.parse(a.data_preenchimento) < Date.parse(b.data_preenchimento)
-    //     ? 1
-    //     : -1
-    // );
 
     setProdutor(produtor);
     setIsLoading(false);
@@ -88,7 +75,6 @@ export const useSelectProdutor = () => {
 
   const resetProdutor = () => {
     setProdutorContext(null);
-    setRelatorios([]);
   };
 
   const handleError = (

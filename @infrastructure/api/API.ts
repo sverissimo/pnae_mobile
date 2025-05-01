@@ -29,13 +29,13 @@ export class API<T> {
           ...authHeaders,
           "Content-Type": "application/json",
         };
-    console.log("API WILL FETCH....");
+    // console.log("API WILL FETCH....", url);
     const response = await fetch(url, {
       method,
       headers,
       body: isFormData ? body : JSON.stringify(body),
     });
-    console.log("Got API response!!!!!!!!! ");
+    // console.log("Got API response!!!!!!!!! ");
 
     if (response.ok) {
       return method === HttpMethod.GET

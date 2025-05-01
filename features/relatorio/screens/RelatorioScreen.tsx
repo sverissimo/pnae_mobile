@@ -24,7 +24,6 @@ export const RelatorioScreen = () => {
     onConfirmDelete,
     sharePDFLink,
   } = useManageRelatorio();
-
   const isLoading = isLoadingProdutor || isLoadingRelatorios;
   const { noRelatorios, disableSaveButton, helperMessage } =
     useCreateRelatorioHelper();

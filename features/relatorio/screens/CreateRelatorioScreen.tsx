@@ -40,18 +40,12 @@ export const CreateRelatorioScreen = ({ route }: any) => {
           await getUpdatedLocation();
           isLocationUpdated.current = true;
         } catch (error) {
-          console.log("Error getting location:", error);
-          setSnackBarOptions({
-            message:
-              "Erro ao obter localização. Verifique as permissões do celular e certifique-se de que o GPS está ativado.",
-            status: "error",
-            duration: 2000,
-          });
+          console.log("********* Error getting location:", error);
         }
       };
       updateLocation();
     }
-  }, [pictureURI]);
+  }, [pictureURI, getUpdatedLocation]);
 
   const handleSaveRelatorio = async () => {
     try {

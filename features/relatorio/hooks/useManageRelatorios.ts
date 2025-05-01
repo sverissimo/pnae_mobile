@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Share } from "react-native";
 import { env } from "@config/env";
 import { RelatorioService } from "@services/relatorio/RelatorioService";
@@ -44,11 +38,21 @@ export const useManageRelatorio = () => {
     ).length;
   }, [relatorios]);
 
-  useLayoutEffect(() => {
-    if (produtor?.id_pessoa_demeter) {
+  useEffect(() => {
+    const produtorId = produtor?.id_pessoa_demeter;
+    if (!produtorId) {
+      setRelatorios([]);
+      return;
+    }
+
+    const shouldFetch =
+      !relatorios || !relatorios.some((r) => r.produtorId === produtorId);
+
+    if (shouldFetch) {
       (async () => {
+        // console.log("&&&&& Called getRelatorios, produtorId:", produtorId);
         setIsLoading(true);
-        await getRelatorios(produtor?.id_pessoa_demeter);
+        await getRelatorios(produtorId);
       })();
     }
   }, [produtor?.id_pessoa_demeter]);
@@ -149,6 +153,7 @@ export const useManageRelatorio = () => {
     if (!produtorId) {
       return [];
     }
+
     try {
       const relatorios = await new RelatorioService({
         isConnected: !!isConnected,

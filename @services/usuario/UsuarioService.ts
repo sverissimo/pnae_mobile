@@ -29,10 +29,6 @@ export class UsuarioService {
     const missingUsuariosOnLocal = ids.filter(
       (id) => !localUsuarios.find((u) => u.id_usuario === id)
     );
-    console.log(
-      "🚀 - file: UsuarioService.ts:35 - UsuarioService - getUsuariosByIds - missingUsuariosOnLocal:",
-      missingUsuariosOnLocal
-    );
 
     if (!this.isConnected || !missingUsuariosOnLocal.length) {
       return localUsuarios;

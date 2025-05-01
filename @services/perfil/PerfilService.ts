@@ -87,6 +87,7 @@ export class PerfilService {
     }
   };
 
+  /* @description Always get from localGruposProdutos if ever saved LOCALLY */
   getGruposProdutos = async () => {
     try {
       const localGruposProdutos =
@@ -96,11 +97,7 @@ export class PerfilService {
         return localGruposProdutos;
       }
 
-      const shouldUpdate = await this.syncHelpers.shouldSync(
-        1000 * 60 * 60 * 24 * 5
-      );
-
-      if (!shouldUpdate && localGruposProdutos?.grupos) {
+      if (localGruposProdutos?.grupos) {
         console.log("@@@ GruposProdutos stil valid, not running sync.");
         return localGruposProdutos;
       }
@@ -138,6 +135,7 @@ export class PerfilService {
     }
   };
 
+  //Only syncs if there are local perfils saved offline to sync
   sync = async () => {
     if (!this.isConnected) return;
     const allPerfilsWithLocalIds = await this.localRepository

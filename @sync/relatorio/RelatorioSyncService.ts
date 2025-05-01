@@ -41,7 +41,7 @@ export class RelatorioSyncService {
       outdatedOnClient,
       upToDateIds,
     } = syncData;
-    // log(syncData);
+    log(syncData);
 
     if (missingOnClient?.length > 0) {
       await this.relatorioLocalRepository.createMany(missingOnClient);
@@ -84,10 +84,17 @@ export class RelatorioSyncService {
         updatedAt: relatorio.updatedAt,
       }));
 
-    // REFACTOR: MAYBE DO NOTE MAKE SERVER CALL IF !produtorIds.length && relatoriosLocal.length === 0
-    // if (!produtorIds.length && relatoriosLocal.length > 0)
+    if (!produtorIds.length && relatoriosLocal.length === 0) {
+      return {
+        missingOnClient: [],
+        missingOnServer: [],
+        outdatedOnClient: [],
+        outdatedOnServer: [],
+        upToDateIds: [],
+      };
+    }
 
-    const syncInfo = await this.getCheckForUpdatesResponse(
+    const syncInfo = await this.checkServerForUpdates(
       produtorIds,
       relatoriosSyncRequest
     );
@@ -109,7 +116,7 @@ export class RelatorioSyncService {
     };
   }
 
-  private async getCheckForUpdatesResponse(
+  private async checkServerForUpdates(
     produtorIds: string[],
     relatoriosSyncInfo: any
   ): Promise<CheckForUpdatesResponse<RelatorioModel>> {
